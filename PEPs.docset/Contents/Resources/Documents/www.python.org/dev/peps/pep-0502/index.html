@@ -1,0 +1,3552 @@
+<!doctype html>
+<!--[if lt IE 7]>   <html class="no-js ie6 lt-ie7 lt-ie8 lt-ie9">   <![endif]-->
+<!--[if IE 7]>      <html class="no-js ie7 lt-ie8 lt-ie9">          <![endif]-->
+<!--[if IE 8]>      <html class="no-js ie8 lt-ie9">                 <![endif]-->
+<!--[if gt IE 8]><!--><html class="no-js" lang="en" dir="ltr">  <!--<![endif]-->
+
+
+<!-- Mirrored from www.python.org/dev/peps/pep-0502/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 03 Sep 2015 04:34:02 GMT -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <link rel="prefetch" href="../../../../ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js">
+
+    <meta name="application-name" content="Python.org">
+    <meta name="msapplication-tooltip" content="The official home of the Python Programming Language">
+    <meta name="apple-mobile-web-app-title" content="Python.org">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="format-detection" content="telephone=no">
+    <meta http-equiv="cleartype" content="on">
+    <meta http-equiv="imagetoolbar" content="false">
+
+    <script src="../../../static/js/libs/modernizr.js"></script>
+
+    <link href="../../../static/stylesheets/style.css" rel="stylesheet" type="text/css" title="default" />
+    <link href="../../../static/stylesheets/mq.css" rel="stylesheet" type="text/css" media="not print, braille, embossed, speech, tty" />
+    
+
+    <!--[if (lte IE 8)&(!IEMobile)]>
+    <link href="/static/stylesheets/no-mq.css" rel="stylesheet" type="text/css" media="screen" />
+    
+    
+    <![endif]-->
+
+    
+    <link rel="icon" type="image/x-icon" href="https://www.python.org/static/favicon.ico">
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="../../../static/apple-touch-icon-144x144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="../../../static/apple-touch-icon-114x114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="../../../static/apple-touch-icon-72x72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="../../../static/apple-touch-icon-precomposed.png">
+    <link rel="apple-touch-icon" href="../../../static/apple-touch-icon-precomposed.png">
+
+    
+    <meta name="msapplication-TileImage" content="/static/metro-icon-144x144-precomposed.png"><!-- white shape -->
+    <meta name="msapplication-TileColor" content="#3673a5"><!-- python blue -->
+    <meta name="msapplication-navbutton-color" content="#3673a5">
+
+    <meta property="og:site_name" content="Python.org">
+    <meta property="og:type" content="website">
+
+    <title>PEP 0502 -- String Interpolation Redux | Python.org</title>
+    <meta property="og:title" content="Welcome to Python.org">
+
+    
+    <meta name="description" content="The official home of the Python Programming Language">
+    <meta name="og:description" content="The official home of the Python Programming Language">
+    <meta name="keywords" content="Python programming language object oriented web free open source software license documentation download community">
+    <meta property="og:tag" content="Python programming language object oriented web free open source software license documentation download community">
+    <meta property="og:published_time" content="">
+    <meta property="og:modified_time" content="">
+    <meta property="og:author" content="">
+    <meta property="og:section" content=""> 
+    <meta property="og:url" content="">
+    <meta property="og:image" content="">
+    <meta property="og:video" content="">
+
+    <link rel="author" href="https://www.python.org/static/humans.txt">
+
+    
+
+    
+    <script type="application/ld+json">
+     {
+       "@context": "http://schema.org",
+       "@type": "WebSite",
+       "url": "https://www.python.org/",
+       "potentialAction": {
+         "@type": "SearchAction",
+         "target": "https://www.python.org/search/?q={search_term_string}",
+         "query-input": "required name=search_term_string"
+       }
+     }
+    </script>
+
+    
+    <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-39055973-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+    </script>
+    
+</head>
+
+<body class="python pages pep-page">
+
+    <div id="touchnav-wrapper">
+
+        <div id="nojs" class="do-not-print">
+            <p><strong>Notice:</strong> While Javascript is not essential for this website, your interaction with the content will be limited. Please turn Javascript on for the full experience. </p>
+        </div>
+
+        <!--[if lt IE 8]>
+        <div id="oldie-warning" class="do-not-print">
+            <p><strong>Notice:</strong> Your browser is <em>ancient</em> and <a href="http://www.ie6countdown.com/">Microsoft agrees</a>. <a href="http://browsehappy.com/">Upgrade to a different browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to experience a better web.</p>
+        </div>
+        <![endif]-->
+
+        <!-- Sister Site Links -->
+        <div id="top" class="top-bar do-not-print">
+
+            <nav class="meta-navigation container" role="navigation">
+
+                
+                <div class="skip-link screen-reader-text">
+                    <a href="#content" title="Skip to content">Skip to content</a>
+                </div>
+
+                
+                <a id="close-python-network" class="jump-link" href="#python-network" aria-hidden="true">
+                    <span aria-hidden="true" class="icon-arrow-down"><span>&#9660;</span></span> Close
+                </a>
+
+                
+
+<ul class="menu" role="tree">
+    
+    <li class="python-meta ">
+        <a href="https://www.python.org/" title="The Python Programming Language" >Python</a>
+    </li>
+    
+    <li class="psf-meta ">
+        <a href="https://www.python.org/psf-landing/" title="The Python Software Foundation" >PSF</a>
+    </li>
+    
+    <li class="docs-meta ">
+        <a href="https://docs.python.org/" title="Python Documentation" >Docs</a>
+    </li>
+    
+    <li class="pypi-meta ">
+        <a href="https://pypi.python.org/" title="Python Package Index" >PyPI</a>
+    </li>
+    
+    <li class="jobs-meta ">
+        <a href="https://www.python.org/jobs/" title="Python Job Board" >Jobs</a>
+    </li>
+    
+    <li class="shop-meta ">
+        <a href="https://www.python.org/community/" title="Python Community" >Community</a>
+    </li>
+    
+</ul>
+
+
+                <a id="python-network" class="jump-link" href="#top" aria-hidden="true">
+                    <span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> The Python Network
+                </a>
+
+            </nav>
+
+        </div>
+
+        <!-- Header elements -->
+        <header class="main-header" role="banner">
+            <div class="container">
+
+                <h1 class="site-headline">
+                    <a href="https://www.python.org/"><img class="python-logo" src="../../../static/img/python-logo.png" alt="python&trade;"></a>
+                </h1>
+
+                <div class="options-bar do-not-print">
+
+                    
+                    <a id="site-map-link" class="jump-to-menu" href="#site-map"><span class="menu-icon">&equiv;</span> Menu</a><form class="search-the-site" action="https://www.python.org/search/" method="get">
+                        <fieldset title="Search Python.org">
+
+                            <span aria-hidden="true" class="icon-search"></span>
+
+                            <label class="screen-reader-text" for="id-search-field">Search This Site</label>
+                            <input id="id-search-field" name="q" type="search" role="textbox" class="search-field" placeholder="Search" value="" tabindex="1">
+
+                            <button type="submit" name="submit" id="submit" class="search-button" title="Submit this Search" tabindex="3">
+                                GO
+                            </button>
+
+                            
+                            <!--[if IE]><input type="text" style="display: none;" disabled="disabled" size="1" tabindex="4"><![endif]-->
+
+                        </fieldset>
+                    </form><span class="breaker"></span><div class="adjust-font-size" aria-hidden="true">
+                        <ul class="navigation menu" aria-label="Adjust Text Size on Page">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                <a href="#" class="action-trigger"><strong><small>A</small> A</strong></a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a class="text-shrink" title="Make Text Smaller" href="javascript:;">Smaller</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a class="text-grow" title="Make Text Larger" href="javascript:;">Larger</a></li>
+                                    <li class="tier-2 element-3" role="treeitem"><a class="text-reset" title="Reset any font size changes I have made" href="javascript:;">Reset</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div><div class="winkwink-nudgenudge">
+                        <ul class="navigation menu" aria-label="Social Media Navigation">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                <a href="#" class="action-trigger">Socialize</a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a href="http://plus.google.com/+Python"><span aria-hidden="true" class="icon-google-plus"></span>Google+</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a href="http://www.facebook.com/pythonlang?fref=ts"><span aria-hidden="true" class="icon-facebook"></span>Facebook</a></li>
+                                    <li class="tier-2 element-3" role="treeitem"><a href="http://twitter.com/ThePSF"><span aria-hidden="true" class="icon-twitter"></span>Twitter</a></li>
+                                    <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/irc/"><span aria-hidden="true" class="icon-freenode"></span>Chat on IRC</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div><div class="account-signin">
+                        <ul class="navigation menu" aria-label="Social Media Navigation">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                
+                                <a href="https://www.python.org/accounts/login/" title="Sign Up or Sign In to Python.org">Sign In</a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/accounts/signup/">Sign Up / Register</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/accounts/login/">Sign In</a></li>
+                                </ul>
+                                
+                            </li>
+                        </ul>
+                    </div>
+
+                </div><!-- end options-bar -->
+
+                <nav id="mainnav" class="python-navigation main-navigation do-not-print" role="navigation">
+                    
+                        
+<ul class="navigation menu" role="menubar" aria-label="Main Navigation">
+  
+    
+    
+    <li id="about" class="tier-1 element-1  " aria-haspopup="true">
+        <a href="https://www.python.org/about/" title="" class="">About</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/apps/" title="">Applications</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/quotes/" title="">Quotes</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/gettingstarted/" title="">Getting Started</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/help/" title="">Help</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="downloads" class="tier-1 element-2  " aria-haspopup="true">
+        <a href="https://www.python.org/downloads/" title="" class="">Downloads</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/downloads/" title="">All releases</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/downloads/source/" title="">Source code</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/downloads/windows/" title="">Windows</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/downloads/mac-osx/" title="">Mac OS X</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/download/other/" title="">Other Platforms</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://docs.python.org/3/license.html" title="">License</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/download/alternatives" title="">Alternative Implementations</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="documentation" class="tier-1 element-3  " aria-haspopup="true">
+        <a href="https://www.python.org/doc/" title="" class="">Documentation</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/doc/" title="">Docs</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/doc/av" title="">Audio/Visual Talks</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://wiki.python.org/moin/BeginnersGuide" title="">Beginner&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://docs.python.org/faq/" title="">FAQ</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="http://wiki.python.org/moin/Languages" title="">Non-English Docs</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="../index.html" title="">PEP Index</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://wiki.python.org/moin/PythonBooks" title="">Python Books</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="community" class="tier-1 element-4  " aria-haspopup="true">
+        <a href="https://www.python.org/community/" title="" class="">Community</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/community/diversity/" title="">Diversity</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/community/irc/" title="">IRC</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/community/lists/" title="">Mailing Lists</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/workshops/" title="">Python Conferences</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/community/sigs/" title="">Special Interest Groups</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://wiki.python.org/moin/" title="">Python Wiki</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/community/logos/" title="">Python Logo</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://www.python.org/community/merchandise/" title="">Merchandise</a></li>
+    
+        <li class="tier-2 element-9" role="treeitem"><a href="https://www.python.org/community/awards" title="">Community Awards</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="success-stories" class="tier-1 element-5  " aria-haspopup="true">
+        <a href="https://www.python.org/about/success/" title="success-stories" class="">Success Stories</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/success/#arts" title="">Arts</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/success/#business" title="">Business</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/success/#education" title="">Education</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/success/#engineering" title="">Engineering</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/about/success/#government" title="">Government</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://www.python.org/about/success/#scientific" title="">Scientific</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/about/success/#software-development" title="">Software Development</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="news" class="tier-1 element-6  " aria-haspopup="true">
+        <a href="https://www.python.org/blogs/" title="News from around the Python world" class="">News</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/blogs/" title="Python Insider Blog Posts">Python News</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://planetpython.org/" title="Planet Python">Community News</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="http://pyfound.blogspot.com/" title="PSF Blog">PSF News</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pycon.blogspot.com/" title="PyCon Blog">PyCon News</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="events" class="tier-1 element-7  " aria-haspopup="true">
+        <a href="https://www.python.org/events/" title="" class="">Events</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/events/python-events/" title="">Python Events</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/events/python-user-group/" title="">User Group Events</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/events/python-events/past/" title="">Python Events Archive</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/events/python-user-group/past/" title="">User Group Events Archive</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://wiki.python.org/moin/PythonEventsCalendar#Submitting_an_Event" title="">Submit an Event</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    
+  
+</ul>
+
+                    
+                </nav>
+
+                <div class="header-banner "> <!-- for optional "do-not-print" class -->
+                    
+                    
+                </div>
+
+                
+                
+
+             </div><!-- end .container -->
+        </header>
+
+        <div id="content" class="content-wrapper">
+            <!-- Main Content Column -->
+            <div class="container">
+
+                <section class="main-content with-left-sidebar" role="main">
+
+                    
+<ul class="breadcrumbs menu">
+    <li>
+        <a href="https://www.python.org/" title="The Python Programming Language">Python</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>
+        <a href="https://www.python.org/dev/">Python Developer's Guide</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>
+        <a href="../index.html">PEP Index</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>PEP 0502 -- String Interpolation Redux</li>
+</ul>
+
+
+                    
+<style>
+   .pep-page pre {
+        padding: .5em;
+        background: inherit;
+        border-left: 0px;
+        -webkit-box-shadow: 0 0 0 0;
+        -moz-box-shadow: 0 0 0 0;
+        box-shadow: 0 0 0 0;
+   }
+</style>
+
+    
+    <article class="text">
+        
+
+        <header class="article-header">
+            <h1 class="page-title">PEP 0502 -- String Interpolation Redux</h1>
+        </header>
+
+        <!--
+This HTML is auto-generated.  DO NOT EDIT THIS FILE!  If you are writing a new
+PEP, see http://www.python.org/dev/peps/pep-0001 for instructions and links
+to templates.  DO NOT USE THIS HTML FILE AS YOUR TEMPLATE!
+-->
+<html>
+ <body>
+  <table class="rfc2822 docutils field-list" frame="void" rules="none">
+   <col class="field-name">
+   </col>
+   <col class="field-body">
+   </col>
+   <tbody valign="top">
+    <tr class="field">
+     <th class="field-name">
+      PEP:
+     </th>
+     <td class="field-body">
+      502
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Title:
+     </th>
+     <td class="field-body">
+      String Interpolation Redux
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Author:
+     </th>
+     <td class="field-body">
+      Mike G. Miller
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Status:
+     </th>
+     <td class="field-body">
+      Draft
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Type:
+     </th>
+     <td class="field-body">
+      Standards Track
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Created:
+     </th>
+     <td class="field-body">
+      10-Aug-2015
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Python-Version:
+     </th>
+     <td class="field-body">
+      3.6
+     </td>
+    </tr>
+   </tbody>
+  </table>
+  <hr/>
+  <div class="contents topic" id="contents">
+   <p class="topic-title first">
+    Contents
+   </p>
+   <ul class="simple">
+    <li>
+     <a class="reference internal" href="#abstract" id="id70">
+      Abstract
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#motivation" id="id71">
+      Motivation
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#rationale" id="id72">
+      Rationale
+     </a>
+     <ul>
+      <li>
+       <a class="reference internal" href="#naming" id="id73">
+        Naming
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#goals" id="id74">
+        Goals
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#limitations" id="id75">
+        Limitations
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#background" id="id76">
+        Background
+       </a>
+       <ul>
+        <li>
+         <a class="reference internal" href="#printf-style-formatting" id="id77">
+          Printf-style formatting
+         </a>
+        </li>
+        <li>
+         <a class="reference internal" href="#string-template" id="id78">
+          string.Template
+         </a>
+        </li>
+        <li>
+         <a class="reference internal" href="#pep-215-string-interpolation" id="id79">
+          PEP 215 - String Interpolation
+         </a>
+        </li>
+        <li>
+         <a class="reference internal" href="#str-format" id="id80">
+          str.format()
+         </a>
+        </li>
+        <li>
+         <a class="reference internal" href="#pep-498-literal-string-formatting" id="id81">
+          PEP 498 -- Literal String Formatting
+         </a>
+        </li>
+        <li>
+         <a class="reference internal" href="#pep-501-translation-ready-string-interpolation" id="id82">
+          PEP 501 -- Translation ready string interpolation
+         </a>
+        </li>
+       </ul>
+      </li>
+      <li>
+       <a class="reference internal" href="#implementations-in-other-languages" id="id83">
+        Implementations in Other Languages
+       </a>
+       <ul>
+        <li>
+         <a class="reference internal" href="#bash" id="id84">
+          Bash
+         </a>
+        </li>
+        <li>
+         <a class="reference internal" href="#perl" id="id85">
+          Perl
+         </a>
+        </li>
+        <li>
+         <a class="reference internal" href="#ruby" id="id86">
+          Ruby
+         </a>
+        </li>
+        <li>
+         <a class="reference internal" href="#others" id="id87">
+          Others
+         </a>
+        </li>
+        <li>
+         <a class="reference internal" href="#scala" id="id88">
+          Scala
+         </a>
+        </li>
+        <li>
+         <a class="reference internal" href="#es6-javascript" id="id89">
+          ES6 (Javascript)
+         </a>
+        </li>
+        <li>
+         <a class="reference internal" href="#c-version-6" id="id90">
+          C#, Version 6
+         </a>
+        </li>
+        <li>
+         <a class="reference internal" href="#apple-s-swift" id="id91">
+          Apple's Swift
+         </a>
+        </li>
+        <li>
+         <a class="reference internal" href="#additional-examples" id="id92">
+          Additional examples
+         </a>
+        </li>
+       </ul>
+      </li>
+      <li>
+       <a class="reference internal" href="#new-syntax" id="id93">
+        New Syntax
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#new-string-prefix" id="id94">
+        New String Prefix
+       </a>
+      </li>
+     </ul>
+    </li>
+    <li>
+     <a class="reference internal" href="#specification" id="id95">
+      Specification
+     </a>
+     <ul>
+      <li>
+       <a class="reference internal" href="#expressionstring-objects" id="id96">
+        ExpressionString Objects
+       </a>
+       <ul>
+        <li>
+         <a class="reference internal" href="#inherits-from-str-type" id="id97">
+          Inherits From
+          <tt class="docutils literal">
+           str
+          </tt>
+          Type
+         </a>
+        </li>
+       </ul>
+      </li>
+      <li>
+       <a class="reference internal" href="#interpolation-syntax" id="id98">
+        Interpolation Syntax
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#composition-with-other-prefixes" id="id99">
+        Composition with Other Prefixes
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#examples" id="id100">
+        Examples
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#safety" id="id101">
+        Safety
+       </a>
+       <ul>
+        <li>
+         <a class="reference internal" href="#mitigation-via-tools" id="id102">
+          Mitigation via tools
+         </a>
+        </li>
+       </ul>
+      </li>
+      <li>
+       <a class="reference internal" href="#backwards-compatibility" id="id103">
+        Backwards Compatibility
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#postponed-ideas" id="id104">
+        Postponed Ideas
+       </a>
+       <ul>
+        <li>
+         <a class="reference internal" href="#internationalization" id="id105">
+          Internationalization
+         </a>
+        </li>
+       </ul>
+      </li>
+      <li>
+       <a class="reference internal" href="#rejected-ideas" id="id106">
+        Rejected Ideas
+       </a>
+       <ul>
+        <li>
+         <a class="reference internal" href="#restricting-syntax-to-str-format-only" id="id107">
+          Restricting Syntax to
+          <tt class="docutils literal">
+           str.format()
+          </tt>
+          Only
+         </a>
+        </li>
+        <li>
+         <a class="reference internal" href="#additional-custom-string-prefixes" id="id108">
+          Additional/Custom String-Prefixes
+         </a>
+        </li>
+        <li>
+         <a class="reference internal" href="#automated-escaping-of-input-variables" id="id109">
+          Automated Escaping of Input Variables
+         </a>
+        </li>
+        <li>
+         <a class="reference internal" href="#environment-access-and-command-substitution" id="id110">
+          Environment Access and Command Substitution
+         </a>
+        </li>
+       </ul>
+      </li>
+     </ul>
+    </li>
+    <li>
+     <a class="reference internal" href="#reference-implementation-s" id="id111">
+      Reference Implementation(s)
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#acknowledgements" id="id112">
+      Acknowledgements
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#references" id="id113">
+      References
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#copyright" id="id114">
+      Copyright
+     </a>
+    </li>
+   </ul>
+  </div>
+  <p>
+   Note: Open issues below are stated with a question mark (?),
+and are therefore searchable.
+  </p>
+  <div class="section" id="abstract">
+   <h1>
+    <a class="toc-backref" href="#id70">
+     Abstract
+    </a>
+   </h1>
+   <p>
+    This proposal describes a new string interpolation feature for Python,
+called an
+    <em>
+     expression-string
+    </em>
+    ,
+that is both concise and powerful,
+improves readability in most cases,
+yet does not conflict with existing code.
+   </p>
+   <p>
+    To achieve this end,
+a new string prefix is introduced,
+which expands at compile-time into an equivalent expression-string object,
+with requested variables from its context passed as keyword arguments.
+At runtime,
+the new object uses these passed values to render a string to given
+specifications, building on
+    <a class="reference external" href="https://docs.python.org/3/library/string.html#format-string-syntax">
+     the existing syntax
+    </a>
+    <a class="footnote-reference" href="#id31" id="id32">
+     [16]
+    </a>
+    of
+    <tt class="docutils literal">
+     str.format()
+    </tt>
+    :
+   </p>
+   <pre class="literal-block">
+&gt;&gt;&gt; location = 'World'
+&gt;&gt;&gt; e'Hello, {location} !'  # new prefix: e''
+'Hello, World !'            # interpolated result
+</pre>
+   <p>
+    This PEP does not recommend to remove or deprecate any of the existing string
+formatting mechanisms.
+   </p>
+  </div>
+  <div class="section" id="motivation">
+   <h1>
+    <a class="toc-backref" href="#id71">
+     Motivation
+    </a>
+   </h1>
+   <p>
+    Though string formatting and manipulation features are plentiful in Python,
+one area where it falls short
+is the lack of a convenient string interpolation syntax.
+In comparison to other dynamic scripting languages
+with similar use cases,
+the amount of code necessary to build similar strings is substantially higher,
+while at times offering lower readability due to verbosity, dense syntax,
+or identifier duplication.
+    <a class="footnote-reference" href="#id16" id="id1">
+     [1]
+    </a>
+   </p>
+   <p>
+    Furthermore, replacement of the print statement with the more consistent print
+function of Python 3 (
+    <a class="reference external" href="../pep-3105/index.html">
+     PEP 3105
+    </a>
+    ) has added one additional minor burden,
+an additional set of parentheses to type and read.
+Combined with the verbosity of current formatting solutions,
+this puts an otherwise simple language at an unfortunate disadvantage to its
+peers:
+   </p>
+   <pre class="literal-block">
+echo "Hello, user: $user, id: $id, on host: $hostname"              # bash
+say  "Hello, user: $user, id: $id, on host: $hostname";             # perl
+puts "Hello, user: #{user}, id: #{id}, on host: #{hostname}\n"      # ruby
+                                                                    # 80 ch --&gt;|
+# Python 3, str.format with named parameters
+print('Hello, user: {user}, id: {id}, on host: {hostname}'.format(**locals()))
+
+# Python 3, variation B, worst case
+print('Hello, user: {user}, id: {id}, on host: {hostname}'.format(user=user,
+                                                                  id=id,
+                                                                  hostname=
+                                                                    hostname))
+</pre>
+   <p>
+    In Python, the formatting and printing of a string with multiple variables in a
+single line of code of standard width is noticeably harder and more verbose,
+indentation often exacerbating the issue.
+   </p>
+   <p>
+    For use cases such as smaller projects, systems programming,
+shell script replacements, and even one-liners,
+where message formatting complexity has yet to be encapsulated,
+this verbosity has likely lead a significant number of developers and
+administrators to choose other languages over the years.
+   </p>
+  </div>
+  <div class="section" id="rationale">
+   <h1>
+    <a class="toc-backref" href="#id72">
+     Rationale
+    </a>
+   </h1>
+   <div class="section" id="naming">
+    <h2>
+     <a class="toc-backref" href="#id73">
+      Naming
+     </a>
+    </h2>
+    <p>
+     The term expression-string was chosen because other applicable terms,
+such as format-string and template are already well used in the Python standard
+library.
+    </p>
+    <p>
+     The string prefix itself,
+     <tt class="docutils literal">
+      e''
+     </tt>
+     was chosen to demonstrate that the
+specification enables expressions,
+is not limited to
+     <tt class="docutils literal">
+      str.format()
+     </tt>
+     syntax,
+and also does not lend itself to
+     <a class="reference external" href="reference_needed.html">
+      the shorthand term
+     </a>
+     <a class="footnote-reference" href="#id33" id="id34">
+      [17]
+     </a>
+     "f-string".
+It is also slightly easier to type than other choices such as
+     <tt class="docutils literal">
+      _''
+     </tt>
+     and
+     <tt class="docutils literal">
+      i''
+     </tt>
+     ,
+while perhaps
+     <a class="reference external" href="https://mail.python.org/pipermail/python-dev/2015-August/141147.html">
+      less odd-looking
+     </a>
+     <a class="footnote-reference" href="#id35" id="id36">
+      [18]
+     </a>
+     to C-developers.
+     <tt class="docutils literal">
+      <span class="pre">
+       printf('')
+      </span>
+     </tt>
+     vs.
+     <tt class="docutils literal">
+      <span class="pre">
+       print(f'')
+      </span>
+     </tt>
+     .
+    </p>
+   </div>
+   <div class="section" id="goals">
+    <h2>
+     <a class="toc-backref" href="#id74">
+      Goals
+     </a>
+    </h2>
+    <p>
+     The design goals of expression-strings are as follows:
+    </p>
+    <ol class="arabic simple">
+     <li>
+      Eliminate need to pass variables manually.
+     </li>
+     <li>
+      Eliminate repetition of identifiers and redundant parentheses.
+     </li>
+     <li>
+      Reduce awkward syntax, punctuation characters, and visual noise.
+     </li>
+     <li>
+      Improve readability and eliminate mismatch errors,
+by prefering named parameters to positional arguments.
+     </li>
+     <li>
+      Avoid need for
+      <tt class="docutils literal">
+       locals()
+      </tt>
+      and
+      <tt class="docutils literal">
+       globals()
+      </tt>
+      usage,
+instead parsing the given string for named parameters,
+then passing them automatically.
+      <a class="footnote-reference" href="#id17" id="id2">
+       [2]
+      </a>
+      <a class="footnote-reference" href="#id18" id="id3">
+       [3]
+      </a>
+     </li>
+    </ol>
+   </div>
+   <div class="section" id="limitations">
+    <h2>
+     <a class="toc-backref" href="#id75">
+      Limitations
+     </a>
+    </h2>
+    <p>
+     In contrast to other languages that take design cues from Unix and its
+shells,
+and in common with Javascript,
+Python specified both single (
+     <tt class="docutils literal">
+      '
+     </tt>
+     ) and double (
+     <tt class="docutils literal">
+      "
+     </tt>
+     ) ASCII quote
+characters to enclose strings.
+It is not reasonable to choose one of them now to enable interpolation,
+while leaving the other for uninterpolated strings.
+"Backtick" characters (
+     <tt class="docutils literal">
+      `
+     </tt>
+     ) are also
+     <a class="reference external" href="https://mail.python.org/pipermail/python-ideas/2007-January/000054.html">
+      constrained by history
+     </a>
+     <a class="footnote-reference" href="#id37" id="id38">
+      [19]
+     </a>
+     as a shortcut
+for
+     <tt class="docutils literal">
+      repr()
+     </tt>
+     .
+    </p>
+    <p>
+     This leaves a few remaining options for the design of such a feature:
+    </p>
+    <ul class="simple">
+     <li>
+      An operator, as in printf-style string formatting via
+      <tt class="docutils literal">
+       %
+      </tt>
+      .
+     </li>
+     <li>
+      A class, such as
+      <tt class="docutils literal">
+       string.Template()
+      </tt>
+      .
+     </li>
+     <li>
+      A function, such as
+      <tt class="docutils literal">
+       str.format()
+      </tt>
+      .
+     </li>
+     <li>
+      New syntax
+     </li>
+     <li>
+      A new string prefix marker, such as the well-known
+      <tt class="docutils literal">
+       r''
+      </tt>
+      or
+      <tt class="docutils literal">
+       u''
+      </tt>
+      .
+     </li>
+    </ul>
+    <p>
+     The first three options above currently work well.
+Each has specific use cases and drawbacks,
+yet also suffer from the verbosity and visual noise mentioned previously.
+All are discussed in the next section.
+    </p>
+   </div>
+   <div class="section" id="background">
+    <h2>
+     <a class="toc-backref" href="#id76">
+      Background
+     </a>
+    </h2>
+    <p>
+     This proposal builds on several existing techniques and proposals and what
+we've collectively learned from them.
+    </p>
+    <p>
+     The following examples focus on the design goals of readability and
+error-prevention using named parameters.
+Let's assume we have the following dictionary,
+and would like to print out its items as an informative string for end users:
+    </p>
+    <pre class="literal-block">
+&gt;&gt;&gt; params = {'user': 'nobody', 'id': 9, 'hostname': 'darkstar'}
+</pre>
+    <div class="section" id="printf-style-formatting">
+     <h3>
+      <a class="toc-backref" href="#id77">
+       Printf-style formatting
+      </a>
+     </h3>
+     <p>
+      This
+      <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#printf-style-string-formatting">
+       venerable technique
+      </a>
+      <a class="footnote-reference" href="#id39" id="id40">
+       [20]
+      </a>
+      continues to have its uses,
+such as with byte-based protocols,
+simplicity in simple cases,
+and familiarity to many programmers:
+     </p>
+     <pre class="literal-block">
+&gt;&gt;&gt; 'Hello, user: %(user)s, id: %(id)s, on host: %(hostname)s' % params
+'Hello, user: nobody, id: 9, on host: darkstar'
+</pre>
+     <p>
+      In this form, considering the prerequisite dictionary creation,
+the technique is verbose, a tad noisy,
+and relatively readable.
+Additional issues are that an operator can only take one argument besides the
+original string,
+meaning multiple parameters must be passed in a tuple or dictionary.
+Also, it is relatively easy to make an error in the number of arguments passed,
+the expected type,
+have a missing key,
+or forget the trailing type, e.g. (
+      <tt class="docutils literal">
+       s
+      </tt>
+      or
+      <tt class="docutils literal">
+       d
+      </tt>
+      ).
+     </p>
+    </div>
+    <div class="section" id="string-template">
+     <h3>
+      <a class="toc-backref" href="#id78">
+       string.Template
+      </a>
+     </h3>
+     <p>
+      The
+      <tt class="docutils literal">
+       string.Template
+      </tt>
+      <a class="reference external" href="https://docs.python.org/3/library/string.html#template-strings">
+       class from
+      </a>
+      <a class="footnote-reference" href="#id41" id="id42">
+       [21]
+      </a>
+      <a class="reference external" href="../pep-0292/index.html">
+       PEP 292
+      </a>
+      (Simpler String Substitutions)
+is a purposely simplified design,
+using familiar shell interpolation syntax,
+with
+      <a class="reference external" href="https://docs.python.org/3/library/string.html#string.Template.safe_substitute">
+       safe-substitution feature
+      </a>
+      <a class="footnote-reference" href="#id43" id="id44">
+       [22]
+      </a>
+      ,
+that finds its main use cases in shell and internationalization tools:
+     </p>
+     <pre class="literal-block">
+Template('Hello, user: $user, id: ${id}, on host: $hostname').substitute(params)
+</pre>
+     <p>
+      Also verbose, however the string itself is readable.
+Though functionality is limited,
+it meets its requirements well.
+It isn't powerful enough for many cases,
+and that helps keep inexperienced users out of trouble,
+as well as avoiding issues with moderately-trusted input (i18n) from
+third-parties.
+It unfortunately takes enough code to discourage its use for ad-hoc string
+interpolation,
+unless encapsulated in a
+      <a class="reference external" href="http://pythonhosted.org/flufl.i18n/">
+       convenience library
+      </a>
+      <a class="footnote-reference" href="#id45" id="id46">
+       [23]
+      </a>
+      such as
+      <tt class="docutils literal">
+       flufl.i18n
+      </tt>
+      .
+     </p>
+    </div>
+    <div class="section" id="pep-215-string-interpolation">
+     <h3>
+      <a class="reference external" href="../pep-0215/index.html">
+       PEP 215
+      </a>
+      - String Interpolation
+     </h3>
+     <p>
+      <a class="reference external" href="../pep-0215/index.html">
+       PEP 215
+      </a>
+      was a former proposal of which this one shares a lot in common.
+Apparently, the world was not ready for it at the time,
+but considering recent support in a number of other languages,
+its day may have come.
+     </p>
+     <p>
+      The large number of dollar sign (
+      <tt class="docutils literal">
+       $
+      </tt>
+      ) characters it included may have
+led it to resemble Python's arch-nemesis Perl,
+and likely contributed to the PEP's lack of acceptance.
+It was superseded by the following proposal.
+     </p>
+    </div>
+    <div class="section" id="str-format">
+     <h3>
+      <a class="toc-backref" href="#id80">
+       str.format()
+      </a>
+     </h3>
+     <p>
+      The
+      <tt class="docutils literal">
+       str.format()
+      </tt>
+      <a class="reference external" href="https://docs.python.org/3/library/string.html#format-string-syntax">
+       syntax of
+      </a>
+      <a class="footnote-reference" href="#id31" id="id47">
+       [16]
+      </a>
+      <a class="reference external" href="../pep-3101/index.html">
+       PEP 3101
+      </a>
+      is the most recent and modern of the
+existing options.
+It is also more powerful and usually easier to read than the others.
+It avoids many of the drawbacks and limits of the previous techniques.
+     </p>
+     <p>
+      However, due to its necessary function call and parameter passing,
+it runs from verbose to very verbose in various situations with
+string literals:
+     </p>
+     <pre class="literal-block">
+&gt;&gt;&gt; 'Hello, user: {user}, id: {id}, on host: {hostname}'.format(**params)
+'Hello, user: nobody, id: 9, on host: darkstar'
+
+# when using keyword args, var name shortening sometimes needed to fit :/
+&gt;&gt;&gt; 'Hello, user: {user}, id: {id}, on host: {host}'.format(user=user,
+                                                            id=id,
+                                                            host=hostname)
+'Hello, user: nobody, id: 9, on host: darkstar'
+</pre>
+    </div>
+    <div class="section" id="pep-498-literal-string-formatting">
+     <h3>
+      <a class="reference external" href="../pep-0498/index.html">
+       PEP 498
+      </a>
+      -- Literal String Formatting
+     </h3>
+     <p>
+      <a class="reference external" href="../pep-0498/index.html">
+       PEP 498
+      </a>
+      discusses and delves partially into implementation details of
+expression-strings,
+which it calls f-strings,
+the idea and syntax
+(with exception of the prefix letter)
+of which is identical to that discussed here.
+The resulting compile-time transformation however
+returns a string joined from parts at runtime,
+rather than an object.
+     </p>
+     <p>
+      It also, somewhat controversially to those first exposed to it,
+introduces the idea that these strings shall be augmented with support for
+arbitrary expressions,
+which is discussed further in the following sections.
+     </p>
+    </div>
+    <div class="section" id="pep-501-translation-ready-string-interpolation">
+     <h3>
+      <a class="reference external" href="../pep-0501/index.html">
+       PEP 501
+      </a>
+      -- Translation ready string interpolation
+     </h3>
+     <p>
+      The complimentary
+      <a class="reference external" href="../pep-0501/index.html">
+       PEP 501
+      </a>
+      brings internationalization into the discussion as a
+first-class concern, with its proposal of i-strings,
+      <tt class="docutils literal">
+       string.Template
+      </tt>
+      syntax integration compatible with ES6 (Javascript),
+deferred rendering,
+and a similar object return value.
+     </p>
+    </div>
+   </div>
+   <div class="section" id="implementations-in-other-languages">
+    <h2>
+     <a class="toc-backref" href="#id83">
+      Implementations in Other Languages
+     </a>
+    </h2>
+    <p>
+     String interpolation is now well supported by various programming languages
+used in multiple industries,
+and is converging into a standard of sorts.
+It is centered around
+     <tt class="docutils literal">
+      str.format()
+     </tt>
+     style syntax in minor variations,
+with the addition of arbitrary expressions to expand utility.
+    </p>
+    <p>
+     In the
+     <a class="reference internal" href="#motivation">
+      Motivation
+     </a>
+     section it was shown how convenient interpolation syntax
+existed in Bash, Perl, and Ruby.
+Let's take a look at their expression support.
+    </p>
+    <div class="section" id="bash">
+     <h3>
+      <a class="toc-backref" href="#id84">
+       Bash
+      </a>
+     </h3>
+     <p>
+      Bash supports a number of arbitrary, even recursive constructs inside strings:
+     </p>
+     <pre class="literal-block">
+&gt; echo "user: $USER, id: $((id + 6)) on host: $(echo is $(hostname))"
+user: nobody, id: 15 on host: is darkstar
+</pre>
+     <ul class="simple">
+      <li>
+       Explicit interpolation within double quotes.
+      </li>
+      <li>
+       Direct environment variable access supported.
+      </li>
+      <li>
+       Arbitrary expressions are supported.
+       <a class="footnote-reference" href="#id19" id="id4">
+        [4]
+       </a>
+      </li>
+      <li>
+       External process execution and output capture supported.
+       <a class="footnote-reference" href="#id20" id="id5">
+        [5]
+       </a>
+      </li>
+      <li>
+       Recursive expressions are supported.
+      </li>
+     </ul>
+    </div>
+    <div class="section" id="perl">
+     <h3>
+      <a class="toc-backref" href="#id85">
+       Perl
+      </a>
+     </h3>
+     <p>
+      Perl also has arbitrary expression constructs, perhaps not as well known:
+     </p>
+     <pre class="literal-block">
+say "I have @{[$id + 6]} guanacos.";                # lists
+say "I have ${\($id + 6)} guanacos.";               # scalars
+say "Hello { @names.join(', ') } how are you?";     # Perl 6 version
+</pre>
+     <ul class="simple">
+      <li>
+       Explicit interpolation within double quotes.
+      </li>
+      <li>
+       Arbitrary expressions are supported.
+       <a class="footnote-reference" href="#id21" id="id6">
+        [6]
+       </a>
+       <a class="footnote-reference" href="#id22" id="id7">
+        [7]
+       </a>
+      </li>
+     </ul>
+    </div>
+    <div class="section" id="ruby">
+     <h3>
+      <a class="toc-backref" href="#id86">
+       Ruby
+      </a>
+     </h3>
+     <p>
+      Ruby allows arbitrary expressions in its interpolated strings:
+     </p>
+     <pre class="literal-block">
+puts "One plus one is two: #{1 + 1}\n"
+</pre>
+     <ul class="simple">
+      <li>
+       Explicit interpolation within double quotes.
+      </li>
+      <li>
+       Arbitrary expressions are supported.
+       <a class="footnote-reference" href="#id23" id="id8">
+        [8]
+       </a>
+       <a class="footnote-reference" href="#id24" id="id9">
+        [9]
+       </a>
+      </li>
+      <li>
+       Possible to change delimiter chars with
+       <tt class="docutils literal">
+        %
+       </tt>
+       .
+      </li>
+      <li>
+       See the Reference Implementation(s) section for an implementation in Python.
+      </li>
+     </ul>
+    </div>
+    <div class="section" id="others">
+     <h3>
+      <a class="toc-backref" href="#id87">
+       Others
+      </a>
+     </h3>
+     <p>
+      Let's look at some less-similar modern languages recently implementing string
+interpolation.
+     </p>
+    </div>
+    <div class="section" id="scala">
+     <h3>
+      <a class="toc-backref" href="#id88">
+       Scala
+      </a>
+     </h3>
+     <p>
+      <a class="reference external" href="http://docs.scala-lang.org/overviews/core/string-interpolation.html">
+       Scala interpolation
+      </a>
+      <a class="footnote-reference" href="#id48" id="id49">
+       [24]
+      </a>
+      is directed through string prefixes.
+Each prefix has a different result:
+     </p>
+     <pre class="literal-block">
+s"Hello, $name ${1 + 1}"                    # arbitrary
+f"$name%s is $height%2.2f meters tall"      # printf-style
+raw"a\nb"                                   # raw, like r''
+</pre>
+     <p>
+      These prefixes may also be implemented by the user,
+by extending Scala's
+      <tt class="docutils literal">
+       StringContext
+      </tt>
+      class.
+     </p>
+     <ul class="simple">
+      <li>
+       Explicit interpolation within double quotes with literal prefix.
+      </li>
+      <li>
+       User implemented prefixes supported.
+      </li>
+      <li>
+       Arbitrary expressions are supported.
+      </li>
+     </ul>
+    </div>
+    <div class="section" id="es6-javascript">
+     <h3>
+      <a class="toc-backref" href="#id89">
+       ES6 (Javascript)
+      </a>
+     </h3>
+     <p>
+      Designers of
+      <a class="reference external" href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/template_strings">
+       Template strings
+      </a>
+      <a class="footnote-reference" href="#id50" id="id51">
+       [25]
+      </a>
+      faced the same issue as Python where single
+and double quotes were taken.
+Unlike Python however, "backticks" were not.
+They were chosen as part of the ECMAScript 2015 (ES6) standard:
+     </p>
+     <pre class="literal-block">
+console.log(`Fifteen is ${a + b} and\nnot ${2 * a + b}.`);
+</pre>
+     <p>
+      Custom prefixes are also supported by implementing a function the same name
+as the tag:
+     </p>
+     <pre class="literal-block">
+function tag(strings, ...values) {
+    console.log(strings.raw[0]);    // raw string is also available
+    return "Bazinga!";
+}
+tag`Hello ${ a + b } world ${ a * b}`;
+</pre>
+     <ul class="simple">
+      <li>
+       Explicit interpolation within backticks.
+      </li>
+      <li>
+       User implemented prefixes supported.
+      </li>
+      <li>
+       Arbitrary expressions are supported.
+      </li>
+     </ul>
+    </div>
+    <div class="section" id="c-version-6">
+     <h3>
+      <a class="toc-backref" href="#id90">
+       C#, Version 6
+      </a>
+     </h3>
+     <p>
+      C# has a useful new
+      <a class="reference external" href="https://msdn.microsoft.com/en-us/library/Dn961160.aspx">
+       interpolation feature
+      </a>
+      <a class="footnote-reference" href="#id52" id="id53">
+       [26]
+      </a>
+      as well,
+with some ability to
+      <a class="reference external" href="http://www.thomaslevesque.com/2015/02/24/customizing-string-interpolation-in-c-6/">
+       customize interpolation
+      </a>
+      <a class="footnote-reference" href="#id54" id="id55">
+       [27]
+      </a>
+      via the
+      <tt class="docutils literal">
+       IFormattable
+      </tt>
+      interface:
+     </p>
+     <pre class="literal-block">
+$"{person.Name, 20} is {person.Age:D3} year{(p.Age == 1 ? "" : "s")} old.";
+</pre>
+     <ul class="simple">
+      <li>
+       Explicit interpolation with double quotes and
+       <tt class="docutils literal">
+        $
+       </tt>
+       prefix.
+      </li>
+      <li>
+       Custom interpolations are available.
+      </li>
+      <li>
+       Arbitrary expressions are supported.
+      </li>
+     </ul>
+    </div>
+    <div class="section" id="apple-s-swift">
+     <h3>
+      <a class="toc-backref" href="#id91">
+       Apple's Swift
+      </a>
+     </h3>
+     <p>
+      Arbitrary
+      <a class="reference external" href="https://developer.apple.com/library/ios/documentation/Swift/Conceptual/Swift_Programming_Language/StringsAndCharacters.html#//apple_ref/doc/uid/TP40014097-CH7-ID292">
+       interpolation under Swift
+      </a>
+      <a class="footnote-reference" href="#id56" id="id57">
+       [28]
+      </a>
+      is available on all strings:
+     </p>
+     <pre class="literal-block">
+let multiplier = 3
+let message = "\(multiplier) times 2.5 is \(Double(multiplier) * 2.5)"
+// message is "3 times 2.5 is 7.5"
+</pre>
+     <ul class="simple">
+      <li>
+       Implicit interpolation with double quotes.
+      </li>
+      <li>
+       Arbitrary expressions are supported.
+      </li>
+      <li>
+       Cannot contain CR/LF.
+      </li>
+     </ul>
+    </div>
+    <div class="section" id="additional-examples">
+     <h3>
+      <a class="toc-backref" href="#id92">
+       Additional examples
+      </a>
+     </h3>
+     <p>
+      A number of additional examples may be
+      <a class="reference external" href="https://en.wikipedia.org/wiki/String_interpolation#Examples">
+       found at Wikipedia
+      </a>
+      <a class="footnote-reference" href="#id58" id="id59">
+       [29]
+      </a>
+      .
+     </p>
+     <p>
+      Now that background and imlementation history have been covered,
+let's continue on for a solution.
+     </p>
+    </div>
+   </div>
+   <div class="section" id="new-syntax">
+    <h2>
+     <a class="toc-backref" href="#id93">
+      New Syntax
+     </a>
+    </h2>
+    <p>
+     This should be an option of last resort,
+as every new syntax feature has a cost in terms of real-estate in a brain it
+inhabits.
+There is one alternative left on our list of possibilities,
+which follows.
+    </p>
+   </div>
+   <div class="section" id="new-string-prefix">
+    <h2>
+     <a class="toc-backref" href="#id94">
+      New String Prefix
+     </a>
+    </h2>
+    <p>
+     Given the history of string formatting in Python,
+backwards-compatibility,
+implementations in other languages,
+and the avoidance of new syntax unless necessary,
+an acceptable design is reached through elimination
+rather than unique insight.
+Therefore, we choose to explicitly mark interpolated string literals with a
+string prefix.
+    </p>
+    <p>
+     We also  choose an expression syntax that reuses and builds on the strongest of
+the existing choices,
+     <tt class="docutils literal">
+      str.format()
+     </tt>
+     to avoid further duplication.
+    </p>
+   </div>
+  </div>
+  <div class="section" id="specification">
+   <h1>
+    <a class="toc-backref" href="#id95">
+     Specification
+    </a>
+   </h1>
+   <p>
+    String literals with the prefix of
+    <tt class="docutils literal">
+     e
+    </tt>
+    shall be converted at compile-time to
+the construction of an
+    <tt class="docutils literal">
+     estr
+    </tt>
+    (perhaps
+    <tt class="docutils literal">
+     types.ExpressionString
+    </tt>
+    ?) object.
+Strings and values are parsed from the literal and passed as tuples to the
+constructor:
+   </p>
+   <pre class="literal-block">
+&gt;&gt;&gt; location = 'World'
+&gt;&gt;&gt; e'Hello, {location} !'
+
+# becomes
+# estr('Hello, {location} !',   # template
+        ('Hello, ', ' !'),      # string fragments
+        ('location',),          # expressions
+        ('World',),             # values
+      )
+</pre>
+   <p>
+    The object interpolates its result immediately at run-time:
+   </p>
+   <pre class="literal-block">
+'Hello, World !'
+</pre>
+   <div class="section" id="expressionstring-objects">
+    <h2>
+     <a class="toc-backref" href="#id96">
+      ExpressionString Objects
+     </a>
+    </h2>
+    <p>
+     The ExpressionString object supports both immediate and deferred rendering of
+its given template and parameters.
+It does this by immediately rendering its inputs to its internal string and
+     <tt class="docutils literal">
+      .rendered
+     </tt>
+     string member (still necessary?),
+useful in the majority of use cases.
+To allow for deferred rendering and caller-specified escaping,
+all inputs are saved for later inspection,
+with convenience methods available.
+    </p>
+    <p>
+     Notes:
+    </p>
+    <ul class="simple">
+     <li>
+      Inputs are saved to the object as
+      <tt class="docutils literal">
+       .template
+      </tt>
+      and
+      <tt class="docutils literal">
+       .context
+      </tt>
+      members
+for later use.
+     </li>
+     <li>
+      No explicit
+      <tt class="docutils literal">
+       str(estr)
+      </tt>
+      call is necessary to render the result,
+though doing so might be desired to free resources if significant.
+     </li>
+     <li>
+      Additional or deferred rendering is available through the
+      <tt class="docutils literal">
+       .render()
+      </tt>
+      method, which allows template and context to be overriden for flexibility.
+     </li>
+     <li>
+      Manual escaping of potentially dangerous input is available through the
+      <tt class="docutils literal">
+       .escape(escape_function)
+      </tt>
+      method,
+the rules of which may therefore be specified by the caller.
+The given function should both accept and return a single modified string.
+     </li>
+     <li>
+      A sample Python implementation can
+      <a class="reference external" href="https://bitbucket.org/mixmastamyk/docs/src/default/pep/estring_demo.py">
+       found at Bitbucket
+      </a>
+      <a class="footnote-reference" href="#id60" id="id61">
+       [30]
+      </a>
+      :
+     </li>
+    </ul>
+    <div class="section" id="inherits-from-str-type">
+     <h3>
+      <a class="toc-backref" href="#id97">
+       Inherits From
+       <tt class="docutils literal">
+        str
+       </tt>
+       Type
+      </a>
+     </h3>
+     <p>
+      Inheriting from the
+      <tt class="docutils literal">
+       str
+      </tt>
+      class is one of the techniques available to improve
+compatibility with code expecting a string object,
+as it will pass an
+      <tt class="docutils literal">
+       isinstance(obj, str)
+      </tt>
+      test.
+ExpressionString implements this and also renders its result into the "raw"
+string of its string superclass,
+providing compatibility with a majority of code.
+     </p>
+    </div>
+   </div>
+   <div class="section" id="interpolation-syntax">
+    <h2>
+     <a class="toc-backref" href="#id98">
+      Interpolation Syntax
+     </a>
+    </h2>
+    <p>
+     The strongest of the existing string formatting syntaxes is chosen,
+     <tt class="docutils literal">
+      str.format()
+     </tt>
+     as a base to build on.
+     <a class="footnote-reference" href="#id25" id="id10">
+      [10]
+     </a>
+     <a class="footnote-reference" href="#id26" id="id11">
+      [11]
+     </a>
+    </p>
+    <!-- -->
+    <ul>
+     <li>
+      <p class="first">
+       Additionally, single arbitrary expressions shall also be supported inside
+braces as an extension:
+      </p>
+      <pre class="literal-block">
+&gt;&gt;&gt; e'My age is {age + 1} years.'
+</pre>
+      <p>
+       See below for section on safety.
+      </p>
+     </li>
+     <li>
+      <p class="first">
+       Triple quoted strings with multiple lines shall be supported:
+      </p>
+      <pre class="literal-block">
+&gt;&gt;&gt; e'''Hello,
+        {location} !'''
+'Hello,\n            World !'
+</pre>
+     </li>
+     <li>
+      <p class="first">
+       Adjacent implicit concatenation shall be supported;
+interpolation does not
+       <a class="reference external" href="https://mail.python.org/pipermail/python-ideas/2015-July/034763.html">
+        not bleed into
+       </a>
+       <a class="footnote-reference" href="#id62" id="id63">
+        [31]
+       </a>
+       other strings:
+      </p>
+      <pre class="literal-block">
+&gt;&gt;&gt; 'Hello {1, 2, 3} ' e'{location} !'
+'Hello {1, 2, 3} World !'
+</pre>
+     </li>
+     <li>
+      <p class="first">
+       Additional implementation details,
+for example expression and error-handling,
+are specified in the compatible
+       <a class="reference external" href="../pep-0498/index.html">
+        PEP 498
+       </a>
+       .
+      </p>
+     </li>
+    </ul>
+   </div>
+   <div class="section" id="composition-with-other-prefixes">
+    <h2>
+     <a class="toc-backref" href="#id99">
+      Composition with Other Prefixes
+     </a>
+    </h2>
+    <ul class="simple">
+     <li>
+      Expression-strings apply to unicode objects only,
+therefore
+      <tt class="docutils literal">
+       u''
+      </tt>
+      is never needed.
+Should it be prevented?
+     </li>
+     <li>
+      Bytes objects are not included here and do not compose with e'' as they
+do not support
+      <tt class="docutils literal">
+       __format__()
+      </tt>
+      .
+     </li>
+     <li>
+      Complimentary to raw strings,
+backslash codes shall not be converted in the expression-string,
+when combined with
+      <tt class="docutils literal">
+       r''
+      </tt>
+      as
+      <tt class="docutils literal">
+       re''
+      </tt>
+      .
+     </li>
+    </ul>
+   </div>
+   <div class="section" id="examples">
+    <h2>
+     <a class="toc-backref" href="#id100">
+      Examples
+     </a>
+    </h2>
+    <p>
+     A more complicated example follows:
+    </p>
+    <pre class="literal-block">
+n = 5; # t0, t1 = … TODO
+a = e"Sliced {n} onions in {t1-t0:.3f} seconds."
+# returns the equvalent of
+estr("Sliced {n} onions in {t1-t0:.3f} seconds",        # template
+        ('Sliced ', ' onions in ',  ' seconds'),        # strings
+        ('n', 't1-t0:.3f'),                             # expressions
+        (5, 0.555555)                                   # values
+    )
+</pre>
+    <p>
+     With expressions only:
+    </p>
+    <pre class="literal-block">
+b = e"Three random numbers: {rand()}, {rand()}, {rand()}."
+# returns the equvalent of
+estr("Three random numbers: {rand():f}, {rand():f}, {rand():}.", # template
+        ('Three random numbers: ', ', ', ', ', '.'),    # strings
+        ('rand():f', 'rand():f', 'rand():f'),           # expressions
+        (rand(), rand(), rand())                        # values
+    )
+</pre>
+   </div>
+   <div class="section" id="safety">
+    <h2>
+     <a class="toc-backref" href="#id101">
+      Safety
+     </a>
+    </h2>
+    <p>
+     In this section we will describe the safety situation and precautions taken
+in support of expression-strings.
+    </p>
+    <ol class="arabic">
+     <li>
+      <p class="first">
+       Only string literals shall be considered here,
+not variables to be taken as input or passed around,
+making external attacks difficult to accomplish.
+      </p>
+      <blockquote>
+       <ul class="simple">
+        <li>
+         <tt class="docutils literal">
+          str.format()
+         </tt>
+         <a class="reference external" href="https://mail.python.org/pipermail/python-ideas/2015-July/034729.html">
+          already handles
+         </a>
+         <a class="footnote-reference" href="#id64" id="id65">
+          [32]
+         </a>
+         this use-case.
+        </li>
+        <li>
+         Direct instantiation of the ExpressionString object with non-literal input
+shall not be allowed.  (Practicality?)
+        </li>
+       </ul>
+      </blockquote>
+     </li>
+     <li>
+      <p class="first">
+       Neither
+       <tt class="docutils literal">
+        locals()
+       </tt>
+       nor
+       <tt class="docutils literal">
+        globals()
+       </tt>
+       are necessary nor used during the
+transformation,
+avoiding leakage of information.
+      </p>
+     </li>
+     <li>
+      <p class="first">
+       To eliminate complexity as well as
+       <tt class="docutils literal">
+        RuntimeError
+       </tt>
+       (s) due to recursion
+depth, recursive interpolation is not supported.
+      </p>
+     </li>
+     <li>
+      <p class="first">
+       Restricted characters or expression classes?, such as
+       <tt class="docutils literal">
+        =
+       </tt>
+       for assignment.
+      </p>
+     </li>
+    </ol>
+    <p>
+     However,
+mistakes or malicious code could be missed inside string literals.
+Though that can be said of code in general,
+that these expressions are inside strings means they are a bit more likely
+to be obscured.
+    </p>
+    <div class="section" id="mitigation-via-tools">
+     <h3>
+      <a class="toc-backref" href="#id102">
+       Mitigation via tools
+      </a>
+     </h3>
+     <p>
+      The idea is that tools or linters such as pyflakes, pylint, or Pycharm,
+could check inside strings for constructs that exceed project policy.
+As this is a common task with languages these days,
+tools won't have to implement this feature solely for Python,
+significantly shortening time to implementation.
+     </p>
+     <p>
+      Additionally the Python interpreter could check(?) and warn with appropriate
+command-line parameters passed.
+     </p>
+    </div>
+   </div>
+   <div class="section" id="backwards-compatibility">
+    <h2>
+     <a class="toc-backref" href="#id103">
+      Backwards Compatibility
+     </a>
+    </h2>
+    <p>
+     By using existing syntax and avoiding use of current or historical features,
+expression-strings (and any associated sub-features),
+were designed so as to not interfere with existing code and is not expected
+to cause any issues.
+    </p>
+   </div>
+   <div class="section" id="postponed-ideas">
+    <h2>
+     <a class="toc-backref" href="#id104">
+      Postponed Ideas
+     </a>
+    </h2>
+    <div class="section" id="internationalization">
+     <h3>
+      <a class="toc-backref" href="#id105">
+       Internationalization
+      </a>
+     </h3>
+     <p>
+      Though it was highly desired to integrate internationalization support,
+(see
+      <a class="reference external" href="../pep-0501/index.html">
+       PEP 501
+      </a>
+      ),
+the finer details diverge at almost every point,
+making a common solution unlikely:
+      <a class="footnote-reference" href="#id30" id="id12">
+       [15]
+      </a>
+     </p>
+     <ul class="simple">
+      <li>
+       Use-cases
+      </li>
+      <li>
+       Compile and run-time tasks
+      </li>
+      <li>
+       Interpolation Syntax
+      </li>
+      <li>
+       Intended audience
+      </li>
+      <li>
+       Security policy
+      </li>
+     </ul>
+     <p>
+      Rather than try to fit a "square peg in a round hole,"
+this PEP attempts to allow internationalization to be supported in the future
+by not preventing it.
+In this proposal,
+expression-string inputs are saved for inspection and re-rendering at a later
+time,
+allowing for their use by an external library of any sort.
+     </p>
+    </div>
+   </div>
+   <div class="section" id="rejected-ideas">
+    <h2>
+     <a class="toc-backref" href="#id106">
+      Rejected Ideas
+     </a>
+    </h2>
+    <div class="section" id="restricting-syntax-to-str-format-only">
+     <h3>
+      <a class="toc-backref" href="#id107">
+       Restricting Syntax to
+       <tt class="docutils literal">
+        str.format()
+       </tt>
+       Only
+      </a>
+     </h3>
+     <p>
+      This was deemed not enough of a solution to the problem.
+It can be seen in the
+      <a class="reference internal" href="#implementations-in-other-languages">
+       Implementations in Other Languages
+      </a>
+      section that the
+developer community at large tends to agree.
+     </p>
+     <p>
+      The common
+      <a class="reference external" href="https://mail.python.org/pipermail/python-ideas/2015-August/034913.html">
+       arguments against
+      </a>
+      <a class="footnote-reference" href="#id66" id="id67">
+       [33]
+      </a>
+      arbitrary expresssions were:
+     </p>
+     <ol class="arabic simple">
+      <li>
+       YAGNI, "You ain't gonna need it."
+      </li>
+      <li>
+       The change is not congruent with historical Python conservatism.
+      </li>
+      <li>
+       Postpone - can implement in a future version if need is demonstrated.
+      </li>
+     </ol>
+    </div>
+    <div class="section" id="additional-custom-string-prefixes">
+     <h3>
+      <a class="toc-backref" href="#id108">
+       Additional/Custom String-Prefixes
+      </a>
+     </h3>
+     <p>
+      As seen in the
+      <a class="reference internal" href="#implementations-in-other-languages">
+       Implementations in Other Languages
+      </a>
+      section,
+many modern languages have extensible string prefixes with a common interface.
+This could be a way to generalize and reduce lines of code in common
+situations.
+Examples are found in ES6 (Javascript), Scala, Nim, and C#
+(to a lesser extent).
+This was rejected by the BDFL.
+      <a class="footnote-reference" href="#id29" id="id13">
+       [14]
+      </a>
+     </p>
+    </div>
+    <div class="section" id="automated-escaping-of-input-variables">
+     <h3>
+      <a class="toc-backref" href="#id109">
+       Automated Escaping of Input Variables
+      </a>
+     </h3>
+     <p>
+      While helpful in some cases,
+this was thought to create too much uncertainty of when and where string
+expressions could be used safely or not.
+The concept was also difficult to describe to others.
+      <a class="footnote-reference" href="#id27" id="id14">
+       [12]
+      </a>
+     </p>
+     <p>
+      Always consider expression-string variables to be unescaped,
+unless the developer has explicitly escaped them.
+     </p>
+    </div>
+    <div class="section" id="environment-access-and-command-substitution">
+     <h3>
+      <a class="toc-backref" href="#id110">
+       Environment Access and Command Substitution
+      </a>
+     </h3>
+     <p>
+      For systems programming and shell-script replacements,
+it would be useful to handle environment variables and capture output of
+commands directly in an expression string.
+This was rejected as not important enough,
+and looking too much like bash/perl,
+which could encourage bad habits.
+      <a class="footnote-reference" href="#id28" id="id15">
+       [13]
+      </a>
+     </p>
+    </div>
+   </div>
+  </div>
+  <div class="section" id="reference-implementation-s">
+   <h1>
+    <a class="toc-backref" href="#id111">
+     Reference Implementation(s)
+    </a>
+   </h1>
+   <p>
+    An expression-string implementation is currently attached to
+    <a class="reference external" href="../pep-0498/index.html">
+     PEP 498
+    </a>
+    ,
+under the
+    <tt class="docutils literal">
+     f''
+    </tt>
+    prefix,
+and may be available in nightly builds.
+   </p>
+   <p>
+    A Python implementation of Ruby interpolation
+    <a class="reference external" href="https://github.com/syrusakbary/interpy">
+     is also available
+    </a>
+    <a class="footnote-reference" href="#id68" id="id69">
+     [34]
+    </a>
+    ,
+which is similar to this proposal.
+It uses the codecs module to do its work:
+   </p>
+   <pre class="literal-block">
+＞ pip install interpy
+
+# coding: interpy
+location = 'World'
+print("Hello #{location}.")
+</pre>
+  </div>
+  <div class="section" id="acknowledgements">
+   <h1>
+    <a class="toc-backref" href="#id112">
+     Acknowledgements
+    </a>
+   </h1>
+   <ul class="simple">
+    <li>
+     Eric V. Smith for providing invaluable implementation work and design
+opinions, helping to focus this PEP.
+    </li>
+    <li>
+     Others on the python-ideas mailing list for rejecting the craziest of ideas,
+also helping to achieve focus.
+    </li>
+   </ul>
+  </div>
+  <div class="section" id="references">
+   <h1>
+    <a class="toc-backref" href="#id113">
+     References
+    </a>
+   </h1>
+   <table class="docutils footnote" frame="void" id="id16" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id1">
+        [1]
+       </a>
+      </td>
+      <td>
+       <p class="first">
+        Briefer String Format
+       </p>
+       <p class="last">
+        (
+        <a class="reference external" href="https://mail.python.org/pipermail/python-ideas/2015-July/034659.html">
+         https://mail.python.org/pipermail/python-ideas/2015-July/034659.html
+        </a>
+        )
+       </p>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id17" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id2">
+        [2]
+       </a>
+      </td>
+      <td>
+       <p class="first">
+        Briefer String Format
+       </p>
+       <p class="last">
+        (
+        <a class="reference external" href="https://mail.python.org/pipermail/python-ideas/2015-July/034669.html">
+         https://mail.python.org/pipermail/python-ideas/2015-July/034669.html
+        </a>
+        )
+       </p>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id18" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id3">
+        [3]
+       </a>
+      </td>
+      <td>
+       <p class="first">
+        Briefer String Format
+       </p>
+       <p class="last">
+        (
+        <a class="reference external" href="https://mail.python.org/pipermail/python-ideas/2015-July/034701.html">
+         https://mail.python.org/pipermail/python-ideas/2015-July/034701.html
+        </a>
+        )
+       </p>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id19" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id4">
+        [4]
+       </a>
+      </td>
+      <td>
+       <p class="first">
+        Bash Docs
+       </p>
+       <p class="last">
+        (
+        <a class="reference external" href="http://www.tldp.org/LDP/abs/html/arithexp.html">
+         http://www.tldp.org/LDP/abs/html/arithexp.html
+        </a>
+        )
+       </p>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id20" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id5">
+        [5]
+       </a>
+      </td>
+      <td>
+       <p class="first">
+        Bash Docs
+       </p>
+       <p class="last">
+        (
+        <a class="reference external" href="http://www.tldp.org/LDP/abs/html/commandsub.html">
+         http://www.tldp.org/LDP/abs/html/commandsub.html
+        </a>
+        )
+       </p>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id21" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id6">
+        [6]
+       </a>
+      </td>
+      <td>
+       <p class="first">
+        Perl Cookbook
+       </p>
+       <p class="last">
+        (
+        <a class="reference external" href="http://docstore.mik.ua/orelly/perl/cookbook/ch01_11.htm">
+         http://docstore.mik.ua/orelly/perl/cookbook/ch01_11.htm
+        </a>
+        )
+       </p>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id22" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id7">
+        [7]
+       </a>
+      </td>
+      <td>
+       <p class="first">
+        Perl Docs
+       </p>
+       <p class="last">
+        (
+        <a class="reference external" href="http://perl6maven.com/perl6-scalar-array-and-hash-interpolation">
+         http://perl6maven.com/perl6-scalar-array-and-hash-interpolation
+        </a>
+        )
+       </p>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id23" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id8">
+        [8]
+       </a>
+      </td>
+      <td>
+       <p class="first">
+        Ruby Docs
+       </p>
+       <p class="last">
+        (
+        <a class="reference external" href="http://ruby-doc.org/core-2.1.1/doc/syntax/literals_rdoc.html#label-Strings">
+         http://ruby-doc.org/core-2.1.1/doc/syntax/literals_rdoc.html#label-Strings
+        </a>
+        )
+       </p>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id24" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id9">
+        [9]
+       </a>
+      </td>
+      <td>
+       <p class="first">
+        Ruby Docs
+       </p>
+       <p class="last">
+        (
+        <a class="reference external" href="https://en.wikibooks.org/wiki/Ruby_Programming/Syntax/Literals#Interpolation">
+         https://en.wikibooks.org/wiki/Ruby_Programming/Syntax/Literals#Interpolation
+        </a>
+        )
+       </p>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id25" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id10">
+        [10]
+       </a>
+      </td>
+      <td>
+       <p class="first">
+        Python Str.Format Syntax
+       </p>
+       <p class="last">
+        (
+        <a class="reference external" href="https://docs.python.org/3/library/string.html#format-string-syntax">
+         https://docs.python.org/3/library/string.html#format-string-syntax
+        </a>
+        )
+       </p>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id26" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id11">
+        [11]
+       </a>
+      </td>
+      <td>
+       <p class="first">
+        Python Format-Spec Mini Language
+       </p>
+       <p class="last">
+        (
+        <a class="reference external" href="https://docs.python.org/3/library/string.html#format-specification-mini-language">
+         https://docs.python.org/3/library/string.html#format-specification-mini-language
+        </a>
+        )
+       </p>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id27" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id14">
+        [12]
+       </a>
+      </td>
+      <td>
+       <p class="first">
+        Escaping of Input Variables
+       </p>
+       <p class="last">
+        (
+        <a class="reference external" href="https://mail.python.org/pipermail/python-ideas/2015-August/035532.html">
+         https://mail.python.org/pipermail/python-ideas/2015-August/035532.html
+        </a>
+        )
+       </p>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id28" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id15">
+        [13]
+       </a>
+      </td>
+      <td>
+       <p class="first">
+        Environment Access and Command Substitution
+       </p>
+       <p class="last">
+        (
+        <a class="reference external" href="https://mail.python.org/pipermail/python-ideas/2015-August/035554.html">
+         https://mail.python.org/pipermail/python-ideas/2015-August/035554.html
+        </a>
+        )
+       </p>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id29" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id13">
+        [14]
+       </a>
+      </td>
+      <td>
+       <p class="first">
+        Extensible String Prefixes
+       </p>
+       <p class="last">
+        (
+        <a class="reference external" href="https://mail.python.org/pipermail/python-ideas/2015-August/035336.html">
+         https://mail.python.org/pipermail/python-ideas/2015-August/035336.html
+        </a>
+        )
+       </p>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id30" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id12">
+        [15]
+       </a>
+      </td>
+      <td>
+       <p class="first">
+        Literal String Formatting
+       </p>
+       <p class="last">
+        (
+        <a class="reference external" href="https://mail.python.org/pipermail/python-dev/2015-August/141289.html">
+         https://mail.python.org/pipermail/python-dev/2015-August/141289.html
+        </a>
+        )
+       </p>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id31" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       [16]
+      </td>
+      <td>
+       <em>
+        (
+        <a class="fn-backref" href="#id32">
+         1
+        </a>
+        ,
+        <a class="fn-backref" href="#id47">
+         2
+        </a>
+        )
+       </em>
+       <a class="reference external" href="https://docs.python.org/3/library/string.html#format-string-syntax">
+        https://docs.python.org/3/library/string.html#format-string-syntax
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id33" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id34">
+        [17]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="reference_needed.html">
+        reference_needed
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id35" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id36">
+        [18]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="https://mail.python.org/pipermail/python-dev/2015-August/141147.html">
+        https://mail.python.org/pipermail/python-dev/2015-August/141147.html
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id37" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id38">
+        [19]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="https://mail.python.org/pipermail/python-ideas/2007-January/000054.html">
+        https://mail.python.org/pipermail/python-ideas/2007-January/000054.html
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id39" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id40">
+        [20]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#printf-style-string-formatting">
+        https://docs.python.org/3/library/stdtypes.html#printf-style-string-formatting
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id41" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id42">
+        [21]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="https://docs.python.org/3/library/string.html#template-strings">
+        https://docs.python.org/3/library/string.html#template-strings
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id43" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id44">
+        [22]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="https://docs.python.org/3/library/string.html#string.Template.safe_substitute">
+        https://docs.python.org/3/library/string.html#string.Template.safe_substitute
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id45" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id46">
+        [23]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="http://pythonhosted.org/flufl.i18n/">
+        http://pythonhosted.org/flufl.i18n/
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id48" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id49">
+        [24]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="http://docs.scala-lang.org/overviews/core/string-interpolation.html">
+        http://docs.scala-lang.org/overviews/core/string-interpolation.html
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id50" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id51">
+        [25]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/template_strings">
+        https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/template_strings
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id52" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id53">
+        [26]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="https://msdn.microsoft.com/en-us/library/Dn961160.aspx">
+        https://msdn.microsoft.com/en-us/library/Dn961160.aspx
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id54" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id55">
+        [27]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="http://www.thomaslevesque.com/2015/02/24/customizing-string-interpolation-in-c-6/">
+        http://www.thomaslevesque.com/2015/02/24/customizing-string-interpolation-in-c-6/
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id56" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id57">
+        [28]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="https://developer.apple.com/library/ios/documentation/Swift/Conceptual/Swift_Programming_Language/StringsAndCharacters.html#//apple_ref/doc/uid/TP40014097-CH7-ID292">
+        https://developer.apple.com/library/ios/documentation/Swift/Conceptual/Swift_Programming_Language/StringsAndCharacters.html#//apple_ref/doc/uid/TP40014097-CH7-ID292
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id58" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id59">
+        [29]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="https://en.wikipedia.org/wiki/String_interpolation#Examples">
+        https://en.wikipedia.org/wiki/String_interpolation#Examples
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id60" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id61">
+        [30]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="https://bitbucket.org/mixmastamyk/docs/src/default/pep/estring_demo.py">
+        https://bitbucket.org/mixmastamyk/docs/src/default/pep/estring_demo.py
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id62" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id63">
+        [31]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="https://mail.python.org/pipermail/python-ideas/2015-July/034763.html">
+        https://mail.python.org/pipermail/python-ideas/2015-July/034763.html
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id64" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id65">
+        [32]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="https://mail.python.org/pipermail/python-ideas/2015-July/034729.html">
+        https://mail.python.org/pipermail/python-ideas/2015-July/034729.html
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id66" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id67">
+        [33]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="https://mail.python.org/pipermail/python-ideas/2015-August/034913.html">
+        https://mail.python.org/pipermail/python-ideas/2015-August/034913.html
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id68" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id69">
+        [34]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="https://github.com/syrusakbary/interpy">
+        https://github.com/syrusakbary/interpy
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+  </div>
+  <div class="section" id="copyright">
+   <h1>
+    <a class="toc-backref" href="#id114">
+     Copyright
+    </a>
+   </h1>
+   <p>
+    This document has been placed in the public domain.
+   </p>
+   <!-- Local Variables:
+mode: indented-text
+indent-tabs-mode: nil
+sentence-end-double-space: t
+fill-column: 70
+coding: utf-8
+End: -->
+  </div>
+ </body>
+
+<!-- Mirrored from www.python.org/dev/peps/pep-0502/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 03 Sep 2015 04:34:05 GMT -->
+</html>Source: <a href="https://hg.python.org/peps/file/tip/pep-0502.txt">https://hg.python.org/peps/file/tip/pep-0502.txt</a>
+
+    </article>
+
+
+                </section>
+
+                
+
+
+<aside class="left-sidebar" role="secondary">
+
+    
+
+
+
+
+
+
+    
+
+
+
+
+
+        <div class="twitter-widget sidebar-widget">
+        <a class="twitter-timeline" data-dnt="true" href="https://twitter.com/ThePSF" data-widget-id="434113224703610882">Tweets by @ThePSF</a>
+        <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+    </div>
+
+    <div class="psf-sidebar-widget sidebar-widget">
+        <h3 class="widget-title">The PSF</h3>
+<p>The Python Software Foundation is the organization behind Python. Become a member of the PSF and help advance the software and our mission. </p>
+
+    </div>
+
+</aside>
+
+
+
+                
+                
+
+
+            </div><!-- end .container -->
+        </div><!-- end #content .content-wrapper -->
+
+        <!-- Footer and social media list -->
+        <footer id="site-map" class="main-footer" role="contentinfo">
+            <div class="main-footer-links">
+                <div class="container">
+
+                    
+                    <a id="back-to-top-1" class="jump-link" href="#python-network"><span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> Back to Top</a>
+
+                    
+
+<ul class="sitemap navigation menu do-not-print" role="tree" id="container">
+    
+    <li class="tier-1 element-1">
+        <a href="https://www.python.org/about/" >About</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/apps/" title="">Applications</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/quotes/" title="">Quotes</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/gettingstarted/" title="">Getting Started</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/help/" title="">Help</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-2">
+        <a href="https://www.python.org/downloads/" >Downloads</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/downloads/" title="">All releases</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/downloads/source/" title="">Source code</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/downloads/windows/" title="">Windows</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/downloads/mac-osx/" title="">Mac OS X</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/download/other/" title="">Other Platforms</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://docs.python.org/3/license.html" title="">License</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/download/alternatives" title="">Alternative Implementations</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-3">
+        <a href="https://www.python.org/doc/" >Documentation</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/doc/" title="">Docs</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/doc/av" title="">Audio/Visual Talks</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://wiki.python.org/moin/BeginnersGuide" title="">Beginner&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://docs.python.org/faq/" title="">FAQ</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="http://wiki.python.org/moin/Languages" title="">Non-English Docs</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="../index.html" title="">PEP Index</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://wiki.python.org/moin/PythonBooks" title="">Python Books</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-4">
+        <a href="https://www.python.org/community/" >Community</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/community/diversity/" title="">Diversity</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/community/irc/" title="">IRC</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/community/lists/" title="">Mailing Lists</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/workshops/" title="">Python Conferences</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/community/sigs/" title="">Special Interest Groups</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://wiki.python.org/moin/" title="">Python Wiki</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/community/logos/" title="">Python Logo</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://www.python.org/community/merchandise/" title="">Merchandise</a></li>
+    
+        <li class="tier-2 element-9" role="treeitem"><a href="https://www.python.org/community/awards" title="">Community Awards</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-5">
+        <a href="https://www.python.org/about/success/" title="success-stories">Success Stories</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/success/#arts" title="">Arts</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/success/#business" title="">Business</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/success/#education" title="">Education</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/success/#engineering" title="">Engineering</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/about/success/#government" title="">Government</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://www.python.org/about/success/#scientific" title="">Scientific</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/about/success/#software-development" title="">Software Development</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-6">
+        <a href="https://www.python.org/blogs/" title="News from around the Python world">News</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/blogs/" title="Python Insider Blog Posts">Python News</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://planetpython.org/" title="Planet Python">Community News</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="http://pyfound.blogspot.com/" title="PSF Blog">PSF News</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pycon.blogspot.com/" title="PyCon Blog">PyCon News</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-7">
+        <a href="https://www.python.org/events/" >Events</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/events/python-events/" title="">Python Events</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/events/python-user-group/" title="">User Group Events</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/events/python-events/past/" title="">Python Events Archive</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/events/python-user-group/past/" title="">User Group Events Archive</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://wiki.python.org/moin/PythonEventsCalendar#Submitting_an_Event" title="">Submit an Event</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-8">
+        <a href="https://www.python.org/dev/" >Contributing</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="http://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://bugs.python.org/" title="">Issue Tracker</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://mail.python.org/mailman/listinfo/python-dev" title="">python-dev list</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pythonmentors.com/" title="">Core Mentorship</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+</ul>
+
+
+                    <a id="back-to-top-2" class="jump-link" href="#python-network"><span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> Back to Top</a>
+                    
+
+                </div><!-- end .container -->
+            </div> <!-- end .main-footer-links -->
+
+            <div class="site-base">
+                <div class="container">
+                    
+                    <ul class="footer-links navigation menu do-not-print" role="tree">
+                        <li class="tier-1 element-1"><a href="https://www.python.org/about/help/">Help &amp; <span class="say-no-more">General</span> Contact</a></li>
+                        <li class="tier-1 element-2"><a href="https://www.python.org/community/diversity/">Diversity <span class="say-no-more">Initiatives</span></a></li>
+                        <li class="tier-1 element-3"><a href="https://github.com/python/pythondotorg/issues">Submit Website Bug</a></li>
+                        <!--<li class="tier-1 element-3"><a href="#"><span class="say-no-more">Website</span> Colophon</a></li>-->
+                    </ul>
+
+                    <div class="copyright">
+                        <p><small>
+                            <span class="pre">Copyright &copy;2001-2015.</span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/psf-landing/">Python Software Foundation</a></span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/about/legal/">Legal Statements</a></span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/privacy/">Privacy Policy</a></span>
+                        </small></p>
+                    </div>
+
+                </div><!-- end .container -->
+            </div><!-- end .site-base -->
+
+        </footer>
+
+    </div><!-- end #touchnav-wrapper -->
+
+    
+    <script src="../../../../ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="../../../static/js/libs/jquery-1.8.2.min.js"><\/script>')</script>
+
+    <script src="../../../static/js/libs/masonry.pkgd.min.js"></script>
+
+    <script type="text/javascript" src="../../../static/js/main-min.js" charset="utf-8"></script>
+    
+
+    <!--[if lte IE 7]>
+    <script type="text/javascript" src="/static/js/plugins/IE8-min.js" charset="utf-8"></script>
+    
+    
+    <![endif]-->
+
+    <!--[if lte IE 8]>
+    <script type="text/javascript" src="/static/js/plugins/getComputedStyle-min.js" charset="utf-8"></script>
+    
+    
+    <![endif]-->
+
+    
+
+    
+    
+
+</body>
+</html>

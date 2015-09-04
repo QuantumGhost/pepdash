@@ -1,0 +1,1739 @@
+<!doctype html>
+<!--[if lt IE 7]>   <html class="no-js ie6 lt-ie7 lt-ie8 lt-ie9">   <![endif]-->
+<!--[if IE 7]>      <html class="no-js ie7 lt-ie8 lt-ie9">          <![endif]-->
+<!--[if IE 8]>      <html class="no-js ie8 lt-ie9">                 <![endif]-->
+<!--[if gt IE 8]><!--><html class="no-js" lang="en" dir="ltr">  <!--<![endif]-->
+
+
+<!-- Mirrored from www.python.org/dev/peps/pep-0457/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 03 Sep 2015 04:33:21 GMT -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <link rel="prefetch" href="../../../../ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js">
+
+    <meta name="application-name" content="Python.org">
+    <meta name="msapplication-tooltip" content="The official home of the Python Programming Language">
+    <meta name="apple-mobile-web-app-title" content="Python.org">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="format-detection" content="telephone=no">
+    <meta http-equiv="cleartype" content="on">
+    <meta http-equiv="imagetoolbar" content="false">
+
+    <script src="../../../static/js/libs/modernizr.js"></script>
+
+    <link href="../../../static/stylesheets/style.css" rel="stylesheet" type="text/css" title="default" />
+    <link href="../../../static/stylesheets/mq.css" rel="stylesheet" type="text/css" media="not print, braille, embossed, speech, tty" />
+    
+
+    <!--[if (lte IE 8)&(!IEMobile)]>
+    <link href="/static/stylesheets/no-mq.css" rel="stylesheet" type="text/css" media="screen" />
+    
+    
+    <![endif]-->
+
+    
+    <link rel="icon" type="image/x-icon" href="https://www.python.org/static/favicon.ico">
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="../../../static/apple-touch-icon-144x144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="../../../static/apple-touch-icon-114x114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="../../../static/apple-touch-icon-72x72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="../../../static/apple-touch-icon-precomposed.png">
+    <link rel="apple-touch-icon" href="../../../static/apple-touch-icon-precomposed.png">
+
+    
+    <meta name="msapplication-TileImage" content="/static/metro-icon-144x144-precomposed.png"><!-- white shape -->
+    <meta name="msapplication-TileColor" content="#3673a5"><!-- python blue -->
+    <meta name="msapplication-navbutton-color" content="#3673a5">
+
+    <meta property="og:site_name" content="Python.org">
+    <meta property="og:type" content="website">
+
+    <title>PEP 0457 -- Syntax For Positional-Only Parameters | Python.org</title>
+    <meta property="og:title" content="Welcome to Python.org">
+
+    
+    <meta name="description" content="The official home of the Python Programming Language">
+    <meta name="og:description" content="The official home of the Python Programming Language">
+    <meta name="keywords" content="Python programming language object oriented web free open source software license documentation download community">
+    <meta property="og:tag" content="Python programming language object oriented web free open source software license documentation download community">
+    <meta property="og:published_time" content="">
+    <meta property="og:modified_time" content="">
+    <meta property="og:author" content="">
+    <meta property="og:section" content=""> 
+    <meta property="og:url" content="">
+    <meta property="og:image" content="">
+    <meta property="og:video" content="">
+
+    <link rel="author" href="https://www.python.org/static/humans.txt">
+
+    
+
+    
+    <script type="application/ld+json">
+     {
+       "@context": "http://schema.org",
+       "@type": "WebSite",
+       "url": "https://www.python.org/",
+       "potentialAction": {
+         "@type": "SearchAction",
+         "target": "https://www.python.org/search/?q={search_term_string}",
+         "query-input": "required name=search_term_string"
+       }
+     }
+    </script>
+
+    
+    <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-39055973-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+    </script>
+    
+</head>
+
+<body class="python pages pep-page">
+
+    <div id="touchnav-wrapper">
+
+        <div id="nojs" class="do-not-print">
+            <p><strong>Notice:</strong> While Javascript is not essential for this website, your interaction with the content will be limited. Please turn Javascript on for the full experience. </p>
+        </div>
+
+        <!--[if lt IE 8]>
+        <div id="oldie-warning" class="do-not-print">
+            <p><strong>Notice:</strong> Your browser is <em>ancient</em> and <a href="http://www.ie6countdown.com/">Microsoft agrees</a>. <a href="http://browsehappy.com/">Upgrade to a different browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to experience a better web.</p>
+        </div>
+        <![endif]-->
+
+        <!-- Sister Site Links -->
+        <div id="top" class="top-bar do-not-print">
+
+            <nav class="meta-navigation container" role="navigation">
+
+                
+                <div class="skip-link screen-reader-text">
+                    <a href="#content" title="Skip to content">Skip to content</a>
+                </div>
+
+                
+                <a id="close-python-network" class="jump-link" href="#python-network" aria-hidden="true">
+                    <span aria-hidden="true" class="icon-arrow-down"><span>&#9660;</span></span> Close
+                </a>
+
+                
+
+<ul class="menu" role="tree">
+    
+    <li class="python-meta ">
+        <a href="https://www.python.org/" title="The Python Programming Language" >Python</a>
+    </li>
+    
+    <li class="psf-meta ">
+        <a href="https://www.python.org/psf-landing/" title="The Python Software Foundation" >PSF</a>
+    </li>
+    
+    <li class="docs-meta ">
+        <a href="https://docs.python.org/" title="Python Documentation" >Docs</a>
+    </li>
+    
+    <li class="pypi-meta ">
+        <a href="https://pypi.python.org/" title="Python Package Index" >PyPI</a>
+    </li>
+    
+    <li class="jobs-meta ">
+        <a href="https://www.python.org/jobs/" title="Python Job Board" >Jobs</a>
+    </li>
+    
+    <li class="shop-meta ">
+        <a href="https://www.python.org/community/" title="Python Community" >Community</a>
+    </li>
+    
+</ul>
+
+
+                <a id="python-network" class="jump-link" href="#top" aria-hidden="true">
+                    <span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> The Python Network
+                </a>
+
+            </nav>
+
+        </div>
+
+        <!-- Header elements -->
+        <header class="main-header" role="banner">
+            <div class="container">
+
+                <h1 class="site-headline">
+                    <a href="https://www.python.org/"><img class="python-logo" src="../../../static/img/python-logo.png" alt="python&trade;"></a>
+                </h1>
+
+                <div class="options-bar do-not-print">
+
+                    
+                    <a id="site-map-link" class="jump-to-menu" href="#site-map"><span class="menu-icon">&equiv;</span> Menu</a><form class="search-the-site" action="https://www.python.org/search/" method="get">
+                        <fieldset title="Search Python.org">
+
+                            <span aria-hidden="true" class="icon-search"></span>
+
+                            <label class="screen-reader-text" for="id-search-field">Search This Site</label>
+                            <input id="id-search-field" name="q" type="search" role="textbox" class="search-field" placeholder="Search" value="" tabindex="1">
+
+                            <button type="submit" name="submit" id="submit" class="search-button" title="Submit this Search" tabindex="3">
+                                GO
+                            </button>
+
+                            
+                            <!--[if IE]><input type="text" style="display: none;" disabled="disabled" size="1" tabindex="4"><![endif]-->
+
+                        </fieldset>
+                    </form><span class="breaker"></span><div class="adjust-font-size" aria-hidden="true">
+                        <ul class="navigation menu" aria-label="Adjust Text Size on Page">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                <a href="#" class="action-trigger"><strong><small>A</small> A</strong></a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a class="text-shrink" title="Make Text Smaller" href="javascript:;">Smaller</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a class="text-grow" title="Make Text Larger" href="javascript:;">Larger</a></li>
+                                    <li class="tier-2 element-3" role="treeitem"><a class="text-reset" title="Reset any font size changes I have made" href="javascript:;">Reset</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div><div class="winkwink-nudgenudge">
+                        <ul class="navigation menu" aria-label="Social Media Navigation">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                <a href="#" class="action-trigger">Socialize</a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a href="http://plus.google.com/+Python"><span aria-hidden="true" class="icon-google-plus"></span>Google+</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a href="http://www.facebook.com/pythonlang?fref=ts"><span aria-hidden="true" class="icon-facebook"></span>Facebook</a></li>
+                                    <li class="tier-2 element-3" role="treeitem"><a href="http://twitter.com/ThePSF"><span aria-hidden="true" class="icon-twitter"></span>Twitter</a></li>
+                                    <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/irc/"><span aria-hidden="true" class="icon-freenode"></span>Chat on IRC</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div><div class="account-signin">
+                        <ul class="navigation menu" aria-label="Social Media Navigation">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                
+                                <a href="https://www.python.org/accounts/login/" title="Sign Up or Sign In to Python.org">Sign In</a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/accounts/signup/">Sign Up / Register</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/accounts/login/">Sign In</a></li>
+                                </ul>
+                                
+                            </li>
+                        </ul>
+                    </div>
+
+                </div><!-- end options-bar -->
+
+                <nav id="mainnav" class="python-navigation main-navigation do-not-print" role="navigation">
+                    
+                        
+<ul class="navigation menu" role="menubar" aria-label="Main Navigation">
+  
+    
+    
+    <li id="about" class="tier-1 element-1  " aria-haspopup="true">
+        <a href="https://www.python.org/about/" title="" class="">About</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/apps/" title="">Applications</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/quotes/" title="">Quotes</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/gettingstarted/" title="">Getting Started</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/help/" title="">Help</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="downloads" class="tier-1 element-2  " aria-haspopup="true">
+        <a href="https://www.python.org/downloads/" title="" class="">Downloads</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/downloads/" title="">All releases</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/downloads/source/" title="">Source code</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/downloads/windows/" title="">Windows</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/downloads/mac-osx/" title="">Mac OS X</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/download/other/" title="">Other Platforms</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://docs.python.org/3/license.html" title="">License</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/download/alternatives" title="">Alternative Implementations</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="documentation" class="tier-1 element-3  " aria-haspopup="true">
+        <a href="https://www.python.org/doc/" title="" class="">Documentation</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/doc/" title="">Docs</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/doc/av" title="">Audio/Visual Talks</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://wiki.python.org/moin/BeginnersGuide" title="">Beginner&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://docs.python.org/faq/" title="">FAQ</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="http://wiki.python.org/moin/Languages" title="">Non-English Docs</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="../index.html" title="">PEP Index</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://wiki.python.org/moin/PythonBooks" title="">Python Books</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="community" class="tier-1 element-4  " aria-haspopup="true">
+        <a href="https://www.python.org/community/" title="" class="">Community</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/community/diversity/" title="">Diversity</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/community/irc/" title="">IRC</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/community/lists/" title="">Mailing Lists</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/workshops/" title="">Python Conferences</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/community/sigs/" title="">Special Interest Groups</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://wiki.python.org/moin/" title="">Python Wiki</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/community/logos/" title="">Python Logo</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://www.python.org/community/merchandise/" title="">Merchandise</a></li>
+    
+        <li class="tier-2 element-9" role="treeitem"><a href="https://www.python.org/community/awards" title="">Community Awards</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="success-stories" class="tier-1 element-5  " aria-haspopup="true">
+        <a href="https://www.python.org/about/success/" title="success-stories" class="">Success Stories</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/success/#arts" title="">Arts</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/success/#business" title="">Business</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/success/#education" title="">Education</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/success/#engineering" title="">Engineering</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/about/success/#government" title="">Government</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://www.python.org/about/success/#scientific" title="">Scientific</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/about/success/#software-development" title="">Software Development</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="news" class="tier-1 element-6  " aria-haspopup="true">
+        <a href="https://www.python.org/blogs/" title="News from around the Python world" class="">News</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/blogs/" title="Python Insider Blog Posts">Python News</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://planetpython.org/" title="Planet Python">Community News</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="http://pyfound.blogspot.com/" title="PSF Blog">PSF News</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pycon.blogspot.com/" title="PyCon Blog">PyCon News</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="events" class="tier-1 element-7  " aria-haspopup="true">
+        <a href="https://www.python.org/events/" title="" class="">Events</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/events/python-events/" title="">Python Events</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/events/python-user-group/" title="">User Group Events</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/events/python-events/past/" title="">Python Events Archive</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/events/python-user-group/past/" title="">User Group Events Archive</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://wiki.python.org/moin/PythonEventsCalendar#Submitting_an_Event" title="">Submit an Event</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    
+  
+</ul>
+
+                    
+                </nav>
+
+                <div class="header-banner "> <!-- for optional "do-not-print" class -->
+                    
+                    
+                </div>
+
+                
+                
+
+             </div><!-- end .container -->
+        </header>
+
+        <div id="content" class="content-wrapper">
+            <!-- Main Content Column -->
+            <div class="container">
+
+                <section class="main-content with-left-sidebar" role="main">
+
+                    
+<ul class="breadcrumbs menu">
+    <li>
+        <a href="https://www.python.org/" title="The Python Programming Language">Python</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>
+        <a href="https://www.python.org/dev/">Python Developer's Guide</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>
+        <a href="../index.html">PEP Index</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>PEP 0457 -- Syntax For Positional-Only Parameters</li>
+</ul>
+
+
+                    
+<style>
+   .pep-page pre {
+        padding: .5em;
+        background: inherit;
+        border-left: 0px;
+        -webkit-box-shadow: 0 0 0 0;
+        -moz-box-shadow: 0 0 0 0;
+        box-shadow: 0 0 0 0;
+   }
+</style>
+
+    
+    <article class="text">
+        
+
+        <header class="article-header">
+            <h1 class="page-title">PEP 0457 -- Syntax For Positional-Only Parameters</h1>
+        </header>
+
+        <!--
+This HTML is auto-generated.  DO NOT EDIT THIS FILE!  If you are writing a new
+PEP, see http://www.python.org/dev/peps/pep-0001 for instructions and links
+to templates.  DO NOT USE THIS HTML FILE AS YOUR TEMPLATE!
+-->
+<html>
+ <body>
+  <table class="rfc2822 docutils field-list" frame="void" rules="none">
+   <col class="field-name">
+   </col>
+   <col class="field-body">
+   </col>
+   <tbody valign="top">
+    <tr class="field">
+     <th class="field-name">
+      PEP:
+     </th>
+     <td class="field-body">
+      457
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Title:
+     </th>
+     <td class="field-body">
+      Syntax For Positional-Only Parameters
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Author:
+     </th>
+     <td class="field-body">
+      Larry Hastings &lt;larry at hastings.org&gt;
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Discussions-To:
+     </th>
+     <td class="field-body">
+      Python-Dev &lt;
+      <a class="reference external" href="mailto:python-dev@python.org?subject=PEP%20457">
+       python-dev at python.org
+      </a>
+      &gt;
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Status:
+     </th>
+     <td class="field-body">
+      Draft
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Type:
+     </th>
+     <td class="field-body">
+      Informational
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Created:
+     </th>
+     <td class="field-body">
+      08-Oct-2013
+     </td>
+    </tr>
+   </tbody>
+  </table>
+  <hr/>
+  <div class="contents topic" id="contents">
+   <p class="topic-title first">
+    Contents
+   </p>
+   <ul class="simple">
+    <li>
+     <a class="reference internal" href="#overview" id="id9">
+      Overview
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#rationale" id="id10">
+      Rationale
+     </a>
+     <ul>
+      <li>
+       <a class="reference internal" href="#positional-only-parameter-semantics-in-current-python" id="id11">
+        Positional-Only Parameter Semantics In Current Python
+       </a>
+      </li>
+     </ul>
+    </li>
+    <li>
+     <a class="reference internal" href="#motivation" id="id12">
+      Motivation
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#the-current-state-of-documentation-for-positional-only-parameters" id="id13">
+      The Current State Of Documentation For Positional-Only Parameters
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#syntax-and-semantics" id="id14">
+      Syntax And Semantics
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#additional-limitations" id="id15">
+      Additional Limitations
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#notes-for-a-future-implementor" id="id16">
+      Notes For A Future Implementor
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#unresolved-questions" id="id17">
+      Unresolved Questions
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#thanks" id="id18">
+      Thanks
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#copyright" id="id19">
+      Copyright
+     </a>
+    </li>
+   </ul>
+  </div>
+  <div class="section" id="overview">
+   <h1>
+    <a class="toc-backref" href="#id9">
+     Overview
+    </a>
+   </h1>
+   <p>
+    This PEP proposes a syntax for positional-only parameters in Python.
+Positional-only parameters are parameters without an externally-usable
+name; when a function accepting positional-only parameters is called,
+positional arguments are mapped to these parameters based solely on
+their position.
+   </p>
+  </div>
+  <div class="section" id="rationale">
+   <h1>
+    <a class="toc-backref" href="#id10">
+     Rationale
+    </a>
+   </h1>
+   <p>
+    Python has always supported positional-only parameters.
+Early versions of Python lacked the concept of specifying
+parameters by name, so naturally all parameters were
+positional-only.  This changed around Python 1.0, when
+all parameters suddenly became positional-or-keyword.
+But, even in current versions of Python, many CPython
+"builtin" functions still only accept positional-only
+arguments.
+   </p>
+   <p>
+    Functions implemented in modern Python can accept
+an arbitrary number of positional-only arguments, via the
+variadic
+    <tt class="docutils literal">
+     *args
+    </tt>
+    parameter.  However, there is no Python
+syntax to specify accepting a specific number of
+positional-only parameters.  Put another way, there are
+many builtin functions whose signatures are simply not
+expressable with Python syntax.
+   </p>
+   <p>
+    This PEP proposes a backwards-compatible syntax that should
+permit implementing any builtin in pure Python code.
+   </p>
+   <div class="section" id="positional-only-parameter-semantics-in-current-python">
+    <h2>
+     <a class="toc-backref" href="#id11">
+      Positional-Only Parameter Semantics In Current Python
+     </a>
+    </h2>
+    <p>
+     There are many, many examples of builtins that only
+accept positional-only parameters.  The resulting
+semantics are easily experienced by the Python
+programmer--just try calling one, specifying its
+arguments by name:
+    </p>
+    <pre class="literal-block">
+&gt;&gt;&gt; pow(x=5, y=3)
+Traceback (most recent call last):
+  File "&lt;stdin&gt;", line 1, in &lt;module&gt;
+TypeError: pow() takes no keyword arguments
+</pre>
+    <p>
+     In addition, there are some functions with particularly
+interesting semantics:
+    </p>
+    <blockquote>
+     <ul class="simple">
+      <li>
+       <tt class="docutils literal">
+        range()
+       </tt>
+       , which accepts an optional parameter
+to the
+       <em>
+        left
+       </em>
+       of its required parameter.
+       <a class="footnote-reference" href="#range" id="id1">
+        [2]
+       </a>
+      </li>
+      <li>
+       <tt class="docutils literal">
+        dict()
+       </tt>
+       , whose mapping/iterator parameter is optional and
+semantically must be positional-only.  Any externally
+visible name for this parameter would occlude
+that name going into the
+       <tt class="docutils literal">
+        **kwarg
+       </tt>
+       keyword variadic
+parameter dict!
+       <a class="footnote-reference" href="#dict" id="id2">
+        [1]
+       </a>
+      </li>
+     </ul>
+    </blockquote>
+    <p>
+     Obviously one can simulate any of these in pure Python code
+by accepting
+     <tt class="docutils literal">
+      (*args, **kwargs)
+     </tt>
+     and parsing the arguments
+by hand.  But this results in a disconnect between the
+Python function's signature and what it actually accepts,
+not to mention the work of implementing said argument parsing.
+    </p>
+   </div>
+  </div>
+  <div class="section" id="motivation">
+   <h1>
+    <a class="toc-backref" href="#id12">
+     Motivation
+    </a>
+   </h1>
+   <p>
+    This PEP does not propose we implement positional-only
+parameters in Python.  The goal of this PEP is simply
+to define the syntax, so that:
+   </p>
+   <blockquote>
+    <ul class="simple">
+     <li>
+      Documentation can clearly, unambiguously, and
+consistently express exactly how the arguments
+for a function will be interpreted.
+     </li>
+     <li>
+      The syntax is reserved for future use, in case
+the community decides someday to add positional-only
+parameters to the language.
+     </li>
+     <li>
+      Argument Clinic can use a variant of the syntax
+as part of its input when defining
+the arguments for built-in functions.
+     </li>
+    </ul>
+   </blockquote>
+  </div>
+  <div class="section" id="the-current-state-of-documentation-for-positional-only-parameters">
+   <h1>
+    <a class="toc-backref" href="#id13">
+     The Current State Of Documentation For Positional-Only Parameters
+    </a>
+   </h1>
+   <p>
+    The documentation for positional-only parameters is incomplete
+and inconsistent:
+   </p>
+   <ul class="simple">
+    <li>
+     Some functions denote optional groups of positional-only arguments
+by enclosing them in nested square brackets.
+     <a class="footnote-reference" href="#border" id="id3">
+      [3]
+     </a>
+    </li>
+    <li>
+     Some functions denote optional groups of positional-only arguments
+by presenting multiple prototypes with varying numbers of
+arguments.
+     <a class="footnote-reference" href="#sendfile" id="id4">
+      [4]
+     </a>
+    </li>
+    <li>
+     Some functions use
+     <em>
+      both
+     </em>
+     of the above approaches.
+     <a class="footnote-reference" href="#range" id="id5">
+      [2]
+     </a>
+     <a class="footnote-reference" href="#addch" id="id6">
+      [5]
+     </a>
+    </li>
+   </ul>
+   <p>
+    One more important idea to consider: currently in the documentation
+there's no way to tell whether a function takes positional-only
+parameters.
+    <tt class="docutils literal">
+     open()
+    </tt>
+    accepts keyword arguments,
+    <tt class="docutils literal">
+     ord()
+    </tt>
+    does
+not, but there is no way of telling just by reading the
+documentation that this is true.
+   </p>
+  </div>
+  <div class="section" id="syntax-and-semantics">
+   <h1>
+    <a class="toc-backref" href="#id14">
+     Syntax And Semantics
+    </a>
+   </h1>
+   <p>
+    From the "ten-thousand foot view", and ignoring
+    <tt class="docutils literal">
+     *args
+    </tt>
+    and
+    <tt class="docutils literal">
+     **kwargs
+    </tt>
+    for now, the grammar for a function definition currently looks like this:
+   </p>
+   <pre class="literal-block">
+def name(positional_or_keyword_parameters, *, keyword_only_parameters):
+</pre>
+   <p>
+    Building on that perspective, the new syntax for functions would look
+like this:
+   </p>
+   <pre class="literal-block">
+def name(positional_only_parameters, /, positional_or_keyword_parameters,
+         *, keyword_only_parameters):
+</pre>
+   <p>
+    All parameters before the
+    <tt class="docutils literal">
+     /
+    </tt>
+    are positional-only.  If
+    <tt class="docutils literal">
+     /
+    </tt>
+    is
+not specified in a function signature, that function does not
+accept any positional-only parameters.
+   </p>
+   <p>
+    Positional-only parameters can be optional, but the mechanism is
+significantly different from positional-or-keyword or keyword-only
+parameters.  Positional-only parameters don't accept default
+values.  Instead, positional-only parameters can be specified
+in optional "groups".  Groups of parameters are surrounded by
+square brackets, like so:
+   </p>
+   <pre class="literal-block">
+def addch([y, x,] ch, [attr,] /):
+</pre>
+   <p>
+    Positional-only parameters that are not in an option group are
+"required" positional-only parameters.  All "required" positional-only
+parameters must be contiguous.
+   </p>
+   <p>
+    Parameters in an optional group accept arguments in a group; you
+must provide arguments either for all of the them or for none of them.
+Using the example of
+    <tt class="docutils literal">
+     addch()
+    </tt>
+    above, you could not call
+    <tt class="docutils literal">
+     addch()
+    </tt>
+    in such a way that
+    <tt class="docutils literal">
+     x
+    </tt>
+    was specified but
+    <tt class="docutils literal">
+     y
+    </tt>
+    was not (and vice versa).
+The mapping of positional parameters to optional groups is done
+based on fitting the number of parameters to groups.  Based on the
+above definition,
+    <tt class="docutils literal">
+     addch()
+    </tt>
+    would assign arguments to parameters
+in the following way:
+   </p>
+   <blockquote>
+    <table border="1" class="docutils">
+     <colgroup>
+      <col width="39%">
+      </col>
+      <col width="61%">
+      </col>
+     </colgroup>
+     <tbody valign="top">
+      <tr>
+       <td>
+        Number of arguments
+       </td>
+       <td>
+        Parameter assignment
+       </td>
+      </tr>
+      <tr>
+       <td>
+        0
+       </td>
+       <td>
+        <em>
+         raises an exception
+        </em>
+       </td>
+      </tr>
+      <tr>
+       <td>
+        1
+       </td>
+       <td>
+        <tt class="docutils literal">
+         ch
+        </tt>
+       </td>
+      </tr>
+      <tr>
+       <td>
+        2
+       </td>
+       <td>
+        <tt class="docutils literal">
+         ch
+        </tt>
+        ,
+        <tt class="docutils literal">
+         attr
+        </tt>
+       </td>
+      </tr>
+      <tr>
+       <td>
+        3
+       </td>
+       <td>
+        <tt class="docutils literal">
+         y
+        </tt>
+        ,
+        <tt class="docutils literal">
+         x
+        </tt>
+        ,
+        <tt class="docutils literal">
+         ch
+        </tt>
+       </td>
+      </tr>
+      <tr>
+       <td>
+        4
+       </td>
+       <td>
+        <tt class="docutils literal">
+         y
+        </tt>
+        ,
+        <tt class="docutils literal">
+         x
+        </tt>
+        ,
+        <tt class="docutils literal">
+         ch
+        </tt>
+        ,
+        <tt class="docutils literal">
+         attr
+        </tt>
+       </td>
+      </tr>
+      <tr>
+       <td>
+        5 or more
+       </td>
+       <td>
+        <em>
+         raises an exception
+        </em>
+       </td>
+      </tr>
+     </tbody>
+    </table>
+   </blockquote>
+   <p>
+    More semantics of positional-only parameters:
+   </p>
+   <blockquote>
+    <ul class="simple">
+     <li>
+      Although positional-only parameter technically have names,
+these names are internal-only; positional-only parameters
+are
+      <em>
+       never
+      </em>
+      externally addressable by name.  (Similarly
+to
+      <tt class="docutils literal">
+       *args
+      </tt>
+      and
+      <tt class="docutils literal">
+       **kwargs
+      </tt>
+      .)
+     </li>
+     <li>
+      It's possible to nest option groups.
+     </li>
+     <li>
+      If there are no required parameters, all option groups behave
+as if they're to the right of the required parameter group.
+     </li>
+     <li>
+      For clarity and consistency, the comma for a parameter always
+comes immediately after the parameter name.  It's a syntax error
+to specify a square bracket between the name of a parameter and
+the following comma.  (This is far more readable than putting
+the comma outside the square bracket, particularly for nested
+groups.)
+     </li>
+     <li>
+      If there are arguments after the
+      <tt class="docutils literal">
+       /
+      </tt>
+      , then you must specify
+a comma after the
+      <tt class="docutils literal">
+       /
+      </tt>
+      , just as there is a comma
+after the
+      <tt class="docutils literal">
+       *
+      </tt>
+      denoting the shift to keyword-only parameters.
+     </li>
+     <li>
+      This syntax has no effect on
+      <tt class="docutils literal">
+       *args
+      </tt>
+      or
+      <tt class="docutils literal">
+       **kwargs
+      </tt>
+      .
+     </li>
+    </ul>
+   </blockquote>
+   <p>
+    It's possible to specify a function prototype where the mapping
+of arguments to parameters is ambiguous.  Consider:
+   </p>
+   <pre class="literal-block">
+def range([start,] stop, [range,] /):
+</pre>
+   <p>
+    Python disambiguates these situations by preferring optional groups
+to the
+    <em>
+     left
+    </em>
+    of the required group.
+   </p>
+  </div>
+  <div class="section" id="additional-limitations">
+   <h1>
+    <a class="toc-backref" href="#id15">
+     Additional Limitations
+    </a>
+   </h1>
+   <p>
+    Argument Clinic uses a form of this syntax for specifying
+builtins.  It imposes further limitations that are
+theoretically unnecessary but make the implementation
+easier.  Specifically:
+   </p>
+   <ul>
+    <li>
+     <p class="first">
+      A function that has positional-only parameters currently
+cannot have any other kind of parameter.  (This will
+probably be relaxed slightly in the near future.)
+     </p>
+    </li>
+    <li>
+     <p class="first">
+      Multiple option groups on either side of the required
+positional-only parameters must be nested, with the
+nesting getting deeper the further away the group is
+from the required positional-parameter group.
+     </p>
+     <p>
+      Put another way:
+all the left-brackets for option groups to the
+left of the required group must be specified contiguously,
+and
+all the right-brackets for option groups to the
+right of the required group must be specified contiguously.
+     </p>
+    </li>
+   </ul>
+  </div>
+  <div class="section" id="notes-for-a-future-implementor">
+   <h1>
+    <a class="toc-backref" href="#id16">
+     Notes For A Future Implementor
+    </a>
+   </h1>
+   <p>
+    If we decide to implement positional-only parameters in a future
+version of Python, we'd have to do some additional work to preserve
+their semantics.  The problem: how do we inform a parameter that
+no value was passed in for it when the function was called?
+   </p>
+   <p>
+    The obvious solution: add a new singleton constant to Python
+that is passed in when a parameter is not mapped to an argument.
+I propose that the value be called
+    <tt class="docutils literal">
+     undefined
+    </tt>
+    ,
+and be a singleton of a special class called
+    <tt class="docutils literal">
+     Undefined
+    </tt>
+    .
+If a positional-only parameter did not receive an argument
+when called, its value would be set to
+    <tt class="docutils literal">
+     undefined
+    </tt>
+    .
+   </p>
+   <p>
+    But this raises a further problem.  How do can we tell the
+difference between "this positional-only parameter did not
+receive an argument" and "the caller passed in
+    <tt class="docutils literal">
+     undefined
+    </tt>
+    for this parameter"?
+   </p>
+   <p>
+    It'd be nice to make it illegal to pass
+    <tt class="docutils literal">
+     undefined
+    </tt>
+    in
+as an argument to a function--to, say, raise an exception.
+But that would slow Python down, and the "consenting adults"
+rule appears applicable here.  So making it illegal should
+probably be strongly discouraged but not outright prevented.
+   </p>
+   <p>
+    However, it should be allowed (and encouraged) for user
+functions to specify
+    <tt class="docutils literal">
+     undefined
+    </tt>
+    as a default value for
+parameters.
+   </p>
+  </div>
+  <div class="section" id="unresolved-questions">
+   <h1>
+    <a class="toc-backref" href="#id17">
+     Unresolved Questions
+    </a>
+   </h1>
+   <p>
+    There are three types of parameters in Python:
+   </p>
+   <blockquote>
+    <ol class="arabic simple">
+     <li>
+      positional-only parameters,
+     </li>
+     <li>
+      positional-or-keyword parameters, and
+     </li>
+     <li>
+      keyword-only parameters.
+     </li>
+    </ol>
+   </blockquote>
+   <p>
+    Python allows functions to have both 2 and 3.  And some
+builtins (e.g. range) have both 1 and 3.  Does it make
+sense to have functions that have both 1 and 2?  Or
+all of the above?
+   </p>
+  </div>
+  <div class="section" id="thanks">
+   <h1>
+    <a class="toc-backref" href="#id18">
+     Thanks
+    </a>
+   </h1>
+   <p>
+    Credit for the use of '/' as the separator between positional-only and positional-or-keyword
+parameters goes to Guido van Rossum, in a proposal from 2012.
+    <a class="footnote-reference" href="#guido" id="id7">
+     [6]
+    </a>
+   </p>
+   <p>
+    Credit for making left option groups higher precedence goes to
+Nick Coghlan. (Conversation in person at PyCon US 2013.)
+   </p>
+   <table class="docutils footnote" frame="void" id="dict" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id2">
+        [1]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="http://docs.python.org/3/library/stdtypes.html#dict">
+        http://docs.python.org/3/library/stdtypes.html#dict
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="range" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       [2]
+      </td>
+      <td>
+       <em>
+        (
+        <a class="fn-backref" href="#id1">
+         1
+        </a>
+        ,
+        <a class="fn-backref" href="#id5">
+         2
+        </a>
+        )
+       </em>
+       <a class="reference external" href="http://docs.python.org/3/library/functions.html#func-range">
+        http://docs.python.org/3/library/functions.html#func-range
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="border" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id3">
+        [3]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="http://docs.python.org/3/library/curses.html#curses.window.border">
+        http://docs.python.org/3/library/curses.html#curses.window.border
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="sendfile" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id4">
+        [4]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="http://docs.python.org/3/library/os.html#os.sendfile">
+        http://docs.python.org/3/library/os.html#os.sendfile
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="addch" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id6">
+        [5]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="http://docs.python.org/3/library/curses.html#curses.window.addch">
+        http://docs.python.org/3/library/curses.html#curses.window.addch
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="guido" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id7">
+        [6]
+       </a>
+      </td>
+      <td>
+       Guido van Rossum, posting to python-ideas, March 2012:
+       <a class="reference external" href="http://mail.python.org/pipermail/python-ideas/2012-March/014364.html">
+        http://mail.python.org/pipermail/python-ideas/2012-March/014364.html
+       </a>
+       and
+       <a class="reference external" href="http://mail.python.org/pipermail/python-ideas/2012-March/014378.html">
+        http://mail.python.org/pipermail/python-ideas/2012-March/014378.html
+       </a>
+       and
+       <a class="reference external" href="http://mail.python.org/pipermail/python-ideas/2012-March/014417.html">
+        http://mail.python.org/pipermail/python-ideas/2012-March/014417.html
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+  </div>
+  <div class="section" id="copyright">
+   <h1>
+    <a class="toc-backref" href="#id19">
+     Copyright
+    </a>
+   </h1>
+   <p>
+    This document has been placed in the public domain.
+   </p>
+   <!-- Local Variables:
+mode: indented-text
+indent-tabs-mode: nil
+sentence-end-double-space: t
+fill-column: 70
+coding: utf-8
+End: -->
+  </div>
+ </body>
+
+<!-- Mirrored from www.python.org/dev/peps/pep-0457/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 03 Sep 2015 04:33:21 GMT -->
+</html>Source: <a href="https://hg.python.org/peps/file/tip/pep-0457.txt">https://hg.python.org/peps/file/tip/pep-0457.txt</a>
+
+    </article>
+
+
+                </section>
+
+                
+
+
+<aside class="left-sidebar" role="secondary">
+
+    
+
+
+
+
+
+
+    
+
+
+
+
+
+        <div class="twitter-widget sidebar-widget">
+        <a class="twitter-timeline" data-dnt="true" href="https://twitter.com/ThePSF" data-widget-id="434113224703610882">Tweets by @ThePSF</a>
+        <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+    </div>
+
+    <div class="psf-sidebar-widget sidebar-widget">
+        <h3 class="widget-title">The PSF</h3>
+<p>The Python Software Foundation is the organization behind Python. Become a member of the PSF and help advance the software and our mission. </p>
+
+    </div>
+
+</aside>
+
+
+
+                
+                
+
+
+            </div><!-- end .container -->
+        </div><!-- end #content .content-wrapper -->
+
+        <!-- Footer and social media list -->
+        <footer id="site-map" class="main-footer" role="contentinfo">
+            <div class="main-footer-links">
+                <div class="container">
+
+                    
+                    <a id="back-to-top-1" class="jump-link" href="#python-network"><span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> Back to Top</a>
+
+                    
+
+<ul class="sitemap navigation menu do-not-print" role="tree" id="container">
+    
+    <li class="tier-1 element-1">
+        <a href="https://www.python.org/about/" >About</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/apps/" title="">Applications</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/quotes/" title="">Quotes</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/gettingstarted/" title="">Getting Started</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/help/" title="">Help</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-2">
+        <a href="https://www.python.org/downloads/" >Downloads</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/downloads/" title="">All releases</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/downloads/source/" title="">Source code</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/downloads/windows/" title="">Windows</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/downloads/mac-osx/" title="">Mac OS X</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/download/other/" title="">Other Platforms</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://docs.python.org/3/license.html" title="">License</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/download/alternatives" title="">Alternative Implementations</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-3">
+        <a href="https://www.python.org/doc/" >Documentation</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/doc/" title="">Docs</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/doc/av" title="">Audio/Visual Talks</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://wiki.python.org/moin/BeginnersGuide" title="">Beginner&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://docs.python.org/faq/" title="">FAQ</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="http://wiki.python.org/moin/Languages" title="">Non-English Docs</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="../index.html" title="">PEP Index</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://wiki.python.org/moin/PythonBooks" title="">Python Books</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-4">
+        <a href="https://www.python.org/community/" >Community</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/community/diversity/" title="">Diversity</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/community/irc/" title="">IRC</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/community/lists/" title="">Mailing Lists</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/workshops/" title="">Python Conferences</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/community/sigs/" title="">Special Interest Groups</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://wiki.python.org/moin/" title="">Python Wiki</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/community/logos/" title="">Python Logo</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://www.python.org/community/merchandise/" title="">Merchandise</a></li>
+    
+        <li class="tier-2 element-9" role="treeitem"><a href="https://www.python.org/community/awards" title="">Community Awards</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-5">
+        <a href="https://www.python.org/about/success/" title="success-stories">Success Stories</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/success/#arts" title="">Arts</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/success/#business" title="">Business</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/success/#education" title="">Education</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/success/#engineering" title="">Engineering</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/about/success/#government" title="">Government</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://www.python.org/about/success/#scientific" title="">Scientific</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/about/success/#software-development" title="">Software Development</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-6">
+        <a href="https://www.python.org/blogs/" title="News from around the Python world">News</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/blogs/" title="Python Insider Blog Posts">Python News</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://planetpython.org/" title="Planet Python">Community News</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="http://pyfound.blogspot.com/" title="PSF Blog">PSF News</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pycon.blogspot.com/" title="PyCon Blog">PyCon News</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-7">
+        <a href="https://www.python.org/events/" >Events</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/events/python-events/" title="">Python Events</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/events/python-user-group/" title="">User Group Events</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/events/python-events/past/" title="">Python Events Archive</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/events/python-user-group/past/" title="">User Group Events Archive</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://wiki.python.org/moin/PythonEventsCalendar#Submitting_an_Event" title="">Submit an Event</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-8">
+        <a href="https://www.python.org/dev/" >Contributing</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="http://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://bugs.python.org/" title="">Issue Tracker</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://mail.python.org/mailman/listinfo/python-dev" title="">python-dev list</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pythonmentors.com/" title="">Core Mentorship</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+</ul>
+
+
+                    <a id="back-to-top-2" class="jump-link" href="#python-network"><span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> Back to Top</a>
+                    
+
+                </div><!-- end .container -->
+            </div> <!-- end .main-footer-links -->
+
+            <div class="site-base">
+                <div class="container">
+                    
+                    <ul class="footer-links navigation menu do-not-print" role="tree">
+                        <li class="tier-1 element-1"><a href="https://www.python.org/about/help/">Help &amp; <span class="say-no-more">General</span> Contact</a></li>
+                        <li class="tier-1 element-2"><a href="https://www.python.org/community/diversity/">Diversity <span class="say-no-more">Initiatives</span></a></li>
+                        <li class="tier-1 element-3"><a href="https://github.com/python/pythondotorg/issues">Submit Website Bug</a></li>
+                        <!--<li class="tier-1 element-3"><a href="#"><span class="say-no-more">Website</span> Colophon</a></li>-->
+                    </ul>
+
+                    <div class="copyright">
+                        <p><small>
+                            <span class="pre">Copyright &copy;2001-2015.</span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/psf-landing/">Python Software Foundation</a></span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/about/legal/">Legal Statements</a></span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/privacy/">Privacy Policy</a></span>
+                        </small></p>
+                    </div>
+
+                </div><!-- end .container -->
+            </div><!-- end .site-base -->
+
+        </footer>
+
+    </div><!-- end #touchnav-wrapper -->
+
+    
+    <script src="../../../../ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="../../../static/js/libs/jquery-1.8.2.min.js"><\/script>')</script>
+
+    <script src="../../../static/js/libs/masonry.pkgd.min.js"></script>
+
+    <script type="text/javascript" src="../../../static/js/main-min.js" charset="utf-8"></script>
+    
+
+    <!--[if lte IE 7]>
+    <script type="text/javascript" src="/static/js/plugins/IE8-min.js" charset="utf-8"></script>
+    
+    
+    <![endif]-->
+
+    <!--[if lte IE 8]>
+    <script type="text/javascript" src="/static/js/plugins/getComputedStyle-min.js" charset="utf-8"></script>
+    
+    
+    <![endif]-->
+
+    
+
+    
+    
+
+</body>
+</html>

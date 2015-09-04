@@ -1,0 +1,1793 @@
+<!doctype html>
+<!--[if lt IE 7]>   <html class="no-js ie6 lt-ie7 lt-ie8 lt-ie9">   <![endif]-->
+<!--[if IE 7]>      <html class="no-js ie7 lt-ie8 lt-ie9">          <![endif]-->
+<!--[if IE 8]>      <html class="no-js ie8 lt-ie9">                 <![endif]-->
+<!--[if gt IE 8]><!--><html class="no-js" lang="en" dir="ltr">  <!--<![endif]-->
+
+
+<!-- Mirrored from www.python.org/dev/peps/pep-0490/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 03 Sep 2015 04:33:40 GMT -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <link rel="prefetch" href="../../../../ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js">
+
+    <meta name="application-name" content="Python.org">
+    <meta name="msapplication-tooltip" content="The official home of the Python Programming Language">
+    <meta name="apple-mobile-web-app-title" content="Python.org">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="format-detection" content="telephone=no">
+    <meta http-equiv="cleartype" content="on">
+    <meta http-equiv="imagetoolbar" content="false">
+
+    <script src="../../../static/js/libs/modernizr.js"></script>
+
+    <link href="../../../static/stylesheets/style.css" rel="stylesheet" type="text/css" title="default" />
+    <link href="../../../static/stylesheets/mq.css" rel="stylesheet" type="text/css" media="not print, braille, embossed, speech, tty" />
+    
+
+    <!--[if (lte IE 8)&(!IEMobile)]>
+    <link href="/static/stylesheets/no-mq.css" rel="stylesheet" type="text/css" media="screen" />
+    
+    
+    <![endif]-->
+
+    
+    <link rel="icon" type="image/x-icon" href="https://www.python.org/static/favicon.ico">
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="../../../static/apple-touch-icon-144x144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="../../../static/apple-touch-icon-114x114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="../../../static/apple-touch-icon-72x72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="../../../static/apple-touch-icon-precomposed.png">
+    <link rel="apple-touch-icon" href="../../../static/apple-touch-icon-precomposed.png">
+
+    
+    <meta name="msapplication-TileImage" content="/static/metro-icon-144x144-precomposed.png"><!-- white shape -->
+    <meta name="msapplication-TileColor" content="#3673a5"><!-- python blue -->
+    <meta name="msapplication-navbutton-color" content="#3673a5">
+
+    <meta property="og:site_name" content="Python.org">
+    <meta property="og:type" content="website">
+
+    <title>PEP 0490 -- Chain exceptions at C level | Python.org</title>
+    <meta property="og:title" content="Welcome to Python.org">
+
+    
+    <meta name="description" content="The official home of the Python Programming Language">
+    <meta name="og:description" content="The official home of the Python Programming Language">
+    <meta name="keywords" content="Python programming language object oriented web free open source software license documentation download community">
+    <meta property="og:tag" content="Python programming language object oriented web free open source software license documentation download community">
+    <meta property="og:published_time" content="">
+    <meta property="og:modified_time" content="">
+    <meta property="og:author" content="">
+    <meta property="og:section" content=""> 
+    <meta property="og:url" content="">
+    <meta property="og:image" content="">
+    <meta property="og:video" content="">
+
+    <link rel="author" href="https://www.python.org/static/humans.txt">
+
+    
+
+    
+    <script type="application/ld+json">
+     {
+       "@context": "http://schema.org",
+       "@type": "WebSite",
+       "url": "https://www.python.org/",
+       "potentialAction": {
+         "@type": "SearchAction",
+         "target": "https://www.python.org/search/?q={search_term_string}",
+         "query-input": "required name=search_term_string"
+       }
+     }
+    </script>
+
+    
+    <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-39055973-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+    </script>
+    
+</head>
+
+<body class="python pages pep-page">
+
+    <div id="touchnav-wrapper">
+
+        <div id="nojs" class="do-not-print">
+            <p><strong>Notice:</strong> While Javascript is not essential for this website, your interaction with the content will be limited. Please turn Javascript on for the full experience. </p>
+        </div>
+
+        <!--[if lt IE 8]>
+        <div id="oldie-warning" class="do-not-print">
+            <p><strong>Notice:</strong> Your browser is <em>ancient</em> and <a href="http://www.ie6countdown.com/">Microsoft agrees</a>. <a href="http://browsehappy.com/">Upgrade to a different browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to experience a better web.</p>
+        </div>
+        <![endif]-->
+
+        <!-- Sister Site Links -->
+        <div id="top" class="top-bar do-not-print">
+
+            <nav class="meta-navigation container" role="navigation">
+
+                
+                <div class="skip-link screen-reader-text">
+                    <a href="#content" title="Skip to content">Skip to content</a>
+                </div>
+
+                
+                <a id="close-python-network" class="jump-link" href="#python-network" aria-hidden="true">
+                    <span aria-hidden="true" class="icon-arrow-down"><span>&#9660;</span></span> Close
+                </a>
+
+                
+
+<ul class="menu" role="tree">
+    
+    <li class="python-meta ">
+        <a href="https://www.python.org/" title="The Python Programming Language" >Python</a>
+    </li>
+    
+    <li class="psf-meta ">
+        <a href="https://www.python.org/psf-landing/" title="The Python Software Foundation" >PSF</a>
+    </li>
+    
+    <li class="docs-meta ">
+        <a href="https://docs.python.org/" title="Python Documentation" >Docs</a>
+    </li>
+    
+    <li class="pypi-meta ">
+        <a href="https://pypi.python.org/" title="Python Package Index" >PyPI</a>
+    </li>
+    
+    <li class="jobs-meta ">
+        <a href="https://www.python.org/jobs/" title="Python Job Board" >Jobs</a>
+    </li>
+    
+    <li class="shop-meta ">
+        <a href="https://www.python.org/community/" title="Python Community" >Community</a>
+    </li>
+    
+</ul>
+
+
+                <a id="python-network" class="jump-link" href="#top" aria-hidden="true">
+                    <span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> The Python Network
+                </a>
+
+            </nav>
+
+        </div>
+
+        <!-- Header elements -->
+        <header class="main-header" role="banner">
+            <div class="container">
+
+                <h1 class="site-headline">
+                    <a href="https://www.python.org/"><img class="python-logo" src="../../../static/img/python-logo.png" alt="python&trade;"></a>
+                </h1>
+
+                <div class="options-bar do-not-print">
+
+                    
+                    <a id="site-map-link" class="jump-to-menu" href="#site-map"><span class="menu-icon">&equiv;</span> Menu</a><form class="search-the-site" action="https://www.python.org/search/" method="get">
+                        <fieldset title="Search Python.org">
+
+                            <span aria-hidden="true" class="icon-search"></span>
+
+                            <label class="screen-reader-text" for="id-search-field">Search This Site</label>
+                            <input id="id-search-field" name="q" type="search" role="textbox" class="search-field" placeholder="Search" value="" tabindex="1">
+
+                            <button type="submit" name="submit" id="submit" class="search-button" title="Submit this Search" tabindex="3">
+                                GO
+                            </button>
+
+                            
+                            <!--[if IE]><input type="text" style="display: none;" disabled="disabled" size="1" tabindex="4"><![endif]-->
+
+                        </fieldset>
+                    </form><span class="breaker"></span><div class="adjust-font-size" aria-hidden="true">
+                        <ul class="navigation menu" aria-label="Adjust Text Size on Page">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                <a href="#" class="action-trigger"><strong><small>A</small> A</strong></a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a class="text-shrink" title="Make Text Smaller" href="javascript:;">Smaller</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a class="text-grow" title="Make Text Larger" href="javascript:;">Larger</a></li>
+                                    <li class="tier-2 element-3" role="treeitem"><a class="text-reset" title="Reset any font size changes I have made" href="javascript:;">Reset</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div><div class="winkwink-nudgenudge">
+                        <ul class="navigation menu" aria-label="Social Media Navigation">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                <a href="#" class="action-trigger">Socialize</a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a href="http://plus.google.com/+Python"><span aria-hidden="true" class="icon-google-plus"></span>Google+</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a href="http://www.facebook.com/pythonlang?fref=ts"><span aria-hidden="true" class="icon-facebook"></span>Facebook</a></li>
+                                    <li class="tier-2 element-3" role="treeitem"><a href="http://twitter.com/ThePSF"><span aria-hidden="true" class="icon-twitter"></span>Twitter</a></li>
+                                    <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/irc/"><span aria-hidden="true" class="icon-freenode"></span>Chat on IRC</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div><div class="account-signin">
+                        <ul class="navigation menu" aria-label="Social Media Navigation">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                
+                                <a href="https://www.python.org/accounts/login/" title="Sign Up or Sign In to Python.org">Sign In</a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/accounts/signup/">Sign Up / Register</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/accounts/login/">Sign In</a></li>
+                                </ul>
+                                
+                            </li>
+                        </ul>
+                    </div>
+
+                </div><!-- end options-bar -->
+
+                <nav id="mainnav" class="python-navigation main-navigation do-not-print" role="navigation">
+                    
+                        
+<ul class="navigation menu" role="menubar" aria-label="Main Navigation">
+  
+    
+    
+    <li id="about" class="tier-1 element-1  " aria-haspopup="true">
+        <a href="https://www.python.org/about/" title="" class="">About</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/apps/" title="">Applications</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/quotes/" title="">Quotes</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/gettingstarted/" title="">Getting Started</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/help/" title="">Help</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="downloads" class="tier-1 element-2  " aria-haspopup="true">
+        <a href="https://www.python.org/downloads/" title="" class="">Downloads</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/downloads/" title="">All releases</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/downloads/source/" title="">Source code</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/downloads/windows/" title="">Windows</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/downloads/mac-osx/" title="">Mac OS X</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/download/other/" title="">Other Platforms</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://docs.python.org/3/license.html" title="">License</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/download/alternatives" title="">Alternative Implementations</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="documentation" class="tier-1 element-3  " aria-haspopup="true">
+        <a href="https://www.python.org/doc/" title="" class="">Documentation</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/doc/" title="">Docs</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/doc/av" title="">Audio/Visual Talks</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://wiki.python.org/moin/BeginnersGuide" title="">Beginner&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://docs.python.org/faq/" title="">FAQ</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="http://wiki.python.org/moin/Languages" title="">Non-English Docs</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="../index.html" title="">PEP Index</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://wiki.python.org/moin/PythonBooks" title="">Python Books</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="community" class="tier-1 element-4  " aria-haspopup="true">
+        <a href="https://www.python.org/community/" title="" class="">Community</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/community/diversity/" title="">Diversity</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/community/irc/" title="">IRC</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/community/lists/" title="">Mailing Lists</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/workshops/" title="">Python Conferences</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/community/sigs/" title="">Special Interest Groups</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://wiki.python.org/moin/" title="">Python Wiki</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/community/logos/" title="">Python Logo</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://www.python.org/community/merchandise/" title="">Merchandise</a></li>
+    
+        <li class="tier-2 element-9" role="treeitem"><a href="https://www.python.org/community/awards" title="">Community Awards</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="success-stories" class="tier-1 element-5  " aria-haspopup="true">
+        <a href="https://www.python.org/about/success/" title="success-stories" class="">Success Stories</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/success/#arts" title="">Arts</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/success/#business" title="">Business</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/success/#education" title="">Education</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/success/#engineering" title="">Engineering</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/about/success/#government" title="">Government</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://www.python.org/about/success/#scientific" title="">Scientific</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/about/success/#software-development" title="">Software Development</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="news" class="tier-1 element-6  " aria-haspopup="true">
+        <a href="https://www.python.org/blogs/" title="News from around the Python world" class="">News</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/blogs/" title="Python Insider Blog Posts">Python News</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://planetpython.org/" title="Planet Python">Community News</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="http://pyfound.blogspot.com/" title="PSF Blog">PSF News</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pycon.blogspot.com/" title="PyCon Blog">PyCon News</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="events" class="tier-1 element-7  " aria-haspopup="true">
+        <a href="https://www.python.org/events/" title="" class="">Events</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/events/python-events/" title="">Python Events</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/events/python-user-group/" title="">User Group Events</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/events/python-events/past/" title="">Python Events Archive</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/events/python-user-group/past/" title="">User Group Events Archive</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://wiki.python.org/moin/PythonEventsCalendar#Submitting_an_Event" title="">Submit an Event</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    
+  
+</ul>
+
+                    
+                </nav>
+
+                <div class="header-banner "> <!-- for optional "do-not-print" class -->
+                    
+                    
+                </div>
+
+                
+                
+
+             </div><!-- end .container -->
+        </header>
+
+        <div id="content" class="content-wrapper">
+            <!-- Main Content Column -->
+            <div class="container">
+
+                <section class="main-content with-left-sidebar" role="main">
+
+                    
+<ul class="breadcrumbs menu">
+    <li>
+        <a href="https://www.python.org/" title="The Python Programming Language">Python</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>
+        <a href="https://www.python.org/dev/">Python Developer's Guide</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>
+        <a href="../index.html">PEP Index</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>PEP 0490 -- Chain exceptions at C level</li>
+</ul>
+
+
+                    
+<style>
+   .pep-page pre {
+        padding: .5em;
+        background: inherit;
+        border-left: 0px;
+        -webkit-box-shadow: 0 0 0 0;
+        -moz-box-shadow: 0 0 0 0;
+        box-shadow: 0 0 0 0;
+   }
+</style>
+
+    
+    <article class="text">
+        
+
+        <header class="article-header">
+            <h1 class="page-title">PEP 0490 -- Chain exceptions at C level</h1>
+        </header>
+
+        <!--
+This HTML is auto-generated.  DO NOT EDIT THIS FILE!  If you are writing a new
+PEP, see http://www.python.org/dev/peps/pep-0001 for instructions and links
+to templates.  DO NOT USE THIS HTML FILE AS YOUR TEMPLATE!
+-->
+<html>
+ <body>
+  <table class="rfc2822 docutils field-list" frame="void" rules="none">
+   <col class="field-name">
+   </col>
+   <col class="field-body">
+   </col>
+   <tbody valign="top">
+    <tr class="field">
+     <th class="field-name">
+      PEP:
+     </th>
+     <td class="field-body">
+      490
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Title:
+     </th>
+     <td class="field-body">
+      Chain exceptions at C level
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Author:
+     </th>
+     <td class="field-body">
+      Victor Stinner &lt;victor.stinner at gmail.com&gt;
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Status:
+     </th>
+     <td class="field-body">
+      Draft
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Type:
+     </th>
+     <td class="field-body">
+      Standards Track
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Created:
+     </th>
+     <td class="field-body">
+      25-March-2015
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Python-Version:
+     </th>
+     <td class="field-body">
+      3.6
+     </td>
+    </tr>
+   </tbody>
+  </table>
+  <hr/>
+  <div class="contents topic" id="contents">
+   <p class="topic-title first">
+    Contents
+   </p>
+   <ul class="simple">
+    <li>
+     <a class="reference internal" href="#abstract" id="id2">
+      Abstract
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#rationale" id="id3">
+      Rationale
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#proposal" id="id4">
+      Proposal
+     </a>
+     <ul>
+      <li>
+       <a class="reference internal" href="#modify-pyerr-functions-to-chain-exceptions" id="id5">
+        Modify PyErr_*() functions to chain exceptions
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#modify-functions-to-not-chain-exceptions" id="id6">
+        Modify functions to not chain exceptions
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#modify-functions-to-chain-exceptions" id="id7">
+        Modify functions to chain exceptions
+       </a>
+      </li>
+     </ul>
+    </li>
+    <li>
+     <a class="reference internal" href="#backward-compatibility" id="id8">
+      Backward compatibility
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#alternatives" id="id9">
+      Alternatives
+     </a>
+     <ul>
+      <li>
+       <a class="reference internal" href="#no-change" id="id10">
+        No change
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#new-helpers-to-chain-exceptions" id="id11">
+        New helpers to chain exceptions
+       </a>
+      </li>
+     </ul>
+    </li>
+    <li>
+     <a class="reference internal" href="#appendix" id="id12">
+      Appendix
+     </a>
+     <ul>
+      <li>
+       <a class="reference internal" href="#peps" id="id13">
+        PEPs
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#python-c-api" id="id14">
+        Python C API
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#python-issues" id="id15">
+        Python Issues
+       </a>
+      </li>
+     </ul>
+    </li>
+    <li>
+     <a class="reference internal" href="#copyright" id="id16">
+      Copyright
+     </a>
+    </li>
+   </ul>
+  </div>
+  <div class="section" id="abstract">
+   <h1>
+    <a class="toc-backref" href="#id2">
+     Abstract
+    </a>
+   </h1>
+   <p>
+    Chain exceptions at C level, as already done at Python level.
+   </p>
+  </div>
+  <div class="section" id="rationale">
+   <h1>
+    <a class="toc-backref" href="#id3">
+     Rationale
+    </a>
+   </h1>
+   <p>
+    Python 3 introduced a new killer feature: exceptions are chained by
+default,
+    <a class="reference external" href="../pep-3134/index.html">
+     PEP 3134
+    </a>
+    .
+   </p>
+   <p>
+    Example:
+   </p>
+   <pre class="literal-block">
+try:
+    raise TypeError("err1")
+except TypeError:
+    raise ValueError("err2")
+</pre>
+   <p>
+    Output:
+   </p>
+   <pre class="literal-block">
+Traceback (most recent call last):
+  File "test.py", line 2, in &lt;module&gt;
+    raise TypeError("err1")
+TypeError: err1
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "test.py", line 4, in &lt;module&gt;
+    raise ValueError("err2")
+ValueError: err2
+</pre>
+   <p>
+    Exceptions are chained by default in Python code, but not in
+extensions written in C.
+   </p>
+   <p>
+    A new private
+    <tt class="docutils literal">
+     _PyErr_ChainExceptions()
+    </tt>
+    function was introduced in
+Python 3.4.3 and 3.5 to chain exceptions. Currently, it must be called
+explicitly to chain exceptions and its usage is not trivial.
+   </p>
+   <p>
+    Example of
+    <tt class="docutils literal">
+     _PyErr_ChainExceptions()
+    </tt>
+    usage from the
+    <tt class="docutils literal">
+     zipimport
+    </tt>
+    module to chain the previous
+    <tt class="docutils literal">
+     OSError
+    </tt>
+    to a new
+    <tt class="docutils literal">
+     ZipImportError
+    </tt>
+    exception:
+   </p>
+   <pre class="literal-block">
+PyObject *exc, *val, *tb;
+PyErr_Fetch(&amp;exc, &amp;val, &amp;tb);
+PyErr_Format(ZipImportError, "can't open Zip file: %R", archive);
+_PyErr_ChainExceptions(exc, val, tb);
+</pre>
+   <p>
+    This PEP proposes to also chain exceptions automatically at C level to
+stay consistent and give more information on failures to help
+debugging. The previous example becomes simply:
+   </p>
+   <pre class="literal-block">
+PyErr_Format(ZipImportError, "can't open Zip file: %R", archive);
+</pre>
+  </div>
+  <div class="section" id="proposal">
+   <h1>
+    <a class="toc-backref" href="#id4">
+     Proposal
+    </a>
+   </h1>
+   <div class="section" id="modify-pyerr-functions-to-chain-exceptions">
+    <h2>
+     <a class="toc-backref" href="#id5">
+      Modify PyErr_*() functions to chain exceptions
+     </a>
+    </h2>
+    <p>
+     Modify C functions raising exceptions of the Python C API to
+automatically chain exceptions: modify
+     <tt class="docutils literal">
+      PyErr_SetString()
+     </tt>
+     ,
+     <tt class="docutils literal">
+      PyErr_Format()
+     </tt>
+     ,
+     <tt class="docutils literal">
+      PyErr_SetNone()
+     </tt>
+     , etc.
+    </p>
+   </div>
+   <div class="section" id="modify-functions-to-not-chain-exceptions">
+    <h2>
+     <a class="toc-backref" href="#id6">
+      Modify functions to not chain exceptions
+     </a>
+    </h2>
+    <p>
+     Keeping the previous exception is not always interesting when the new
+exception contains information of the previous exception or even more
+information, especially when the two exceptions have the same type.
+    </p>
+    <p>
+     Example of an useless exception chain with
+     <tt class="docutils literal">
+      int(str)
+     </tt>
+     :
+    </p>
+    <pre class="literal-block">
+TypeError: a bytes-like object is required, not 'type'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "&lt;stdin&gt;", line 1, in &lt;module&gt;
+TypeError: int() argument must be a string, a bytes-like object or a number, not 'type'
+</pre>
+    <p>
+     The new
+     <tt class="docutils literal">
+      TypeError
+     </tt>
+     exception contains more information than the
+previous exception. The previous exception should be hidden.
+    </p>
+    <p>
+     The
+     <tt class="docutils literal">
+      PyErr_Clear()
+     </tt>
+     function can be called to clear the current
+exception before raising a new exception, to not chain the current
+exception with a new exception.
+    </p>
+   </div>
+   <div class="section" id="modify-functions-to-chain-exceptions">
+    <h2>
+     <a class="toc-backref" href="#id7">
+      Modify functions to chain exceptions
+     </a>
+    </h2>
+    <p>
+     Some functions save and then restore the current exception. If a new
+exception is raised, the exception is currently displayed into
+sys.stderr or ignored depending on the function.  Some of these
+functions should be modified to chain exceptions instead.
+    </p>
+    <p>
+     Examples of function ignoring the new exception(s):
+    </p>
+    <ul class="simple">
+     <li>
+      <tt class="docutils literal">
+       ptrace_enter_call()
+      </tt>
+      : ignore exception
+     </li>
+     <li>
+      <tt class="docutils literal">
+       subprocess_fork_exec()
+      </tt>
+      : ignore exception raised by enable_gc()
+     </li>
+     <li>
+      <tt class="docutils literal">
+       t_bootstrap()
+      </tt>
+      of the
+      <tt class="docutils literal">
+       _thread
+      </tt>
+      module: ignore exception raised
+by trying to display the bootstrap function to
+      <tt class="docutils literal">
+       sys.stderr
+      </tt>
+     </li>
+     <li>
+      <tt class="docutils literal">
+       PyDict_GetItem()
+      </tt>
+      ,
+      <tt class="docutils literal">
+       _PyDict_GetItem_KnownHash()
+      </tt>
+      : ignore
+exception raised by looking for a key in the dictionary
+     </li>
+     <li>
+      <tt class="docutils literal">
+       _PyErr_TrySetFromCause()
+      </tt>
+      : ignore exception
+     </li>
+     <li>
+      <tt class="docutils literal">
+       PyFrame_LocalsToFast()
+      </tt>
+      : ignore exception raised by
+      <tt class="docutils literal">
+       dict_to_map()
+      </tt>
+     </li>
+     <li>
+      <tt class="docutils literal">
+       _PyObject_Dump()
+      </tt>
+      : ignore exception.
+      <tt class="docutils literal">
+       _PyObject_Dump()
+      </tt>
+      is used
+to debug, to inspect a running process, it should not modify the
+Python state.
+     </li>
+     <li>
+      <tt class="docutils literal">
+       Py_ReprLeave()
+      </tt>
+      : ignore exception "because there is no way to
+report them"
+     </li>
+     <li>
+      <tt class="docutils literal">
+       type_dealloc()
+      </tt>
+      : ignore exception raised by
+      <tt class="docutils literal">
+       remove_all_subclasses()
+      </tt>
+     </li>
+     <li>
+      <tt class="docutils literal">
+       PyObject_ClearWeakRefs()
+      </tt>
+      : ignore exception?
+     </li>
+     <li>
+      <tt class="docutils literal">
+       call_exc_trace()
+      </tt>
+      ,
+      <tt class="docutils literal">
+       call_trace_protected()
+      </tt>
+      : ignore exception
+     </li>
+     <li>
+      <tt class="docutils literal">
+       remove_importlib_frames()
+      </tt>
+      : ignore exception
+     </li>
+     <li>
+      <tt class="docutils literal">
+       do_mktuple()
+      </tt>
+      , helper used by
+      <tt class="docutils literal">
+       Py_BuildValue()
+      </tt>
+      for example:
+ignore exception?
+     </li>
+     <li>
+      <tt class="docutils literal">
+       flush_io()
+      </tt>
+      : ignore exception
+     </li>
+     <li>
+      <tt class="docutils literal">
+       sys_write()
+      </tt>
+      ,
+      <tt class="docutils literal">
+       sys_format()
+      </tt>
+      : ignore exception
+     </li>
+     <li>
+      <tt class="docutils literal">
+       _PyTraceback_Add()
+      </tt>
+      : ignore exception
+     </li>
+     <li>
+      <tt class="docutils literal">
+       PyTraceBack_Print()
+      </tt>
+      : ignore exception
+     </li>
+    </ul>
+    <p>
+     Examples of function displaying the new exception to
+     <tt class="docutils literal">
+      sys.stderr
+     </tt>
+     :
+    </p>
+    <ul class="simple">
+     <li>
+      <tt class="docutils literal">
+       atexit_callfuncs()
+      </tt>
+      : display exceptions with
+      <tt class="docutils literal">
+       PyErr_Display()
+      </tt>
+      and return the latest exception, the function
+calls multiple callbacks and only returns the latest exception
+     </li>
+     <li>
+      <tt class="docutils literal">
+       sock_dealloc()
+      </tt>
+      : log the
+      <tt class="docutils literal">
+       ResourceWarning
+      </tt>
+      exception with
+      <tt class="docutils literal">
+       PyErr_WriteUnraisable()
+      </tt>
+     </li>
+     <li>
+      <tt class="docutils literal">
+       slot_tp_del()
+      </tt>
+      : display exception with
+      <tt class="docutils literal">
+       PyErr_WriteUnraisable()
+      </tt>
+     </li>
+     <li>
+      <tt class="docutils literal">
+       _PyGen_Finalize()
+      </tt>
+      : display
+      <tt class="docutils literal">
+       gen_close()
+      </tt>
+      exception with
+      <tt class="docutils literal">
+       PyErr_WriteUnraisable()
+      </tt>
+     </li>
+     <li>
+      <tt class="docutils literal">
+       slot_tp_finalize()
+      </tt>
+      : display exception raised by the
+      <tt class="docutils literal">
+       __del__()
+      </tt>
+      method with
+      <tt class="docutils literal">
+       PyErr_WriteUnraisable()
+      </tt>
+     </li>
+     <li>
+      <tt class="docutils literal">
+       PyErr_GivenExceptionMatches()
+      </tt>
+      : display exception raised by
+      <tt class="docutils literal">
+       PyType_IsSubtype()
+      </tt>
+      with
+      <tt class="docutils literal">
+       PyErr_WriteUnraisable()
+      </tt>
+     </li>
+    </ul>
+   </div>
+  </div>
+  <div class="section" id="backward-compatibility">
+   <h1>
+    <a class="toc-backref" href="#id8">
+     Backward compatibility
+    </a>
+   </h1>
+   <p>
+    A side effect of chaining exceptions is that exceptions store
+traceback objects which store frame objects which store local
+variables.  Local variables are kept alive by exceptions. A common
+issue is a reference cycle between local variables and exceptions: an
+exception is stored in a local variable and the frame indirectly
+stored in the exception. The cycle only impacts applications storing
+exceptions.
+   </p>
+   <p>
+    The reference cycle can now be fixed with the new
+    <tt class="docutils literal">
+     traceback.TracebackException
+    </tt>
+    object introduced in Python 3.5. It
+stores informations required to format a full textual traceback without
+storing local variables.
+   </p>
+   <p>
+    The
+    <tt class="docutils literal">
+     asyncio
+    </tt>
+    is impacted by the reference cycle issue. This module
+is also maintained outside Python standard library to release a
+version for Python 3.3.
+    <tt class="docutils literal">
+     traceback.TracebackException
+    </tt>
+    will maybe
+be backported in a private
+    <tt class="docutils literal">
+     asyncio
+    </tt>
+    module to fix reference cycle
+issues.
+   </p>
+  </div>
+  <div class="section" id="alternatives">
+   <h1>
+    <a class="toc-backref" href="#id9">
+     Alternatives
+    </a>
+   </h1>
+   <div class="section" id="no-change">
+    <h2>
+     <a class="toc-backref" href="#id10">
+      No change
+     </a>
+    </h2>
+    <p>
+     A new private
+     <tt class="docutils literal">
+      _PyErr_ChainExceptions()
+     </tt>
+     function is enough to chain
+manually exceptions.
+    </p>
+    <p>
+     Exceptions will only be chained explicitly where it makes sense.
+    </p>
+   </div>
+   <div class="section" id="new-helpers-to-chain-exceptions">
+    <h2>
+     <a class="toc-backref" href="#id11">
+      New helpers to chain exceptions
+     </a>
+    </h2>
+    <p>
+     Functions like
+     <tt class="docutils literal">
+      PyErr_SetString()
+     </tt>
+     don't chain automatically
+exceptions. To make the usage of
+     <tt class="docutils literal">
+      _PyErr_ChainExceptions()
+     </tt>
+     easier,
+new private functions are added:
+    </p>
+    <ul class="simple">
+     <li>
+      <tt class="docutils literal">
+       _PyErr_SetStringChain(exc_type, message)
+      </tt>
+     </li>
+     <li>
+      <tt class="docutils literal">
+       _PyErr_FormatChain(exc_type, format,
+       <span class="pre">
+        ...)
+       </span>
+      </tt>
+     </li>
+     <li>
+      <tt class="docutils literal">
+       _PyErr_SetNoneChain(exc_type)
+      </tt>
+     </li>
+     <li>
+      <tt class="docutils literal">
+       _PyErr_SetObjectChain(exc_type, exc_value)
+      </tt>
+     </li>
+    </ul>
+    <p>
+     Helper functions to raise specific exceptions like
+     <tt class="docutils literal">
+      _PyErr_SetKeyError(key)
+     </tt>
+     or
+     <tt class="docutils literal">
+      PyErr_SetImportError(message, name,
+path)
+     </tt>
+     don't chain exceptions.  The generic
+     <tt class="docutils literal">
+      _PyErr_ChainExceptions(exc_type, exc_value, exc_tb)
+     </tt>
+     should be used
+to chain exceptions with these helper functions.
+    </p>
+   </div>
+  </div>
+  <div class="section" id="appendix">
+   <h1>
+    <a class="toc-backref" href="#id12">
+     Appendix
+    </a>
+   </h1>
+   <div class="section" id="peps">
+    <h2>
+     <a class="toc-backref" href="#id13">
+      PEPs
+     </a>
+    </h2>
+    <ul class="simple">
+     <li>
+      <a class="reference external" href="../pep-3134/index.html">
+       PEP 3134 -- Exception Chaining and Embedded Tracebacks
+      </a>
+      (Python 3.0):
+new
+      <tt class="docutils literal">
+       __context__
+      </tt>
+      and
+      <tt class="docutils literal">
+       __cause__
+      </tt>
+      attributes for exceptions
+     </li>
+     <li>
+      <a class="reference external" href="../pep-0415/index.html">
+       PEP 415 - Implement context suppression with exception attributes
+      </a>
+      (Python 3.3):
+      <tt class="docutils literal">
+       raise exc from None
+      </tt>
+     </li>
+     <li>
+      <a class="reference external" href="../pep-0409/index.html">
+       PEP 409 - Suppressing exception context
+      </a>
+      (superseded by the
+      <a class="reference external" href="../pep-0415/index.html">
+       PEP 415
+      </a>
+      )
+     </li>
+    </ul>
+   </div>
+   <div class="section" id="python-c-api">
+    <h2>
+     <a class="toc-backref" href="#id14">
+      Python C API
+     </a>
+    </h2>
+    <p>
+     The header file
+     <tt class="docutils literal">
+      Include/pyerror.h
+     </tt>
+     declares functions related to
+exceptions.
+    </p>
+    <p>
+     Functions raising exceptions:
+    </p>
+    <ul class="simple">
+     <li>
+      <tt class="docutils literal">
+       PyErr_SetNone(exc_type)
+      </tt>
+     </li>
+     <li>
+      <tt class="docutils literal">
+       PyErr_SetObject(exc_type, exc_value)
+      </tt>
+     </li>
+     <li>
+      <tt class="docutils literal">
+       PyErr_SetString(exc_type, message)
+      </tt>
+     </li>
+     <li>
+      <tt class="docutils literal">
+       PyErr_Format(exc, format,
+       <span class="pre">
+        ...)
+       </span>
+      </tt>
+     </li>
+    </ul>
+    <p>
+     Helpers to raise specific exceptions:
+    </p>
+    <ul class="simple">
+     <li>
+      <tt class="docutils literal">
+       PyErr_BadArgument()
+      </tt>
+     </li>
+     <li>
+      <tt class="docutils literal">
+       PyErr_BadInternalCall()
+      </tt>
+     </li>
+     <li>
+      <tt class="docutils literal">
+       PyErr_NoMemory()
+      </tt>
+     </li>
+     <li>
+      <tt class="docutils literal">
+       PyErr_SetFromErrno(exc)
+      </tt>
+     </li>
+     <li>
+      <tt class="docutils literal">
+       PyErr_SetFromWindowsErr(err)
+      </tt>
+     </li>
+     <li>
+      <tt class="docutils literal">
+       PyErr_SetImportError(message, name, path)
+      </tt>
+     </li>
+     <li>
+      <tt class="docutils literal">
+       _PyErr_SetKeyError(key)
+      </tt>
+     </li>
+     <li>
+      <tt class="docutils literal">
+       _PyErr_TrySetFromCause(prefix_format,
+       <span class="pre">
+        ...)
+       </span>
+      </tt>
+     </li>
+    </ul>
+    <p>
+     Manage the current exception:
+    </p>
+    <ul class="simple">
+     <li>
+      <tt class="docutils literal">
+       PyErr_Clear()
+      </tt>
+      : clear the current exception,
+like
+      <tt class="docutils literal">
+       except: pass
+      </tt>
+     </li>
+     <li>
+      <tt class="docutils literal">
+       PyErr_Fetch(exc_type, exc_value, exc_tb)
+      </tt>
+     </li>
+     <li>
+      <tt class="docutils literal">
+       PyErr_Restore(exc_type, exc_value, exc_tb)
+      </tt>
+     </li>
+     <li>
+      <tt class="docutils literal">
+       PyErr_GetExcInfo(exc_type, exc_value, exc_tb)
+      </tt>
+     </li>
+     <li>
+      <tt class="docutils literal">
+       PyErr_SetExcInfo(exc_type, exc_value, exc_tb)
+      </tt>
+     </li>
+    </ul>
+    <p>
+     Others function to handle exceptions:
+    </p>
+    <ul class="simple">
+     <li>
+      <tt class="docutils literal">
+       PyErr_ExceptionMatches(exc)
+      </tt>
+      : check to implement
+      <tt class="docutils literal">
+       except exc:  ...
+      </tt>
+     </li>
+     <li>
+      <tt class="docutils literal">
+       PyErr_GivenExceptionMatches(exc1, exc2)
+      </tt>
+     </li>
+     <li>
+      <tt class="docutils literal">
+       PyErr_NormalizeException(exc_type, exc_value, exc_tb)
+      </tt>
+     </li>
+     <li>
+      <tt class="docutils literal">
+       _PyErr_ChainExceptions(exc_type, exc_value, exc_tb)
+      </tt>
+     </li>
+    </ul>
+   </div>
+   <div class="section" id="python-issues">
+    <h2>
+     <a class="toc-backref" href="#id15">
+      Python Issues
+     </a>
+    </h2>
+    <p>
+     Chain exceptions:
+    </p>
+    <ul class="simple">
+     <li>
+      <a class="reference external" href="http://bugs.python.org/issue23763">
+       Issue #23763: Chain exceptions in C
+      </a>
+     </li>
+     <li>
+      <a class="reference external" href="http://bugs.python.org/issue23696">
+       Issue #23696: zipimport: chain ImportError to OSError
+      </a>
+     </li>
+     <li>
+      <a class="reference external" href="http://bugs.python.org/issue21715">
+       Issue #21715: Chaining exceptions at C level
+      </a>
+      : added
+      <tt class="docutils literal">
+       _PyErr_ChainExceptions()
+      </tt>
+     </li>
+     <li>
+      <a class="reference external" href="http://bugs.python.org/issue18488">
+       Issue #18488: sqlite: finalize() method of user function may be
+called with an exception set if a call to step() method failed
+      </a>
+     </li>
+     <li>
+      <a class="reference external" href="http://bugs.python.org/issue23781">
+       Issue #23781: Add private _PyErr_ReplaceException() in 2.7
+      </a>
+     </li>
+     <li>
+      <a class="reference external" href="http://bugs.python.org/issue23782">
+       Issue #23782: Leak in _PyTraceback_Add
+      </a>
+     </li>
+    </ul>
+    <p>
+     Changes preventing to loose exceptions:
+    </p>
+    <ul class="simple">
+     <li>
+      <a class="reference external" href="http://bugs.python.org/issue23571">
+       Issue #23571: Raise SystemError if a function returns a result with an
+exception set
+      </a>
+     </li>
+     <li>
+      <a class="reference external" href="http://bugs.python.org/issue18408">
+       Issue #18408: Fixes crashes found by pyfailmalloc
+      </a>
+     </li>
+    </ul>
+   </div>
+  </div>
+  <div class="section" id="copyright">
+   <h1>
+    <a class="toc-backref" href="#id16">
+     Copyright
+    </a>
+   </h1>
+   <p>
+    This document has been placed in the public domain.
+   </p>
+   <!-- Local Variables:
+mode: indented-text
+indent-tabs-mode: nil
+sentence-end-double-space: t
+fill-column: 70
+coding: utf-8
+End: -->
+  </div>
+ </body>
+
+<!-- Mirrored from www.python.org/dev/peps/pep-0490/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 03 Sep 2015 04:33:40 GMT -->
+</html>Source: <a href="https://hg.python.org/peps/file/tip/pep-0490.txt">https://hg.python.org/peps/file/tip/pep-0490.txt</a>
+
+    </article>
+
+
+                </section>
+
+                
+
+
+<aside class="left-sidebar" role="secondary">
+
+    
+
+
+
+
+
+
+    
+
+
+
+
+
+        <div class="twitter-widget sidebar-widget">
+        <a class="twitter-timeline" data-dnt="true" href="https://twitter.com/ThePSF" data-widget-id="434113224703610882">Tweets by @ThePSF</a>
+        <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+    </div>
+
+    <div class="psf-sidebar-widget sidebar-widget">
+        <h3 class="widget-title">The PSF</h3>
+<p>The Python Software Foundation is the organization behind Python. Become a member of the PSF and help advance the software and our mission. </p>
+
+    </div>
+
+</aside>
+
+
+
+                
+                
+
+
+            </div><!-- end .container -->
+        </div><!-- end #content .content-wrapper -->
+
+        <!-- Footer and social media list -->
+        <footer id="site-map" class="main-footer" role="contentinfo">
+            <div class="main-footer-links">
+                <div class="container">
+
+                    
+                    <a id="back-to-top-1" class="jump-link" href="#python-network"><span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> Back to Top</a>
+
+                    
+
+<ul class="sitemap navigation menu do-not-print" role="tree" id="container">
+    
+    <li class="tier-1 element-1">
+        <a href="https://www.python.org/about/" >About</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/apps/" title="">Applications</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/quotes/" title="">Quotes</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/gettingstarted/" title="">Getting Started</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/help/" title="">Help</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-2">
+        <a href="https://www.python.org/downloads/" >Downloads</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/downloads/" title="">All releases</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/downloads/source/" title="">Source code</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/downloads/windows/" title="">Windows</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/downloads/mac-osx/" title="">Mac OS X</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/download/other/" title="">Other Platforms</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://docs.python.org/3/license.html" title="">License</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/download/alternatives" title="">Alternative Implementations</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-3">
+        <a href="https://www.python.org/doc/" >Documentation</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/doc/" title="">Docs</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/doc/av" title="">Audio/Visual Talks</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://wiki.python.org/moin/BeginnersGuide" title="">Beginner&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://docs.python.org/faq/" title="">FAQ</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="http://wiki.python.org/moin/Languages" title="">Non-English Docs</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="../index.html" title="">PEP Index</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://wiki.python.org/moin/PythonBooks" title="">Python Books</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-4">
+        <a href="https://www.python.org/community/" >Community</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/community/diversity/" title="">Diversity</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/community/irc/" title="">IRC</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/community/lists/" title="">Mailing Lists</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/workshops/" title="">Python Conferences</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/community/sigs/" title="">Special Interest Groups</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://wiki.python.org/moin/" title="">Python Wiki</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/community/logos/" title="">Python Logo</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://www.python.org/community/merchandise/" title="">Merchandise</a></li>
+    
+        <li class="tier-2 element-9" role="treeitem"><a href="https://www.python.org/community/awards" title="">Community Awards</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-5">
+        <a href="https://www.python.org/about/success/" title="success-stories">Success Stories</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/success/#arts" title="">Arts</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/success/#business" title="">Business</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/success/#education" title="">Education</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/success/#engineering" title="">Engineering</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/about/success/#government" title="">Government</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://www.python.org/about/success/#scientific" title="">Scientific</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/about/success/#software-development" title="">Software Development</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-6">
+        <a href="https://www.python.org/blogs/" title="News from around the Python world">News</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/blogs/" title="Python Insider Blog Posts">Python News</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://planetpython.org/" title="Planet Python">Community News</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="http://pyfound.blogspot.com/" title="PSF Blog">PSF News</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pycon.blogspot.com/" title="PyCon Blog">PyCon News</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-7">
+        <a href="https://www.python.org/events/" >Events</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/events/python-events/" title="">Python Events</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/events/python-user-group/" title="">User Group Events</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/events/python-events/past/" title="">Python Events Archive</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/events/python-user-group/past/" title="">User Group Events Archive</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://wiki.python.org/moin/PythonEventsCalendar#Submitting_an_Event" title="">Submit an Event</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-8">
+        <a href="https://www.python.org/dev/" >Contributing</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="http://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://bugs.python.org/" title="">Issue Tracker</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://mail.python.org/mailman/listinfo/python-dev" title="">python-dev list</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pythonmentors.com/" title="">Core Mentorship</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+</ul>
+
+
+                    <a id="back-to-top-2" class="jump-link" href="#python-network"><span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> Back to Top</a>
+                    
+
+                </div><!-- end .container -->
+            </div> <!-- end .main-footer-links -->
+
+            <div class="site-base">
+                <div class="container">
+                    
+                    <ul class="footer-links navigation menu do-not-print" role="tree">
+                        <li class="tier-1 element-1"><a href="https://www.python.org/about/help/">Help &amp; <span class="say-no-more">General</span> Contact</a></li>
+                        <li class="tier-1 element-2"><a href="https://www.python.org/community/diversity/">Diversity <span class="say-no-more">Initiatives</span></a></li>
+                        <li class="tier-1 element-3"><a href="https://github.com/python/pythondotorg/issues">Submit Website Bug</a></li>
+                        <!--<li class="tier-1 element-3"><a href="#"><span class="say-no-more">Website</span> Colophon</a></li>-->
+                    </ul>
+
+                    <div class="copyright">
+                        <p><small>
+                            <span class="pre">Copyright &copy;2001-2015.</span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/psf-landing/">Python Software Foundation</a></span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/about/legal/">Legal Statements</a></span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/privacy/">Privacy Policy</a></span>
+                        </small></p>
+                    </div>
+
+                </div><!-- end .container -->
+            </div><!-- end .site-base -->
+
+        </footer>
+
+    </div><!-- end #touchnav-wrapper -->
+
+    
+    <script src="../../../../ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="../../../static/js/libs/jquery-1.8.2.min.js"><\/script>')</script>
+
+    <script src="../../../static/js/libs/masonry.pkgd.min.js"></script>
+
+    <script type="text/javascript" src="../../../static/js/main-min.js" charset="utf-8"></script>
+    
+
+    <!--[if lte IE 7]>
+    <script type="text/javascript" src="/static/js/plugins/IE8-min.js" charset="utf-8"></script>
+    
+    
+    <![endif]-->
+
+    <!--[if lte IE 8]>
+    <script type="text/javascript" src="/static/js/plugins/getComputedStyle-min.js" charset="utf-8"></script>
+    
+    
+    <![endif]-->
+
+    
+
+    
+    
+
+</body>
+</html>

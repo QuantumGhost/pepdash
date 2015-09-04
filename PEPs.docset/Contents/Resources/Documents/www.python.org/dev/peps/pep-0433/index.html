@@ -1,0 +1,3306 @@
+<!doctype html>
+<!--[if lt IE 7]>   <html class="no-js ie6 lt-ie7 lt-ie8 lt-ie9">   <![endif]-->
+<!--[if IE 7]>      <html class="no-js ie7 lt-ie8 lt-ie9">          <![endif]-->
+<!--[if IE 8]>      <html class="no-js ie8 lt-ie9">                 <![endif]-->
+<!--[if gt IE 8]><!--><html class="no-js" lang="en" dir="ltr">  <!--<![endif]-->
+
+
+<!-- Mirrored from www.python.org/dev/peps/pep-0433/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 03 Sep 2015 04:38:15 GMT -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <link rel="prefetch" href="../../../../ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js">
+
+    <meta name="application-name" content="Python.org">
+    <meta name="msapplication-tooltip" content="The official home of the Python Programming Language">
+    <meta name="apple-mobile-web-app-title" content="Python.org">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="format-detection" content="telephone=no">
+    <meta http-equiv="cleartype" content="on">
+    <meta http-equiv="imagetoolbar" content="false">
+
+    <script src="../../../static/js/libs/modernizr.js"></script>
+
+    <link href="../../../static/stylesheets/style.css" rel="stylesheet" type="text/css" title="default" />
+    <link href="../../../static/stylesheets/mq.css" rel="stylesheet" type="text/css" media="not print, braille, embossed, speech, tty" />
+    
+
+    <!--[if (lte IE 8)&(!IEMobile)]>
+    <link href="/static/stylesheets/no-mq.css" rel="stylesheet" type="text/css" media="screen" />
+    
+    
+    <![endif]-->
+
+    
+    <link rel="icon" type="image/x-icon" href="https://www.python.org/static/favicon.ico">
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="../../../static/apple-touch-icon-144x144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="../../../static/apple-touch-icon-114x114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="../../../static/apple-touch-icon-72x72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="../../../static/apple-touch-icon-precomposed.png">
+    <link rel="apple-touch-icon" href="../../../static/apple-touch-icon-precomposed.png">
+
+    
+    <meta name="msapplication-TileImage" content="/static/metro-icon-144x144-precomposed.png"><!-- white shape -->
+    <meta name="msapplication-TileColor" content="#3673a5"><!-- python blue -->
+    <meta name="msapplication-navbutton-color" content="#3673a5">
+
+    <meta property="og:site_name" content="Python.org">
+    <meta property="og:type" content="website">
+
+    <title>PEP 0433 -- Easier suppression of file descriptor inheritance | Python.org</title>
+    <meta property="og:title" content="Welcome to Python.org">
+
+    
+    <meta name="description" content="The official home of the Python Programming Language">
+    <meta name="og:description" content="The official home of the Python Programming Language">
+    <meta name="keywords" content="Python programming language object oriented web free open source software license documentation download community">
+    <meta property="og:tag" content="Python programming language object oriented web free open source software license documentation download community">
+    <meta property="og:published_time" content="">
+    <meta property="og:modified_time" content="">
+    <meta property="og:author" content="">
+    <meta property="og:section" content=""> 
+    <meta property="og:url" content="">
+    <meta property="og:image" content="">
+    <meta property="og:video" content="">
+
+    <link rel="author" href="https://www.python.org/static/humans.txt">
+
+    
+
+    
+    <script type="application/ld+json">
+     {
+       "@context": "http://schema.org",
+       "@type": "WebSite",
+       "url": "https://www.python.org/",
+       "potentialAction": {
+         "@type": "SearchAction",
+         "target": "https://www.python.org/search/?q={search_term_string}",
+         "query-input": "required name=search_term_string"
+       }
+     }
+    </script>
+
+    
+    <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-39055973-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+    </script>
+    
+</head>
+
+<body class="python pages pep-page">
+
+    <div id="touchnav-wrapper">
+
+        <div id="nojs" class="do-not-print">
+            <p><strong>Notice:</strong> While Javascript is not essential for this website, your interaction with the content will be limited. Please turn Javascript on for the full experience. </p>
+        </div>
+
+        <!--[if lt IE 8]>
+        <div id="oldie-warning" class="do-not-print">
+            <p><strong>Notice:</strong> Your browser is <em>ancient</em> and <a href="http://www.ie6countdown.com/">Microsoft agrees</a>. <a href="http://browsehappy.com/">Upgrade to a different browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to experience a better web.</p>
+        </div>
+        <![endif]-->
+
+        <!-- Sister Site Links -->
+        <div id="top" class="top-bar do-not-print">
+
+            <nav class="meta-navigation container" role="navigation">
+
+                
+                <div class="skip-link screen-reader-text">
+                    <a href="#content" title="Skip to content">Skip to content</a>
+                </div>
+
+                
+                <a id="close-python-network" class="jump-link" href="#python-network" aria-hidden="true">
+                    <span aria-hidden="true" class="icon-arrow-down"><span>&#9660;</span></span> Close
+                </a>
+
+                
+
+<ul class="menu" role="tree">
+    
+    <li class="python-meta ">
+        <a href="https://www.python.org/" title="The Python Programming Language" >Python</a>
+    </li>
+    
+    <li class="psf-meta ">
+        <a href="https://www.python.org/psf-landing/" title="The Python Software Foundation" >PSF</a>
+    </li>
+    
+    <li class="docs-meta ">
+        <a href="https://docs.python.org/" title="Python Documentation" >Docs</a>
+    </li>
+    
+    <li class="pypi-meta ">
+        <a href="https://pypi.python.org/" title="Python Package Index" >PyPI</a>
+    </li>
+    
+    <li class="jobs-meta ">
+        <a href="https://www.python.org/jobs/" title="Python Job Board" >Jobs</a>
+    </li>
+    
+    <li class="shop-meta ">
+        <a href="https://www.python.org/community/" title="Python Community" >Community</a>
+    </li>
+    
+</ul>
+
+
+                <a id="python-network" class="jump-link" href="#top" aria-hidden="true">
+                    <span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> The Python Network
+                </a>
+
+            </nav>
+
+        </div>
+
+        <!-- Header elements -->
+        <header class="main-header" role="banner">
+            <div class="container">
+
+                <h1 class="site-headline">
+                    <a href="https://www.python.org/"><img class="python-logo" src="../../../static/img/python-logo.png" alt="python&trade;"></a>
+                </h1>
+
+                <div class="options-bar do-not-print">
+
+                    
+                    <a id="site-map-link" class="jump-to-menu" href="#site-map"><span class="menu-icon">&equiv;</span> Menu</a><form class="search-the-site" action="https://www.python.org/search/" method="get">
+                        <fieldset title="Search Python.org">
+
+                            <span aria-hidden="true" class="icon-search"></span>
+
+                            <label class="screen-reader-text" for="id-search-field">Search This Site</label>
+                            <input id="id-search-field" name="q" type="search" role="textbox" class="search-field" placeholder="Search" value="" tabindex="1">
+
+                            <button type="submit" name="submit" id="submit" class="search-button" title="Submit this Search" tabindex="3">
+                                GO
+                            </button>
+
+                            
+                            <!--[if IE]><input type="text" style="display: none;" disabled="disabled" size="1" tabindex="4"><![endif]-->
+
+                        </fieldset>
+                    </form><span class="breaker"></span><div class="adjust-font-size" aria-hidden="true">
+                        <ul class="navigation menu" aria-label="Adjust Text Size on Page">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                <a href="#" class="action-trigger"><strong><small>A</small> A</strong></a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a class="text-shrink" title="Make Text Smaller" href="javascript:;">Smaller</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a class="text-grow" title="Make Text Larger" href="javascript:;">Larger</a></li>
+                                    <li class="tier-2 element-3" role="treeitem"><a class="text-reset" title="Reset any font size changes I have made" href="javascript:;">Reset</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div><div class="winkwink-nudgenudge">
+                        <ul class="navigation menu" aria-label="Social Media Navigation">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                <a href="#" class="action-trigger">Socialize</a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a href="http://plus.google.com/+Python"><span aria-hidden="true" class="icon-google-plus"></span>Google+</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a href="http://www.facebook.com/pythonlang?fref=ts"><span aria-hidden="true" class="icon-facebook"></span>Facebook</a></li>
+                                    <li class="tier-2 element-3" role="treeitem"><a href="http://twitter.com/ThePSF"><span aria-hidden="true" class="icon-twitter"></span>Twitter</a></li>
+                                    <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/irc/"><span aria-hidden="true" class="icon-freenode"></span>Chat on IRC</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div><div class="account-signin">
+                        <ul class="navigation menu" aria-label="Social Media Navigation">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                
+                                <a href="https://www.python.org/accounts/login/" title="Sign Up or Sign In to Python.org">Sign In</a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/accounts/signup/">Sign Up / Register</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/accounts/login/">Sign In</a></li>
+                                </ul>
+                                
+                            </li>
+                        </ul>
+                    </div>
+
+                </div><!-- end options-bar -->
+
+                <nav id="mainnav" class="python-navigation main-navigation do-not-print" role="navigation">
+                    
+                        
+<ul class="navigation menu" role="menubar" aria-label="Main Navigation">
+  
+    
+    
+    <li id="about" class="tier-1 element-1  " aria-haspopup="true">
+        <a href="https://www.python.org/about/" title="" class="">About</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/apps/" title="">Applications</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/quotes/" title="">Quotes</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/gettingstarted/" title="">Getting Started</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/help/" title="">Help</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="downloads" class="tier-1 element-2  " aria-haspopup="true">
+        <a href="https://www.python.org/downloads/" title="" class="">Downloads</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/downloads/" title="">All releases</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/downloads/source/" title="">Source code</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/downloads/windows/" title="">Windows</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/downloads/mac-osx/" title="">Mac OS X</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/download/other/" title="">Other Platforms</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://docs.python.org/3/license.html" title="">License</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/download/alternatives" title="">Alternative Implementations</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="documentation" class="tier-1 element-3  " aria-haspopup="true">
+        <a href="https://www.python.org/doc/" title="" class="">Documentation</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/doc/" title="">Docs</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/doc/av" title="">Audio/Visual Talks</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://wiki.python.org/moin/BeginnersGuide" title="">Beginner&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://docs.python.org/faq/" title="">FAQ</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="http://wiki.python.org/moin/Languages" title="">Non-English Docs</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="../index.html" title="">PEP Index</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://wiki.python.org/moin/PythonBooks" title="">Python Books</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="community" class="tier-1 element-4  " aria-haspopup="true">
+        <a href="https://www.python.org/community/" title="" class="">Community</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/community/diversity/" title="">Diversity</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/community/irc/" title="">IRC</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/community/lists/" title="">Mailing Lists</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/workshops/" title="">Python Conferences</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/community/sigs/" title="">Special Interest Groups</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://wiki.python.org/moin/" title="">Python Wiki</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/community/logos/" title="">Python Logo</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://www.python.org/community/merchandise/" title="">Merchandise</a></li>
+    
+        <li class="tier-2 element-9" role="treeitem"><a href="https://www.python.org/community/awards" title="">Community Awards</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="success-stories" class="tier-1 element-5  " aria-haspopup="true">
+        <a href="https://www.python.org/about/success/" title="success-stories" class="">Success Stories</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/success/#arts" title="">Arts</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/success/#business" title="">Business</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/success/#education" title="">Education</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/success/#engineering" title="">Engineering</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/about/success/#government" title="">Government</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://www.python.org/about/success/#scientific" title="">Scientific</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/about/success/#software-development" title="">Software Development</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="news" class="tier-1 element-6  " aria-haspopup="true">
+        <a href="https://www.python.org/blogs/" title="News from around the Python world" class="">News</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/blogs/" title="Python Insider Blog Posts">Python News</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://planetpython.org/" title="Planet Python">Community News</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="http://pyfound.blogspot.com/" title="PSF Blog">PSF News</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pycon.blogspot.com/" title="PyCon Blog">PyCon News</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="events" class="tier-1 element-7  " aria-haspopup="true">
+        <a href="https://www.python.org/events/" title="" class="">Events</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/events/python-events/" title="">Python Events</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/events/python-user-group/" title="">User Group Events</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/events/python-events/past/" title="">Python Events Archive</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/events/python-user-group/past/" title="">User Group Events Archive</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://wiki.python.org/moin/PythonEventsCalendar#Submitting_an_Event" title="">Submit an Event</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    
+  
+</ul>
+
+                    
+                </nav>
+
+                <div class="header-banner "> <!-- for optional "do-not-print" class -->
+                    
+                    
+                </div>
+
+                
+                
+
+             </div><!-- end .container -->
+        </header>
+
+        <div id="content" class="content-wrapper">
+            <!-- Main Content Column -->
+            <div class="container">
+
+                <section class="main-content with-left-sidebar" role="main">
+
+                    
+<ul class="breadcrumbs menu">
+    <li>
+        <a href="https://www.python.org/" title="The Python Programming Language">Python</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>
+        <a href="https://www.python.org/dev/">Python Developer's Guide</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>
+        <a href="../index.html">PEP Index</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>PEP 0433 -- Easier suppression of file descriptor inheritance</li>
+</ul>
+
+
+                    
+<style>
+   .pep-page pre {
+        padding: .5em;
+        background: inherit;
+        border-left: 0px;
+        -webkit-box-shadow: 0 0 0 0;
+        -moz-box-shadow: 0 0 0 0;
+        box-shadow: 0 0 0 0;
+   }
+</style>
+
+    
+    <article class="text">
+        
+
+        <header class="article-header">
+            <h1 class="page-title">PEP 0433 -- Easier suppression of file descriptor inheritance</h1>
+        </header>
+
+        <!--
+This HTML is auto-generated.  DO NOT EDIT THIS FILE!  If you are writing a new
+PEP, see http://www.python.org/dev/peps/pep-0001 for instructions and links
+to templates.  DO NOT USE THIS HTML FILE AS YOUR TEMPLATE!
+-->
+<html>
+ <body>
+  <table class="rfc2822 docutils field-list" frame="void" rules="none">
+   <col class="field-name">
+   </col>
+   <col class="field-body">
+   </col>
+   <tbody valign="top">
+    <tr class="field">
+     <th class="field-name">
+      PEP:
+     </th>
+     <td class="field-body">
+      433
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Title:
+     </th>
+     <td class="field-body">
+      Easier suppression of file descriptor inheritance
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Author:
+     </th>
+     <td class="field-body">
+      Victor Stinner &lt;victor.stinner at gmail.com&gt;
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Status:
+     </th>
+     <td class="field-body">
+      Superseded
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Type:
+     </th>
+     <td class="field-body">
+      Standards Track
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Created:
+     </th>
+     <td class="field-body">
+      10-January-2013
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Python-Version:
+     </th>
+     <td class="field-body">
+      3.4
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Superseded-By:
+     </th>
+     <td class="field-body">
+      446
+     </td>
+    </tr>
+   </tbody>
+  </table>
+  <hr/>
+  <div class="contents topic" id="contents">
+   <p class="topic-title first">
+    Contents
+   </p>
+   <ul class="simple">
+    <li>
+     <a class="reference internal" href="#abstract" id="id5">
+      Abstract
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#rationale" id="id6">
+      Rationale
+     </a>
+     <ul>
+      <li>
+       <a class="reference internal" href="#status-in-python-3-3" id="id7">
+        Status in Python 3.3
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#inherited-file-descriptors-issues" id="id8">
+        Inherited file descriptors issues
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#security" id="id9">
+        Security
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#atomicity" id="id10">
+        Atomicity
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#portability" id="id11">
+        Portability
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#scope" id="id12">
+        Scope
+       </a>
+      </li>
+     </ul>
+    </li>
+    <li>
+     <a class="reference internal" href="#proposal" id="id13">
+      Proposal
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#alternatives" id="id14">
+      Alternatives
+     </a>
+     <ul>
+      <li>
+       <a class="reference internal" href="#inheritance-enabled-by-default-default-no-configurable" id="id15">
+        Inheritance enabled by default, default no configurable
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#inheritance-enabled-by-default-default-can-only-be-set-to-true" id="id16">
+        Inheritance enabled by default, default can only be set to True
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#disable-inheritance-by-default" id="id17">
+        Disable inheritance by default
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#close-file-descriptors-after-fork" id="id18">
+        Close file descriptors after fork
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#open-add-e-flag-to-mode" id="id19">
+        open(): add "e" flag to mode
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#bikeshedding-on-the-name-of-the-new-parameter" id="id20">
+        Bikeshedding on the name of the new parameter
+       </a>
+      </li>
+     </ul>
+    </li>
+    <li>
+     <a class="reference internal" href="#applications-using-inheritance-of-file-descriptors" id="id21">
+      Applications using inheritance of file descriptors
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#performances" id="id22">
+      Performances
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#implementation" id="id23">
+      Implementation
+     </a>
+     <ul>
+      <li>
+       <a class="reference internal" href="#os-get-cloexec-fd" id="id24">
+        os.get_cloexec(fd)
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#os-set-cloexec-fd-cloexec-true" id="id25">
+        os.set_cloexec(fd, cloexec=True)
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#open" id="id26">
+        open()
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#os-dup" id="id27">
+        os.dup()
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#os-dup2" id="id28">
+        os.dup2()
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#os-pipe" id="id29">
+        os.pipe()
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#socket-socket" id="id30">
+        socket.socket()
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#socket-socketpair" id="id31">
+        socket.socketpair()
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#socket-socket-accept" id="id32">
+        socket.socket.accept()
+       </a>
+      </li>
+     </ul>
+    </li>
+    <li>
+     <a class="reference internal" href="#backward-compatibility" id="id33">
+      Backward compatibility
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#appendix-operating-system-support" id="id34">
+      Appendix: Operating system support
+     </a>
+     <ul>
+      <li>
+       <a class="reference internal" href="#windows" id="id35">
+        Windows
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#ioctl" id="id36">
+        ioctl
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#fcntl" id="id37">
+        fcntl
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#atomic-flags" id="id38">
+        Atomic flags
+       </a>
+      </li>
+     </ul>
+    </li>
+    <li>
+     <a class="reference internal" href="#links" id="id39">
+      Links
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#footnotes" id="id40">
+      Footnotes
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#id2" id="id41">
+      References
+     </a>
+    </li>
+   </ul>
+  </div>
+  <div class="section" id="abstract">
+   <h1>
+    <a class="toc-backref" href="#id5">
+     Abstract
+    </a>
+   </h1>
+   <p>
+    Add a new optional
+    <em>
+     cloexec
+    </em>
+    parameter on functions creating file
+descriptors, add different ways to change default values of this
+parameter, and add four new functions:
+   </p>
+   <blockquote>
+    <ul class="simple">
+     <li>
+      <tt class="docutils literal">
+       os.get_cloexec(fd)
+      </tt>
+     </li>
+     <li>
+      <tt class="docutils literal">
+       os.set_cloexec(fd, cloexec=True)
+      </tt>
+     </li>
+     <li>
+      <tt class="docutils literal">
+       sys.getdefaultcloexec()
+      </tt>
+     </li>
+     <li>
+      <tt class="docutils literal">
+       sys.setdefaultcloexec(cloexec)
+      </tt>
+     </li>
+    </ul>
+   </blockquote>
+  </div>
+  <div class="section" id="rationale">
+   <h1>
+    <a class="toc-backref" href="#id6">
+     Rationale
+    </a>
+   </h1>
+   <p>
+    A file descriptor has a close-on-exec flag which indicates if the file
+descriptor will be inherited or not.
+   </p>
+   <p>
+    On UNIX, if the close-on-exec flag is set, the file descriptor is not
+inherited: it will be closed at the execution of child processes;
+otherwise the file descriptor is inherited by child processes.
+   </p>
+   <p>
+    On Windows, if the close-on-exec flag is set, the file descriptor is not
+inherited; the file descriptor is inherited by child processes if the
+close-on-exec flag is cleared and if
+    <tt class="docutils literal">
+     CreateProcess()
+    </tt>
+    is called with
+the
+    <em>
+     bInheritHandles
+    </em>
+    parameter set to
+    <tt class="docutils literal">
+     TRUE
+    </tt>
+    (when
+    <tt class="docutils literal">
+     subprocess.Popen
+    </tt>
+    is created with
+    <tt class="docutils literal">
+     close_fds=False
+    </tt>
+    for example).
+Windows does not have "close-on-exec" flag but an inheritance flag which
+is just the opposite value. For example, setting close-on-exec flag
+means clearing the
+    <tt class="docutils literal">
+     HANDLE_FLAG_INHERIT
+    </tt>
+    flag of an handle.
+   </p>
+   <div class="section" id="status-in-python-3-3">
+    <h2>
+     <a class="toc-backref" href="#id7">
+      Status in Python 3.3
+     </a>
+    </h2>
+    <p>
+     On UNIX, the subprocess module closes file descriptors greater than 2 by
+default since Python 3.2
+     <a class="footnote-reference" href="#subprocess-close" id="id1">
+      [1]
+     </a>
+     . All file descriptors
+created by the parent process are automatically closed in the child
+process.
+    </p>
+    <p>
+     <tt class="docutils literal">
+      xmlrpc.server.SimpleXMLRPCServer
+     </tt>
+     sets the close-on-exec flag of
+the listening socket, the parent class
+     <tt class="docutils literal">
+      socketserver.TCPServer
+     </tt>
+     does not set this flag.
+    </p>
+    <p>
+     There are other cases creating a subprocess or executing a new program
+where file descriptors are not closed: functions of the
+     <tt class="docutils literal">
+      <span class="pre">
+       os.spawn*()
+      </span>
+     </tt>
+     and the
+     <tt class="docutils literal">
+      <span class="pre">
+       os.exec*()
+      </span>
+     </tt>
+     families and third party modules calling
+     <tt class="docutils literal">
+      exec()
+     </tt>
+     or
+     <tt class="docutils literal">
+      fork()
+     </tt>
+     +
+     <tt class="docutils literal">
+      exec()
+     </tt>
+     . In this case, file descriptors
+are shared between the parent and the child processes which is usually
+unexpected and causes various issues.
+    </p>
+    <p>
+     This PEP proposes to continue the work started with the change in the
+subprocess in Python 3.2, to fix the issue in any code, and not just
+code using subprocess.
+    </p>
+   </div>
+   <div class="section" id="inherited-file-descriptors-issues">
+    <h2>
+     <a class="toc-backref" href="#id8">
+      Inherited file descriptors issues
+     </a>
+    </h2>
+    <p>
+     Closing the file descriptor in the parent process does not close the
+related resource (file, socket, ...) because it is still open in the
+child process.
+    </p>
+    <p>
+     The listening socket of TCPServer is not closed on
+     <tt class="docutils literal">
+      exec()
+     </tt>
+     : the child
+process is able to get connection from new clients; if the parent closes
+the listening socket and create a new listening socket on the same
+address, it would get an "address already is used" error.
+    </p>
+    <p>
+     Not closing file descriptors can lead to resource exhaustion: even if
+the parent closes all files, creating a new file descriptor may fail
+with "too many files" because files are still open in the child process.
+    </p>
+    <p>
+     See also the following issues:
+    </p>
+    <blockquote>
+     <ul class="simple">
+      <li>
+       <a class="reference external" href="http://bugs.python.org/issue2320">
+        Issue #2320: Race condition in subprocess using stdin
+       </a>
+       (2008)
+      </li>
+      <li>
+       <a class="reference external" href="http://bugs.python.org/issue3006">
+        Issue #3006: subprocess.Popen causes socket to remain open after
+close
+       </a>
+       (2008)
+      </li>
+      <li>
+       <a class="reference external" href="http://bugs.python.org/issue7213">
+        Issue #7213: subprocess leaks open file descriptors between Popen
+instances causing hangs
+       </a>
+       (2009)
+      </li>
+      <li>
+       <a class="reference external" href="http://bugs.python.org/issue12786">
+        Issue #12786: subprocess wait() hangs when stdin is closed
+       </a>
+       (2011)
+      </li>
+     </ul>
+    </blockquote>
+   </div>
+   <div class="section" id="security">
+    <h2>
+     <a class="toc-backref" href="#id9">
+      Security
+     </a>
+    </h2>
+    <p>
+     Leaking file descriptors is a major security vulnerability. An
+untrusted child process can read sensitive data like passwords and
+take control of the parent process though leaked file descriptors. It
+is for example a known vulnerability to escape from a chroot.
+    </p>
+    <p>
+     See also the CERT recommandation:
+     <a class="reference external" href="https://www.securecoding.cert.org/confluence/display/seccode/FIO42-C.+Ensure+files+are+properly+closed+when+they+are+no+longer+needed">
+      FIO42-C. Ensure files are properly closed when they are no longer needed
+     </a>
+     .
+    </p>
+    <p>
+     Example of vulnerabilities:
+    </p>
+    <blockquote>
+     <ul class="simple">
+      <li>
+       <a class="reference external" href="http://www.openssh.com/txt/portable-keysign-rand-helper.adv">
+        OpenSSH Security Advisory: portable-keysign-rand-helper.adv
+       </a>
+       (April 2011)
+      </li>
+      <li>
+       <a class="reference external" href="http://cwe.mitre.org/data/definitions/403.html">
+        CWE-403: Exposure of File Descriptor to Unintended Control Sphere
+       </a>
+       (2008)
+      </li>
+      <li>
+       <a class="reference external" href="http://www.securityfocus.com/archive/1/348368">
+        Hijacking Apache https by mod_php
+       </a>
+       (Dec 2003)
+       <ul>
+        <li>
+         Apache:
+         <a class="reference external" href="https://issues.apache.org/bugzilla/show_bug.cgi?id=46425">
+          Apr should set FD_CLOEXEC if APR_FOPEN_NOCLEANUP is not set
+         </a>
+         (fixed in 2009)
+        </li>
+        <li>
+         PHP:
+         <a class="reference external" href="https://bugs.php.net/bug.php?id=38915">
+          system() (and similar) don't cleanup opened handles of Apache
+         </a>
+         (not fixed in january
+2013)
+        </li>
+       </ul>
+      </li>
+     </ul>
+    </blockquote>
+   </div>
+   <div class="section" id="atomicity">
+    <h2>
+     <a class="toc-backref" href="#id10">
+      Atomicity
+     </a>
+    </h2>
+    <p>
+     Using
+     <tt class="docutils literal">
+      fcntl()
+     </tt>
+     to set the close-on-exec flag is not safe in a
+multithreaded application. If a thread calls
+     <tt class="docutils literal">
+      fork()
+     </tt>
+     and
+     <tt class="docutils literal">
+      exec()
+     </tt>
+     between the creation of the file descriptor and the call to
+     <tt class="docutils literal">
+      fcntl(fd, F_SETFD, new_flags)
+     </tt>
+     : the file descriptor will be
+inherited by the child process. Modern operating systems offer
+functions to set the flag during the creation of the file descriptor,
+which avoids the race condition.
+    </p>
+   </div>
+   <div class="section" id="portability">
+    <h2>
+     <a class="toc-backref" href="#id11">
+      Portability
+     </a>
+    </h2>
+    <p>
+     Python 3.2 added
+     <tt class="docutils literal">
+      socket.SOCK_CLOEXEC
+     </tt>
+     flag, Python 3.3 added
+     <tt class="docutils literal">
+      os.O_CLOEXEC
+     </tt>
+     flag and
+     <tt class="docutils literal">
+      os.pipe2()
+     </tt>
+     function. It is already
+possible to set atomically close-on-exec flag in Python 3.3 when
+opening a file and creating a pipe or socket.
+    </p>
+    <p>
+     The problem is that these flags and functions are not portable: only
+recent versions of operating systems support them.
+     <tt class="docutils literal">
+      O_CLOEXEC
+     </tt>
+     and
+     <tt class="docutils literal">
+      SOCK_CLOEXEC
+     </tt>
+     flags are ignored by old Linux versions and so
+     <tt class="docutils literal">
+      FD_CLOEXEC
+     </tt>
+     flag must be checked using
+     <tt class="docutils literal">
+      fcntl(fd, F_GETFD)
+     </tt>
+     .  If
+the kernel ignores
+     <tt class="docutils literal">
+      O_CLOEXEC
+     </tt>
+     or
+     <tt class="docutils literal">
+      SOCK_CLOEXEC
+     </tt>
+     flag, a call to
+     <tt class="docutils literal">
+      fcntl(fd, F_SETFD, flags)
+     </tt>
+     is required to set close-on-exec flag.
+    </p>
+    <div class="note">
+     <p class="first admonition-title">
+      Note
+     </p>
+     <p class="last">
+      OpenBSD older 5.2 does not close the file descriptor with
+close-on-exec flag set if
+      <tt class="docutils literal">
+       fork()
+      </tt>
+      is used before
+      <tt class="docutils literal">
+       exec()
+      </tt>
+      , but
+it works correctly if
+      <tt class="docutils literal">
+       exec()
+      </tt>
+      is called without
+      <tt class="docutils literal">
+       fork()
+      </tt>
+      . Try
+      <a class="reference external" href="http://hg.python.org/peps/file/tip/pep-0433/openbsd_bug.py">
+       openbsd_bug.py
+      </a>
+      .
+     </p>
+    </div>
+   </div>
+   <div class="section" id="scope">
+    <h2>
+     <a class="toc-backref" href="#id12">
+      Scope
+     </a>
+    </h2>
+    <p>
+     Applications still have to close explicitly file descriptors after a
+     <tt class="docutils literal">
+      fork()
+     </tt>
+     .  The close-on-exec flag only closes file descriptors after
+     <tt class="docutils literal">
+      exec()
+     </tt>
+     , and so after
+     <tt class="docutils literal">
+      fork()
+     </tt>
+     +
+     <tt class="docutils literal">
+      exec()
+     </tt>
+     .
+    </p>
+    <p>
+     This PEP only change the close-on-exec flag of file descriptors
+created by the Python standard library, or by modules using the
+standard library.  Third party modules not using the standard library
+should be modified to conform to this PEP. The new
+     <tt class="docutils literal">
+      os.set_cloexec()
+     </tt>
+     function can be used for example.
+    </p>
+    <div class="note">
+     <p class="first admonition-title">
+      Note
+     </p>
+     <p class="last">
+      See
+      <a class="reference internal" href="#close-file-descriptors-after-fork">
+       Close file descriptors after fork
+      </a>
+      for a possible solution
+for
+      <tt class="docutils literal">
+       fork()
+      </tt>
+      without
+      <tt class="docutils literal">
+       exec()
+      </tt>
+      .
+     </p>
+    </div>
+   </div>
+  </div>
+  <div class="section" id="proposal">
+   <h1>
+    <a class="toc-backref" href="#id13">
+     Proposal
+    </a>
+   </h1>
+   <p>
+    Add a new optional
+    <em>
+     cloexec
+    </em>
+    parameter on functions creating file
+descriptors and different ways to change default value of this
+parameter.
+   </p>
+   <p>
+    Add new functions:
+   </p>
+   <blockquote>
+    <ul class="simple">
+     <li>
+      <tt class="docutils literal">
+       os.get_cloexec(fd:int)
+       <span class="pre">
+        -&gt;
+       </span>
+       bool
+      </tt>
+      : get the
+close-on-exec flag of a file descriptor. Not available on all
+platforms.
+     </li>
+     <li>
+      <tt class="docutils literal">
+       os.set_cloexec(fd:int, cloexec:bool=True)
+      </tt>
+      : set or clear the
+close-on-exec flag on a file descriptor. Not available on all
+platforms.
+     </li>
+     <li>
+      <tt class="docutils literal">
+       sys.getdefaultcloexec()
+       <span class="pre">
+        -&gt;
+       </span>
+       bool
+      </tt>
+      : get the current default value
+of the
+      <em>
+       cloexec
+      </em>
+      parameter
+     </li>
+     <li>
+      <tt class="docutils literal">
+       sys.setdefaultcloexec(cloexec: bool)
+      </tt>
+      : set the default value
+of the
+      <em>
+       cloexec
+      </em>
+      parameter
+     </li>
+    </ul>
+   </blockquote>
+   <p>
+    Add a new optional
+    <em>
+     cloexec
+    </em>
+    parameter to:
+   </p>
+   <blockquote>
+    <ul class="simple">
+     <li>
+      <tt class="docutils literal">
+       asyncore.dispatcher.create_socket()
+      </tt>
+     </li>
+     <li>
+      <tt class="docutils literal">
+       io.FileIO
+      </tt>
+     </li>
+     <li>
+      <tt class="docutils literal">
+       io.open()
+      </tt>
+     </li>
+     <li>
+      <tt class="docutils literal">
+       open()
+      </tt>
+     </li>
+     <li>
+      <tt class="docutils literal">
+       os.dup()
+      </tt>
+     </li>
+     <li>
+      <tt class="docutils literal">
+       os.dup2()
+      </tt>
+     </li>
+     <li>
+      <tt class="docutils literal">
+       os.fdopen()
+      </tt>
+     </li>
+     <li>
+      <tt class="docutils literal">
+       os.open()
+      </tt>
+     </li>
+     <li>
+      <tt class="docutils literal">
+       os.openpty()
+      </tt>
+     </li>
+     <li>
+      <tt class="docutils literal">
+       os.pipe()
+      </tt>
+     </li>
+     <li>
+      <tt class="docutils literal">
+       select.devpoll()
+      </tt>
+     </li>
+     <li>
+      <tt class="docutils literal">
+       select.epoll()
+      </tt>
+     </li>
+     <li>
+      <tt class="docutils literal">
+       select.kqueue()
+      </tt>
+     </li>
+     <li>
+      <tt class="docutils literal">
+       socket.socket()
+      </tt>
+     </li>
+     <li>
+      <tt class="docutils literal">
+       socket.socket.accept()
+      </tt>
+     </li>
+     <li>
+      <tt class="docutils literal">
+       socket.socket.dup()
+      </tt>
+     </li>
+     <li>
+      <tt class="docutils literal">
+       socket.socket.fromfd
+      </tt>
+     </li>
+     <li>
+      <tt class="docutils literal">
+       socket.socketpair()
+      </tt>
+     </li>
+    </ul>
+   </blockquote>
+   <p>
+    The default value of the
+    <em>
+     cloexec
+    </em>
+    parameter is
+    <tt class="docutils literal">
+     sys.getdefaultcloexec()
+    </tt>
+    .
+   </p>
+   <p>
+    Add a new command line option
+    <tt class="docutils literal">
+     <span class="pre">
+      -e
+     </span>
+    </tt>
+    and an environment variable
+    <tt class="docutils literal">
+     PYTHONCLOEXEC
+    </tt>
+    to the set close-on-exec flag by default.
+   </p>
+   <p>
+    <tt class="docutils literal">
+     subprocess
+    </tt>
+    clears the close-on-exec flag of file descriptors of the
+    <tt class="docutils literal">
+     pass_fds
+    </tt>
+    parameter.
+   </p>
+   <p>
+    All functions creating file descriptors in the standard library must
+respect the default value of the
+    <em>
+     cloexec
+    </em>
+    parameter:
+    <tt class="docutils literal">
+     sys.getdefaultcloexec()
+    </tt>
+    .
+   </p>
+   <p>
+    File descriptors 0 (stdin), 1 (stdout) and 2 (stderr) are expected to be
+inherited, but Python does not handle them differently. When
+    <tt class="docutils literal">
+     os.dup2()
+    </tt>
+    is used to replace standard streams,
+    <tt class="docutils literal">
+     cloexec=False
+    </tt>
+    must be specified explicitly.
+   </p>
+   <p>
+    Drawbacks of the proposal:
+   </p>
+   <blockquote>
+    <ul class="simple">
+     <li>
+      It is not more possible to know if the close-on-exec flag will be
+set or not on a newly created file descriptor just by reading the
+source code.
+     </li>
+     <li>
+      If the inheritance of a file descriptor matters, the
+      <em>
+       cloexec
+      </em>
+      parameter must now be specified explicitly, or the library or the
+application will not work depending on the default value of the
+      <em>
+       cloexec
+      </em>
+      parameter.
+     </li>
+    </ul>
+   </blockquote>
+  </div>
+  <div class="section" id="alternatives">
+   <h1>
+    <a class="toc-backref" href="#id14">
+     Alternatives
+    </a>
+   </h1>
+   <div class="section" id="inheritance-enabled-by-default-default-no-configurable">
+    <h2>
+     <a class="toc-backref" href="#id15">
+      Inheritance enabled by default, default no configurable
+     </a>
+    </h2>
+    <p>
+     Add a new optional parameter
+     <em>
+      cloexec
+     </em>
+     on functions creating file
+descriptors. The default value of the
+     <em>
+      cloexec
+     </em>
+     parameter is
+     <tt class="docutils literal">
+      False
+     </tt>
+     ,
+and this default cannot be changed. File descriptor inheritance enabled by
+default is also the default on POSIX and on Windows. This alternative is
+the most convervative option.
+    </p>
+    <p>
+     This option does not solve issues listed in the
+     <a class="reference internal" href="#rationale">
+      Rationale
+     </a>
+     section, it only provides an helper to fix them. All functions creating
+file descriptors have to be modified to set
+     <em>
+      cloexec=True
+     </em>
+     in each
+module used by an application to fix all these issues.
+    </p>
+   </div>
+   <div class="section" id="inheritance-enabled-by-default-default-can-only-be-set-to-true">
+    <h2>
+     <a class="toc-backref" href="#id16">
+      Inheritance enabled by default, default can only be set to True
+     </a>
+    </h2>
+    <p>
+     This alternative is based on the proposal: the only difference is that
+     <tt class="docutils literal">
+      sys.setdefaultcloexec()
+     </tt>
+     does not take any argument, it can only be
+used to set the default value of the
+     <em>
+      cloexec
+     </em>
+     parameter to
+     <tt class="docutils literal">
+      True
+     </tt>
+     .
+    </p>
+   </div>
+   <div class="section" id="disable-inheritance-by-default">
+    <h2>
+     <a class="toc-backref" href="#id17">
+      Disable inheritance by default
+     </a>
+    </h2>
+    <p>
+     This alternative is based on the proposal: the only difference is that
+the default value of the
+     <em>
+      cloexec
+     </em>
+     parameter is
+     <tt class="docutils literal">
+      True
+     </tt>
+     (instead of
+     <tt class="docutils literal">
+      False
+     </tt>
+     ).
+    </p>
+    <p>
+     If a file must be inherited by child processes,
+     <tt class="docutils literal">
+      cloexec=False
+     </tt>
+     parameter can be used.
+    </p>
+    <p>
+     Advantages of setting close-on-exec flag by default:
+    </p>
+    <blockquote>
+     <ul class="simple">
+      <li>
+       There are far more programs that are bitten by FD inheritance upon
+exec (see
+       <a class="reference internal" href="#inherited-file-descriptors-issues">
+        Inherited file descriptors issues
+       </a>
+       and
+       <a class="reference internal" href="#security">
+        Security
+       </a>
+       )
+than programs relying on it (see
+       <a class="reference internal" href="#applications-using-inheritance-of-file-descriptors">
+        Applications using inheritance of
+file descriptors
+       </a>
+       ).
+      </li>
+     </ul>
+    </blockquote>
+    <p>
+     Drawbacks of setting close-on-exec flag by default:
+    </p>
+    <blockquote>
+     <ul class="simple">
+      <li>
+       It violates the principle of least surprise.  Developers using the
+os module may expect that Python respects the POSIX standard and so
+that close-on-exec flag is not set by default.
+      </li>
+      <li>
+       The os module is written as a thin wrapper to system calls (to
+functions of the C standard library). If atomic flags to set
+close-on-exec flag are not supported (see
+       <a class="reference internal" href="#appendix-operating-system-support">
+        Appendix: Operating
+system support
+       </a>
+       ), a single Python function call may call 2 or 3
+system calls (see
+       <a class="reference internal" href="#performances">
+        Performances
+       </a>
+       section).
+      </li>
+      <li>
+       Extra system calls, if any, may slow down Python: see
+       <a class="reference internal" href="#performances">
+        Performances
+       </a>
+       .
+      </li>
+     </ul>
+    </blockquote>
+    <p>
+     Backward compatibility: only a few programs rely on inheritance of file
+descriptors, and they only pass a few file descriptors, usually just
+one.  These programs will fail immediatly with
+     <tt class="docutils literal">
+      EBADF
+     </tt>
+     error, and it
+will be simple to fix them: add
+     <tt class="docutils literal">
+      cloexec=False
+     </tt>
+     parameter or use
+     <tt class="docutils literal">
+      os.set_cloexec(fd, False)
+     </tt>
+     .
+    </p>
+    <p>
+     The
+     <tt class="docutils literal">
+      subprocess
+     </tt>
+     module will be changed anyway to clear
+close-on-exec flag on file descriptors listed in the
+     <tt class="docutils literal">
+      pass_fds
+     </tt>
+     parameter of Popen constructor. So it possible that these programs will
+not need any fix if they use the
+     <tt class="docutils literal">
+      subprocess
+     </tt>
+     module.
+    </p>
+   </div>
+   <div class="section" id="close-file-descriptors-after-fork">
+    <h2>
+     <a class="toc-backref" href="#id18">
+      Close file descriptors after fork
+     </a>
+    </h2>
+    <p>
+     This PEP does not fix issues with applications using
+     <tt class="docutils literal">
+      fork()
+     </tt>
+     without
+     <tt class="docutils literal">
+      exec()
+     </tt>
+     . Python needs a generic process to register
+callbacks which would be called after a fork, see
+     <a class="reference external" href="http://bugs.python.org/issue16500">
+      #16500:
+Add an atfork module
+     </a>
+     <a class="footnote-reference" href="#id3" id="id4">
+      [2]
+     </a>
+     .  Such registry could be used to close file
+descriptors just after a
+     <tt class="docutils literal">
+      fork()
+     </tt>
+     .
+    </p>
+    <p>
+     Drawbacks:
+    </p>
+    <blockquote>
+     <ul class="simple">
+      <li>
+       It does not solve the problem on Windows:
+       <tt class="docutils literal">
+        fork()
+       </tt>
+       does not exist
+on Windows
+      </li>
+      <li>
+       This alternative does not solve the problem for programs using
+       <tt class="docutils literal">
+        exec()
+       </tt>
+       without
+       <tt class="docutils literal">
+        fork()
+       </tt>
+       .
+      </li>
+      <li>
+       A third party module may call directly the C function
+       <tt class="docutils literal">
+        fork()
+       </tt>
+       which will not call "atfork" callbacks.
+      </li>
+      <li>
+       All functions creating file descriptors must be changed to register
+a callback and then unregister their callback when the file is
+closed. Or a list of
+       <em>
+        all
+       </em>
+       open file descriptors must be
+maintained.
+      </li>
+      <li>
+       The operating system is a better place than Python to close
+automatically file descriptors. For example, it is not easy to
+avoid a race condition between closing the file and unregistering
+the callback closing the file.
+      </li>
+     </ul>
+    </blockquote>
+   </div>
+   <div class="section" id="open-add-e-flag-to-mode">
+    <h2>
+     <a class="toc-backref" href="#id19">
+      open(): add "e" flag to mode
+     </a>
+    </h2>
+    <p>
+     A new "e" mode would set close-on-exec flag (best-effort).
+    </p>
+    <p>
+     This alternative only solves the problem for
+     <tt class="docutils literal">
+      open()
+     </tt>
+     .
+socket.socket() and os.pipe() do not have a
+     <tt class="docutils literal">
+      mode
+     </tt>
+     parameter for
+example.
+    </p>
+    <p>
+     Since its version 2.7, the GNU libc supports
+     <tt class="docutils literal">
+      "e"
+     </tt>
+     flag for
+     <tt class="docutils literal">
+      fopen()
+     </tt>
+     .  It uses
+     <tt class="docutils literal">
+      O_CLOEXEC
+     </tt>
+     if available, or use
+     <tt class="docutils literal">
+      fcntl(fd,
+F_SETFD, FD_CLOEXEC)
+     </tt>
+     .  With Visual Studio, fopen() accepts a "N"
+flag which uses
+     <tt class="docutils literal">
+      O_NOINHERIT
+     </tt>
+     .
+    </p>
+   </div>
+   <div class="section" id="bikeshedding-on-the-name-of-the-new-parameter">
+    <h2>
+     <a class="toc-backref" href="#id20">
+      Bikeshedding on the name of the new parameter
+     </a>
+    </h2>
+    <blockquote>
+     <ul class="simple">
+      <li>
+       <tt class="docutils literal">
+        inherit
+       </tt>
+       ,
+       <tt class="docutils literal">
+        inherited
+       </tt>
+       : closer to Windows definition
+      </li>
+      <li>
+       <tt class="docutils literal">
+        sensitive
+       </tt>
+      </li>
+      <li>
+       <tt class="docutils literal">
+        sterile
+       </tt>
+       : "Does not produce offspring."
+      </li>
+     </ul>
+    </blockquote>
+   </div>
+  </div>
+  <div class="section" id="applications-using-inheritance-of-file-descriptors">
+   <h1>
+    <a class="toc-backref" href="#id21">
+     Applications using inheritance of file descriptors
+    </a>
+   </h1>
+   <p>
+    Most developers don't know that file descriptors are inherited by
+default. Most programs do not rely on inheritance of file descriptors.
+For example,
+    <tt class="docutils literal">
+     subprocess.Popen
+    </tt>
+    was changed in Python 3.2 to close
+all file descriptors greater than 2 in the child process by default.
+No user complained about this behavior change yet.
+   </p>
+   <p>
+    Network servers using fork may want to pass the client socket to the
+child process. For example, on UNIX a CGI server pass the socket
+client through file descriptors 0 (stdin) and 1 (stdout) using
+    <tt class="docutils literal">
+     dup2()
+    </tt>
+    .
+   </p>
+   <p>
+    To access a restricted resource like creating a socket listening on a
+TCP port lower than 1024 or reading a file containing sensitive data
+like passwords, a common practice is: start as the root user, create a
+file descriptor, create a child process, drop privileges (ex: change the
+current user), pass the file descriptor to the child process and exit
+the parent process.
+   </p>
+   <p>
+    Security is very important in such use case: leaking another file
+descriptor would be a critical security vulnerability (see
+    <a class="reference internal" href="#security">
+     Security
+    </a>
+    ).
+The root process may not exit but monitors the child process instead,
+and restarts a new child process and pass the same file descriptor if
+the previous child process crashed.
+   </p>
+   <p>
+    Example of programs taking file descriptors from the parent process
+using a command line option:
+   </p>
+   <blockquote>
+    <ul class="simple">
+     <li>
+      gpg:
+      <tt class="docutils literal">
+       <span class="pre">
+        --status-fd
+       </span>
+       &lt;fd&gt;
+      </tt>
+      ,
+      <tt class="docutils literal">
+       <span class="pre">
+        --logger-fd
+       </span>
+       &lt;fd&gt;
+      </tt>
+      , etc.
+     </li>
+     <li>
+      openssl:
+      <tt class="docutils literal">
+       <span class="pre">
+        -pass
+       </span>
+       <span class="pre">
+        fd:&lt;fd&gt;
+       </span>
+      </tt>
+     </li>
+     <li>
+      qemu:
+      <tt class="docutils literal">
+       <span class="pre">
+        -add-fd
+       </span>
+       &lt;fd&gt;
+      </tt>
+     </li>
+     <li>
+      valgrind:
+      <tt class="docutils literal">
+       <span class="pre">
+        --log-fd=&lt;fd&gt;
+       </span>
+      </tt>
+      ,
+      <tt class="docutils literal">
+       <span class="pre">
+        --input-fd=&lt;fd&gt;
+       </span>
+      </tt>
+      , etc.
+     </li>
+     <li>
+      xterm:
+      <tt class="docutils literal">
+       <span class="pre">
+        -S
+       </span>
+       &lt;fd&gt;
+      </tt>
+     </li>
+    </ul>
+   </blockquote>
+   <p>
+    On Linux, it is possible to use
+    <tt class="docutils literal">
+     <span class="pre">
+      "/dev/fd/&lt;fd&gt;"
+     </span>
+    </tt>
+    filename to pass a
+file descriptor to a program expecting a filename.
+   </p>
+  </div>
+  <div class="section" id="performances">
+   <h1>
+    <a class="toc-backref" href="#id22">
+     Performances
+    </a>
+   </h1>
+   <p>
+    Setting close-on-exec flag may require additional system calls for
+each creation of new file descriptors. The number of additional system
+calls depends on the method used to set the flag:
+   </p>
+   <blockquote>
+    <ul class="simple">
+     <li>
+      <tt class="docutils literal">
+       O_NOINHERIT
+      </tt>
+      : no additional system call
+     </li>
+     <li>
+      <tt class="docutils literal">
+       O_CLOEXEC
+      </tt>
+      : one additional system call, but only at the creation
+of the first file descriptor, to check if the flag is supported. If
+the flag is not supported, Python has to fallback to the next method.
+     </li>
+     <li>
+      <tt class="docutils literal">
+       ioctl(fd, FIOCLEX)
+      </tt>
+      : one additional system call per file
+descriptor
+     </li>
+     <li>
+      <tt class="docutils literal">
+       fcntl(fd, F_SETFD, flags)
+      </tt>
+      : two additional system calls per file
+descriptor, one to get old flags and one to set new flags
+     </li>
+    </ul>
+   </blockquote>
+   <p>
+    On Linux, setting the close-on-flag has a low overhead on performances.
+Results of
+    <a class="reference external" href="http://hg.python.org/peps/file/tip/pep-0433/bench_cloexec.py">
+     bench_cloexec.py
+    </a>
+    on Linux 3.6:
+   </p>
+   <blockquote>
+    <ul class="simple">
+     <li>
+      close-on-flag not set: 7.8 us
+     </li>
+     <li>
+      <tt class="docutils literal">
+       O_CLOEXEC
+      </tt>
+      : 1% slower (7.9 us)
+     </li>
+     <li>
+      <tt class="docutils literal">
+       ioctl()
+      </tt>
+      : 3% slower (8.0 us)
+     </li>
+     <li>
+      <tt class="docutils literal">
+       fcntl()
+      </tt>
+      : 3% slower (8.0 us)
+     </li>
+    </ul>
+   </blockquote>
+  </div>
+  <div class="section" id="implementation">
+   <h1>
+    <a class="toc-backref" href="#id23">
+     Implementation
+    </a>
+   </h1>
+   <div class="section" id="os-get-cloexec-fd">
+    <h2>
+     <a class="toc-backref" href="#id24">
+      os.get_cloexec(fd)
+     </a>
+    </h2>
+    <p>
+     Get the close-on-exec flag of a file descriptor.
+    </p>
+    <p>
+     Pseudo-code:
+    </p>
+    <pre class="literal-block">
+if os.name == 'nt':
+    def get_cloexec(fd):
+        handle = _winapi._get_osfhandle(fd);
+        flags = _winapi.GetHandleInformation(handle)
+        return not(flags &amp; _winapi.HANDLE_FLAG_INHERIT)
+else:
+    try:
+        import fcntl
+    except ImportError:
+        pass
+    else:
+        def get_cloexec(fd):
+            flags = fcntl.fcntl(fd, fcntl.F_GETFD)
+            return bool(flags &amp; fcntl.FD_CLOEXEC)
+</pre>
+   </div>
+   <div class="section" id="os-set-cloexec-fd-cloexec-true">
+    <h2>
+     <a class="toc-backref" href="#id25">
+      os.set_cloexec(fd, cloexec=True)
+     </a>
+    </h2>
+    <p>
+     Set or clear the close-on-exec flag on a file descriptor. The flag
+is set after the creation of the file descriptor and so it is not
+atomic.
+    </p>
+    <p>
+     Pseudo-code:
+    </p>
+    <pre class="literal-block">
+if os.name == 'nt':
+    def set_cloexec(fd, cloexec=True):
+        handle = _winapi._get_osfhandle(fd);
+        mask = _winapi.HANDLE_FLAG_INHERIT
+        if cloexec:
+            flags = 0
+        else:
+            flags = mask
+        _winapi.SetHandleInformation(handle, mask, flags)
+else:
+    fnctl = None
+    ioctl = None
+    try:
+        import ioctl
+    except ImportError:
+        try:
+            import fcntl
+        except ImportError:
+            pass
+    if ioctl is not None and hasattr('FIOCLEX', ioctl):
+        def set_cloexec(fd, cloexec=True):
+            if cloexec:
+                ioctl.ioctl(fd, ioctl.FIOCLEX)
+            else:
+                ioctl.ioctl(fd, ioctl.FIONCLEX)
+    elif fnctl is not None:
+        def set_cloexec(fd, cloexec=True):
+            flags = fcntl.fcntl(fd, fcntl.F_GETFD)
+            if cloexec:
+                flags |= FD_CLOEXEC
+            else:
+                flags &amp;= ~FD_CLOEXEC
+            fcntl.fcntl(fd, fcntl.F_SETFD, flags)
+</pre>
+    <p>
+     ioctl is preferred over fcntl because it requires only one syscall,
+instead of two syscalls for fcntl.
+    </p>
+    <div class="note">
+     <p class="first admonition-title">
+      Note
+     </p>
+     <p class="last">
+      <tt class="docutils literal">
+       fcntl(fd, F_SETFD, flags)
+      </tt>
+      only supports one flag
+(
+      <tt class="docutils literal">
+       FD_CLOEXEC
+      </tt>
+      ), so it would be possible to avoid
+      <tt class="docutils literal">
+       fcntl(fd,
+F_GETFD)
+      </tt>
+      . But it may drop other flags in the future, and so it is
+safer to keep the two functions calls.
+     </p>
+    </div>
+    <div class="note">
+     <p class="first admonition-title">
+      Note
+     </p>
+     <p class="last">
+      <tt class="docutils literal">
+       fopen()
+      </tt>
+      function of the GNU libc ignores the error if
+      <tt class="docutils literal">
+       fcntl(fd, F_SETFD, flags)
+      </tt>
+      failed.
+     </p>
+    </div>
+   </div>
+   <div class="section" id="open">
+    <h2>
+     <a class="toc-backref" href="#id26">
+      open()
+     </a>
+    </h2>
+    <blockquote>
+     <ul class="simple">
+      <li>
+       Windows:
+       <tt class="docutils literal">
+        open()
+       </tt>
+       with
+       <tt class="docutils literal">
+        O_NOINHERIT
+       </tt>
+       flag [atomic]
+      </li>
+      <li>
+       <tt class="docutils literal">
+        open()
+       </tt>
+       with
+       <tt class="docutils literal">
+        O_CLOEXEC flag
+       </tt>
+       [atomic]
+      </li>
+      <li>
+       <tt class="docutils literal">
+        open()
+       </tt>
+       +
+       <tt class="docutils literal">
+        os.set_cloexec(fd, True)
+       </tt>
+       [best-effort]
+      </li>
+     </ul>
+    </blockquote>
+   </div>
+   <div class="section" id="os-dup">
+    <h2>
+     <a class="toc-backref" href="#id27">
+      os.dup()
+     </a>
+    </h2>
+    <blockquote>
+     <ul class="simple">
+      <li>
+       Windows:
+       <tt class="docutils literal">
+        DuplicateHandle()
+       </tt>
+       [atomic]
+      </li>
+      <li>
+       <tt class="docutils literal">
+        fcntl(fd, F_DUPFD_CLOEXEC)
+       </tt>
+       [atomic]
+      </li>
+      <li>
+       <tt class="docutils literal">
+        dup()
+       </tt>
+       +
+       <tt class="docutils literal">
+        os.set_cloexec(fd, True)
+       </tt>
+       [best-effort]
+      </li>
+     </ul>
+    </blockquote>
+   </div>
+   <div class="section" id="os-dup2">
+    <h2>
+     <a class="toc-backref" href="#id28">
+      os.dup2()
+     </a>
+    </h2>
+    <blockquote>
+     <ul class="simple">
+      <li>
+       <tt class="docutils literal">
+        fcntl(fd, F_DUP2FD_CLOEXEC, fd2)
+       </tt>
+       [atomic]
+      </li>
+      <li>
+       <tt class="docutils literal">
+        dup3()
+       </tt>
+       with
+       <tt class="docutils literal">
+        O_CLOEXEC
+       </tt>
+       flag [atomic]
+      </li>
+      <li>
+       <tt class="docutils literal">
+        dup2()
+       </tt>
+       +
+       <tt class="docutils literal">
+        os.set_cloexec(fd, True)
+       </tt>
+       [best-effort]
+      </li>
+     </ul>
+    </blockquote>
+   </div>
+   <div class="section" id="os-pipe">
+    <h2>
+     <a class="toc-backref" href="#id29">
+      os.pipe()
+     </a>
+    </h2>
+    <blockquote>
+     <ul class="simple">
+      <li>
+       Windows:
+       <tt class="docutils literal">
+        CreatePipe()
+       </tt>
+       with
+       <tt class="docutils literal">
+        SECURITY_ATTRIBUTES.bInheritHandle=TRUE
+       </tt>
+       , or
+       <tt class="docutils literal">
+        _pipe()
+       </tt>
+       with
+       <tt class="docutils literal">
+        O_NOINHERIT
+       </tt>
+       flag [atomic]
+      </li>
+      <li>
+       <tt class="docutils literal">
+        pipe2()
+       </tt>
+       with
+       <tt class="docutils literal">
+        O_CLOEXEC
+       </tt>
+       flag [atomic]
+      </li>
+      <li>
+       <tt class="docutils literal">
+        pipe()
+       </tt>
+       +
+       <tt class="docutils literal">
+        os.set_cloexec(fd, True)
+       </tt>
+       [best-effort]
+      </li>
+     </ul>
+    </blockquote>
+   </div>
+   <div class="section" id="socket-socket">
+    <h2>
+     <a class="toc-backref" href="#id30">
+      socket.socket()
+     </a>
+    </h2>
+    <blockquote>
+     <ul class="simple">
+      <li>
+       Windows:
+       <tt class="docutils literal">
+        WSASocket()
+       </tt>
+       with
+       <tt class="docutils literal">
+        WSA_FLAG_NO_HANDLE_INHERIT
+       </tt>
+       flag
+[atomic]
+      </li>
+      <li>
+       <tt class="docutils literal">
+        socket()
+       </tt>
+       with
+       <tt class="docutils literal">
+        SOCK_CLOEXEC
+       </tt>
+       flag [atomic]
+      </li>
+      <li>
+       <tt class="docutils literal">
+        socket()
+       </tt>
+       +
+       <tt class="docutils literal">
+        os.set_cloexec(fd, True)
+       </tt>
+       [best-effort]
+      </li>
+     </ul>
+    </blockquote>
+   </div>
+   <div class="section" id="socket-socketpair">
+    <h2>
+     <a class="toc-backref" href="#id31">
+      socket.socketpair()
+     </a>
+    </h2>
+    <blockquote>
+     <ul class="simple">
+      <li>
+       <tt class="docutils literal">
+        socketpair()
+       </tt>
+       with
+       <tt class="docutils literal">
+        SOCK_CLOEXEC
+       </tt>
+       flag [atomic]
+      </li>
+      <li>
+       <tt class="docutils literal">
+        socketpair()
+       </tt>
+       +
+       <tt class="docutils literal">
+        os.set_cloexec(fd, True)
+       </tt>
+       [best-effort]
+      </li>
+     </ul>
+    </blockquote>
+   </div>
+   <div class="section" id="socket-socket-accept">
+    <h2>
+     <a class="toc-backref" href="#id32">
+      socket.socket.accept()
+     </a>
+    </h2>
+    <blockquote>
+     <ul class="simple">
+      <li>
+       <tt class="docutils literal">
+        accept4()
+       </tt>
+       with
+       <tt class="docutils literal">
+        SOCK_CLOEXEC
+       </tt>
+       flag [atomic]
+      </li>
+      <li>
+       <tt class="docutils literal">
+        accept()
+       </tt>
+       +
+       <tt class="docutils literal">
+        os.set_cloexec(fd, True)
+       </tt>
+       [best-effort]
+      </li>
+     </ul>
+    </blockquote>
+   </div>
+  </div>
+  <div class="section" id="backward-compatibility">
+   <h1>
+    <a class="toc-backref" href="#id33">
+     Backward compatibility
+    </a>
+   </h1>
+   <p>
+    There is no backward incompatible change. The default behaviour is
+unchanged: the close-on-exec flag is not set by default.
+   </p>
+  </div>
+  <div class="section" id="appendix-operating-system-support">
+   <h1>
+    <a class="toc-backref" href="#id34">
+     Appendix: Operating system support
+    </a>
+   </h1>
+   <div class="section" id="windows">
+    <h2>
+     <a class="toc-backref" href="#id35">
+      Windows
+     </a>
+    </h2>
+    <p>
+     Windows has an
+     <tt class="docutils literal">
+      O_NOINHERIT
+     </tt>
+     flag: "Do not inherit in child
+processes".
+    </p>
+    <p>
+     For example, it is supported by
+     <tt class="docutils literal">
+      open()
+     </tt>
+     and
+     <tt class="docutils literal">
+      _pipe()
+     </tt>
+     .
+    </p>
+    <p>
+     The flag can be cleared using
+     <tt class="docutils literal">
+      SetHandleInformation(fd, HANDLE_FLAG_INHERIT, 0)
+     </tt>
+     .
+    </p>
+    <p>
+     <tt class="docutils literal">
+      CreateProcess()
+     </tt>
+     has an
+     <tt class="docutils literal">
+      bInheritHandles
+     </tt>
+     parameter: if it is
+     <tt class="docutils literal">
+      FALSE
+     </tt>
+     , the handles are not inherited. If it is
+     <tt class="docutils literal">
+      TRUE
+     </tt>
+     , handles
+with
+     <tt class="docutils literal">
+      HANDLE_FLAG_INHERIT
+     </tt>
+     flag set are inherited.
+     <tt class="docutils literal">
+      subprocess.Popen
+     </tt>
+     uses
+     <tt class="docutils literal">
+      close_fds
+     </tt>
+     option to define
+     <tt class="docutils literal">
+      bInheritHandles
+     </tt>
+     .
+    </p>
+   </div>
+   <div class="section" id="ioctl">
+    <h2>
+     <a class="toc-backref" href="#id36">
+      ioctl
+     </a>
+    </h2>
+    <p>
+     Functions:
+    </p>
+    <blockquote>
+     <ul class="simple">
+      <li>
+       <tt class="docutils literal">
+        ioctl(fd, FIOCLEX, 0)
+       </tt>
+       : set the close-on-exec flag
+      </li>
+      <li>
+       <tt class="docutils literal">
+        ioctl(fd, FIONCLEX, 0)
+       </tt>
+       : clear the close-on-exec flag
+      </li>
+     </ul>
+    </blockquote>
+    <p>
+     Availability: Linux, Mac OS X, QNX, NetBSD, OpenBSD, FreeBSD.
+    </p>
+   </div>
+   <div class="section" id="fcntl">
+    <h2>
+     <a class="toc-backref" href="#id37">
+      fcntl
+     </a>
+    </h2>
+    <p>
+     Functions:
+    </p>
+    <blockquote>
+     <ul class="simple">
+      <li>
+       <tt class="docutils literal">
+        flags = fcntl(fd, F_GETFD); fcntl(fd, F_SETFD, flags | FD_CLOEXEC)
+       </tt>
+       :
+set the close-on-exec flag
+      </li>
+      <li>
+       <tt class="docutils literal">
+        flags = fcntl(fd, F_GETFD); fcntl(fd, F_SETFD, flags &amp; ~FD_CLOEXEC)
+       </tt>
+       :
+clear the close-on-exec flag
+      </li>
+     </ul>
+    </blockquote>
+    <p>
+     Availability: AIX, Digital UNIX, FreeBSD, HP-UX, IRIX, Linux, Mac OS
+X, OpenBSD, Solaris, SunOS, Unicos.
+    </p>
+   </div>
+   <div class="section" id="atomic-flags">
+    <h2>
+     <a class="toc-backref" href="#id38">
+      Atomic flags
+     </a>
+    </h2>
+    <p>
+     New flags:
+    </p>
+    <blockquote>
+     <ul class="simple">
+      <li>
+       <tt class="docutils literal">
+        O_CLOEXEC
+       </tt>
+       : available on Linux (2.6.23), FreeBSD (8.3),
+OpenBSD 5.0, Solaris 11, QNX, BeOS, next NetBSD release (6.1?).
+This flag is part of POSIX.1-2008.
+      </li>
+      <li>
+       <tt class="docutils literal">
+        SOCK_CLOEXEC
+       </tt>
+       flag for
+       <tt class="docutils literal">
+        socket()
+       </tt>
+       and
+       <tt class="docutils literal">
+        socketpair()
+       </tt>
+       ,
+available on Linux 2.6.27, OpenBSD 5.2, NetBSD 6.0.
+      </li>
+      <li>
+       <tt class="docutils literal">
+        WSA_FLAG_NO_HANDLE_INHERIT
+       </tt>
+       flag for
+       <tt class="docutils literal">
+        WSASocket()
+       </tt>
+       :  supported
+on Windows 7 with SP1, Windows Server 2008 R2 with SP1, and later
+      </li>
+      <li>
+       <tt class="docutils literal">
+        fcntl()
+       </tt>
+       :
+       <tt class="docutils literal">
+        F_DUPFD_CLOEXEC
+       </tt>
+       flag, available on Linux 2.6.24,
+OpenBSD 5.0, FreeBSD 9.1, NetBSD 6.0, Solaris 11. This flag is part
+of POSIX.1-2008.
+      </li>
+      <li>
+       <tt class="docutils literal">
+        fcntl()
+       </tt>
+       :
+       <tt class="docutils literal">
+        F_DUP2FD_CLOEXEC
+       </tt>
+       flag, available on FreeBSD 9.1
+and Solaris 11.
+      </li>
+      <li>
+       <tt class="docutils literal">
+        recvmsg()
+       </tt>
+       :
+       <tt class="docutils literal">
+        MSG_CMSG_CLOEXEC
+       </tt>
+       , available on Linux 2.6.23,
+NetBSD 6.0.
+      </li>
+     </ul>
+    </blockquote>
+    <p>
+     On Linux older than 2.6.23,
+     <tt class="docutils literal">
+      O_CLOEXEC
+     </tt>
+     flag is simply ignored. So
+we have to check that the flag is supported by calling
+     <tt class="docutils literal">
+      fcntl()
+     </tt>
+     . If
+it does not work, we have to set the flag using
+     <tt class="docutils literal">
+      ioctl()
+     </tt>
+     or
+     <tt class="docutils literal">
+      fcntl()
+     </tt>
+     .
+    </p>
+    <p>
+     On Linux older than 2.6.27, if the
+     <tt class="docutils literal">
+      SOCK_CLOEXEC
+     </tt>
+     flag is set in the
+socket type,
+     <tt class="docutils literal">
+      socket()
+     </tt>
+     or
+     <tt class="docutils literal">
+      socketpair()
+     </tt>
+     fail and
+     <tt class="docutils literal">
+      errno
+     </tt>
+     is set
+to
+     <tt class="docutils literal">
+      EINVAL
+     </tt>
+     .
+    </p>
+    <p>
+     On Windows XPS3,
+     <tt class="docutils literal">
+      WSASocket()
+     </tt>
+     with with
+     <tt class="docutils literal">
+      WSAEPROTOTYPE
+     </tt>
+     when
+     <tt class="docutils literal">
+      WSA_FLAG_NO_HANDLE_INHERIT
+     </tt>
+     flag is used.
+    </p>
+    <p>
+     New functions:
+    </p>
+    <blockquote>
+     <ul class="simple">
+      <li>
+       <tt class="docutils literal">
+        dup3()
+       </tt>
+       : available on Linux 2.6.27 (and glibc 2.9)
+      </li>
+      <li>
+       <tt class="docutils literal">
+        pipe2()
+       </tt>
+       : available on Linux 2.6.27 (and glibc 2.9)
+      </li>
+      <li>
+       <tt class="docutils literal">
+        accept4()
+       </tt>
+       : available on Linux 2.6.28 (and glibc 2.10)
+      </li>
+     </ul>
+    </blockquote>
+    <p>
+     If
+     <tt class="docutils literal">
+      accept4()
+     </tt>
+     is called on Linux older than 2.6.28,
+     <tt class="docutils literal">
+      accept4()
+     </tt>
+     returns
+     <tt class="docutils literal">
+      <span class="pre">
+       -1
+      </span>
+     </tt>
+     (fail) and
+     <tt class="docutils literal">
+      errno
+     </tt>
+     is set to
+     <tt class="docutils literal">
+      ENOSYS
+     </tt>
+     .
+    </p>
+   </div>
+  </div>
+  <div class="section" id="links">
+   <h1>
+    <a class="toc-backref" href="#id39">
+     Links
+    </a>
+   </h1>
+   <p>
+    Links:
+   </p>
+   <blockquote>
+    <ul class="simple">
+     <li>
+      <a class="reference external" href="http://udrepper.livejournal.com/20407.html">
+       Secure File Descriptor Handling
+      </a>
+      (Ulrich Drepper,
+2008)
+     </li>
+     <li>
+      <a class="reference external" href="https://bitbucket.org/pvl/gaeseries-tornado/src/c2671cea1842/tornado/win32_support.py">
+       win32_support.py of the Tornado project
+      </a>
+      :
+emulate fcntl(fd, F_SETFD, FD_CLOEXEC) using
+      <tt class="docutils literal">
+       SetHandleInformation(fd, HANDLE_FLAG_INHERIT, 1)
+      </tt>
+     </li>
+     <li>
+      <a class="reference external" href="https://lkml.org/lkml/2012/4/1/71">
+       LKML: [PATCH] nextfd(2)
+      </a>
+     </li>
+    </ul>
+   </blockquote>
+   <p>
+    Python issues:
+   </p>
+   <blockquote>
+    <ul class="simple">
+     <li>
+      <a class="reference external" href="http://bugs.python.org/issue10115">
+       #10115: Support accept4() for atomic setting of flags at socket
+creation
+      </a>
+     </li>
+     <li>
+      <a class="reference external" href="http://bugs.python.org/issue12105">
+       #12105: open() does not able to set flags, such as O_CLOEXEC
+      </a>
+     </li>
+     <li>
+      <a class="reference external" href="http://bugs.python.org/issue12107">
+       #12107: TCP listening sockets created without FD_CLOEXEC flag
+      </a>
+     </li>
+     <li>
+      <a class="reference external" href="http://bugs.python.org/issue16500">
+       #16500: Add an atfork module
+      </a>
+     </li>
+     <li>
+      <a class="reference external" href="http://bugs.python.org/issue16850">
+       #16850: Add "e" mode to open(): close-and-exec
+(O_CLOEXEC) / O_NOINHERIT
+      </a>
+     </li>
+     <li>
+      <a class="reference external" href="http://bugs.python.org/issue16860">
+       #16860: Use O_CLOEXEC in the tempfile module
+      </a>
+     </li>
+     <li>
+      <a class="reference external" href="http://bugs.python.org/issue17036">
+       #17036: Implementation of the PEP 433
+      </a>
+     </li>
+     <li>
+      <a class="reference external" href="http://bugs.python.org/issue16946">
+       #16946: subprocess: _close_open_fd_range_safe() does not set
+close-on-exec flag on Linux &lt; 2.6.23 if O_CLOEXEC is defined
+      </a>
+     </li>
+     <li>
+      <a class="reference external" href="http://bugs.python.org/issue17070">
+       #17070: PEP 433: Use the new cloexec to improve security and avoid
+bugs
+      </a>
+     </li>
+    </ul>
+   </blockquote>
+   <p>
+    Other languages:
+   </p>
+   <blockquote>
+    <ul class="simple">
+     <li>
+      Perl sets the close-on-exec flag on newly created file decriptor if
+their number is greater than
+      <tt class="docutils literal">
+       $SYSTEM_FD_MAX
+      </tt>
+      (
+      <tt class="docutils literal">
+       $^F
+      </tt>
+      ).
+See
+      <a class="reference external" href="http://perldoc.perl.org/perlvar.html#%24SYSTEM_FD_MAX">
+       $SYSTEM_FD_MAX documentation
+      </a>
+      . Perl does
+this since the creation of Perl (it was already present in Perl 1).
+     </li>
+     <li>
+      Ruby:
+      <a class="reference external" href="http://bugs.ruby-lang.org/issues/5041">
+       Set FD_CLOEXEC for all fds (except 0, 1, 2)
+      </a>
+     </li>
+     <li>
+      Ruby:
+      <a class="reference external" href="http://bugs.ruby-lang.org/issues/1291">
+       O_CLOEXEC flag missing for Kernel::open
+      </a>
+      : the
+      <a class="reference external" href="http://bugs.ruby-lang.org/projects/ruby-trunk/repository/revisions/31643">
+       commit was reverted later
+      </a>
+     </li>
+     <li>
+      OCaml:
+      <a class="reference external" href="http://caml.inria.fr/mantis/view.php?id=5256">
+       PR#5256: Processes opened using Unix.open_process* inherit
+all opened file descriptors (including sockets)
+      </a>
+      . OCaml has a
+      <tt class="docutils literal">
+       Unix.set_close_on_exec
+      </tt>
+      function.
+     </li>
+    </ul>
+   </blockquote>
+  </div>
+  <div class="section" id="footnotes">
+   <h1>
+    <a class="toc-backref" href="#id40">
+     Footnotes
+    </a>
+   </h1>
+   <table class="docutils footnote" frame="void" id="subprocess-close" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id1">
+        [1]
+       </a>
+      </td>
+      <td>
+       On UNIX since Python 3.2, subprocess.Popen()
+closes all file descriptors by default:
+       <tt class="docutils literal">
+        close_fds=True
+       </tt>
+       . It
+closes file descriptors in range 3 inclusive to
+       <tt class="docutils literal">
+        local_max_fd
+       </tt>
+       exclusive, where
+       <tt class="docutils literal">
+        local_max_fd
+       </tt>
+       is
+       <tt class="docutils literal">
+        fcntl(0, F_MAXFD)
+       </tt>
+       on
+NetBSD, or
+       <tt class="docutils literal">
+        sysconf(_SC_OPEN_MAX)
+       </tt>
+       otherwise. If the error pipe
+has a descriptor smaller than 3,
+       <tt class="docutils literal">
+        ValueError
+       </tt>
+       is raised.
+      </td>
+     </tr>
+    </tbody>
+   </table>
+  </div>
+  <div class="section" id="id2">
+   <h1>
+    <a class="toc-backref" href="#id41">
+     References
+    </a>
+   </h1>
+   <table class="docutils footnote" frame="void" id="id3" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id4">
+        [2]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="http://bugs.python.org/issue16500">
+        http://bugs.python.org/issue16500
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+  </div>
+ </body>
+
+<!-- Mirrored from www.python.org/dev/peps/pep-0433/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 03 Sep 2015 04:38:15 GMT -->
+</html>Source: <a href="https://hg.python.org/peps/file/tip/pep-0433.txt">https://hg.python.org/peps/file/tip/pep-0433.txt</a>
+
+    </article>
+
+
+                </section>
+
+                
+
+
+<aside class="left-sidebar" role="secondary">
+
+    
+
+
+
+
+
+
+    
+
+
+
+
+
+        <div class="twitter-widget sidebar-widget">
+        <a class="twitter-timeline" data-dnt="true" href="https://twitter.com/ThePSF" data-widget-id="434113224703610882">Tweets by @ThePSF</a>
+        <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+    </div>
+
+    <div class="psf-sidebar-widget sidebar-widget">
+        <h3 class="widget-title">The PSF</h3>
+<p>The Python Software Foundation is the organization behind Python. Become a member of the PSF and help advance the software and our mission. </p>
+
+    </div>
+
+</aside>
+
+
+
+                
+                
+
+
+            </div><!-- end .container -->
+        </div><!-- end #content .content-wrapper -->
+
+        <!-- Footer and social media list -->
+        <footer id="site-map" class="main-footer" role="contentinfo">
+            <div class="main-footer-links">
+                <div class="container">
+
+                    
+                    <a id="back-to-top-1" class="jump-link" href="#python-network"><span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> Back to Top</a>
+
+                    
+
+<ul class="sitemap navigation menu do-not-print" role="tree" id="container">
+    
+    <li class="tier-1 element-1">
+        <a href="https://www.python.org/about/" >About</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/apps/" title="">Applications</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/quotes/" title="">Quotes</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/gettingstarted/" title="">Getting Started</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/help/" title="">Help</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-2">
+        <a href="https://www.python.org/downloads/" >Downloads</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/downloads/" title="">All releases</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/downloads/source/" title="">Source code</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/downloads/windows/" title="">Windows</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/downloads/mac-osx/" title="">Mac OS X</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/download/other/" title="">Other Platforms</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://docs.python.org/3/license.html" title="">License</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/download/alternatives" title="">Alternative Implementations</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-3">
+        <a href="https://www.python.org/doc/" >Documentation</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/doc/" title="">Docs</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/doc/av" title="">Audio/Visual Talks</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://wiki.python.org/moin/BeginnersGuide" title="">Beginner&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://docs.python.org/faq/" title="">FAQ</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="http://wiki.python.org/moin/Languages" title="">Non-English Docs</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="../index.html" title="">PEP Index</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://wiki.python.org/moin/PythonBooks" title="">Python Books</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-4">
+        <a href="https://www.python.org/community/" >Community</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/community/diversity/" title="">Diversity</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/community/irc/" title="">IRC</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/community/lists/" title="">Mailing Lists</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/workshops/" title="">Python Conferences</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/community/sigs/" title="">Special Interest Groups</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://wiki.python.org/moin/" title="">Python Wiki</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/community/logos/" title="">Python Logo</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://www.python.org/community/merchandise/" title="">Merchandise</a></li>
+    
+        <li class="tier-2 element-9" role="treeitem"><a href="https://www.python.org/community/awards" title="">Community Awards</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-5">
+        <a href="https://www.python.org/about/success/" title="success-stories">Success Stories</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/success/#arts" title="">Arts</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/success/#business" title="">Business</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/success/#education" title="">Education</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/success/#engineering" title="">Engineering</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/about/success/#government" title="">Government</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://www.python.org/about/success/#scientific" title="">Scientific</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/about/success/#software-development" title="">Software Development</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-6">
+        <a href="https://www.python.org/blogs/" title="News from around the Python world">News</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/blogs/" title="Python Insider Blog Posts">Python News</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://planetpython.org/" title="Planet Python">Community News</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="http://pyfound.blogspot.com/" title="PSF Blog">PSF News</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pycon.blogspot.com/" title="PyCon Blog">PyCon News</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-7">
+        <a href="https://www.python.org/events/" >Events</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/events/python-events/" title="">Python Events</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/events/python-user-group/" title="">User Group Events</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/events/python-events/past/" title="">Python Events Archive</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/events/python-user-group/past/" title="">User Group Events Archive</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://wiki.python.org/moin/PythonEventsCalendar#Submitting_an_Event" title="">Submit an Event</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-8">
+        <a href="https://www.python.org/dev/" >Contributing</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="http://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://bugs.python.org/" title="">Issue Tracker</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://mail.python.org/mailman/listinfo/python-dev" title="">python-dev list</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pythonmentors.com/" title="">Core Mentorship</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+</ul>
+
+
+                    <a id="back-to-top-2" class="jump-link" href="#python-network"><span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> Back to Top</a>
+                    
+
+                </div><!-- end .container -->
+            </div> <!-- end .main-footer-links -->
+
+            <div class="site-base">
+                <div class="container">
+                    
+                    <ul class="footer-links navigation menu do-not-print" role="tree">
+                        <li class="tier-1 element-1"><a href="https://www.python.org/about/help/">Help &amp; <span class="say-no-more">General</span> Contact</a></li>
+                        <li class="tier-1 element-2"><a href="https://www.python.org/community/diversity/">Diversity <span class="say-no-more">Initiatives</span></a></li>
+                        <li class="tier-1 element-3"><a href="https://github.com/python/pythondotorg/issues">Submit Website Bug</a></li>
+                        <!--<li class="tier-1 element-3"><a href="#"><span class="say-no-more">Website</span> Colophon</a></li>-->
+                    </ul>
+
+                    <div class="copyright">
+                        <p><small>
+                            <span class="pre">Copyright &copy;2001-2015.</span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/psf-landing/">Python Software Foundation</a></span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/about/legal/">Legal Statements</a></span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/privacy/">Privacy Policy</a></span>
+                        </small></p>
+                    </div>
+
+                </div><!-- end .container -->
+            </div><!-- end .site-base -->
+
+        </footer>
+
+    </div><!-- end #touchnav-wrapper -->
+
+    
+    <script src="../../../../ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="../../../static/js/libs/jquery-1.8.2.min.js"><\/script>')</script>
+
+    <script src="../../../static/js/libs/masonry.pkgd.min.js"></script>
+
+    <script type="text/javascript" src="../../../static/js/main-min.js" charset="utf-8"></script>
+    
+
+    <!--[if lte IE 7]>
+    <script type="text/javascript" src="/static/js/plugins/IE8-min.js" charset="utf-8"></script>
+    
+    
+    <![endif]-->
+
+    <!--[if lte IE 8]>
+    <script type="text/javascript" src="/static/js/plugins/getComputedStyle-min.js" charset="utf-8"></script>
+    
+    
+    <![endif]-->
+
+    
+
+    
+    
+
+</body>
+</html>

@@ -1,0 +1,2096 @@
+<!doctype html>
+<!--[if lt IE 7]>   <html class="no-js ie6 lt-ie7 lt-ie8 lt-ie9">   <![endif]-->
+<!--[if IE 7]>      <html class="no-js ie7 lt-ie8 lt-ie9">          <![endif]-->
+<!--[if IE 8]>      <html class="no-js ie8 lt-ie9">                 <![endif]-->
+<!--[if gt IE 8]><!--><html class="no-js" lang="en" dir="ltr">  <!--<![endif]-->
+
+
+<!-- Mirrored from www.python.org/dev/peps/pep-0100/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 03 Sep 2015 04:34:05 GMT -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <link rel="prefetch" href="../../../../ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js">
+
+    <meta name="application-name" content="Python.org">
+    <meta name="msapplication-tooltip" content="The official home of the Python Programming Language">
+    <meta name="apple-mobile-web-app-title" content="Python.org">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="format-detection" content="telephone=no">
+    <meta http-equiv="cleartype" content="on">
+    <meta http-equiv="imagetoolbar" content="false">
+
+    <script src="../../../static/js/libs/modernizr.js"></script>
+
+    <link href="../../../static/stylesheets/style.css" rel="stylesheet" type="text/css" title="default" />
+    <link href="../../../static/stylesheets/mq.css" rel="stylesheet" type="text/css" media="not print, braille, embossed, speech, tty" />
+    
+
+    <!--[if (lte IE 8)&(!IEMobile)]>
+    <link href="/static/stylesheets/no-mq.css" rel="stylesheet" type="text/css" media="screen" />
+    
+    
+    <![endif]-->
+
+    
+    <link rel="icon" type="image/x-icon" href="https://www.python.org/static/favicon.ico">
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="../../../static/apple-touch-icon-144x144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="../../../static/apple-touch-icon-114x114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="../../../static/apple-touch-icon-72x72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="../../../static/apple-touch-icon-precomposed.png">
+    <link rel="apple-touch-icon" href="../../../static/apple-touch-icon-precomposed.png">
+
+    
+    <meta name="msapplication-TileImage" content="/static/metro-icon-144x144-precomposed.png"><!-- white shape -->
+    <meta name="msapplication-TileColor" content="#3673a5"><!-- python blue -->
+    <meta name="msapplication-navbutton-color" content="#3673a5">
+
+    <meta property="og:site_name" content="Python.org">
+    <meta property="og:type" content="website">
+
+    <title>PEP 100 -- Python Unicode Integration | Python.org</title>
+    <meta property="og:title" content="Welcome to Python.org">
+
+    
+    <meta name="description" content="The official home of the Python Programming Language">
+    <meta name="og:description" content="The official home of the Python Programming Language">
+    <meta name="keywords" content="Python programming language object oriented web free open source software license documentation download community">
+    <meta property="og:tag" content="Python programming language object oriented web free open source software license documentation download community">
+    <meta property="og:published_time" content="">
+    <meta property="og:modified_time" content="">
+    <meta property="og:author" content="">
+    <meta property="og:section" content=""> 
+    <meta property="og:url" content="">
+    <meta property="og:image" content="">
+    <meta property="og:video" content="">
+
+    <link rel="author" href="https://www.python.org/static/humans.txt">
+
+    
+
+    
+    <script type="application/ld+json">
+     {
+       "@context": "http://schema.org",
+       "@type": "WebSite",
+       "url": "https://www.python.org/",
+       "potentialAction": {
+         "@type": "SearchAction",
+         "target": "https://www.python.org/search/?q={search_term_string}",
+         "query-input": "required name=search_term_string"
+       }
+     }
+    </script>
+
+    
+    <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-39055973-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+    </script>
+    
+</head>
+
+<body class="python pages pep-page">
+
+    <div id="touchnav-wrapper">
+
+        <div id="nojs" class="do-not-print">
+            <p><strong>Notice:</strong> While Javascript is not essential for this website, your interaction with the content will be limited. Please turn Javascript on for the full experience. </p>
+        </div>
+
+        <!--[if lt IE 8]>
+        <div id="oldie-warning" class="do-not-print">
+            <p><strong>Notice:</strong> Your browser is <em>ancient</em> and <a href="http://www.ie6countdown.com/">Microsoft agrees</a>. <a href="http://browsehappy.com/">Upgrade to a different browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to experience a better web.</p>
+        </div>
+        <![endif]-->
+
+        <!-- Sister Site Links -->
+        <div id="top" class="top-bar do-not-print">
+
+            <nav class="meta-navigation container" role="navigation">
+
+                
+                <div class="skip-link screen-reader-text">
+                    <a href="#content" title="Skip to content">Skip to content</a>
+                </div>
+
+                
+                <a id="close-python-network" class="jump-link" href="#python-network" aria-hidden="true">
+                    <span aria-hidden="true" class="icon-arrow-down"><span>&#9660;</span></span> Close
+                </a>
+
+                
+
+<ul class="menu" role="tree">
+    
+    <li class="python-meta ">
+        <a href="https://www.python.org/" title="The Python Programming Language" >Python</a>
+    </li>
+    
+    <li class="psf-meta ">
+        <a href="https://www.python.org/psf-landing/" title="The Python Software Foundation" >PSF</a>
+    </li>
+    
+    <li class="docs-meta ">
+        <a href="https://docs.python.org/" title="Python Documentation" >Docs</a>
+    </li>
+    
+    <li class="pypi-meta ">
+        <a href="https://pypi.python.org/" title="Python Package Index" >PyPI</a>
+    </li>
+    
+    <li class="jobs-meta ">
+        <a href="https://www.python.org/jobs/" title="Python Job Board" >Jobs</a>
+    </li>
+    
+    <li class="shop-meta ">
+        <a href="https://www.python.org/community/" title="Python Community" >Community</a>
+    </li>
+    
+</ul>
+
+
+                <a id="python-network" class="jump-link" href="#top" aria-hidden="true">
+                    <span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> The Python Network
+                </a>
+
+            </nav>
+
+        </div>
+
+        <!-- Header elements -->
+        <header class="main-header" role="banner">
+            <div class="container">
+
+                <h1 class="site-headline">
+                    <a href="https://www.python.org/"><img class="python-logo" src="../../../static/img/python-logo.png" alt="python&trade;"></a>
+                </h1>
+
+                <div class="options-bar do-not-print">
+
+                    
+                    <a id="site-map-link" class="jump-to-menu" href="#site-map"><span class="menu-icon">&equiv;</span> Menu</a><form class="search-the-site" action="https://www.python.org/search/" method="get">
+                        <fieldset title="Search Python.org">
+
+                            <span aria-hidden="true" class="icon-search"></span>
+
+                            <label class="screen-reader-text" for="id-search-field">Search This Site</label>
+                            <input id="id-search-field" name="q" type="search" role="textbox" class="search-field" placeholder="Search" value="" tabindex="1">
+
+                            <button type="submit" name="submit" id="submit" class="search-button" title="Submit this Search" tabindex="3">
+                                GO
+                            </button>
+
+                            
+                            <!--[if IE]><input type="text" style="display: none;" disabled="disabled" size="1" tabindex="4"><![endif]-->
+
+                        </fieldset>
+                    </form><span class="breaker"></span><div class="adjust-font-size" aria-hidden="true">
+                        <ul class="navigation menu" aria-label="Adjust Text Size on Page">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                <a href="#" class="action-trigger"><strong><small>A</small> A</strong></a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a class="text-shrink" title="Make Text Smaller" href="javascript:;">Smaller</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a class="text-grow" title="Make Text Larger" href="javascript:;">Larger</a></li>
+                                    <li class="tier-2 element-3" role="treeitem"><a class="text-reset" title="Reset any font size changes I have made" href="javascript:;">Reset</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div><div class="winkwink-nudgenudge">
+                        <ul class="navigation menu" aria-label="Social Media Navigation">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                <a href="#" class="action-trigger">Socialize</a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a href="http://plus.google.com/+Python"><span aria-hidden="true" class="icon-google-plus"></span>Google+</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a href="http://www.facebook.com/pythonlang?fref=ts"><span aria-hidden="true" class="icon-facebook"></span>Facebook</a></li>
+                                    <li class="tier-2 element-3" role="treeitem"><a href="http://twitter.com/ThePSF"><span aria-hidden="true" class="icon-twitter"></span>Twitter</a></li>
+                                    <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/irc/"><span aria-hidden="true" class="icon-freenode"></span>Chat on IRC</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div><div class="account-signin">
+                        <ul class="navigation menu" aria-label="Social Media Navigation">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                
+                                <a href="https://www.python.org/accounts/login/" title="Sign Up or Sign In to Python.org">Sign In</a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/accounts/signup/">Sign Up / Register</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/accounts/login/">Sign In</a></li>
+                                </ul>
+                                
+                            </li>
+                        </ul>
+                    </div>
+
+                </div><!-- end options-bar -->
+
+                <nav id="mainnav" class="python-navigation main-navigation do-not-print" role="navigation">
+                    
+                        
+<ul class="navigation menu" role="menubar" aria-label="Main Navigation">
+  
+    
+    
+    <li id="about" class="tier-1 element-1  " aria-haspopup="true">
+        <a href="https://www.python.org/about/" title="" class="">About</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/apps/" title="">Applications</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/quotes/" title="">Quotes</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/gettingstarted/" title="">Getting Started</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/help/" title="">Help</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="downloads" class="tier-1 element-2  " aria-haspopup="true">
+        <a href="https://www.python.org/downloads/" title="" class="">Downloads</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/downloads/" title="">All releases</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/downloads/source/" title="">Source code</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/downloads/windows/" title="">Windows</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/downloads/mac-osx/" title="">Mac OS X</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/download/other/" title="">Other Platforms</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://docs.python.org/3/license.html" title="">License</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/download/alternatives" title="">Alternative Implementations</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="documentation" class="tier-1 element-3  " aria-haspopup="true">
+        <a href="https://www.python.org/doc/" title="" class="">Documentation</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/doc/" title="">Docs</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/doc/av" title="">Audio/Visual Talks</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://wiki.python.org/moin/BeginnersGuide" title="">Beginner&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://docs.python.org/faq/" title="">FAQ</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="http://wiki.python.org/moin/Languages" title="">Non-English Docs</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="../index.html" title="">PEP Index</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://wiki.python.org/moin/PythonBooks" title="">Python Books</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="community" class="tier-1 element-4  " aria-haspopup="true">
+        <a href="https://www.python.org/community/" title="" class="">Community</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/community/diversity/" title="">Diversity</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/community/irc/" title="">IRC</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/community/lists/" title="">Mailing Lists</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/workshops/" title="">Python Conferences</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/community/sigs/" title="">Special Interest Groups</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://wiki.python.org/moin/" title="">Python Wiki</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/community/logos/" title="">Python Logo</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://www.python.org/community/merchandise/" title="">Merchandise</a></li>
+    
+        <li class="tier-2 element-9" role="treeitem"><a href="https://www.python.org/community/awards" title="">Community Awards</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="success-stories" class="tier-1 element-5  " aria-haspopup="true">
+        <a href="https://www.python.org/about/success/" title="success-stories" class="">Success Stories</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/success/#arts" title="">Arts</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/success/#business" title="">Business</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/success/#education" title="">Education</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/success/#engineering" title="">Engineering</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/about/success/#government" title="">Government</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://www.python.org/about/success/#scientific" title="">Scientific</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/about/success/#software-development" title="">Software Development</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="news" class="tier-1 element-6  " aria-haspopup="true">
+        <a href="https://www.python.org/blogs/" title="News from around the Python world" class="">News</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/blogs/" title="Python Insider Blog Posts">Python News</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://planetpython.org/" title="Planet Python">Community News</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="http://pyfound.blogspot.com/" title="PSF Blog">PSF News</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pycon.blogspot.com/" title="PyCon Blog">PyCon News</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="events" class="tier-1 element-7  " aria-haspopup="true">
+        <a href="https://www.python.org/events/" title="" class="">Events</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/events/python-events/" title="">Python Events</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/events/python-user-group/" title="">User Group Events</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/events/python-events/past/" title="">Python Events Archive</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/events/python-user-group/past/" title="">User Group Events Archive</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://wiki.python.org/moin/PythonEventsCalendar#Submitting_an_Event" title="">Submit an Event</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    
+  
+</ul>
+
+                    
+                </nav>
+
+                <div class="header-banner "> <!-- for optional "do-not-print" class -->
+                    
+                    
+                </div>
+
+                
+                
+
+             </div><!-- end .container -->
+        </header>
+
+        <div id="content" class="content-wrapper">
+            <!-- Main Content Column -->
+            <div class="container">
+
+                <section class="main-content with-left-sidebar" role="main">
+
+                    
+<ul class="breadcrumbs menu">
+    <li>
+        <a href="https://www.python.org/" title="The Python Programming Language">Python</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>
+        <a href="https://www.python.org/dev/">Python Developer's Guide</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>
+        <a href="../index.html">PEP Index</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>PEP 100 -- Python Unicode Integration</li>
+</ul>
+
+
+                    
+<style>
+   .pep-page pre {
+        padding: .5em;
+        background: inherit;
+        border-left: 0px;
+        -webkit-box-shadow: 0 0 0 0;
+        -moz-box-shadow: 0 0 0 0;
+        box-shadow: 0 0 0 0;
+   }
+</style>
+
+    
+    <article class="text">
+        
+
+        <header class="article-header">
+            <h1 class="page-title">PEP 100 -- Python Unicode Integration</h1>
+        </header>
+
+        <html>
+ <body>
+  <div class="header">
+   <table border="0">
+    <tr>
+     <th>
+      PEP:
+     </th>
+     <td>
+      100
+     </td>
+    </tr>
+    <tr>
+     <th>
+      Title:
+     </th>
+     <td>
+      Python Unicode Integration
+     </td>
+    </tr>
+    <tr>
+     <th>
+      Author:
+     </th>
+     <td>
+      Marc-André Lemburg &lt;mal at lemburg.com&gt;
+     </td>
+    </tr>
+    <tr>
+     <th>
+      Status:
+     </th>
+     <td>
+      Final
+     </td>
+    </tr>
+    <tr>
+     <th>
+      Type:
+     </th>
+     <td>
+      Standards Track
+     </td>
+    </tr>
+    <tr>
+     <th>
+      Created:
+     </th>
+     <td>
+      10-Mar-2000
+     </td>
+    </tr>
+    <tr>
+     <th>
+      Python-Version:
+     </th>
+     <td>
+      2.0
+     </td>
+    </tr>
+    <tr>
+     <th>
+      Post-History:
+     </th>
+     <td>
+     </td>
+    </tr>
+   </table>
+  </div>
+  <div class="content">
+   <h3>
+    Historical Note
+   </h3>
+   <pre>
+    This document was first written by Marc-Andre in the pre-PEP days,
+    and was originally distributed as Misc/unicode.txt in Python
+    distributions up to and included Python 2.1.  The last revision of
+    the proposal in that location was labeled version 1.7 (CVS
+    revision 3.10).  Because the document clearly serves the purpose
+    of an informational PEP in the post-PEP era, it has been moved
+    here and reformatted to comply with PEP guidelines.  Future
+    revisions will be made to this document, while Misc/unicode.txt
+    will contain a pointer to this PEP.
+
+    -Barry Warsaw, PEP editor
+
+
+</pre>
+   <h3>
+    Introduction
+   </h3>
+   <pre>
+    The idea of this proposal is to add native Unicode 3.0 support to
+    Python in a way that makes use of Unicode strings as simple as
+    possible without introducing too many pitfalls along the way.
+
+    Since this goal is not easy to achieve -- strings being one of the
+    most fundamental objects in Python -- we expect this proposal to
+    undergo some significant refinements.
+
+    Note that the current version of this proposal is still a bit
+    unsorted due to the many different aspects of the Unicode-Python
+    integration.
+
+    The latest version of this document is always available at:
+
+            <a href="http://starship.python.net/~lemburg/unicode-proposal.txt">http://starship.python.net/~lemburg/unicode-proposal.txt</a>
+
+    Older versions are available as:
+
+            <a href="http://starship.python.net/~lemburg/unicode-proposal-X.X.txt">http://starship.python.net/~lemburg/unicode-proposal-X.X.txt</a>
+
+    [ed. note: new revisions should be made to this PEP document,
+     while the historical record previous to version 1.7 should be
+     retrieved from MAL's url, or Misc/unicode.txt]
+
+
+</pre>
+   <h3>
+    Conventions
+   </h3>
+   <pre>
+    - In examples we use u = Unicode object and s = Python string
+
+    - 'XXX' markings indicate points of discussion (PODs)
+
+
+</pre>
+   <h3>
+    General Remarks
+   </h3>
+   <pre>
+    - Unicode encoding names should be lower case on output and
+      case-insensitive on input (they will be converted to lower case
+      by all APIs taking an encoding name as input).
+
+    - Encoding names should follow the name conventions as used by the
+      Unicode Consortium: spaces are converted to hyphens, e.g. 'utf
+      16' is written as 'utf-16'.
+
+    - Codec modules should use the same names, but with hyphens
+      converted to underscores, e.g. utf_8, utf_16, iso_8859_1.
+
+
+</pre>
+   <h3>
+    Unicode Default Encoding
+   </h3>
+   <pre>
+    The Unicode implementation has to make some assumption about the
+    encoding of 8-bit strings passed to it for coercion and about the
+    encoding to as default for conversion of Unicode to strings when
+    no specific encoding is given.  This encoding is called &lt;default
+    encoding&gt; throughout this text.
+
+    For this, the implementation maintains a global which can be set
+    in the site.py Python startup script.  Subsequent changes are not
+    possible.  The &lt;default encoding&gt; can be set and queried using the
+    two sys module APIs:
+
+      sys.setdefaultencoding(encoding)
+        --&gt; Sets the &lt;default encoding&gt; used by the Unicode implementation.
+            encoding has to be an encoding which is supported by the
+            Python installation, otherwise, a LookupError is raised.
+
+            Note: This API is only available in site.py!  It is
+            removed from the sys module by site.py after usage.
+
+      sys.getdefaultencoding()
+        --&gt; Returns the current &lt;default encoding&gt;.
+
+    If not otherwise defined or set, the &lt;default encoding&gt; defaults
+    to 'ascii'.  This encoding is also the startup default of Python
+    (and in effect before site.py is executed).
+
+    Note that the default site.py startup module contains disabled
+    optional code which can set the &lt;default encoding&gt; according to
+    the encoding defined by the current locale.  The locale module is
+    used to extract the encoding from the locale default settings
+    defined by the OS environment (see locale.py).  If the encoding
+    cannot be determined, is unkown or unsupported, the code defaults
+    to setting the &lt;default encoding&gt; to 'ascii'.  To enable this
+    code, edit the site.py file or place the appropriate code into the
+    sitecustomize.py module of your Python installation.
+
+
+</pre>
+   <h3>
+    Unicode Constructors
+   </h3>
+   <pre>
+    Python should provide a built-in constructor for Unicode strings
+    which is available through __builtins__:
+
+    u = unicode(encoded_string[,encoding=&lt;default encoding&gt;][,errors="strict"])
+
+    u = u'&lt;unicode-escape encoded Python string&gt;'
+
+    u = ur'&lt;raw-unicode-escape encoded Python string&gt;'
+
+    With the 'unicode-escape' encoding being defined as:
+
+    - all non-escape characters represent themselves as Unicode
+      ordinal (e.g. 'a' -&gt; U+0061).
+
+    - all existing defined Python escape sequences are interpreted as
+      Unicode ordinals; note that \xXXXX can represent all Unicode
+      ordinals, and \OOO (octal) can represent Unicode ordinals up to
+      U+01FF.
+
+    - a new escape sequence, \uXXXX, represents U+XXXX; it is a syntax
+      error to have fewer than 4 digits after \u.
+
+    For an explanation of possible values for errors see the Codec
+    section below.
+
+    Examples:
+
+      u'abc'          -&gt; U+0061 U+0062 U+0063
+      u'\u1234'       -&gt; U+1234
+      u'abc\u1234\n'  -&gt; U+0061 U+0062 U+0063 U+1234 U+005c
+
+    The 'raw-unicode-escape' encoding is defined as follows:
+
+    - \uXXXX sequence represent the U+XXXX Unicode character if and
+      only if the number of leading backslashes is odd
+
+    - all other characters represent themselves as Unicode ordinal
+      (e.g. 'b' -&gt; U+0062)
+
+    Note that you should provide some hint to the encoding you used to
+    write your programs as pragma line in one the first few comment
+    lines of the source file (e.g. '# source file encoding: latin-1').
+    If you only use 7-bit ASCII then everything is fine and no such
+    notice is needed, but if you include Latin-1 characters not
+    defined in ASCII, it may well be worthwhile including a hint since
+    people in other countries will want to be able to read your source
+    strings too.
+
+
+</pre>
+   <h3>
+    Unicode Type Object
+   </h3>
+   <pre>
+    Unicode objects should have the type UnicodeType with type name
+    'unicode', made available through the standard types module.
+
+
+</pre>
+   <h3>
+    Unicode Output
+   </h3>
+   <pre>
+    Unicode objects have a method .encode([encoding=&lt;default encoding&gt;])
+    which returns a Python string encoding the Unicode string using the
+    given scheme (see Codecs).
+
+      print u := print u.encode()   # using the &lt;default encoding&gt;
+
+      str(u)  := u.encode()         # using the &lt;default encoding&gt;
+
+      repr(u) := "u%s" % repr(u.encode('unicode-escape'))
+
+    Also see Internal Argument Parsing and Buffer Interface for
+    details on how other APIs written in C will treat Unicode objects.
+
+
+</pre>
+   <h3>
+    Unicode Ordinals
+   </h3>
+   <pre>
+    Since Unicode 3.0 has a 32-bit ordinal character set, the
+    implementation should provide 32-bit aware ordinal conversion
+    APIs:
+
+      ord(u[:1]) (this is the standard ord() extended to work with Unicode
+                  objects)
+        --&gt; Unicode ordinal number (32-bit)
+
+      unichr(i) 
+          --&gt; Unicode object for character i (provided it is 32-bit);
+              ValueError otherwise
+
+    Both APIs should go into __builtins__ just like their string
+    counterparts ord() and chr().
+
+    Note that Unicode provides space for private encodings.  Usage of
+    these can cause different output representations on different
+    machines.  This problem is not a Python or Unicode problem, but a
+    machine setup and maintenance one.
+
+
+</pre>
+   <h3>
+    Comparison &amp; Hash Value
+   </h3>
+   <pre>
+    Unicode objects should compare equal to other objects after these
+    other objects have been coerced to Unicode.  For strings this
+    means that they are interpreted as Unicode string using the
+    &lt;default encoding&gt;.
+
+    Unicode objects should return the same hash value as their ASCII
+    equivalent strings.  Unicode strings holding non-ASCII values are
+    not guaranteed to return the same hash values as the default
+    encoded equivalent string representation.
+
+    When compared using cmp() (or PyObject_Compare()) the
+    implementation should mask TypeErrors raised during the conversion
+    to remain in synch with the string behavior.  All other errors
+    such as ValueErrors raised during coercion of strings to Unicode
+    should not be masked and passed through to the user.
+
+    In containment tests ('a' in u'abc' and u'a' in 'abc') both sides
+    should be coerced to Unicode before applying the test.  Errors
+    occurring during coercion (e.g. None in u'abc') should not be
+    masked.
+
+
+</pre>
+   <h3>
+    Coercion
+   </h3>
+   <pre>
+    Using Python strings and Unicode objects to form new objects
+    should always coerce to the more precise format, i.e. Unicode
+    objects.
+
+      u + s := u + unicode(s)
+
+      s + u := unicode(s) + u
+
+    All string methods should delegate the call to an equivalent
+    Unicode object method call by converting all involved strings to
+    Unicode and then applying the arguments to the Unicode method of
+    the same name, e.g.
+
+      string.join((s,u),sep) := (s + sep) + u
+
+      sep.join((s,u)) := (s + sep) + u
+
+    For a discussion of %-formatting w/r to Unicode objects, see
+    Formatting Markers.
+
+
+</pre>
+   <h3>
+    Exceptions
+   </h3>
+   <pre>
+    UnicodeError is defined in the exceptions module as a subclass of
+    ValueError.  It is available at the C level via
+    PyExc_UnicodeError.  All exceptions related to Unicode
+    encoding/decoding should be subclasses of UnicodeError.
+
+
+</pre>
+   <h3>
+    Codecs (Coder/Decoders) Lookup
+   </h3>
+   <pre>
+    A Codec (see Codec Interface Definition) search registry should be
+    implemented by a module "codecs":
+
+      codecs.register(search_function)
+
+    Search functions are expected to take one argument, the encoding
+    name in all lower case letters and with hyphens and spaces
+    converted to underscores, and return a tuple of functions
+    (encoder, decoder, stream_reader, stream_writer) taking the
+    following arguments:
+
+      encoder and decoder:
+      
+        These must be functions or methods which have the same
+        interface as the .encode/.decode methods of Codec instances
+        (see Codec Interface). The functions/methods are expected to
+        work in a stateless mode.
+
+      stream_reader and stream_writer:
+
+        These need to be factory functions with the following
+        interface:
+
+            factory(stream,errors='strict')
+
+        The factory functions must return objects providing the
+        interfaces defined by StreamWriter/StreamReader resp.  (see
+        Codec Interface).  Stream codecs can maintain state.
+
+        Possible values for errors are defined in the Codec section
+        below.
+
+    In case a search function cannot find a given encoding, it should
+    return None.
+
+    Aliasing support for encodings is left to the search functions to
+    implement.
+
+    The codecs module will maintain an encoding cache for performance
+    reasons.  Encodings are first looked up in the cache.  If not
+    found, the list of registered search functions is scanned.  If no
+    codecs tuple is found, a LookupError is raised.  Otherwise, the
+    codecs tuple is stored in the cache and returned to the caller.
+
+    To query the Codec instance the following API should be used:
+
+      codecs.lookup(encoding)
+
+    This will either return the found codecs tuple or raise a
+    LookupError.
+
+
+</pre>
+   <h3>
+    Standard Codecs
+   </h3>
+   <pre>
+    Standard codecs should live inside an encodings/ package directory
+    in the Standard Python Code Library.  The __init__.py file of that
+    directory should include a Codec Lookup compatible search function
+    implementing a lazy module based codec lookup.
+
+    Python should provide a few standard codecs for the most relevant
+    encodings, e.g.
+
+      'utf-8':              8-bit variable length encoding
+      'utf-16':             16-bit variable length encoding (little/big endian)
+      'utf-16-le':          utf-16 but explicitly little endian
+      'utf-16-be':          utf-16 but explicitly big endian
+      'ascii':              7-bit ASCII codepage
+      'iso-8859-1':         ISO 8859-1 (Latin 1) codepage
+      'unicode-escape':     See Unicode Constructors for a definition
+      'raw-unicode-escape': See Unicode Constructors for a definition
+      'native':             Dump of the Internal Format used by Python
+
+    Common aliases should also be provided per default, e.g.
+    'latin-1' for 'iso-8859-1'.
+
+    Note: 'utf-16' should be implemented by using and requiring byte
+    order marks (BOM) for file input/output.
+
+    All other encodings such as the CJK ones to support Asian scripts
+    should be implemented in separate packages which do not get
+    included in the core Python distribution and are not a part of
+    this proposal.
+
+
+</pre>
+   <h3>
+    Codecs Interface Definition
+   </h3>
+   <pre>
+    The following base class should be defined in the module "codecs".
+    They provide not only templates for use by encoding module
+    implementors, but also define the interface which is expected by
+    the Unicode implementation.
+
+    Note that the Codec Interface defined here is well suitable for a
+    larger range of applications.  The Unicode implementation expects
+    Unicode objects on input for .encode() and .write() and character
+    buffer compatible objects on input for .decode().  Output of
+    .encode() and .read() should be a Python string and .decode() must
+    return an Unicode object.
+
+    First, we have the stateless encoders/decoders.  These do not work
+    in chunks as the stream codecs (see below) do, because all
+    components are expected to be available in memory.
+
+    class Codec:
+
+        """Defines the interface for stateless encoders/decoders.
+
+           The .encode()/.decode() methods may implement different
+           error handling schemes by providing the errors argument.
+           These string values are defined:
+
+             'strict'  - raise an error (or a subclass)
+             'ignore'  - ignore the character and continue with the next
+             'replace' - replace with a suitable replacement character;
+                         Python will use the official U+FFFD
+                         REPLACEMENT CHARACTER for the builtin Unicode
+                         codecs.
+        """
+
+        def encode(self,input,errors='strict'):
+
+            """Encodes the object input and returns a tuple (output
+               object, length consumed).
+
+               errors defines the error handling to apply.  It
+               defaults to 'strict' handling.
+
+               The method may not store state in the Codec instance.
+               Use StreamCodec for codecs which have to keep state in
+               order to make encoding/decoding efficient.
+            """
+
+        def decode(self,input,errors='strict'):
+
+            """Decodes the object input and returns a tuple (output
+               object, length consumed).
+
+               input must be an object which provides the
+               bf_getreadbuf buffer slot.  Python strings, buffer
+               objects and memory mapped files are examples of objects
+               providing this slot.
+
+               errors defines the error handling to apply.  It
+               defaults to 'strict' handling.
+
+               The method may not store state in the Codec instance.
+               Use StreamCodec for codecs which have to keep state in
+               order to make encoding/decoding efficient.
+
+            """ 
+
+    StreamWriter and StreamReader define the interface for stateful
+    encoders/decoders which work on streams.  These allow processing
+    of the data in chunks to efficiently use memory.  If you have
+    large strings in memory, you may want to wrap them with cStringIO
+    objects and then use these codecs on them to be able to do chunk
+    processing as well, e.g. to provide progress information to the
+    user.
+
+    class StreamWriter(Codec):
+
+        def __init__(self,stream,errors='strict'):
+
+            """Creates a StreamWriter instance.
+
+               stream must be a file-like object open for writing
+               (binary) data.
+
+               The StreamWriter may implement different error handling
+               schemes by providing the errors keyword argument.
+               These parameters are defined:
+
+                 'strict' - raise a ValueError (or a subclass)
+                 'ignore' - ignore the character and continue with the next
+                 'replace'- replace with a suitable replacement character
+            """
+            self.stream = stream
+            self.errors = errors
+
+        def write(self,object):
+
+            """Writes the object's contents encoded to self.stream.
+            """
+            data, consumed = self.encode(object,self.errors)
+            self.stream.write(data)
+
+        def writelines(self, list):
+
+            """Writes the concatenated list of strings to the stream
+               using .write().
+            """
+            self.write(''.join(list))
+
+        def reset(self):
+
+            """Flushes and resets the codec buffers used for keeping state.
+
+               Calling this method should ensure that the data on the
+               output is put into a clean state, that allows appending
+               of new fresh data without having to rescan the whole
+               stream to recover state.
+            """
+            pass
+
+        def __getattr__(self,name, getattr=getattr):
+
+            """Inherit all other methods from the underlying stream.
+            """
+            return getattr(self.stream,name)
+
+
+    class StreamReader(Codec):
+
+        def __init__(self,stream,errors='strict'):
+
+            """Creates a StreamReader instance.
+
+               stream must be a file-like object open for reading
+               (binary) data.
+
+               The StreamReader may implement different error handling
+               schemes by providing the errors keyword argument.
+               These parameters are defined:
+
+                 'strict' - raise a ValueError (or a subclass)
+                 'ignore' - ignore the character and continue with the next
+                 'replace'- replace with a suitable replacement character;
+            """
+            self.stream = stream
+            self.errors = errors
+
+        def read(self,size=-1):
+
+            """Decodes data from the stream self.stream and returns the
+               resulting object.
+
+               size indicates the approximate maximum number of bytes
+               to read from the stream for decoding purposes.  The
+               decoder can modify this setting as appropriate.  The
+               default value -1 indicates to read and decode as much
+               as possible.  size is intended to prevent having to
+               decode huge files in one step.
+
+               The method should use a greedy read strategy meaning
+               that it should read as much data as is allowed within
+               the definition of the encoding and the given size, e.g.
+               if optional encoding endings or state markers are
+               available on the stream, these should be read too.
+            """
+            # Unsliced reading:
+            if size &lt; 0:
+                return self.decode(self.stream.read())[0]
+
+            # Sliced reading:
+            read = self.stream.read
+            decode = self.decode
+            data = read(size)
+            i = 0
+            while 1:
+                try:
+                    object, decodedbytes = decode(data)
+                except ValueError,why:
+                    # This method is slow but should work under pretty
+                    # much all conditions; at most 10 tries are made
+                    i = i + 1
+                    newdata = read(1)
+                    if not newdata or i &gt; 10:
+                        raise
+                    data = data + newdata
+                else:
+                    return object
+
+        def readline(self, size=None):
+
+            """Read one line from the input stream and return the
+               decoded data.
+
+               Note: Unlike the .readlines() method, this method
+               inherits the line breaking knowledge from the
+               underlying stream's .readline() method -- there is
+               currently no support for line breaking using the codec
+               decoder due to lack of line buffering.  Subclasses
+               should however, if possible, try to implement this
+               method using their own knowledge of line breaking.
+
+               size, if given, is passed as size argument to the
+               stream's .readline() method.
+            """
+            if size is None:
+                line = self.stream.readline()
+            else:
+                line = self.stream.readline(size)
+            return self.decode(line)[0]
+
+        def readlines(self, sizehint=0):
+
+            """Read all lines available on the input stream
+               and return them as list of lines.
+
+               Line breaks are implemented using the codec's decoder
+               method and are included in the list entries.
+
+               sizehint, if given, is passed as size argument to the
+               stream's .read() method.
+            """
+            if sizehint is None:
+                data = self.stream.read()
+            else:
+                data = self.stream.read(sizehint)
+            return self.decode(data)[0].splitlines(1)
+
+        def reset(self):
+
+            """Resets the codec buffers used for keeping state.
+
+               Note that no stream repositioning should take place.
+               This method is primarily intended to be able to recover
+               from decoding errors.
+
+            """
+            pass
+
+        def __getattr__(self,name, getattr=getattr):
+
+            """ Inherit all other methods from the underlying stream.
+            """
+            return getattr(self.stream,name)
+
+
+    Stream codec implementors are free to combine the StreamWriter and
+    StreamReader interfaces into one class.  Even combining all these
+    with the Codec class should be possible.
+
+    Implementors are free to add additional methods to enhance the
+    codec functionality or provide extra state information needed for
+    them to work.  The internal codec implementation will only use the
+    above interfaces, though.
+
+    It is not required by the Unicode implementation to use these base
+    classes, only the interfaces must match; this allows writing
+    Codecs as extension types.
+
+    As guideline, large mapping tables should be implemented using
+    static C data in separate (shared) extension modules.  That way
+    multiple processes can share the same data.
+
+    A tool to auto-convert Unicode mapping files to mapping modules
+    should be provided to simplify support for additional mappings
+    (see References).
+
+
+</pre>
+   <h3>
+    Whitespace
+   </h3>
+   <pre>
+    The .split() method will have to know about what is considered
+    whitespace in Unicode.
+
+
+</pre>
+   <h3>
+    Case Conversion
+   </h3>
+   <pre>
+    Case conversion is rather complicated with Unicode data, since
+    there are many different conditions to respect.  See
+
+      <a href="http://www.unicode.org/unicode/reports/tr13/">http://www.unicode.org/unicode/reports/tr13/</a> 
+
+    for some guidelines on implementing case conversion.
+
+    For Python, we should only implement the 1-1 conversions included
+    in Unicode.  Locale dependent and other special case conversions
+    (see the Unicode standard file SpecialCasing.txt) should be left
+    to user land routines and not go into the core interpreter.
+
+    The methods .capitalize() and .iscapitalized() should follow the
+    case mapping algorithm defined in the above technical report as
+    closely as possible.
+
+
+</pre>
+   <h3>
+    Line Breaks
+   </h3>
+   <pre>
+    Line breaking should be done for all Unicode characters having the
+    B property as well as the combinations CRLF, CR, LF (interpreted
+    in that order) and other special line separators defined by the
+    standard.
+
+    The Unicode type should provide a .splitlines() method which
+    returns a list of lines according to the above specification. See
+    Unicode Methods.
+
+
+</pre>
+   <h3>
+    Unicode Character Properties
+   </h3>
+   <pre>
+    A separate module "unicodedata" should provide a compact interface
+    to all Unicode character properties defined in the standard's
+    UnicodeData.txt file.
+
+    Among other things, these properties provide ways to recognize
+    numbers, digits, spaces, whitespace, etc.
+
+    Since this module will have to provide access to all Unicode
+    characters, it will eventually have to contain the data from
+    UnicodeData.txt which takes up around 600kB.  For this reason, the
+    data should be stored in static C data.  This enables compilation
+    as shared module which the underlying OS can shared between
+    processes (unlike normal Python code modules).
+
+    There should be a standard Python interface for accessing this
+    information so that other implementors can plug in their own
+    possibly enhanced versions, e.g. ones that do decompressing of the
+    data on-the-fly.
+
+
+</pre>
+   <h3>
+    Private Code Point Areas
+   </h3>
+   <pre>
+    Support for these is left to user land Codecs and not explicitly
+    integrated into the core.  Note that due to the Internal Format
+    being implemented, only the area between \uE000 and \uF8FF is
+    usable for private encodings.
+
+
+</pre>
+   <h3>
+    Internal Format
+   </h3>
+   <pre>
+    The internal format for Unicode objects should use a Python
+    specific fixed format &lt;PythonUnicode&gt; implemented as 'unsigned
+    short' (or another unsigned numeric type having 16 bits).  Byte
+    order is platform dependent.
+
+    This format will hold UTF-16 encodings of the corresponding
+    Unicode ordinals.  The Python Unicode implementation will address
+    these values as if they were UCS-2 values. UCS-2 and UTF-16 are
+    the same for all currently defined Unicode character points.
+    UTF-16 without surrogates provides access to about 64k characters
+    and covers all characters in the Basic Multilingual Plane (BMP) of
+    Unicode.
+
+    It is the Codec's responsibility to ensure that the data they pass
+    to the Unicode object constructor respects this assumption.  The
+    constructor does not check the data for Unicode compliance or use
+    of surrogates.
+
+    Future implementations can extend the 32 bit restriction to the
+    full set of all UTF-16 addressable characters (around 1M
+    characters).
+
+    The Unicode API should provide interface routines from
+    &lt;PythonUnicode&gt; to the compiler's wchar_t which can be 16 or 32
+    bit depending on the compiler/libc/platform being used.
+
+    Unicode objects should have a pointer to a cached Python string
+    object &lt;defenc&gt; holding the object's value using the &lt;default
+    encoding&gt;.  This is needed for performance and internal parsing
+    (see Internal Argument Parsing) reasons.  The buffer is filled
+    when the first conversion request to the &lt;default encoding&gt; is
+    issued on the object.
+
+    Interning is not needed (for now), since Python identifiers are
+    defined as being ASCII only.
+
+    codecs.BOM should return the byte order mark (BOM) for the format
+    used internally.  The codecs module should provide the following
+    additional constants for convenience and reference (codecs.BOM
+    will either be BOM_BE or BOM_LE depending on the platform):
+
+      BOM_BE: '\376\377' 
+        (corresponds to Unicode U+0000FEFF in UTF-16 on big endian
+         platforms == ZERO WIDTH NO-BREAK SPACE)
+
+      BOM_LE: '\377\376' 
+        (corresponds to Unicode U+0000FFFE in UTF-16 on little endian
+         platforms == defined as being an illegal Unicode character)
+
+      BOM4_BE: '\000\000\376\377'
+        (corresponds to Unicode U+0000FEFF in UCS-4)
+
+      BOM4_LE: '\377\376\000\000'
+        (corresponds to Unicode U+0000FFFE in UCS-4)
+
+    Note that Unicode sees big endian byte order as being "correct".
+    The swapped order is taken to be an indicator for a "wrong"
+    format, hence the illegal character definition.
+
+    The configure script should provide aid in deciding whether Python
+    can use the native wchar_t type or not (it has to be a 16-bit
+    unsigned type).
+
+
+</pre>
+   <h3>
+    Buffer Interface
+   </h3>
+   <pre>
+    Implement the buffer interface using the &lt;defenc&gt; Python string
+    object as basis for bf_getcharbuf and the internal buffer for
+    bf_getreadbuf.  If bf_getcharbuf is requested and the &lt;defenc&gt;
+    object does not yet exist, it is created first.
+
+    Note that as special case, the parser marker "s#" will not return
+    raw Unicode UTF-16 data (which the bf_getreadbuf returns), but
+    instead tries to encode the Unicode object using the default
+    encoding and then returns a pointer to the resulting string object
+    (or raises an exception in case the conversion fails).  This was
+    done in order to prevent accidentely writing binary data to an
+    output stream which the other end might not recognize.
+
+    This has the advantage of being able to write to output streams
+    (which typically use this interface) without additional
+    specification of the encoding to use.
+
+    If you need to access the read buffer interface of Unicode
+    objects, use the PyObject_AsReadBuffer() interface.
+
+    The internal format can also be accessed using the
+    'unicode-internal' codec, e.g. via u.encode('unicode-internal').
+
+
+</pre>
+   <h3>
+    Pickle/Marshalling
+   </h3>
+   <pre>
+    Should have native Unicode object support.  The objects should be
+    encoded using platform independent encodings.
+
+    Marshal should use UTF-8 and Pickle should either choose
+    Raw-Unicode-Escape (in text mode) or UTF-8 (in binary mode) as
+    encoding.  Using UTF-8 instead of UTF-16 has the advantage of
+    eliminating the need to store a BOM mark.
+
+
+</pre>
+   <h3>
+    Regular Expressions
+   </h3>
+   <pre>
+    Secret Labs AB is working on a Unicode-aware regular expression
+    machinery.  It works on plain 8-bit, UCS-2, and (optionally) UCS-4
+    internal character buffers.
+
+    Also see
+
+            <a href="http://www.unicode.org/unicode/reports/tr18/">http://www.unicode.org/unicode/reports/tr18/</a>
+
+    for some remarks on how to treat Unicode REs.
+
+
+</pre>
+   <h3>
+    Formatting Markers
+   </h3>
+   <pre>
+    Format markers are used in Python format strings.  If Python
+    strings are used as format strings, the following interpretations
+    should be in effect:
+
+      '%s': For Unicode objects this will cause coercion of the
+            whole format string to Unicode.  Note that you should use
+            a Unicode format string to start with for performance
+            reasons.
+
+    In case the format string is an Unicode object, all parameters are
+    coerced to Unicode first and then put together and formatted
+    according to the format string.  Numbers are first converted to
+    strings and then to Unicode.
+
+      '%s': Python strings are interpreted as Unicode
+            string using the &lt;default encoding&gt;.  Unicode objects are
+            taken as is.
+
+    All other string formatters should work accordingly.
+
+    Example:
+
+    u"%s %s" % (u"abc", "abc")  ==  u"abc abc"
+
+
+</pre>
+   <h3>
+    Internal Argument Parsing
+   </h3>
+   <pre>
+    These markers are used by the PyArg_ParseTuple() APIs:
+
+      "U":  Check for Unicode object and return a pointer to it
+
+      "s":  For Unicode objects: return a pointer to the object's
+            &lt;defenc&gt; buffer (which uses the &lt;default encoding&gt;).
+
+      "s#": Access to the default encoded version of the Unicode object
+            (see Buffer Interface); note that the length relates to
+            the length of the default encoded string rather than the
+            Unicode object length.
+
+      "t#": Same as "s#".
+
+      "es": 
+            Takes two parameters: encoding (const char *) and buffer
+            (char **).
+
+            The input object is first coerced to Unicode in the usual
+            way and then encoded into a string using the given
+            encoding.
+
+            On output, a buffer of the needed size is allocated and
+            returned through *buffer as NULL-terminated string.  The
+            encoded may not contain embedded NULL characters.  The
+            caller is responsible for calling PyMem_Free() to free the
+            allocated *buffer after usage.
+
+      "es#":
+            Takes three parameters: encoding (const char *), buffer
+            (char **) and buffer_len (int *).
+
+            The input object is first coerced to Unicode in the usual
+            way and then encoded into a string using the given
+            encoding.
+
+            If *buffer is non-NULL, *buffer_len must be set to
+            sizeof(buffer) on input. Output is then copied to *buffer.
+
+            If *buffer is NULL, a buffer of the needed size is
+            allocated and output copied into it.  *buffer is then
+            updated to point to the allocated memory area.  The caller
+            is responsible for calling PyMem_Free() to free the
+            allocated *buffer after usage.
+
+            In both cases *buffer_len is updated to the number of
+            characters written (excluding the trailing NULL-byte).
+            The output buffer is assured to be NULL-terminated.
+
+    Examples:
+
+    Using "es#" with auto-allocation:
+
+        static PyObject *
+        test_parser(PyObject *self,
+                    PyObject *args)
+        {
+            PyObject *str;
+            const char *encoding = "latin-1";
+            char *buffer = NULL;
+            int buffer_len = 0;
+
+            if (!PyArg_ParseTuple(args, "es#:test_parser",
+                                  encoding, &amp;buffer, &amp;buffer_len))
+                return NULL;
+            if (!buffer) {
+                PyErr_SetString(PyExc_SystemError,
+                                "buffer is NULL");
+                return NULL;
+            }
+            str = PyString_FromStringAndSize(buffer, buffer_len);
+            PyMem_Free(buffer);
+            return str;
+        }
+
+    Using "es" with auto-allocation returning a NULL-terminated string:    
+
+        static PyObject *
+        test_parser(PyObject *self,
+                    PyObject *args)
+        {
+            PyObject *str;
+            const char *encoding = "latin-1";
+            char *buffer = NULL;
+
+            if (!PyArg_ParseTuple(args, "es:test_parser",
+                                  encoding, &amp;buffer))
+                return NULL;
+            if (!buffer) {
+                PyErr_SetString(PyExc_SystemError,
+                                "buffer is NULL");
+                return NULL;
+            }
+            str = PyString_FromString(buffer);
+            PyMem_Free(buffer);
+            return str;
+        }
+
+    Using "es#" with a pre-allocated buffer:
+
+        static PyObject *
+        test_parser(PyObject *self,
+                    PyObject *args)
+        {
+            PyObject *str;
+            const char *encoding = "latin-1";
+            char _buffer[10];
+            char *buffer = _buffer;
+            int buffer_len = sizeof(_buffer);
+
+            if (!PyArg_ParseTuple(args, "es#:test_parser",
+                                  encoding, &amp;buffer, &amp;buffer_len))
+                return NULL;
+            if (!buffer) {
+                PyErr_SetString(PyExc_SystemError,
+                                "buffer is NULL");
+                return NULL;
+            }
+            str = PyString_FromStringAndSize(buffer, buffer_len);
+            return str;
+        }
+
+
+</pre>
+   <h3>
+    File/Stream Output
+   </h3>
+   <pre>
+    Since file.write(object) and most other stream writers use the
+    "s#" or "t#" argument parsing marker for querying the data to
+    write, the default encoded string version of the Unicode object
+    will be written to the streams (see Buffer Interface).
+
+    For explicit handling of files using Unicode, the standard stream
+    codecs as available through the codecs module should be used.
+
+    The codecs module should provide a short-cut
+    open(filename,mode,encoding) available which also assures that
+    mode contains the 'b' character when needed.
+
+
+</pre>
+   <h3>
+    File/Stream Input
+   </h3>
+   <pre>
+    Only the user knows what encoding the input data uses, so no
+    special magic is applied.  The user will have to explicitly
+    convert the string data to Unicode objects as needed or use the
+    file wrappers defined in the codecs module (see File/Stream
+    Output).
+
+
+</pre>
+   <h3>
+    Unicode Methods &amp; Attributes
+   </h3>
+   <pre>
+    All Python string methods, plus:
+
+      .encode([encoding=&lt;default encoding&gt;][,errors="strict"]) 
+         --&gt; see Unicode Output
+
+      .splitlines([include_breaks=0])
+         --&gt; breaks the Unicode string into a list of (Unicode) lines;
+             returns the lines with line breaks included, if
+             include_breaks is true.  See Line Breaks for a
+             specification of how line breaking is done.
+
+
+</pre>
+   <h3>
+    Code Base
+   </h3>
+   <pre>
+    We should use Fredrik Lundh's Unicode object implementation as
+    basis.  It already implements most of the string methods needed
+    and provides a well written code base which we can build upon.
+
+    The object sharing implemented in Fredrik's implementation should
+    be dropped.
+
+
+</pre>
+   <h3>
+    Test Cases
+   </h3>
+   <pre>
+    Test cases should follow those in Lib/test/test_string.py and
+    include additional checks for the Codec Registry and the Standard
+    Codecs.
+
+
+</pre>
+   <h3>
+    References
+   </h3>
+   <pre>
+    Unicode Consortium:
+            <a href="http://www.unicode.org/">http://www.unicode.org/</a>
+
+    Unicode FAQ:
+            <a href="http://www.unicode.org/unicode/faq/">http://www.unicode.org/unicode/faq/</a>
+
+    Unicode 3.0:
+            <a href="http://www.unicode.org/unicode/standard/versions/Unicode3.0.html">http://www.unicode.org/unicode/standard/versions/Unicode3.0.html</a>
+
+    Unicode-TechReports:
+            <a href="http://www.unicode.org/unicode/reports/techreports.html">http://www.unicode.org/unicode/reports/techreports.html</a>
+
+    Unicode-Mappings:
+            <a href="ftp://ftp.unicode.org/Public/MAPPINGS/">ftp://ftp.unicode.org/Public/MAPPINGS/</a>
+
+    Introduction to Unicode (a little outdated by still nice to read):
+            <a href="http://www.nada.kth.se/i18n/ucs/unicode-iso10646-oview.html">http://www.nada.kth.se/i18n/ucs/unicode-iso10646-oview.html</a>
+
+    For comparison:
+            Introducing Unicode to ECMAScript (aka JavaScript) --
+            <a href="http://www-4.ibm.com/software/developer/library/internationalization-support.html">http://www-4.ibm.com/software/developer/library/internationalization-support.html</a>
+
+    IANA Character Set Names:
+            <a href="ftp://ftp.isi.edu/in-notes/iana/assignments/character-sets">ftp://ftp.isi.edu/in-notes/iana/assignments/character-sets</a>
+
+    Discussion of UTF-8 and Unicode support for POSIX and Linux:
+            <a href="http://www.cl.cam.ac.uk/~mgk25/unicode.html">http://www.cl.cam.ac.uk/~mgk25/unicode.html</a>
+
+    Encodings:
+
+        Overview:
+                <a href="http://czyborra.com/utf/">http://czyborra.com/utf/</a>
+
+        UTC-2:
+                <a href="http://www.uazone.com/multiling/unicode/ucs2.html">http://www.uazone.com/multiling/unicode/ucs2.html</a>
+
+        UTF-7:
+                Defined in <a href="http://www.faqs.org/rfcs/rfc2152.html">RFC2152</a>, e.g.
+                <a href="http://www.uazone.com/multiling/ml-docs/rfc2152.txt">http://www.uazone.com/multiling/ml-docs/rfc2152.txt</a>
+
+        UTF-8:
+                Defined in <a href="http://www.faqs.org/rfcs/rfc2279.html">RFC2279</a>, e.g.
+                <a href="http://info.internet.isi.edu/in-notes/rfc/files/rfc2279.txt">http://info.internet.isi.edu/in-notes/rfc/files/rfc2279.txt</a>
+
+        UTF-16:
+                <a href="http://www.uazone.com/multiling/unicode/wg2n1035.html">http://www.uazone.com/multiling/unicode/wg2n1035.html</a>
+
+
+</pre>
+   <h3>
+    History of this Proposal
+   </h3>
+   <pre>
+    [ed. note: revisions prior to 1.7 are available in the CVS history
+     of Misc/unicode.txt from the standard Python distribution.  All
+     subsequent history is available via the CVS revisions on this
+     file.]
+
+    1.7: Added note about the changed behaviour of "s#".
+    1.6: Changed &lt;defencstr&gt; to &lt;defenc&gt; since this is the name used in the
+         implementation.  Added notes about the usage of &lt;defenc&gt; in
+         the buffer protocol implementation.
+    1.5: Added notes about setting the &lt;default encoding&gt;.  Fixed some
+         typos (thanks to Andrew Kuchling).  Changed &lt;defencstr&gt; to
+         &lt;utf8str&gt;.
+    1.4: Added note about mixed type comparisons and contains tests.
+         Changed treating of Unicode objects in format strings (if
+         used with '%s' % u they will now cause the format string to
+         be coerced to Unicode, thus producing a Unicode object on
+         return).  Added link to IANA charset names (thanks to Lars
+         Marius Garshol).  Added new codec methods .readline(),
+         .readlines() and .writelines().
+    1.3: Added new "es" and "es#" parser markers
+    1.2: Removed POD about codecs.open()
+    1.1: Added note about comparisons and hash values.  Added note about
+         case mapping algorithms.  Changed stream codecs .read() and
+         .write() method to match the standard file-like object
+         methods (bytes consumed information is no longer returned by
+         the methods)
+    1.0: changed encode Codec method to be symmetric to the decode method
+         (they both return (object, data consumed) now and thus become
+         interchangeable); removed __init__ method of Codec class (the
+         methods are stateless) and moved the errors argument down to
+         the methods; made the Codec design more generic w/r to type
+         of input and output objects; changed StreamWriter.flush to
+         StreamWriter.reset in order to avoid overriding the stream's
+         .flush() method; renamed .breaklines() to .splitlines();
+         renamed the module unicodec to codecs; modified the File I/O
+         section to refer to the stream codecs.
+    0.9: changed errors keyword argument definition; added 'replace' error
+         handling; changed the codec APIs to accept buffer like
+         objects on input; some minor typo fixes; added Whitespace
+         section and included references for Unicode characters that
+         have the whitespace and the line break characteristic; added
+         note that search functions can expect lower-case encoding
+         names; dropped slicing and offsets in the codec APIs
+    0.8: added encodings package and raw unicode escape encoding; untabified
+         the proposal; added notes on Unicode format strings; added
+         .breaklines() method
+    0.7: added a whole new set of codec APIs; added a different
+         encoder lookup scheme; fixed some names
+    0.6: changed "s#" to "t#"; changed &lt;defencbuf&gt; to &lt;defencstr&gt; holding
+         a real Python string object; changed Buffer Interface to
+         delegate requests to &lt;defencstr&gt;'s buffer interface; removed
+         the explicit reference to the unicodec.codecs dictionary (the
+         module can implement this in way fit for the purpose);
+         removed the settable default encoding; move UnicodeError from
+         unicodec to exceptions; "s#" not returns the internal data;
+         passed the UCS-2/UTF-16 checking from the Unicode constructor
+         to the Codecs
+    0.5: moved sys.bom to unicodec.BOM; added sections on case mapping,
+         private use encodings and Unicode character properties
+    0.4: added Codec interface, notes on %-formatting, changed some encoding
+         details, added comments on stream wrappers, fixed some
+         discussion points (most important: Internal Format),
+         clarified the 'unicode-escape' encoding, added encoding
+         references
+    0.3: added references, comments on codec modules, the internal format,
+         bf_getcharbuffer and the RE engine; added 'unicode-escape'
+         encoding proposed by Tim Peters and fixed repr(u) accordingly
+    0.2: integrated Guido's suggestions, added stream codecs and file
+         wrapping
+    0.1: first version
+
+
+
+</pre>
+  </div>
+ </body>
+
+<!-- Mirrored from www.python.org/dev/peps/pep-0100/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 03 Sep 2015 04:34:05 GMT -->
+</html>Source: <a href="https://hg.python.org/peps/file/tip/pep-0100.txt">https://hg.python.org/peps/file/tip/pep-0100.txt</a>
+
+    </article>
+
+
+                </section>
+
+                
+
+
+<aside class="left-sidebar" role="secondary">
+
+    
+
+
+
+
+
+
+    
+
+
+
+
+
+        <div class="twitter-widget sidebar-widget">
+        <a class="twitter-timeline" data-dnt="true" href="https://twitter.com/ThePSF" data-widget-id="434113224703610882">Tweets by @ThePSF</a>
+        <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+    </div>
+
+    <div class="psf-sidebar-widget sidebar-widget">
+        <h3 class="widget-title">The PSF</h3>
+<p>The Python Software Foundation is the organization behind Python. Become a member of the PSF and help advance the software and our mission. </p>
+
+    </div>
+
+</aside>
+
+
+
+                
+                
+
+
+            </div><!-- end .container -->
+        </div><!-- end #content .content-wrapper -->
+
+        <!-- Footer and social media list -->
+        <footer id="site-map" class="main-footer" role="contentinfo">
+            <div class="main-footer-links">
+                <div class="container">
+
+                    
+                    <a id="back-to-top-1" class="jump-link" href="#python-network"><span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> Back to Top</a>
+
+                    
+
+<ul class="sitemap navigation menu do-not-print" role="tree" id="container">
+    
+    <li class="tier-1 element-1">
+        <a href="https://www.python.org/about/" >About</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/apps/" title="">Applications</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/quotes/" title="">Quotes</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/gettingstarted/" title="">Getting Started</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/help/" title="">Help</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-2">
+        <a href="https://www.python.org/downloads/" >Downloads</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/downloads/" title="">All releases</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/downloads/source/" title="">Source code</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/downloads/windows/" title="">Windows</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/downloads/mac-osx/" title="">Mac OS X</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/download/other/" title="">Other Platforms</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://docs.python.org/3/license.html" title="">License</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/download/alternatives" title="">Alternative Implementations</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-3">
+        <a href="https://www.python.org/doc/" >Documentation</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/doc/" title="">Docs</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/doc/av" title="">Audio/Visual Talks</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://wiki.python.org/moin/BeginnersGuide" title="">Beginner&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://docs.python.org/faq/" title="">FAQ</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="http://wiki.python.org/moin/Languages" title="">Non-English Docs</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="../index.html" title="">PEP Index</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://wiki.python.org/moin/PythonBooks" title="">Python Books</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-4">
+        <a href="https://www.python.org/community/" >Community</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/community/diversity/" title="">Diversity</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/community/irc/" title="">IRC</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/community/lists/" title="">Mailing Lists</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/workshops/" title="">Python Conferences</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/community/sigs/" title="">Special Interest Groups</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://wiki.python.org/moin/" title="">Python Wiki</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/community/logos/" title="">Python Logo</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://www.python.org/community/merchandise/" title="">Merchandise</a></li>
+    
+        <li class="tier-2 element-9" role="treeitem"><a href="https://www.python.org/community/awards" title="">Community Awards</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-5">
+        <a href="https://www.python.org/about/success/" title="success-stories">Success Stories</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/success/#arts" title="">Arts</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/success/#business" title="">Business</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/success/#education" title="">Education</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/success/#engineering" title="">Engineering</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/about/success/#government" title="">Government</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://www.python.org/about/success/#scientific" title="">Scientific</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/about/success/#software-development" title="">Software Development</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-6">
+        <a href="https://www.python.org/blogs/" title="News from around the Python world">News</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/blogs/" title="Python Insider Blog Posts">Python News</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://planetpython.org/" title="Planet Python">Community News</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="http://pyfound.blogspot.com/" title="PSF Blog">PSF News</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pycon.blogspot.com/" title="PyCon Blog">PyCon News</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-7">
+        <a href="https://www.python.org/events/" >Events</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/events/python-events/" title="">Python Events</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/events/python-user-group/" title="">User Group Events</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/events/python-events/past/" title="">Python Events Archive</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/events/python-user-group/past/" title="">User Group Events Archive</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://wiki.python.org/moin/PythonEventsCalendar#Submitting_an_Event" title="">Submit an Event</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-8">
+        <a href="https://www.python.org/dev/" >Contributing</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="http://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://bugs.python.org/" title="">Issue Tracker</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://mail.python.org/mailman/listinfo/python-dev" title="">python-dev list</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pythonmentors.com/" title="">Core Mentorship</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+</ul>
+
+
+                    <a id="back-to-top-2" class="jump-link" href="#python-network"><span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> Back to Top</a>
+                    
+
+                </div><!-- end .container -->
+            </div> <!-- end .main-footer-links -->
+
+            <div class="site-base">
+                <div class="container">
+                    
+                    <ul class="footer-links navigation menu do-not-print" role="tree">
+                        <li class="tier-1 element-1"><a href="https://www.python.org/about/help/">Help &amp; <span class="say-no-more">General</span> Contact</a></li>
+                        <li class="tier-1 element-2"><a href="https://www.python.org/community/diversity/">Diversity <span class="say-no-more">Initiatives</span></a></li>
+                        <li class="tier-1 element-3"><a href="https://github.com/python/pythondotorg/issues">Submit Website Bug</a></li>
+                        <!--<li class="tier-1 element-3"><a href="#"><span class="say-no-more">Website</span> Colophon</a></li>-->
+                    </ul>
+
+                    <div class="copyright">
+                        <p><small>
+                            <span class="pre">Copyright &copy;2001-2015.</span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/psf-landing/">Python Software Foundation</a></span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/about/legal/">Legal Statements</a></span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/privacy/">Privacy Policy</a></span>
+                        </small></p>
+                    </div>
+
+                </div><!-- end .container -->
+            </div><!-- end .site-base -->
+
+        </footer>
+
+    </div><!-- end #touchnav-wrapper -->
+
+    
+    <script src="../../../../ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="../../../static/js/libs/jquery-1.8.2.min.js"><\/script>')</script>
+
+    <script src="../../../static/js/libs/masonry.pkgd.min.js"></script>
+
+    <script type="text/javascript" src="../../../static/js/main-min.js" charset="utf-8"></script>
+    
+
+    <!--[if lte IE 7]>
+    <script type="text/javascript" src="/static/js/plugins/IE8-min.js" charset="utf-8"></script>
+    
+    
+    <![endif]-->
+
+    <!--[if lte IE 8]>
+    <script type="text/javascript" src="/static/js/plugins/getComputedStyle-min.js" charset="utf-8"></script>
+    
+    
+    <![endif]-->
+
+    
+
+    
+    
+
+</body>
+</html>

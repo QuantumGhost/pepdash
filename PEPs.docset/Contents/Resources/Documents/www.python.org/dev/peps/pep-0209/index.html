@@ -1,0 +1,1579 @@
+<!doctype html>
+<!--[if lt IE 7]>   <html class="no-js ie6 lt-ie7 lt-ie8 lt-ie9">   <![endif]-->
+<!--[if IE 7]>      <html class="no-js ie7 lt-ie8 lt-ie9">          <![endif]-->
+<!--[if IE 8]>      <html class="no-js ie8 lt-ie9">                 <![endif]-->
+<!--[if gt IE 8]><!--><html class="no-js" lang="en" dir="ltr">  <!--<![endif]-->
+
+
+<!-- Mirrored from www.python.org/dev/peps/pep-0209/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 03 Sep 2015 04:37:08 GMT -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <link rel="prefetch" href="../../../../ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js">
+
+    <meta name="application-name" content="Python.org">
+    <meta name="msapplication-tooltip" content="The official home of the Python Programming Language">
+    <meta name="apple-mobile-web-app-title" content="Python.org">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="format-detection" content="telephone=no">
+    <meta http-equiv="cleartype" content="on">
+    <meta http-equiv="imagetoolbar" content="false">
+
+    <script src="../../../static/js/libs/modernizr.js"></script>
+
+    <link href="../../../static/stylesheets/style.css" rel="stylesheet" type="text/css" title="default" />
+    <link href="../../../static/stylesheets/mq.css" rel="stylesheet" type="text/css" media="not print, braille, embossed, speech, tty" />
+    
+
+    <!--[if (lte IE 8)&(!IEMobile)]>
+    <link href="/static/stylesheets/no-mq.css" rel="stylesheet" type="text/css" media="screen" />
+    
+    
+    <![endif]-->
+
+    
+    <link rel="icon" type="image/x-icon" href="https://www.python.org/static/favicon.ico">
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="../../../static/apple-touch-icon-144x144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="../../../static/apple-touch-icon-114x114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="../../../static/apple-touch-icon-72x72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="../../../static/apple-touch-icon-precomposed.png">
+    <link rel="apple-touch-icon" href="../../../static/apple-touch-icon-precomposed.png">
+
+    
+    <meta name="msapplication-TileImage" content="/static/metro-icon-144x144-precomposed.png"><!-- white shape -->
+    <meta name="msapplication-TileColor" content="#3673a5"><!-- python blue -->
+    <meta name="msapplication-navbutton-color" content="#3673a5">
+
+    <meta property="og:site_name" content="Python.org">
+    <meta property="og:type" content="website">
+
+    <title>PEP 209 -- Multi-dimensional Arrays | Python.org</title>
+    <meta property="og:title" content="Welcome to Python.org">
+
+    
+    <meta name="description" content="The official home of the Python Programming Language">
+    <meta name="og:description" content="The official home of the Python Programming Language">
+    <meta name="keywords" content="Python programming language object oriented web free open source software license documentation download community">
+    <meta property="og:tag" content="Python programming language object oriented web free open source software license documentation download community">
+    <meta property="og:published_time" content="">
+    <meta property="og:modified_time" content="">
+    <meta property="og:author" content="">
+    <meta property="og:section" content=""> 
+    <meta property="og:url" content="">
+    <meta property="og:image" content="">
+    <meta property="og:video" content="">
+
+    <link rel="author" href="https://www.python.org/static/humans.txt">
+
+    
+
+    
+    <script type="application/ld+json">
+     {
+       "@context": "http://schema.org",
+       "@type": "WebSite",
+       "url": "https://www.python.org/",
+       "potentialAction": {
+         "@type": "SearchAction",
+         "target": "https://www.python.org/search/?q={search_term_string}",
+         "query-input": "required name=search_term_string"
+       }
+     }
+    </script>
+
+    
+    <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-39055973-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+    </script>
+    
+</head>
+
+<body class="python pages pep-page">
+
+    <div id="touchnav-wrapper">
+
+        <div id="nojs" class="do-not-print">
+            <p><strong>Notice:</strong> While Javascript is not essential for this website, your interaction with the content will be limited. Please turn Javascript on for the full experience. </p>
+        </div>
+
+        <!--[if lt IE 8]>
+        <div id="oldie-warning" class="do-not-print">
+            <p><strong>Notice:</strong> Your browser is <em>ancient</em> and <a href="http://www.ie6countdown.com/">Microsoft agrees</a>. <a href="http://browsehappy.com/">Upgrade to a different browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to experience a better web.</p>
+        </div>
+        <![endif]-->
+
+        <!-- Sister Site Links -->
+        <div id="top" class="top-bar do-not-print">
+
+            <nav class="meta-navigation container" role="navigation">
+
+                
+                <div class="skip-link screen-reader-text">
+                    <a href="#content" title="Skip to content">Skip to content</a>
+                </div>
+
+                
+                <a id="close-python-network" class="jump-link" href="#python-network" aria-hidden="true">
+                    <span aria-hidden="true" class="icon-arrow-down"><span>&#9660;</span></span> Close
+                </a>
+
+                
+
+<ul class="menu" role="tree">
+    
+    <li class="python-meta ">
+        <a href="https://www.python.org/" title="The Python Programming Language" >Python</a>
+    </li>
+    
+    <li class="psf-meta ">
+        <a href="https://www.python.org/psf-landing/" title="The Python Software Foundation" >PSF</a>
+    </li>
+    
+    <li class="docs-meta ">
+        <a href="https://docs.python.org/" title="Python Documentation" >Docs</a>
+    </li>
+    
+    <li class="pypi-meta ">
+        <a href="https://pypi.python.org/" title="Python Package Index" >PyPI</a>
+    </li>
+    
+    <li class="jobs-meta ">
+        <a href="https://www.python.org/jobs/" title="Python Job Board" >Jobs</a>
+    </li>
+    
+    <li class="shop-meta ">
+        <a href="https://www.python.org/community/" title="Python Community" >Community</a>
+    </li>
+    
+</ul>
+
+
+                <a id="python-network" class="jump-link" href="#top" aria-hidden="true">
+                    <span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> The Python Network
+                </a>
+
+            </nav>
+
+        </div>
+
+        <!-- Header elements -->
+        <header class="main-header" role="banner">
+            <div class="container">
+
+                <h1 class="site-headline">
+                    <a href="https://www.python.org/"><img class="python-logo" src="../../../static/img/python-logo.png" alt="python&trade;"></a>
+                </h1>
+
+                <div class="options-bar do-not-print">
+
+                    
+                    <a id="site-map-link" class="jump-to-menu" href="#site-map"><span class="menu-icon">&equiv;</span> Menu</a><form class="search-the-site" action="https://www.python.org/search/" method="get">
+                        <fieldset title="Search Python.org">
+
+                            <span aria-hidden="true" class="icon-search"></span>
+
+                            <label class="screen-reader-text" for="id-search-field">Search This Site</label>
+                            <input id="id-search-field" name="q" type="search" role="textbox" class="search-field" placeholder="Search" value="" tabindex="1">
+
+                            <button type="submit" name="submit" id="submit" class="search-button" title="Submit this Search" tabindex="3">
+                                GO
+                            </button>
+
+                            
+                            <!--[if IE]><input type="text" style="display: none;" disabled="disabled" size="1" tabindex="4"><![endif]-->
+
+                        </fieldset>
+                    </form><span class="breaker"></span><div class="adjust-font-size" aria-hidden="true">
+                        <ul class="navigation menu" aria-label="Adjust Text Size on Page">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                <a href="#" class="action-trigger"><strong><small>A</small> A</strong></a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a class="text-shrink" title="Make Text Smaller" href="javascript:;">Smaller</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a class="text-grow" title="Make Text Larger" href="javascript:;">Larger</a></li>
+                                    <li class="tier-2 element-3" role="treeitem"><a class="text-reset" title="Reset any font size changes I have made" href="javascript:;">Reset</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div><div class="winkwink-nudgenudge">
+                        <ul class="navigation menu" aria-label="Social Media Navigation">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                <a href="#" class="action-trigger">Socialize</a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a href="http://plus.google.com/+Python"><span aria-hidden="true" class="icon-google-plus"></span>Google+</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a href="http://www.facebook.com/pythonlang?fref=ts"><span aria-hidden="true" class="icon-facebook"></span>Facebook</a></li>
+                                    <li class="tier-2 element-3" role="treeitem"><a href="http://twitter.com/ThePSF"><span aria-hidden="true" class="icon-twitter"></span>Twitter</a></li>
+                                    <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/irc/"><span aria-hidden="true" class="icon-freenode"></span>Chat on IRC</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div><div class="account-signin">
+                        <ul class="navigation menu" aria-label="Social Media Navigation">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                
+                                <a href="https://www.python.org/accounts/login/" title="Sign Up or Sign In to Python.org">Sign In</a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/accounts/signup/">Sign Up / Register</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/accounts/login/">Sign In</a></li>
+                                </ul>
+                                
+                            </li>
+                        </ul>
+                    </div>
+
+                </div><!-- end options-bar -->
+
+                <nav id="mainnav" class="python-navigation main-navigation do-not-print" role="navigation">
+                    
+                        
+<ul class="navigation menu" role="menubar" aria-label="Main Navigation">
+  
+    
+    
+    <li id="about" class="tier-1 element-1  " aria-haspopup="true">
+        <a href="https://www.python.org/about/" title="" class="">About</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/apps/" title="">Applications</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/quotes/" title="">Quotes</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/gettingstarted/" title="">Getting Started</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/help/" title="">Help</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="downloads" class="tier-1 element-2  " aria-haspopup="true">
+        <a href="https://www.python.org/downloads/" title="" class="">Downloads</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/downloads/" title="">All releases</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/downloads/source/" title="">Source code</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/downloads/windows/" title="">Windows</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/downloads/mac-osx/" title="">Mac OS X</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/download/other/" title="">Other Platforms</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://docs.python.org/3/license.html" title="">License</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/download/alternatives" title="">Alternative Implementations</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="documentation" class="tier-1 element-3  " aria-haspopup="true">
+        <a href="https://www.python.org/doc/" title="" class="">Documentation</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/doc/" title="">Docs</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/doc/av" title="">Audio/Visual Talks</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://wiki.python.org/moin/BeginnersGuide" title="">Beginner&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://docs.python.org/faq/" title="">FAQ</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="http://wiki.python.org/moin/Languages" title="">Non-English Docs</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="../index.html" title="">PEP Index</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://wiki.python.org/moin/PythonBooks" title="">Python Books</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="community" class="tier-1 element-4  " aria-haspopup="true">
+        <a href="https://www.python.org/community/" title="" class="">Community</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/community/diversity/" title="">Diversity</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/community/irc/" title="">IRC</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/community/lists/" title="">Mailing Lists</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/workshops/" title="">Python Conferences</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/community/sigs/" title="">Special Interest Groups</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://wiki.python.org/moin/" title="">Python Wiki</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/community/logos/" title="">Python Logo</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://www.python.org/community/merchandise/" title="">Merchandise</a></li>
+    
+        <li class="tier-2 element-9" role="treeitem"><a href="https://www.python.org/community/awards" title="">Community Awards</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="success-stories" class="tier-1 element-5  " aria-haspopup="true">
+        <a href="https://www.python.org/about/success/" title="success-stories" class="">Success Stories</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/success/#arts" title="">Arts</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/success/#business" title="">Business</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/success/#education" title="">Education</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/success/#engineering" title="">Engineering</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/about/success/#government" title="">Government</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://www.python.org/about/success/#scientific" title="">Scientific</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/about/success/#software-development" title="">Software Development</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="news" class="tier-1 element-6  " aria-haspopup="true">
+        <a href="https://www.python.org/blogs/" title="News from around the Python world" class="">News</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/blogs/" title="Python Insider Blog Posts">Python News</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://planetpython.org/" title="Planet Python">Community News</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="http://pyfound.blogspot.com/" title="PSF Blog">PSF News</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pycon.blogspot.com/" title="PyCon Blog">PyCon News</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="events" class="tier-1 element-7  " aria-haspopup="true">
+        <a href="https://www.python.org/events/" title="" class="">Events</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/events/python-events/" title="">Python Events</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/events/python-user-group/" title="">User Group Events</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/events/python-events/past/" title="">Python Events Archive</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/events/python-user-group/past/" title="">User Group Events Archive</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://wiki.python.org/moin/PythonEventsCalendar#Submitting_an_Event" title="">Submit an Event</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    
+  
+</ul>
+
+                    
+                </nav>
+
+                <div class="header-banner "> <!-- for optional "do-not-print" class -->
+                    
+                    
+                </div>
+
+                
+                
+
+             </div><!-- end .container -->
+        </header>
+
+        <div id="content" class="content-wrapper">
+            <!-- Main Content Column -->
+            <div class="container">
+
+                <section class="main-content with-left-sidebar" role="main">
+
+                    
+<ul class="breadcrumbs menu">
+    <li>
+        <a href="https://www.python.org/" title="The Python Programming Language">Python</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>
+        <a href="https://www.python.org/dev/">Python Developer's Guide</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>
+        <a href="../index.html">PEP Index</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>PEP 209 -- Multi-dimensional Arrays</li>
+</ul>
+
+
+                    
+<style>
+   .pep-page pre {
+        padding: .5em;
+        background: inherit;
+        border-left: 0px;
+        -webkit-box-shadow: 0 0 0 0;
+        -moz-box-shadow: 0 0 0 0;
+        box-shadow: 0 0 0 0;
+   }
+</style>
+
+    
+    <article class="text">
+        
+
+        <header class="article-header">
+            <h1 class="page-title">PEP 209 -- Multi-dimensional Arrays</h1>
+        </header>
+
+        <html>
+ <body>
+  <div class="header">
+   <table border="0">
+    <tr>
+     <th>
+      PEP:
+     </th>
+     <td>
+      209
+     </td>
+    </tr>
+    <tr>
+     <th>
+      Title:
+     </th>
+     <td>
+      Multi-dimensional Arrays
+     </td>
+    </tr>
+    <tr>
+     <th>
+      Author:
+     </th>
+     <td>
+      Paul Barrett &lt;barrett at stsci.edu&gt;, Travis Oliphant &lt;oliphant at ee.byu.edu&gt;
+     </td>
+    </tr>
+    <tr>
+     <th>
+      Status:
+     </th>
+     <td>
+      Withdrawn
+     </td>
+    </tr>
+    <tr>
+     <th>
+      Type:
+     </th>
+     <td>
+      Standards Track
+     </td>
+    </tr>
+    <tr>
+     <th>
+      Created:
+     </th>
+     <td>
+      03-Jan-2001
+     </td>
+    </tr>
+    <tr>
+     <th>
+      Python-Version:
+     </th>
+     <td>
+      2.2
+     </td>
+    </tr>
+    <tr>
+     <th>
+      Post-History:
+     </th>
+     <td>
+     </td>
+    </tr>
+   </table>
+  </div>
+  <div class="content">
+   <h3>
+    Abstract
+   </h3>
+   <pre>
+    This PEP proposes a redesign and re-implementation of the multi-
+    dimensional array module, Numeric, to make it easier to add new
+    features and functionality to the module.  Aspects of Numeric 2
+    that will receive special attention are efficient access to arrays
+    exceeding a gigabyte in size and composed of inhomogeneous data
+    structures or records.  The proposed design uses four Python
+    classes: ArrayType, UFunc, Array, and ArrayView; and a low-level
+    C-extension module, _ufunc, to handle the array operations
+    efficiently.  In addition, each array type has its own C-extension
+    module which defines the coercion rules, operations, and methods
+    for that type.  This design enables new types, features, and
+    functionality to be added in a modular fashion.  The new version
+    will introduce some incompatibilities with the current Numeric.
+
+
+</pre>
+   <h3>
+    Motivation
+   </h3>
+   <pre>
+    Multi-dimensional arrays are commonly used to store and manipulate
+    data in science, engineering, and computing.  Python currently has
+    an extension module, named Numeric (henceforth called Numeric 1),
+    which provides a satisfactory set of functionality for users
+    manipulating homogeneous arrays of data of moderate size (of order
+    10 MB).  For access to larger arrays (of order 100 MB or more) of
+    possibly inhomogeneous data, the implementation of Numeric 1 is
+    inefficient and cumbersome.  In the future, requests by the
+    Numerical Python community for additional functionality is also
+    likely as PEPs 211: Adding New Linear Operators to Python, and
+    225: Elementwise/Objectwise Operators illustrate.
+
+
+</pre>
+   <h3>
+    Proposal
+   </h3>
+   <pre>
+    This proposal recommends a re-design and re-implementation of
+    Numeric 1, henceforth called Numeric 2, which will enable new
+    types, features, and functionality to be added in an easy and
+    modular manner.  The initial design of Numeric 2 should focus on
+    providing a generic framework for manipulating arrays of various
+    types and should enable a straightforward mechanism for adding new
+    array types and UFuncs.  Functional methods that are more specific
+    to various disciplines can then be layered on top of this core.
+    This new module will still be called Numeric and most of the
+    behavior found in Numeric 1 will be preserved.
+
+    The proposed design uses four Python classes: ArrayType, UFunc,
+    Array, and ArrayView; and a low-level C-extension module to handle
+    the array operations efficiently.  In addition, each array type
+    has its own C-extension module which defines the coercion rules,
+    operations, and methods for that type.  At a later date, when core
+    functionality is stable, some Python classes can be converted to
+    C-extension types.
+
+    Some planned features are:
+    
+    1.  Improved memory usage
+    
+    This feature is particularly important when handling large arrays
+    and can produce significant improvements in performance as well as
+    memory usage.  We have identified several areas where memory usage
+    can be improved:
+    
+        a.  Use a local coercion model
+    
+        Instead of using Python's global coercion model which creates
+        temporary arrays, Numeric 2, like Numeric 1, will implement a
+        local coercion model as described in <a href="../pep-0208/index.html">PEP 208</a> which defers the
+        responsibility of coercion to the operator.  By using internal
+        buffers, a coercion operation can be done for each array
+        (including output arrays), if necessary, at the time of the
+        operation.  Benchmarks [1] have shown that performance is at
+        most degraded only slightly and is improved in cases where the
+        internal buffers are less than the L2 cache size and the
+        processor is under load.  To avoid array coercion altogether,
+        C functions having arguments of mixed type are allowed in
+        Numeric 2.
+    
+        b.  Avoid creation of temporary arrays
+    
+        In complex array expressions (i.e. having more than one
+        operation), each operation will create a temporary array which
+        will be used and then deleted by the succeeding operation.  A
+        better approach would be to identify these temporary arrays
+        and reuse their data buffers when possible, namely when the
+        array shape and type are the same as the temporary array being
+        created.  This can be done by checking the temporary array's
+        reference count.  If it is 1, then it will be deleted once the
+        operation is done and is a candidate for reuse.
+    
+        c.  Optional use of memory-mapped files
+    
+        Numeric users sometimes need to access data from very large
+        files or to handle data that is greater than the available
+        memory.  Memory-mapped arrays provide a mechanism to do this
+        by storing the data on disk while making it appear to be in
+        memory.  Memory- mapped arrays should improve access to all
+        files by eliminating one of two copy steps during a file
+        access.  Numeric should be able to access in-memory and
+        memory-mapped arrays transparently.
+    
+        d.  Record access
+
+        In some fields of science, data is stored in files as binary
+        records.  For example in astronomy, photon data is stored as a
+        1 dimensional list of photons in order of arrival time.  These
+        records or C-like structures contain information about the
+        detected photon, such as its arrival time, its position on the
+        detector, and its energy.  Each field may be of a different
+        type, such as char, int, or float.  Such arrays introduce new
+        issues that must be dealt with, in particular byte alignment
+        or byte swapping may need to be performed for the numeric
+        values to be properly accessed (though byte swapping is also
+        an issue for memory mapped data).  Numeric 2 is designed to
+        automatically handle alignment and representational issues
+        when data is accessed or operated on.  There are two
+        approaches to implementing records; as either a derived array
+        class or a special array type, depending on your point-of-
+        view.  We defer this discussion to the Open Issues section.
+    
+    
+    2.  Additional array types
+    
+    Numeric 1 has 11 defined types: char, ubyte, sbyte, short, int,
+    long, float, double, cfloat, cdouble, and object.  There are no
+    ushort, uint, or ulong types, nor are there more complex types
+    such as a bit type which is of use to some fields of science and
+    possibly for implementing masked-arrays.  The design of Numeric 1
+    makes the addition of these and other types a difficult and
+    error-prone process.  To enable the easy addition (and deletion)
+    of new array types such as a bit type described below, a re-design
+    of Numeric is necessary.
+    
+        a.  Bit type
+    
+        The result of a rich comparison between arrays is an array of
+        boolean values.  The result can be stored in an array of type
+        char, but this is an unnecessary waste of memory.  A better
+        implementation would use a bit or boolean type, compressing
+        the array size by a factor of eight.  This is currently being
+        implemented for Numeric 1 (by Travis Oliphant) and should be
+        included in Numeric 2.
+
+    3.  Enhanced array indexing syntax
+    
+    The extended slicing syntax was added to Python to provide greater
+    flexibility when manipulating Numeric arrays by allowing
+    step-sizes greater than 1.  This syntax works well as a shorthand
+    for a list of regularly spaced indices.  For those situations
+    where a list of irregularly spaced indices are needed, an enhanced
+    array indexing syntax would allow 1-D arrays to be arguments.
+    
+    4.  Rich comparisons
+    
+    The implementation of <a href="../pep-0207/index.html">PEP 207</a>: Rich Comparisons in Python 2.1
+    provides additional flexibility when manipulating arrays.  We
+    intend to implement this feature in Numeric 2.
+    
+    5. Array broadcasting rules
+    
+    When an operation between a scalar and an array is done, the
+    implied behavior is to create a new array having the same shape as
+    the array operand containing the scalar value.  This is called
+    array broadcasting.  It also works with arrays of lesser rank,
+    such as vectors.  This implicit behavior is implemented in Numeric
+    1 and will also be implemented in Numeric 2.
+
+
+</pre>
+   <h3>
+    Design and Implementation
+   </h3>
+   <pre>
+    The design of Numeric 2 has four primary classes:
+    
+    1.  ArrayType:
+    
+    This is a simple class that describes the fundamental properties
+    of an array-type, e.g. its name, its size in bytes, its coercion
+    relations with respect to other types, etc., e.g.
+    
+    &gt; Int32 = ArrayType('Int32', 4, 'doc-string')
+    
+    Its relation to the other types is defined when the C-extension
+    module for that type is imported.  The corresponding Python code
+    is:
+    
+    &gt; Int32.astype[Real64] = Real64
+    
+    This says that the Real64 array-type has higher priority than the
+    Int32 array-type.
+    
+    The following attributes and methods are proposed for the core
+    implementation.  Additional attributes can be added on an
+    individual basis, e.g. .bitsize or .bitstrides for the bit type.
+    
+    Attributes:
+        .name:                  e.g. "Int32", "Float64", etc.
+        .typecode:              e.g. 'i', 'f', etc.
+                                (for backward compatibility)
+        .size (in bytes):       e.g. 4, 8, etc.
+        .array_rules (mapping): rules between array types
+        .pyobj_rules (mapping): rules between array and python types
+        .doc:                   documentation string
+    Methods:
+        __init__():             initialization
+        __del__():              destruction
+        __repr__():             representation
+    
+    C-API:
+        This still needs to be fleshed-out.
+    
+    
+    2.  UFunc:
+    
+    This class is the heart of Numeric 2.  Its design is similar to
+    that of ArrayType in that the UFunc creates a singleton callable
+    object whose attributes are name, total and input number of
+    arguments, a document string, and an empty CFunc dictionary; e.g.
+    
+    &gt; add = UFunc('add', 3, 2, 'doc-string')
+    
+    When defined the add instance has no C functions associated with
+    it and therefore can do no work.  The CFunc dictionary is
+    populated or registered later when the C-extension module for an
+    array-type is imported.  The arguments of the register method are:
+    function name, function descriptor, and the CUFunc object.  The
+    corresponding Python code is
+    
+    &gt; add.register('add', (Int32, Int32, Int32), cfunc-add)
+    
+    In the initialization function of an array type module, e.g.
+    Int32, there are two C API functions: one to initialize the
+    coercion rules and the other to register the CFunc objects.
+    
+    When an operation is applied to some arrays, the __call__ method
+    is invoked.  It gets the type of each array (if the output array
+    is not given, it is created from the coercion rules) and checks
+    the CFunc dictionary for a key that matches the argument types.
+    If it exists the operation is performed immediately, otherwise the
+    coercion rules are used to search for a related operation and set
+    of conversion functions.  The __call__ method then invokes a
+    compute method written in C to iterate over slices of each array,
+    namely:
+    
+    &gt; _ufunc.compute(slice, data, func, swap, conv)
+    
+    The 'func' argument is a CFuncObject, while the 'swap' and 'conv'
+    arguments are lists of CFuncObjects for those arrays needing pre-
+    or post-processing, otherwise None is used.  The data argument is
+    a list of buffer objects, and the slice argument gives the number
+    of iterations for each dimension along with the buffer offset and
+    step size for each array and each dimension.
+    
+    We have predefined several UFuncs for use by the __call__ method:
+    cast, swap, getobj, and setobj.  The cast and swap functions do
+    coercion and byte-swapping, respectively and the getobj and setobj
+    functions do coercion between Numeric arrays and Python sequences.
+    
+    The following attributes and methods are proposed for the core
+    implementation.
+    
+    Attributes:
+        .name:                  e.g. "add", "subtract", etc.
+        .nargs:                 number of total arguments
+        .iargs:                 number of input arguments
+        .cfuncs (mapping):      the set C functions
+        .doc:                   documentation string
+    Methods:
+        __init__():             initialization
+        __del__():              destruction
+        __repr__():             representation
+        __call__():             look-up and dispatch method
+        initrule():             initialize coercion rule
+        uninitrule():           uninitialize coercion rule
+        register():             register a CUFunc
+        unregister():           unregister a CUFunc
+
+    C-API:
+        This still needs to be fleshed-out.
+    
+    3.  Array:
+    
+    This class contains information about the array, such as shape,
+    type, endian-ness of the data, etc..  Its operators, '+', '-',
+    etc. just invoke the corresponding UFunc function, e.g.
+    
+    &gt; def __add__(self, other):
+    &gt;     return ufunc.add(self, other)
+
+    The following attributes, methods, and functions are proposed for
+    the core implementation.
+    
+    Attributes:
+        .shape:                 shape of the array
+        .format:                type of the array
+        .real (only complex):   real part of a complex array
+        .imag (only complex):   imaginary part of a complex array
+    Methods:
+        __init__():             initialization
+        __del__():              destruction
+        __repr_():              representation
+        __str__():              pretty representation
+        __cmp__():              rich comparison
+        __len__():
+        __getitem__():
+        __setitem__():
+        __getslice__():
+        __setslice__():
+        numeric methods:
+        copy():                 copy of array
+        aslist():               create list from array
+        asstring():             create string from array
+        
+    Functions:
+        fromlist():             create array from sequence
+        fromstring():           create array from string
+        array():                create array with shape and value
+        concat():               concatenate two arrays
+        resize():               resize array
+
+    C-API:
+        This still needs to be fleshed-out.
+
+    4.  ArrayView
+
+    This class is similar to the Array class except that the reshape
+    and flat methods will raise exceptions, since non-contiguous
+    arrays cannot be reshaped or flattened using just pointer and
+    step-size information.
+
+    C-API:
+        This still needs to be fleshed-out.
+    
+    5.  C-extension modules:
+    
+    Numeric2 will have several C-extension modules.
+
+        a.  _ufunc:
+
+        The primary module of this set is the _ufuncmodule.c.  The
+        intention of this module is to do the bare minimum,
+        i.e. iterate over arrays using a specified C function.  The
+        interface of these functions is the same as Numeric 1, i.e.
+
+        int (*CFunc)(char *data, int *steps, int repeat, void *func);
+
+        and their functionality is expected to be the same, i.e. they
+        iterate over the inner-most dimension.
+
+        The following attributes and methods are proposed for the core
+        implementation.
+    
+        Attributes:
+        
+        Methods:
+            compute():
+
+        C-API:
+            This still needs to be fleshed-out.
+
+        b.  _int32, _real64, etc.:
+    
+        There will also be C-extension modules for each array type,
+        e.g. _int32module.c, _real64module.c, etc.  As mentioned
+        previously, when these modules are imported by the UFunc
+        module, they will automatically register their functions and
+        coercion rules.  New or improved versions of these modules can
+        be easily implemented and used without affecting the rest of
+        Numeric 2.
+
+
+</pre>
+   <h3>
+    Open Issues
+   </h3>
+   <pre>
+    1.  Does slicing syntax default to copy or view behavior?
+
+    The default behavior of Python is to return a copy of a sub-list
+    or tuple when slicing syntax is used, whereas Numeric 1 returns a
+    view into the array.  The choice made for Numeric 1 is apparently
+    for reasons of performance: the developers wish to avoid the
+    penalty of allocating and copying the data buffer during each
+    array operation and feel that the need for a deep copy of an array
+    to be rare.  Yet, some have argued that Numeric's slice notation
+    should also have copy behavior to be consistent with Python lists.
+    In this case the performance penalty associated with copy behavior
+    can be minimized by implementing copy-on-write.  This scheme has
+    both arrays sharing one data buffer (as in view behavior) until
+    either array is assigned new data at which point a copy of the
+    data buffer is made.  View behavior would then be implemented by
+    an ArrayView class, whose behavior be similar to Numeric 1 arrays,
+    i.e. .shape is not settable for non-contiguous arrays.  The use of
+    an ArrayView class also makes explicit what type of data the array
+    contains.
+
+    2.  Does item syntax default to copy or view behavior?
+
+    A similar question arises with the item syntax.  For example, if a
+    = [[0,1,2], [3,4,5]] and b = a[0], then changing b[0] also changes
+    a[0][0], because a[0] is a reference or view of the first row of
+    a.  Therefore, if c is a 2-d array, it would appear that c[i]
+    should return a 1-d array which is a view into, instead of a copy
+    of, c for consistency.  Yet, c[i] can be considered just a
+    shorthand for c[i,:] which would imply copy behavior assuming
+    slicing syntax returns a copy.  Should Numeric 2 behave the same
+    way as lists and return a view or should it return a copy.
+    
+    3.  How is scalar coercion implemented?
+
+    Python has fewer numeric types than Numeric which can cause
+    coercion problems.  For example when multiplying a Python scalar
+    of type float and a Numeric array of type float, the Numeric array
+    is converted to a double, since the Python float type is actually
+    a double.  This is often not the desired behavior, since the
+    Numeric array will be doubled in size which is likely to be
+    annoying, particularly for very large arrays.  We prefer that the
+    array type trumps the python type for the same type class, namely
+    integer, float, and complex.  Therefore an operation between a
+    Python integer and an Int16 (short) array will return an Int16
+    array.  Whereas an operation between a Python float and an Int16
+    array would return a Float64 (double) array.  Operations between
+    two arrays use normal coercion rules.
+    
+    4.  How is integer division handled?
+    
+    In a future version of Python, the behavior of integer division
+    will change.  The operands will be converted to floats, so the
+    result will be a float.  If we implement the proposed scalar
+    coercion rules where arrays have precedence over Python scalars,
+    then dividing an array by an integer will return an integer array
+    and will not be consistent with a future version of Python which
+    would return an array of type double.  Scientific programmers are
+    familiar with the distinction between integer and float-point
+    division, so should Numeric 2 continue with this behavior?
+
+    5.  How should records be implemented?
+
+    There are two approaches to implementing records depending on your
+    point-of-view.  The first is two divide arrays into separate
+    classes depending on the behavior of their types.  For example
+    numeric arrays are one class, strings a second, and records a
+    third, because the range and type of operations of each class
+    differ.  As such, a record array is not a new type, but a
+    mechanism for a more flexible form of array.  To easily access and
+    manipulate such complex data, the class is comprised of numeric
+    arrays having different byte offsets into the data buffer.  For
+    example, one might have a table consisting of an array of Int16,
+    Real32 values.  Two numeric arrays, one with an offset of 0 bytes
+    and a stride of 6 bytes to be interpreted as Int16, and one with an
+    offset of 2 bytes and a stride of 6 bytes to be interpreted as
+    Real32 would represent the record array.  Both numeric arrays
+    would refer to the same data buffer, but have different offset and
+    stride attributes, and a different numeric type.
+
+    The second approach is to consider a record as one of many array
+    types, albeit with fewer, and possibly different, array operations
+    than for numeric arrays.  This approach considers an array type to
+    be a mapping of a fixed-length string.  The mapping can either be
+    simple, like integer and floating-point numbers, or complex, like
+    a complex number, a byte string, and a C-structure.  The record
+    type effectively merges the struct and Numeric modules into a
+    multi-dimensional struct array.  This approach implies certain
+    changes to the array interface.  For example, the 'typecode'
+    keyword argument should probably be changed to the more
+    descriptive 'format' keyword.
+
+        a.  How are record semantics defined and implemented?
+
+        Which ever implementation approach is taken for records, the
+        syntax and semantics of how they are to be accessed and
+        manipulated must be decided, if one wishes to have access to
+        sub-fields of records.  In this case, the record type can
+        essentially be considered an inhomogeneous list, like a tuple
+        returned by the unpack method of the struct module; and a 1-d
+        array of records may be interpreted as a 2-d array with the
+        second dimension being the index into the list of fields.
+        This enhanced array semantics makes access to an array of one
+        or more of the fields easy and straightforward.  It also
+        allows a user to do array operations on a field in a natural
+        and intuitive way.  If we assume that records are implemented
+        as an array type, then last dimension defaults to 0 and can
+        therefore be neglected for arrays comprised of simple types,
+        like numeric.
+   
+    6.  How are masked-arrays implemented?
+
+    Masked-arrays in Numeric 1 are implemented as a separate array
+    class.  With the ability to add new array types to Numeric 2, it
+    is possible that masked-arrays in Numeric 2 could be implemented
+    as a new array type instead of an array class.
+    
+    7.  How are numerical errors handled (IEEE floating-point errors in
+        particular)?
+
+    It is not clear to the proposers (Paul Barrett and Travis
+    Oliphant) what is the best or preferred way of handling errors.
+    Since most of the C functions that do the operation, iterate over
+    the inner-most (last) dimension of the array.  This dimension
+    could contain a thousand or more items having one or more errors
+    of differing type, such as divide-by-zero, underflow, and
+    overflow.  Additionally, keeping track of these errors may come at
+    the expense of performance.  Therefore, we suggest several
+    options:
+
+        a.  Print a message of the most severe error, leaving it to
+        the user to locate the errors.
+
+        b.  Print a message of all errors that occurred and the number
+        of occurrences, leaving it to the user to locate the errors.
+
+        c.  Print a message of all errors that occurred and a list of
+        where they occurred.
+
+        d.  Or use a hybrid approach, printing only the most severe
+        error, yet keeping track of what and where the errors
+        occurred.  This would allow the user to locate the errors
+        while keeping the error message brief.
+
+    8.  What features are needed to ease the integration of FORTRAN
+        libraries and code?
+
+    It would be a good idea at this stage to consider how to ease the
+    integration of FORTRAN libraries and user code in Numeric 2.
+
+
+</pre>
+   <h3>
+    Implementation Steps
+   </h3>
+   <pre>
+    1.  Implement basic UFunc capability
+    
+        a.  Minimal Array class:
+
+        Necessary class attributes and methods, e.g. .shape, .data,
+        .type, etc.
+
+        b.  Minimal ArrayType class:
+
+        Int32, Real64, Complex64, Char, Object
+
+        c.  Minimal UFunc class:
+
+        UFunc instantiation, CFunction registration, UFunc call for
+        1-D arrays including the rules for doing alignment,
+        byte-swapping, and coercion.
+
+        d.  Minimal C-extension module:
+
+        _UFunc, which does the innermost array loop in C.
+    
+        This step implements whatever is needed to do: 'c = add(a, b)'
+        where a, b, and c are 1-D arrays.  It teaches us how to add
+        new UFuncs, to coerce the arrays, to pass the necessary
+        information to a C iterator method and to do the actually
+        computation.
+    
+    2.  Continue enhancing the UFunc iterator and Array class
+    
+        a.  Implement some access methods for the Array class:
+            print, repr, getitem, setitem, etc.
+
+        b.  Implement multidimensional arrays
+
+        c.  Implement some of basic Array methods using UFuncs:
+            +, -, *, /, etc.
+
+        d.  Enable UFuncs to use Python sequences.
+    
+    3.  Complete the standard UFunc and Array class behavior
+    
+        a.  Implement getslice and setslice behavior
+
+        b.  Work on Array broadcasting rules
+
+        c.  Implement Record type
+
+    4.  Add additional functionality
+    
+        a.  Add more UFuncs
+
+        b.  Implement buffer or mmap access
+
+
+</pre>
+   <h3>
+    Incompatibilities
+   </h3>
+   <pre>
+    The following is a list of incompatibilities in behavior between
+    Numeric 1 and Numeric 2.
+
+    1.  Scalar coercion rules
+
+    Numeric 1 has single set of coercion rules for array and Python
+    numeric types.  This can cause unexpected and annoying problems
+    during the calculation of an array expression.  Numeric 2 intends
+    to overcome these problems by having two sets of coercion rules:
+    one for arrays and Python numeric types, and another just for
+    arrays.
+
+    2.  No savespace attribute
+
+    The savespace attribute in Numeric 1 makes arrays with this
+    attribute set take precedence over those that do not have it set.
+    Numeric 2 will not have such an attribute and therefore normal
+    array coercion rules will be in effect.
+
+    3.  Slicing syntax returns a copy
+
+    The slicing syntax in Numeric 1 returns a view into the original
+    array.  The slicing behavior for Numeric 2 will be a copy.  You
+    should use the ArrayView class to get a view into an array.
+
+    4.  Boolean comparisons return a boolean array
+
+    A comparison between arrays in Numeric 1 results in a Boolean
+    scalar, because of current limitations in Python.  The advent of
+    Rich Comparisons in Python 2.1 will allow an array of Booleans to
+    be returned.
+
+    5.  Type characters are deprecated
+
+    Numeric 2 will have an ArrayType class composed of Type instances,
+    for example Int8, Int16, Int32, and Int for signed integers.  The
+    typecode scheme in Numeric 1 will be available for backward
+    compatibility, but will be deprecated.
+
+
+</pre>
+   <h3>
+    Appendices
+   </h3>
+   <pre>
+    A.  Implicit sub-arrays iteration
+
+    A computer animation is composed of a number of 2-D images or
+    frames of identical shape.  By stacking these images into a single
+    block of memory, a 3-D array is created.  Yet the operations to be
+    performed are not meant for the entire 3-D array, but on the set
+    of 2-D sub-arrays.  In most array languages, each frame has to be
+    extracted, operated on, and then reinserted into the output array
+    using a for-like loop.  The J language allows the programmer to
+    perform such operations implicitly by having a rank for the frame
+    and array.  By default these ranks will be the same during the
+    creation of the array.  It was the intention of the Numeric 1
+    developers to implement this feature, since it is based on the
+    language J.  The Numeric 1 code has the required variables for
+    implementing this behavior, but was never implemented.  We intend
+    to implement implicit sub-array iteration in Numeric 2, if the
+    array broadcasting rules found in Numeric 1 do not fully support
+    this behavior.
+
+
+</pre>
+   <h3>
+    Copyright
+   </h3>
+   <pre>
+    This document is placed in the public domain.
+
+
+</pre>
+   <h3>
+    Related PEPs
+   </h3>
+   <pre>
+    <a href="../pep-0207/index.html">PEP 207</a>: Rich Comparisons
+        by Guido van Rossum and David Ascher
+
+    <a href="../pep-0208/index.html">PEP 208</a>: Reworking the Coercion Model
+        by Neil Schemenauer and Marc-Andre' Lemburg
+
+    <a href="../pep-0211/index.html">PEP 211</a>: Adding New Linear Algebra Operators to Python
+        by Greg Wilson
+
+    <a href="../pep-0225/index.html">PEP 225</a>: Elementwise/Objectwise Operators
+        by Huaiyu Zhu
+
+    <a href="../pep-0228/index.html">PEP 228</a>: Reworking Python's Numeric Model
+        by Moshe Zadka
+
+
+</pre>
+   <h3>
+    References
+   </h3>
+   <pre>
+    [1] P. Greenfield 2000. private communication.
+
+
+
+</pre>
+  </div>
+ </body>
+
+<!-- Mirrored from www.python.org/dev/peps/pep-0209/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 03 Sep 2015 04:37:08 GMT -->
+</html>Source: <a href="https://hg.python.org/peps/file/tip/pep-0209.txt">https://hg.python.org/peps/file/tip/pep-0209.txt</a>
+
+    </article>
+
+
+                </section>
+
+                
+
+
+<aside class="left-sidebar" role="secondary">
+
+    
+
+
+
+
+
+
+    
+
+
+
+
+
+        <div class="twitter-widget sidebar-widget">
+        <a class="twitter-timeline" data-dnt="true" href="https://twitter.com/ThePSF" data-widget-id="434113224703610882">Tweets by @ThePSF</a>
+        <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+    </div>
+
+    <div class="psf-sidebar-widget sidebar-widget">
+        <h3 class="widget-title">The PSF</h3>
+<p>The Python Software Foundation is the organization behind Python. Become a member of the PSF and help advance the software and our mission. </p>
+
+    </div>
+
+</aside>
+
+
+
+                
+                
+
+
+            </div><!-- end .container -->
+        </div><!-- end #content .content-wrapper -->
+
+        <!-- Footer and social media list -->
+        <footer id="site-map" class="main-footer" role="contentinfo">
+            <div class="main-footer-links">
+                <div class="container">
+
+                    
+                    <a id="back-to-top-1" class="jump-link" href="#python-network"><span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> Back to Top</a>
+
+                    
+
+<ul class="sitemap navigation menu do-not-print" role="tree" id="container">
+    
+    <li class="tier-1 element-1">
+        <a href="https://www.python.org/about/" >About</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/apps/" title="">Applications</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/quotes/" title="">Quotes</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/gettingstarted/" title="">Getting Started</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/help/" title="">Help</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-2">
+        <a href="https://www.python.org/downloads/" >Downloads</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/downloads/" title="">All releases</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/downloads/source/" title="">Source code</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/downloads/windows/" title="">Windows</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/downloads/mac-osx/" title="">Mac OS X</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/download/other/" title="">Other Platforms</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://docs.python.org/3/license.html" title="">License</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/download/alternatives" title="">Alternative Implementations</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-3">
+        <a href="https://www.python.org/doc/" >Documentation</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/doc/" title="">Docs</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/doc/av" title="">Audio/Visual Talks</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://wiki.python.org/moin/BeginnersGuide" title="">Beginner&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://docs.python.org/faq/" title="">FAQ</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="http://wiki.python.org/moin/Languages" title="">Non-English Docs</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="../index.html" title="">PEP Index</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://wiki.python.org/moin/PythonBooks" title="">Python Books</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-4">
+        <a href="https://www.python.org/community/" >Community</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/community/diversity/" title="">Diversity</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/community/irc/" title="">IRC</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/community/lists/" title="">Mailing Lists</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/workshops/" title="">Python Conferences</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/community/sigs/" title="">Special Interest Groups</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://wiki.python.org/moin/" title="">Python Wiki</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/community/logos/" title="">Python Logo</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://www.python.org/community/merchandise/" title="">Merchandise</a></li>
+    
+        <li class="tier-2 element-9" role="treeitem"><a href="https://www.python.org/community/awards" title="">Community Awards</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-5">
+        <a href="https://www.python.org/about/success/" title="success-stories">Success Stories</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/success/#arts" title="">Arts</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/success/#business" title="">Business</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/success/#education" title="">Education</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/success/#engineering" title="">Engineering</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/about/success/#government" title="">Government</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://www.python.org/about/success/#scientific" title="">Scientific</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/about/success/#software-development" title="">Software Development</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-6">
+        <a href="https://www.python.org/blogs/" title="News from around the Python world">News</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/blogs/" title="Python Insider Blog Posts">Python News</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://planetpython.org/" title="Planet Python">Community News</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="http://pyfound.blogspot.com/" title="PSF Blog">PSF News</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pycon.blogspot.com/" title="PyCon Blog">PyCon News</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-7">
+        <a href="https://www.python.org/events/" >Events</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/events/python-events/" title="">Python Events</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/events/python-user-group/" title="">User Group Events</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/events/python-events/past/" title="">Python Events Archive</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/events/python-user-group/past/" title="">User Group Events Archive</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://wiki.python.org/moin/PythonEventsCalendar#Submitting_an_Event" title="">Submit an Event</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-8">
+        <a href="https://www.python.org/dev/" >Contributing</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="http://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://bugs.python.org/" title="">Issue Tracker</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://mail.python.org/mailman/listinfo/python-dev" title="">python-dev list</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pythonmentors.com/" title="">Core Mentorship</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+</ul>
+
+
+                    <a id="back-to-top-2" class="jump-link" href="#python-network"><span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> Back to Top</a>
+                    
+
+                </div><!-- end .container -->
+            </div> <!-- end .main-footer-links -->
+
+            <div class="site-base">
+                <div class="container">
+                    
+                    <ul class="footer-links navigation menu do-not-print" role="tree">
+                        <li class="tier-1 element-1"><a href="https://www.python.org/about/help/">Help &amp; <span class="say-no-more">General</span> Contact</a></li>
+                        <li class="tier-1 element-2"><a href="https://www.python.org/community/diversity/">Diversity <span class="say-no-more">Initiatives</span></a></li>
+                        <li class="tier-1 element-3"><a href="https://github.com/python/pythondotorg/issues">Submit Website Bug</a></li>
+                        <!--<li class="tier-1 element-3"><a href="#"><span class="say-no-more">Website</span> Colophon</a></li>-->
+                    </ul>
+
+                    <div class="copyright">
+                        <p><small>
+                            <span class="pre">Copyright &copy;2001-2015.</span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/psf-landing/">Python Software Foundation</a></span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/about/legal/">Legal Statements</a></span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/privacy/">Privacy Policy</a></span>
+                        </small></p>
+                    </div>
+
+                </div><!-- end .container -->
+            </div><!-- end .site-base -->
+
+        </footer>
+
+    </div><!-- end #touchnav-wrapper -->
+
+    
+    <script src="../../../../ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="../../../static/js/libs/jquery-1.8.2.min.js"><\/script>')</script>
+
+    <script src="../../../static/js/libs/masonry.pkgd.min.js"></script>
+
+    <script type="text/javascript" src="../../../static/js/main-min.js" charset="utf-8"></script>
+    
+
+    <!--[if lte IE 7]>
+    <script type="text/javascript" src="/static/js/plugins/IE8-min.js" charset="utf-8"></script>
+    
+    
+    <![endif]-->
+
+    <!--[if lte IE 8]>
+    <script type="text/javascript" src="/static/js/plugins/getComputedStyle-min.js" charset="utf-8"></script>
+    
+    
+    <![endif]-->
+
+    
+
+    
+    
+
+</body>
+</html>

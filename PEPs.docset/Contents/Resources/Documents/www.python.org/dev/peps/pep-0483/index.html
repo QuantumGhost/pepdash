@@ -1,0 +1,1625 @@
+<!doctype html>
+<!--[if lt IE 7]>   <html class="no-js ie6 lt-ie7 lt-ie8 lt-ie9">   <![endif]-->
+<!--[if IE 7]>      <html class="no-js ie7 lt-ie8 lt-ie9">          <![endif]-->
+<!--[if IE 8]>      <html class="no-js ie8 lt-ie9">                 <![endif]-->
+<!--[if gt IE 8]><!--><html class="no-js" lang="en" dir="ltr">  <!--<![endif]-->
+
+
+<!-- Mirrored from www.python.org/dev/peps/pep-0483/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 03 Sep 2015 04:33:36 GMT -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <link rel="prefetch" href="../../../../ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js">
+
+    <meta name="application-name" content="Python.org">
+    <meta name="msapplication-tooltip" content="The official home of the Python Programming Language">
+    <meta name="apple-mobile-web-app-title" content="Python.org">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="format-detection" content="telephone=no">
+    <meta http-equiv="cleartype" content="on">
+    <meta http-equiv="imagetoolbar" content="false">
+
+    <script src="../../../static/js/libs/modernizr.js"></script>
+
+    <link href="../../../static/stylesheets/style.css" rel="stylesheet" type="text/css" title="default" />
+    <link href="../../../static/stylesheets/mq.css" rel="stylesheet" type="text/css" media="not print, braille, embossed, speech, tty" />
+    
+
+    <!--[if (lte IE 8)&(!IEMobile)]>
+    <link href="/static/stylesheets/no-mq.css" rel="stylesheet" type="text/css" media="screen" />
+    
+    
+    <![endif]-->
+
+    
+    <link rel="icon" type="image/x-icon" href="https://www.python.org/static/favicon.ico">
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="../../../static/apple-touch-icon-144x144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="../../../static/apple-touch-icon-114x114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="../../../static/apple-touch-icon-72x72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="../../../static/apple-touch-icon-precomposed.png">
+    <link rel="apple-touch-icon" href="../../../static/apple-touch-icon-precomposed.png">
+
+    
+    <meta name="msapplication-TileImage" content="/static/metro-icon-144x144-precomposed.png"><!-- white shape -->
+    <meta name="msapplication-TileColor" content="#3673a5"><!-- python blue -->
+    <meta name="msapplication-navbutton-color" content="#3673a5">
+
+    <meta property="og:site_name" content="Python.org">
+    <meta property="og:type" content="website">
+
+    <title>PEP 0483 -- The Theory of Type Hints | Python.org</title>
+    <meta property="og:title" content="Welcome to Python.org">
+
+    
+    <meta name="description" content="The official home of the Python Programming Language">
+    <meta name="og:description" content="The official home of the Python Programming Language">
+    <meta name="keywords" content="Python programming language object oriented web free open source software license documentation download community">
+    <meta property="og:tag" content="Python programming language object oriented web free open source software license documentation download community">
+    <meta property="og:published_time" content="">
+    <meta property="og:modified_time" content="">
+    <meta property="og:author" content="">
+    <meta property="og:section" content=""> 
+    <meta property="og:url" content="">
+    <meta property="og:image" content="">
+    <meta property="og:video" content="">
+
+    <link rel="author" href="https://www.python.org/static/humans.txt">
+
+    
+
+    
+    <script type="application/ld+json">
+     {
+       "@context": "http://schema.org",
+       "@type": "WebSite",
+       "url": "https://www.python.org/",
+       "potentialAction": {
+         "@type": "SearchAction",
+         "target": "https://www.python.org/search/?q={search_term_string}",
+         "query-input": "required name=search_term_string"
+       }
+     }
+    </script>
+
+    
+    <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-39055973-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+    </script>
+    
+</head>
+
+<body class="python pages pep-page">
+
+    <div id="touchnav-wrapper">
+
+        <div id="nojs" class="do-not-print">
+            <p><strong>Notice:</strong> While Javascript is not essential for this website, your interaction with the content will be limited. Please turn Javascript on for the full experience. </p>
+        </div>
+
+        <!--[if lt IE 8]>
+        <div id="oldie-warning" class="do-not-print">
+            <p><strong>Notice:</strong> Your browser is <em>ancient</em> and <a href="http://www.ie6countdown.com/">Microsoft agrees</a>. <a href="http://browsehappy.com/">Upgrade to a different browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to experience a better web.</p>
+        </div>
+        <![endif]-->
+
+        <!-- Sister Site Links -->
+        <div id="top" class="top-bar do-not-print">
+
+            <nav class="meta-navigation container" role="navigation">
+
+                
+                <div class="skip-link screen-reader-text">
+                    <a href="#content" title="Skip to content">Skip to content</a>
+                </div>
+
+                
+                <a id="close-python-network" class="jump-link" href="#python-network" aria-hidden="true">
+                    <span aria-hidden="true" class="icon-arrow-down"><span>&#9660;</span></span> Close
+                </a>
+
+                
+
+<ul class="menu" role="tree">
+    
+    <li class="python-meta ">
+        <a href="https://www.python.org/" title="The Python Programming Language" >Python</a>
+    </li>
+    
+    <li class="psf-meta ">
+        <a href="https://www.python.org/psf-landing/" title="The Python Software Foundation" >PSF</a>
+    </li>
+    
+    <li class="docs-meta ">
+        <a href="https://docs.python.org/" title="Python Documentation" >Docs</a>
+    </li>
+    
+    <li class="pypi-meta ">
+        <a href="https://pypi.python.org/" title="Python Package Index" >PyPI</a>
+    </li>
+    
+    <li class="jobs-meta ">
+        <a href="https://www.python.org/jobs/" title="Python Job Board" >Jobs</a>
+    </li>
+    
+    <li class="shop-meta ">
+        <a href="https://www.python.org/community/" title="Python Community" >Community</a>
+    </li>
+    
+</ul>
+
+
+                <a id="python-network" class="jump-link" href="#top" aria-hidden="true">
+                    <span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> The Python Network
+                </a>
+
+            </nav>
+
+        </div>
+
+        <!-- Header elements -->
+        <header class="main-header" role="banner">
+            <div class="container">
+
+                <h1 class="site-headline">
+                    <a href="https://www.python.org/"><img class="python-logo" src="../../../static/img/python-logo.png" alt="python&trade;"></a>
+                </h1>
+
+                <div class="options-bar do-not-print">
+
+                    
+                    <a id="site-map-link" class="jump-to-menu" href="#site-map"><span class="menu-icon">&equiv;</span> Menu</a><form class="search-the-site" action="https://www.python.org/search/" method="get">
+                        <fieldset title="Search Python.org">
+
+                            <span aria-hidden="true" class="icon-search"></span>
+
+                            <label class="screen-reader-text" for="id-search-field">Search This Site</label>
+                            <input id="id-search-field" name="q" type="search" role="textbox" class="search-field" placeholder="Search" value="" tabindex="1">
+
+                            <button type="submit" name="submit" id="submit" class="search-button" title="Submit this Search" tabindex="3">
+                                GO
+                            </button>
+
+                            
+                            <!--[if IE]><input type="text" style="display: none;" disabled="disabled" size="1" tabindex="4"><![endif]-->
+
+                        </fieldset>
+                    </form><span class="breaker"></span><div class="adjust-font-size" aria-hidden="true">
+                        <ul class="navigation menu" aria-label="Adjust Text Size on Page">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                <a href="#" class="action-trigger"><strong><small>A</small> A</strong></a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a class="text-shrink" title="Make Text Smaller" href="javascript:;">Smaller</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a class="text-grow" title="Make Text Larger" href="javascript:;">Larger</a></li>
+                                    <li class="tier-2 element-3" role="treeitem"><a class="text-reset" title="Reset any font size changes I have made" href="javascript:;">Reset</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div><div class="winkwink-nudgenudge">
+                        <ul class="navigation menu" aria-label="Social Media Navigation">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                <a href="#" class="action-trigger">Socialize</a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a href="http://plus.google.com/+Python"><span aria-hidden="true" class="icon-google-plus"></span>Google+</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a href="http://www.facebook.com/pythonlang?fref=ts"><span aria-hidden="true" class="icon-facebook"></span>Facebook</a></li>
+                                    <li class="tier-2 element-3" role="treeitem"><a href="http://twitter.com/ThePSF"><span aria-hidden="true" class="icon-twitter"></span>Twitter</a></li>
+                                    <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/irc/"><span aria-hidden="true" class="icon-freenode"></span>Chat on IRC</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div><div class="account-signin">
+                        <ul class="navigation menu" aria-label="Social Media Navigation">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                
+                                <a href="https://www.python.org/accounts/login/" title="Sign Up or Sign In to Python.org">Sign In</a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/accounts/signup/">Sign Up / Register</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/accounts/login/">Sign In</a></li>
+                                </ul>
+                                
+                            </li>
+                        </ul>
+                    </div>
+
+                </div><!-- end options-bar -->
+
+                <nav id="mainnav" class="python-navigation main-navigation do-not-print" role="navigation">
+                    
+                        
+<ul class="navigation menu" role="menubar" aria-label="Main Navigation">
+  
+    
+    
+    <li id="about" class="tier-1 element-1  " aria-haspopup="true">
+        <a href="https://www.python.org/about/" title="" class="">About</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/apps/" title="">Applications</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/quotes/" title="">Quotes</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/gettingstarted/" title="">Getting Started</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/help/" title="">Help</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="downloads" class="tier-1 element-2  " aria-haspopup="true">
+        <a href="https://www.python.org/downloads/" title="" class="">Downloads</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/downloads/" title="">All releases</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/downloads/source/" title="">Source code</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/downloads/windows/" title="">Windows</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/downloads/mac-osx/" title="">Mac OS X</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/download/other/" title="">Other Platforms</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://docs.python.org/3/license.html" title="">License</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/download/alternatives" title="">Alternative Implementations</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="documentation" class="tier-1 element-3  " aria-haspopup="true">
+        <a href="https://www.python.org/doc/" title="" class="">Documentation</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/doc/" title="">Docs</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/doc/av" title="">Audio/Visual Talks</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://wiki.python.org/moin/BeginnersGuide" title="">Beginner&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://docs.python.org/faq/" title="">FAQ</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="http://wiki.python.org/moin/Languages" title="">Non-English Docs</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="../index.html" title="">PEP Index</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://wiki.python.org/moin/PythonBooks" title="">Python Books</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="community" class="tier-1 element-4  " aria-haspopup="true">
+        <a href="https://www.python.org/community/" title="" class="">Community</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/community/diversity/" title="">Diversity</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/community/irc/" title="">IRC</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/community/lists/" title="">Mailing Lists</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/workshops/" title="">Python Conferences</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/community/sigs/" title="">Special Interest Groups</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://wiki.python.org/moin/" title="">Python Wiki</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/community/logos/" title="">Python Logo</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://www.python.org/community/merchandise/" title="">Merchandise</a></li>
+    
+        <li class="tier-2 element-9" role="treeitem"><a href="https://www.python.org/community/awards" title="">Community Awards</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="success-stories" class="tier-1 element-5  " aria-haspopup="true">
+        <a href="https://www.python.org/about/success/" title="success-stories" class="">Success Stories</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/success/#arts" title="">Arts</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/success/#business" title="">Business</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/success/#education" title="">Education</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/success/#engineering" title="">Engineering</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/about/success/#government" title="">Government</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://www.python.org/about/success/#scientific" title="">Scientific</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/about/success/#software-development" title="">Software Development</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="news" class="tier-1 element-6  " aria-haspopup="true">
+        <a href="https://www.python.org/blogs/" title="News from around the Python world" class="">News</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/blogs/" title="Python Insider Blog Posts">Python News</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://planetpython.org/" title="Planet Python">Community News</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="http://pyfound.blogspot.com/" title="PSF Blog">PSF News</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pycon.blogspot.com/" title="PyCon Blog">PyCon News</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="events" class="tier-1 element-7  " aria-haspopup="true">
+        <a href="https://www.python.org/events/" title="" class="">Events</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/events/python-events/" title="">Python Events</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/events/python-user-group/" title="">User Group Events</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/events/python-events/past/" title="">Python Events Archive</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/events/python-user-group/past/" title="">User Group Events Archive</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://wiki.python.org/moin/PythonEventsCalendar#Submitting_an_Event" title="">Submit an Event</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    
+  
+</ul>
+
+                    
+                </nav>
+
+                <div class="header-banner "> <!-- for optional "do-not-print" class -->
+                    
+                    
+                </div>
+
+                
+                
+
+             </div><!-- end .container -->
+        </header>
+
+        <div id="content" class="content-wrapper">
+            <!-- Main Content Column -->
+            <div class="container">
+
+                <section class="main-content with-left-sidebar" role="main">
+
+                    
+<ul class="breadcrumbs menu">
+    <li>
+        <a href="https://www.python.org/" title="The Python Programming Language">Python</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>
+        <a href="https://www.python.org/dev/">Python Developer's Guide</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>
+        <a href="../index.html">PEP Index</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>PEP 0483 -- The Theory of Type Hints</li>
+</ul>
+
+
+                    
+<style>
+   .pep-page pre {
+        padding: .5em;
+        background: inherit;
+        border-left: 0px;
+        -webkit-box-shadow: 0 0 0 0;
+        -moz-box-shadow: 0 0 0 0;
+        box-shadow: 0 0 0 0;
+   }
+</style>
+
+    
+    <article class="text">
+        
+
+        <header class="article-header">
+            <h1 class="page-title">PEP 0483 -- The Theory of Type Hints</h1>
+        </header>
+
+        <!--
+This HTML is auto-generated.  DO NOT EDIT THIS FILE!  If you are writing a new
+PEP, see http://www.python.org/dev/peps/pep-0001 for instructions and links
+to templates.  DO NOT USE THIS HTML FILE AS YOUR TEMPLATE!
+-->
+<html>
+ <body>
+  <table class="rfc2822 docutils field-list" frame="void" rules="none">
+   <col class="field-name">
+   </col>
+   <col class="field-body">
+   </col>
+   <tbody valign="top">
+    <tr class="field">
+     <th class="field-name">
+      PEP:
+     </th>
+     <td class="field-body">
+      483
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Title:
+     </th>
+     <td class="field-body">
+      The Theory of Type Hints
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Author:
+     </th>
+     <td class="field-body">
+      Guido van Rossum &lt;guido at python.org&gt;
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Discussions-To:
+     </th>
+     <td class="field-body">
+      Python-Ideas &lt;
+      <a class="reference external" href="mailto:python-ideas@python.org?subject=PEP%20483">
+       python-ideas at python.org
+      </a>
+      &gt;
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Status:
+     </th>
+     <td class="field-body">
+      Draft
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Type:
+     </th>
+     <td class="field-body">
+      Informational
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Created:
+     </th>
+     <td class="field-body">
+      19-Dec-2014
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Post-History:
+     </th>
+     <td class="field-body">
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Resolution:
+     </th>
+     <td class="field-body">
+     </td>
+    </tr>
+   </tbody>
+  </table>
+  <hr/>
+  <div class="contents topic" id="contents">
+   <p class="topic-title first">
+    Contents
+   </p>
+   <ul class="simple">
+    <li>
+     <a class="reference internal" href="#abstract" id="id3">
+      Abstract
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#introduction" id="id4">
+      Introduction
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#specification" id="id5">
+      Specification
+     </a>
+     <ul>
+      <li>
+       <a class="reference internal" href="#summary-of-gradual-typing" id="id6">
+        Summary of gradual typing
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#notational-conventions" id="id7">
+        Notational conventions
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#general-rules" id="id8">
+        General rules
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#types" id="id9">
+        Types
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#pragmatics" id="id10">
+        Pragmatics
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#generic-types" id="id11">
+        Generic types
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#predefined-generic-types-and-protocols-in-typing-py" id="id12">
+        Predefined generic types and Protocols in typing.py
+       </a>
+      </li>
+     </ul>
+    </li>
+    <li>
+     <a class="reference internal" href="#copyright" id="id13">
+      Copyright
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#references-and-footnotes" id="id14">
+      References and Footnotes
+     </a>
+    </li>
+   </ul>
+  </div>
+  <div class="section" id="abstract">
+   <h1>
+    <a class="toc-backref" href="#id3">
+     Abstract
+    </a>
+   </h1>
+   <p>
+    This PEP lays out the theory referenced by
+    <a class="reference external" href="../pep-0484/index.html">
+     PEP 484
+    </a>
+    .
+   </p>
+  </div>
+  <div class="section" id="introduction">
+   <h1>
+    <a class="toc-backref" href="#id4">
+     Introduction
+    </a>
+   </h1>
+   <p>
+    This document lays out the theory of the new type hinting proposal for
+Python 3.5. It's not quite a full proposal or specification because
+there are many details that need to be worked out, but it lays out the
+theory without which it is hard to discuss more detailed specifications.
+We start by explaining gradual typing; then we state some conventions
+and general rules; then we define the new special types (such as Union)
+that can be used in annotations; and finally we define the approach to
+generic types. (TODO: The latter section needs more fleshing out; sorry!)
+   </p>
+  </div>
+  <div class="section" id="specification">
+   <h1>
+    <a class="toc-backref" href="#id5">
+     Specification
+    </a>
+   </h1>
+   <div class="section" id="summary-of-gradual-typing">
+    <h2>
+     <a class="toc-backref" href="#id6">
+      Summary of gradual typing
+     </a>
+    </h2>
+    <p>
+     We define a new relationship, is-consistent-with, which is similar to
+is-subclass-of, except it is not transitive when the new type
+     <strong>
+      Any
+     </strong>
+     is
+involved. (Neither relationship is symmetric.) Assigning x to y is OK if
+the type of x is consistent with the type of y. (Compare this to "... if
+the type of x is a subclass of the type of y," which states one of the
+fundamentals of OO programming.) The is-consistent-with relationship is
+defined by three rules:
+    </p>
+    <ul class="simple">
+     <li>
+      A type t1 is consistent with a type t2 if t1 is a subclass of t2.
+(But not the other way around.)
+     </li>
+     <li>
+      <strong>
+       Any
+      </strong>
+      is consistent with every type. (But
+      <strong>
+       Any
+      </strong>
+      is not a subclass
+of every type.)
+     </li>
+     <li>
+      Every type is a subclass of
+      <strong>
+       Any
+      </strong>
+      . (Which also makes every type
+consistent with
+      <strong>
+       Any
+      </strong>
+      , via rule 1.)
+     </li>
+    </ul>
+    <p>
+     That's all! See Jeremy Siek's blog post
+     <a class="reference external" href="http://wphomes.soic.indiana.edu/jsiek/what-is-gradual-typing/">
+      What is Gradual
+Typing
+     </a>
+     for a longer explanation and motivation. Note that rule 3 places
+     <strong>
+      Any
+     </strong>
+     at the root of the class graph. This makes it very similar to
+     <strong>
+      object
+     </strong>
+     . The difference is that
+     <strong>
+      object
+     </strong>
+     is not consistent with
+most types (e.g. you can't use an object() instance where an int is
+expected). IOW both
+     <strong>
+      Any
+     </strong>
+     and
+     <strong>
+      object
+     </strong>
+     mean "any type is allowed"
+when used to annotate an argument, but only
+     <strong>
+      Any
+     </strong>
+     can be passed no
+matter what type is expected (in essence,
+     <strong>
+      Any
+     </strong>
+     shuts up complaints
+from the static checker).
+    </p>
+    <p>
+     Here's an example showing how these rules work out in practice:
+    </p>
+    <p>
+     Say we have an Employee class, and a subclass Manager:
+    </p>
+    <ul class="simple">
+     <li>
+      class Employee: ...
+     </li>
+     <li>
+      class Manager(Employee): ...
+     </li>
+    </ul>
+    <p>
+     Let's say variable e is declared with type Employee:
+    </p>
+    <ul class="simple">
+     <li>
+      e = Employee()  # type: Employee
+     </li>
+    </ul>
+    <p>
+     Now it's okay to assign a Manager instance to e (rule 1):
+    </p>
+    <ul class="simple">
+     <li>
+      e = Manager()
+     </li>
+    </ul>
+    <p>
+     It's not okay to assign an Employee instance to a variable declared with
+type Manager:
+    </p>
+    <ul class="simple">
+     <li>
+      m = Manager()  # type: Manager
+     </li>
+     <li>
+      m = Employee()  # Fails static check
+     </li>
+    </ul>
+    <p>
+     However, suppose we have a variable whose type is
+     <strong>
+      Any
+     </strong>
+     :
+    </p>
+    <ul class="simple">
+     <li>
+      a = some_func()  # type: Any
+     </li>
+    </ul>
+    <p>
+     Now it's okay to assign a to e (rule 2):
+    </p>
+    <ul class="simple">
+     <li>
+      e = a  # OK
+     </li>
+    </ul>
+    <p>
+     Of course it's also okay to assign e to a (rule 3), but we didn't need
+the concept of consistency for that:
+    </p>
+    <ul class="simple">
+     <li>
+      a = e  # OK
+     </li>
+    </ul>
+   </div>
+   <div class="section" id="notational-conventions">
+    <h2>
+     <a class="toc-backref" href="#id7">
+      Notational conventions
+     </a>
+    </h2>
+    <ul class="simple">
+     <li>
+      t1, t2 etc.  and u1, u2 etc. are types or classes. Sometimes we write
+ti or tj to refer to "any of t1, t2, etc."
+     </li>
+     <li>
+      X, Y etc. are type variables (defined with TypeVar(), see below).
+     </li>
+     <li>
+      C, D etc. are classes defined with a class statement.
+     </li>
+     <li>
+      x, y etc. are objects or instances.
+     </li>
+     <li>
+      We use the terms type and class interchangeably.  Note that
+      <a class="reference external" href="../pep-0484/index.html">
+       PEP 484
+      </a>
+      makes a distinction (a type is a concept for the type checker,
+while a class is a runtime concept).  In this PEP we're only
+interested in the types anyway, and if this bothers you, you can
+reinterpret this PEP with every occurrence of "class" replaced by
+"type".
+     </li>
+    </ul>
+   </div>
+   <div class="section" id="general-rules">
+    <h2>
+     <a class="toc-backref" href="#id8">
+      General rules
+     </a>
+    </h2>
+    <ul class="simple">
+     <li>
+      Instance-ness is derived from class-ness, e.g. x is an instance of
+t1 if the type of x is a subclass of t1.
+     </li>
+     <li>
+      No types defined below (i.e. Any, Union etc.) can be instantiated.
+(But non-abstract subclasses of Generic can be.)
+     </li>
+     <li>
+      No types defined below can be subclassed, except for Generic and
+classes derived from it.
+     </li>
+     <li>
+      Where a type is expected, None can be substituted for type(None);
+e.g. Union[t1, None] == Union[t1, type(None)].
+     </li>
+    </ul>
+   </div>
+   <div class="section" id="types">
+    <h2>
+     <a class="toc-backref" href="#id9">
+      Types
+     </a>
+    </h2>
+    <ul class="simple">
+     <li>
+      <strong>
+       Any
+      </strong>
+      . Every class is a subclass of Any; however, to the static
+type checker it is also consistent with every class (see above).
+     </li>
+     <li>
+      <strong>
+       Union[t1, t2, ...]
+      </strong>
+      . Classes that are subclass of at least one of
+t1 etc. are subclasses of this. So are unions whose components are
+all subclasses of t1 etc. (Example: Union[int, str] is a subclass of
+Union[int, float, str].) The order of the arguments doesn't matter.
+(Example: Union[int, str] == Union[str, int].) If ti is itself a
+Union the result is flattened. (Example: Union[int, Union[float,
+str]] == Union[int, float, str].) If ti and tj have a subclass
+relationship, the less specific type survives. (Example:
+Union[Employee, Manager] == Union[Employee].) Union[t1] returns just
+t1. Union[] is illegal, so is Union[()]. Corollary: Union[..., Any,
+...] returns Any; Union[..., object, ...] returns object; to cut a
+tie, Union[Any, object] == Union[object, Any] == Any.
+     </li>
+     <li>
+      <strong>
+       Optional[t1]
+      </strong>
+      . Alias for Union[t1, None], i.e. Union[t1,
+type(None)].
+     </li>
+     <li>
+      <strong>
+       Tuple[t1, t2, ..., tn]
+      </strong>
+      . A tuple whose items are instances of t1
+etc.. Example: Tuple[int, float] means a tuple of two items, the
+first is an int, the second a float; e.g., (42, 3.14). Tuple[u1, u2,
+..., um] is a subclass of Tuple[t1, t2, ..., tn] if they have the
+same length (n==m) and each ui is a subclass of ti. To spell the type
+of the empty tuple, use Tuple[()]. A variadic homogeneous tuple type
+can be written Tuple[t1, ...]. (That's three dots, a literal ellipsis;
+and yes, that's a valid token in Python's syntax.)
+     </li>
+     <li>
+      <strong>
+       Callable[[t1, t2, ..., tn], tr]
+      </strong>
+      . A function with positional
+argument types t1 etc., and return type tr. The argument list may be
+empty (n==0). There is no way to indicate optional or keyword
+arguments, nor varargs, but you can say the argument list is entirely
+unchecked by writing Callable[..., tr] (again, a literal ellipsis).
+This is covariant in the return type, but contravariant in the
+arguments. "Covariant" here means that for two callable types that
+differ only in the return type, the subclass relationship for the
+callable types follows that of the return types. (Example:
+Callable[[], Manager] is a subclass of Callable[[], Employee].)
+"Contravariant" here means that for two callable types that differ
+only in the type of one argument, the subclass relationship for the
+callable types goes in the opposite direction as for the argument
+types. (Example: Callable[[Employee], None] is a subclass of
+Callable[[Mananger], None]. Yes, you read that right.)
+     </li>
+    </ul>
+    <p>
+     We might add:
+    </p>
+    <ul class="simple">
+     <li>
+      <strong>
+       Intersection[t1, t2, ...]
+      </strong>
+      . Classes that are subclass of
+      <em>
+       each
+      </em>
+      of
+t1, etc are subclasses of this. (Compare to Union, which has
+      <em>
+       at
+least one
+      </em>
+      instead of
+      <em>
+       each
+      </em>
+      in its definition.) The order of the
+arguments doesn't matter. Nested intersections are flattened, e.g.
+Intersection[int, Intersection[float, str]] == Intersection[int,
+float, str]. An intersection of fewer types is a subclass of an
+intersection of more types, e.g. Intersection[int, str] is a subclass
+of Intersection[int, float, str]. An intersection of one argument is
+just that argument, e.g. Intersection[int] is int. When argument have
+a subclass relationship, the more specific class survives, e.g.
+Intersection[str, Employee, Manager] is Intersection[str, Manager].
+Intersection[] is illegal, so is Intersection[()]. Corollary: Any
+disappears from the argument list, e.g. Intersection[int, str, Any]
+== Intersection[int, str]. Intersection[Any, object] is object. The
+interaction between Intersection and Union is complex but should be
+no surprise if you understand the interaction between intersections
+and unions in set theory (note that sets of types can be infinite in
+size, since there is no limit on the number of new subclasses).
+     </li>
+    </ul>
+   </div>
+   <div class="section" id="pragmatics">
+    <h2>
+     <a class="toc-backref" href="#id10">
+      Pragmatics
+     </a>
+    </h2>
+    <p>
+     Some things are irrelevant to the theory but make practical use more
+convenient. (This is not a full list; I probably missed a few and some
+are still controversial or not fully specified.)
+    </p>
+    <ul class="simple">
+     <li>
+      Type aliases, e.g.
+      <ul>
+       <li>
+        Point = Tuple[float, float]
+       </li>
+       <li>
+        def distance(p: Point) -&gt; float: ...
+       </li>
+      </ul>
+     </li>
+     <li>
+      Forward references via strings, e.g.
+      <ul>
+       <li>
+        class C:
+        <ul>
+         <li>
+          def compare(self, other: 'C') -&gt; int: ...
+         </li>
+        </ul>
+       </li>
+      </ul>
+     </li>
+     <li>
+      If a default of None is specified, the type is implicitly Optional, e.g.
+      <ul>
+       <li>
+        def get(key: KT, default: VT = None) -&gt; VT: ...
+       </li>
+      </ul>
+     </li>
+     <li>
+      Don't use dynamic type expressions; use builtins and imported types
+only. No 'if'.
+      <ul>
+       <li>
+        def display(message: str if WINDOWS else bytes):  # NOT OK
+       </li>
+      </ul>
+     </li>
+     <li>
+      Type declaration in comments, e.g.
+      <ul>
+       <li>
+        x = []  # type: Sequence[int]
+       </li>
+      </ul>
+     </li>
+     <li>
+      Type declarations using Undefined, e.g.
+      <ul>
+       <li>
+        x = Undefined(str)
+       </li>
+      </ul>
+     </li>
+     <li>
+      Casts using cast(T, x), e.g.
+      <ul>
+       <li>
+        x = cast(Any, frobozz())
+       </li>
+      </ul>
+     </li>
+     <li>
+      Other things, e.g. overloading and stub modules; best left to an
+actual PEP.
+     </li>
+    </ul>
+   </div>
+   <div class="section" id="generic-types">
+    <h2>
+     <a class="toc-backref" href="#id11">
+      Generic types
+     </a>
+    </h2>
+    <p>
+     (TODO: Explain more. See also the
+     <a class="reference external" href="http://mypy.readthedocs.org/en/latest/generics.html">
+      mypy docs on
+generics
+     </a>
+     .)
+    </p>
+    <ul class="simple">
+     <li>
+      <strong>
+       X = TypeVar('X')
+      </strong>
+      . Declares a unique type variable. The name must match
+the variable name.
+     </li>
+     <li>
+      <strong>
+       Y = TypeVar('Y', t1, t2, ...).
+      </strong>
+      Ditto, constrained to t1 etc. Behaves
+like Union[t1, t2, ...] for most purposes, but when used as a type
+variable, subclasses of t1 etc. are replaced by the most-derived base
+class among t1 etc.
+     </li>
+     <li>
+      Example of constrained type variables:
+      <ul>
+       <li>
+        AnyStr = TypeVar('AnyStr', str, bytes)
+       </li>
+       <li>
+        def longest(a: AnyStr, b: AnyStr) -&gt; AnyStr:
+        <ul>
+         <li>
+          return a if len(a) &gt;= len(b) else b
+         </li>
+        </ul>
+       </li>
+       <li>
+        x = longest('a', 'abc')  # The inferred type for x is str
+       </li>
+       <li>
+        y = longest('a', b'abc')  # Fails static type check
+       </li>
+       <li>
+        In this example, both arguments to longest() must have the same type
+(str or bytes), and moreover, even if the arguments are instances of a
+common str subclass, the return type is still str, not that subclass
+(see next example).
+       </li>
+      </ul>
+     </li>
+     <li>
+      For comparison, if the type variable was unconstrained, the common
+subclass would be chosen as the return type, e.g.:
+      <ul>
+       <li>
+        S = TypeVar('S')
+       </li>
+       <li>
+        def longest(a: S, b: S) -&gt; S:
+        <ul>
+         <li>
+          return a if len(a) &gt;= b else b
+         </li>
+        </ul>
+       </li>
+       <li>
+        class MyStr(str): ...
+       </li>
+       <li>
+        x = longest(MyStr('a'), MyStr('abc'))
+       </li>
+       <li>
+        The inferred type of x is MyStr (whereas in the AnyStr example it would
+be str).
+       </li>
+      </ul>
+     </li>
+     <li>
+      Also for comparison, if a Union is used, the return type also has to be
+a Union:
+      <ul>
+       <li>
+        U = Union[str, bytes]
+       </li>
+       <li>
+        def longest(a: U, b: U) -&gt; U:
+        <ul>
+         <li>
+          return a if len(a) &gt;= b else b
+         </li>
+        </ul>
+       </li>
+       <li>
+        x = longest('a', 'abc')
+       </li>
+       <li>
+        The inferred type of x is still Union[str, bytes], even though both
+arguments are str.
+       </li>
+      </ul>
+     </li>
+     <li>
+      <strong>
+       class C(Generic[X, Y, ...]):
+      </strong>
+      ... Define a generic class C over type
+variables X etc. C itself becomes parameterizable, e.g. C[int, str, ...]
+is a specific class with substitutions X-&gt;int etc.
+     </li>
+     <li>
+      TODO: Explain use of generic types in function signatures. E.g.
+Sequence[X], Sequence[int], Sequence[Tuple[X, Y, Z]], and mixtures.
+Think about co*variance. No gimmicks like deriving from
+Sequence[Union[int, str]] or Sequence[Union[int, X]].
+     </li>
+    </ul>
+   </div>
+   <div class="section" id="predefined-generic-types-and-protocols-in-typing-py">
+    <h2>
+     <a class="toc-backref" href="#id12">
+      Predefined generic types and Protocols in typing.py
+     </a>
+    </h2>
+    <p>
+     (See also the
+     <a class="reference external" href="https://github.com/ambv/typehinting/blob/master/prototyping/typing.py">
+      typing.py module
+     </a>
+     .)
+    </p>
+    <ul class="simple">
+     <li>
+      Everything from collections.abc (but Set renamed to AbstractSet).
+     </li>
+     <li>
+      Dict, List, Set, FrozenSet, a few more.
+     </li>
+     <li>
+      re.Pattern[AnyStr], re.Match[AnyStr].
+     </li>
+     <li>
+      re.IO[AnyStr], re.TextIO ~ re.IO[str], re.BinaryIO ~ re.IO[bytes].
+     </li>
+    </ul>
+   </div>
+  </div>
+  <div class="section" id="copyright">
+   <h1>
+    <a class="toc-backref" href="#id13">
+     Copyright
+    </a>
+   </h1>
+   <p>
+    This document is licensed under the
+    <a class="reference external" href="http://www.opencontent.org/openpub/">
+     Open Publication License
+    </a>
+    <a class="footnote-reference" href="#id1" id="id2">
+     [1]
+    </a>
+    .
+   </p>
+  </div>
+  <div class="section" id="references-and-footnotes">
+   <h1>
+    <a class="toc-backref" href="#id14">
+     References and Footnotes
+    </a>
+   </h1>
+   <!-- Local Variables:
+mode: indented-text
+indent-tabs-mode: nil
+sentence-end-double-space: t
+fill-column: 70
+coding: utf-8
+End: -->
+   <table class="docutils footnote" frame="void" id="id1" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id2">
+        [1]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="http://www.opencontent.org/openpub/">
+        http://www.opencontent.org/openpub/
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+  </div>
+ </body>
+
+<!-- Mirrored from www.python.org/dev/peps/pep-0483/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 03 Sep 2015 04:33:36 GMT -->
+</html>Source: <a href="https://hg.python.org/peps/file/tip/pep-0483.txt">https://hg.python.org/peps/file/tip/pep-0483.txt</a>
+
+    </article>
+
+
+                </section>
+
+                
+
+
+<aside class="left-sidebar" role="secondary">
+
+    
+
+
+
+
+
+
+    
+
+
+
+
+
+        <div class="twitter-widget sidebar-widget">
+        <a class="twitter-timeline" data-dnt="true" href="https://twitter.com/ThePSF" data-widget-id="434113224703610882">Tweets by @ThePSF</a>
+        <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+    </div>
+
+    <div class="psf-sidebar-widget sidebar-widget">
+        <h3 class="widget-title">The PSF</h3>
+<p>The Python Software Foundation is the organization behind Python. Become a member of the PSF and help advance the software and our mission. </p>
+
+    </div>
+
+</aside>
+
+
+
+                
+                
+
+
+            </div><!-- end .container -->
+        </div><!-- end #content .content-wrapper -->
+
+        <!-- Footer and social media list -->
+        <footer id="site-map" class="main-footer" role="contentinfo">
+            <div class="main-footer-links">
+                <div class="container">
+
+                    
+                    <a id="back-to-top-1" class="jump-link" href="#python-network"><span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> Back to Top</a>
+
+                    
+
+<ul class="sitemap navigation menu do-not-print" role="tree" id="container">
+    
+    <li class="tier-1 element-1">
+        <a href="https://www.python.org/about/" >About</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/apps/" title="">Applications</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/quotes/" title="">Quotes</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/gettingstarted/" title="">Getting Started</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/help/" title="">Help</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-2">
+        <a href="https://www.python.org/downloads/" >Downloads</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/downloads/" title="">All releases</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/downloads/source/" title="">Source code</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/downloads/windows/" title="">Windows</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/downloads/mac-osx/" title="">Mac OS X</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/download/other/" title="">Other Platforms</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://docs.python.org/3/license.html" title="">License</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/download/alternatives" title="">Alternative Implementations</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-3">
+        <a href="https://www.python.org/doc/" >Documentation</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/doc/" title="">Docs</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/doc/av" title="">Audio/Visual Talks</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://wiki.python.org/moin/BeginnersGuide" title="">Beginner&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://docs.python.org/faq/" title="">FAQ</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="http://wiki.python.org/moin/Languages" title="">Non-English Docs</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="../index.html" title="">PEP Index</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://wiki.python.org/moin/PythonBooks" title="">Python Books</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-4">
+        <a href="https://www.python.org/community/" >Community</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/community/diversity/" title="">Diversity</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/community/irc/" title="">IRC</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/community/lists/" title="">Mailing Lists</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/workshops/" title="">Python Conferences</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/community/sigs/" title="">Special Interest Groups</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://wiki.python.org/moin/" title="">Python Wiki</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/community/logos/" title="">Python Logo</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://www.python.org/community/merchandise/" title="">Merchandise</a></li>
+    
+        <li class="tier-2 element-9" role="treeitem"><a href="https://www.python.org/community/awards" title="">Community Awards</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-5">
+        <a href="https://www.python.org/about/success/" title="success-stories">Success Stories</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/success/#arts" title="">Arts</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/success/#business" title="">Business</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/success/#education" title="">Education</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/success/#engineering" title="">Engineering</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/about/success/#government" title="">Government</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://www.python.org/about/success/#scientific" title="">Scientific</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/about/success/#software-development" title="">Software Development</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-6">
+        <a href="https://www.python.org/blogs/" title="News from around the Python world">News</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/blogs/" title="Python Insider Blog Posts">Python News</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://planetpython.org/" title="Planet Python">Community News</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="http://pyfound.blogspot.com/" title="PSF Blog">PSF News</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pycon.blogspot.com/" title="PyCon Blog">PyCon News</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-7">
+        <a href="https://www.python.org/events/" >Events</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/events/python-events/" title="">Python Events</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/events/python-user-group/" title="">User Group Events</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/events/python-events/past/" title="">Python Events Archive</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/events/python-user-group/past/" title="">User Group Events Archive</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://wiki.python.org/moin/PythonEventsCalendar#Submitting_an_Event" title="">Submit an Event</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-8">
+        <a href="https://www.python.org/dev/" >Contributing</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="http://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://bugs.python.org/" title="">Issue Tracker</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://mail.python.org/mailman/listinfo/python-dev" title="">python-dev list</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pythonmentors.com/" title="">Core Mentorship</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+</ul>
+
+
+                    <a id="back-to-top-2" class="jump-link" href="#python-network"><span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> Back to Top</a>
+                    
+
+                </div><!-- end .container -->
+            </div> <!-- end .main-footer-links -->
+
+            <div class="site-base">
+                <div class="container">
+                    
+                    <ul class="footer-links navigation menu do-not-print" role="tree">
+                        <li class="tier-1 element-1"><a href="https://www.python.org/about/help/">Help &amp; <span class="say-no-more">General</span> Contact</a></li>
+                        <li class="tier-1 element-2"><a href="https://www.python.org/community/diversity/">Diversity <span class="say-no-more">Initiatives</span></a></li>
+                        <li class="tier-1 element-3"><a href="https://github.com/python/pythondotorg/issues">Submit Website Bug</a></li>
+                        <!--<li class="tier-1 element-3"><a href="#"><span class="say-no-more">Website</span> Colophon</a></li>-->
+                    </ul>
+
+                    <div class="copyright">
+                        <p><small>
+                            <span class="pre">Copyright &copy;2001-2015.</span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/psf-landing/">Python Software Foundation</a></span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/about/legal/">Legal Statements</a></span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/privacy/">Privacy Policy</a></span>
+                        </small></p>
+                    </div>
+
+                </div><!-- end .container -->
+            </div><!-- end .site-base -->
+
+        </footer>
+
+    </div><!-- end #touchnav-wrapper -->
+
+    
+    <script src="../../../../ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="../../../static/js/libs/jquery-1.8.2.min.js"><\/script>')</script>
+
+    <script src="../../../static/js/libs/masonry.pkgd.min.js"></script>
+
+    <script type="text/javascript" src="../../../static/js/main-min.js" charset="utf-8"></script>
+    
+
+    <!--[if lte IE 7]>
+    <script type="text/javascript" src="/static/js/plugins/IE8-min.js" charset="utf-8"></script>
+    
+    
+    <![endif]-->
+
+    <!--[if lte IE 8]>
+    <script type="text/javascript" src="/static/js/plugins/getComputedStyle-min.js" charset="utf-8"></script>
+    
+    
+    <![endif]-->
+
+    
+
+    
+    
+
+</body>
+</html>

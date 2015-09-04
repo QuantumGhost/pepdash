@@ -1,0 +1,1353 @@
+<!doctype html>
+<!--[if lt IE 7]>   <html class="no-js ie6 lt-ie7 lt-ie8 lt-ie9">   <![endif]-->
+<!--[if IE 7]>      <html class="no-js ie7 lt-ie8 lt-ie9">          <![endif]-->
+<!--[if IE 8]>      <html class="no-js ie8 lt-ie9">                 <![endif]-->
+<!--[if gt IE 8]><!--><html class="no-js" lang="en" dir="ltr">  <!--<![endif]-->
+
+
+<!-- Mirrored from www.python.org/dev/peps/pep-0266/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 03 Sep 2015 04:37:15 GMT -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <link rel="prefetch" href="../../../../ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js">
+
+    <meta name="application-name" content="Python.org">
+    <meta name="msapplication-tooltip" content="The official home of the Python Programming Language">
+    <meta name="apple-mobile-web-app-title" content="Python.org">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="format-detection" content="telephone=no">
+    <meta http-equiv="cleartype" content="on">
+    <meta http-equiv="imagetoolbar" content="false">
+
+    <script src="../../../static/js/libs/modernizr.js"></script>
+
+    <link href="../../../static/stylesheets/style.css" rel="stylesheet" type="text/css" title="default" />
+    <link href="../../../static/stylesheets/mq.css" rel="stylesheet" type="text/css" media="not print, braille, embossed, speech, tty" />
+    
+
+    <!--[if (lte IE 8)&(!IEMobile)]>
+    <link href="/static/stylesheets/no-mq.css" rel="stylesheet" type="text/css" media="screen" />
+    
+    
+    <![endif]-->
+
+    
+    <link rel="icon" type="image/x-icon" href="https://www.python.org/static/favicon.ico">
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="../../../static/apple-touch-icon-144x144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="../../../static/apple-touch-icon-114x114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="../../../static/apple-touch-icon-72x72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="../../../static/apple-touch-icon-precomposed.png">
+    <link rel="apple-touch-icon" href="../../../static/apple-touch-icon-precomposed.png">
+
+    
+    <meta name="msapplication-TileImage" content="/static/metro-icon-144x144-precomposed.png"><!-- white shape -->
+    <meta name="msapplication-TileColor" content="#3673a5"><!-- python blue -->
+    <meta name="msapplication-navbutton-color" content="#3673a5">
+
+    <meta property="og:site_name" content="Python.org">
+    <meta property="og:type" content="website">
+
+    <title>PEP 266 -- Optimizing Global Variable/Attribute Access | Python.org</title>
+    <meta property="og:title" content="Welcome to Python.org">
+
+    
+    <meta name="description" content="The official home of the Python Programming Language">
+    <meta name="og:description" content="The official home of the Python Programming Language">
+    <meta name="keywords" content="Python programming language object oriented web free open source software license documentation download community">
+    <meta property="og:tag" content="Python programming language object oriented web free open source software license documentation download community">
+    <meta property="og:published_time" content="">
+    <meta property="og:modified_time" content="">
+    <meta property="og:author" content="">
+    <meta property="og:section" content=""> 
+    <meta property="og:url" content="">
+    <meta property="og:image" content="">
+    <meta property="og:video" content="">
+
+    <link rel="author" href="https://www.python.org/static/humans.txt">
+
+    
+
+    
+    <script type="application/ld+json">
+     {
+       "@context": "http://schema.org",
+       "@type": "WebSite",
+       "url": "https://www.python.org/",
+       "potentialAction": {
+         "@type": "SearchAction",
+         "target": "https://www.python.org/search/?q={search_term_string}",
+         "query-input": "required name=search_term_string"
+       }
+     }
+    </script>
+
+    
+    <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-39055973-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+    </script>
+    
+</head>
+
+<body class="python pages pep-page">
+
+    <div id="touchnav-wrapper">
+
+        <div id="nojs" class="do-not-print">
+            <p><strong>Notice:</strong> While Javascript is not essential for this website, your interaction with the content will be limited. Please turn Javascript on for the full experience. </p>
+        </div>
+
+        <!--[if lt IE 8]>
+        <div id="oldie-warning" class="do-not-print">
+            <p><strong>Notice:</strong> Your browser is <em>ancient</em> and <a href="http://www.ie6countdown.com/">Microsoft agrees</a>. <a href="http://browsehappy.com/">Upgrade to a different browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to experience a better web.</p>
+        </div>
+        <![endif]-->
+
+        <!-- Sister Site Links -->
+        <div id="top" class="top-bar do-not-print">
+
+            <nav class="meta-navigation container" role="navigation">
+
+                
+                <div class="skip-link screen-reader-text">
+                    <a href="#content" title="Skip to content">Skip to content</a>
+                </div>
+
+                
+                <a id="close-python-network" class="jump-link" href="#python-network" aria-hidden="true">
+                    <span aria-hidden="true" class="icon-arrow-down"><span>&#9660;</span></span> Close
+                </a>
+
+                
+
+<ul class="menu" role="tree">
+    
+    <li class="python-meta ">
+        <a href="https://www.python.org/" title="The Python Programming Language" >Python</a>
+    </li>
+    
+    <li class="psf-meta ">
+        <a href="https://www.python.org/psf-landing/" title="The Python Software Foundation" >PSF</a>
+    </li>
+    
+    <li class="docs-meta ">
+        <a href="https://docs.python.org/" title="Python Documentation" >Docs</a>
+    </li>
+    
+    <li class="pypi-meta ">
+        <a href="https://pypi.python.org/" title="Python Package Index" >PyPI</a>
+    </li>
+    
+    <li class="jobs-meta ">
+        <a href="https://www.python.org/jobs/" title="Python Job Board" >Jobs</a>
+    </li>
+    
+    <li class="shop-meta ">
+        <a href="https://www.python.org/community/" title="Python Community" >Community</a>
+    </li>
+    
+</ul>
+
+
+                <a id="python-network" class="jump-link" href="#top" aria-hidden="true">
+                    <span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> The Python Network
+                </a>
+
+            </nav>
+
+        </div>
+
+        <!-- Header elements -->
+        <header class="main-header" role="banner">
+            <div class="container">
+
+                <h1 class="site-headline">
+                    <a href="https://www.python.org/"><img class="python-logo" src="../../../static/img/python-logo.png" alt="python&trade;"></a>
+                </h1>
+
+                <div class="options-bar do-not-print">
+
+                    
+                    <a id="site-map-link" class="jump-to-menu" href="#site-map"><span class="menu-icon">&equiv;</span> Menu</a><form class="search-the-site" action="https://www.python.org/search/" method="get">
+                        <fieldset title="Search Python.org">
+
+                            <span aria-hidden="true" class="icon-search"></span>
+
+                            <label class="screen-reader-text" for="id-search-field">Search This Site</label>
+                            <input id="id-search-field" name="q" type="search" role="textbox" class="search-field" placeholder="Search" value="" tabindex="1">
+
+                            <button type="submit" name="submit" id="submit" class="search-button" title="Submit this Search" tabindex="3">
+                                GO
+                            </button>
+
+                            
+                            <!--[if IE]><input type="text" style="display: none;" disabled="disabled" size="1" tabindex="4"><![endif]-->
+
+                        </fieldset>
+                    </form><span class="breaker"></span><div class="adjust-font-size" aria-hidden="true">
+                        <ul class="navigation menu" aria-label="Adjust Text Size on Page">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                <a href="#" class="action-trigger"><strong><small>A</small> A</strong></a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a class="text-shrink" title="Make Text Smaller" href="javascript:;">Smaller</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a class="text-grow" title="Make Text Larger" href="javascript:;">Larger</a></li>
+                                    <li class="tier-2 element-3" role="treeitem"><a class="text-reset" title="Reset any font size changes I have made" href="javascript:;">Reset</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div><div class="winkwink-nudgenudge">
+                        <ul class="navigation menu" aria-label="Social Media Navigation">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                <a href="#" class="action-trigger">Socialize</a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a href="http://plus.google.com/+Python"><span aria-hidden="true" class="icon-google-plus"></span>Google+</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a href="http://www.facebook.com/pythonlang?fref=ts"><span aria-hidden="true" class="icon-facebook"></span>Facebook</a></li>
+                                    <li class="tier-2 element-3" role="treeitem"><a href="http://twitter.com/ThePSF"><span aria-hidden="true" class="icon-twitter"></span>Twitter</a></li>
+                                    <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/irc/"><span aria-hidden="true" class="icon-freenode"></span>Chat on IRC</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div><div class="account-signin">
+                        <ul class="navigation menu" aria-label="Social Media Navigation">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                
+                                <a href="https://www.python.org/accounts/login/" title="Sign Up or Sign In to Python.org">Sign In</a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/accounts/signup/">Sign Up / Register</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/accounts/login/">Sign In</a></li>
+                                </ul>
+                                
+                            </li>
+                        </ul>
+                    </div>
+
+                </div><!-- end options-bar -->
+
+                <nav id="mainnav" class="python-navigation main-navigation do-not-print" role="navigation">
+                    
+                        
+<ul class="navigation menu" role="menubar" aria-label="Main Navigation">
+  
+    
+    
+    <li id="about" class="tier-1 element-1  " aria-haspopup="true">
+        <a href="https://www.python.org/about/" title="" class="">About</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/apps/" title="">Applications</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/quotes/" title="">Quotes</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/gettingstarted/" title="">Getting Started</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/help/" title="">Help</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="downloads" class="tier-1 element-2  " aria-haspopup="true">
+        <a href="https://www.python.org/downloads/" title="" class="">Downloads</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/downloads/" title="">All releases</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/downloads/source/" title="">Source code</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/downloads/windows/" title="">Windows</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/downloads/mac-osx/" title="">Mac OS X</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/download/other/" title="">Other Platforms</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://docs.python.org/3/license.html" title="">License</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/download/alternatives" title="">Alternative Implementations</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="documentation" class="tier-1 element-3  " aria-haspopup="true">
+        <a href="https://www.python.org/doc/" title="" class="">Documentation</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/doc/" title="">Docs</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/doc/av" title="">Audio/Visual Talks</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://wiki.python.org/moin/BeginnersGuide" title="">Beginner&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://docs.python.org/faq/" title="">FAQ</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="http://wiki.python.org/moin/Languages" title="">Non-English Docs</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="../index.html" title="">PEP Index</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://wiki.python.org/moin/PythonBooks" title="">Python Books</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="community" class="tier-1 element-4  " aria-haspopup="true">
+        <a href="https://www.python.org/community/" title="" class="">Community</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/community/diversity/" title="">Diversity</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/community/irc/" title="">IRC</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/community/lists/" title="">Mailing Lists</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/workshops/" title="">Python Conferences</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/community/sigs/" title="">Special Interest Groups</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://wiki.python.org/moin/" title="">Python Wiki</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/community/logos/" title="">Python Logo</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://www.python.org/community/merchandise/" title="">Merchandise</a></li>
+    
+        <li class="tier-2 element-9" role="treeitem"><a href="https://www.python.org/community/awards" title="">Community Awards</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="success-stories" class="tier-1 element-5  " aria-haspopup="true">
+        <a href="https://www.python.org/about/success/" title="success-stories" class="">Success Stories</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/success/#arts" title="">Arts</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/success/#business" title="">Business</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/success/#education" title="">Education</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/success/#engineering" title="">Engineering</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/about/success/#government" title="">Government</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://www.python.org/about/success/#scientific" title="">Scientific</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/about/success/#software-development" title="">Software Development</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="news" class="tier-1 element-6  " aria-haspopup="true">
+        <a href="https://www.python.org/blogs/" title="News from around the Python world" class="">News</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/blogs/" title="Python Insider Blog Posts">Python News</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://planetpython.org/" title="Planet Python">Community News</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="http://pyfound.blogspot.com/" title="PSF Blog">PSF News</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pycon.blogspot.com/" title="PyCon Blog">PyCon News</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="events" class="tier-1 element-7  " aria-haspopup="true">
+        <a href="https://www.python.org/events/" title="" class="">Events</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/events/python-events/" title="">Python Events</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/events/python-user-group/" title="">User Group Events</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/events/python-events/past/" title="">Python Events Archive</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/events/python-user-group/past/" title="">User Group Events Archive</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://wiki.python.org/moin/PythonEventsCalendar#Submitting_an_Event" title="">Submit an Event</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    
+  
+</ul>
+
+                    
+                </nav>
+
+                <div class="header-banner "> <!-- for optional "do-not-print" class -->
+                    
+                    
+                </div>
+
+                
+                
+
+             </div><!-- end .container -->
+        </header>
+
+        <div id="content" class="content-wrapper">
+            <!-- Main Content Column -->
+            <div class="container">
+
+                <section class="main-content with-left-sidebar" role="main">
+
+                    
+<ul class="breadcrumbs menu">
+    <li>
+        <a href="https://www.python.org/" title="The Python Programming Language">Python</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>
+        <a href="https://www.python.org/dev/">Python Developer's Guide</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>
+        <a href="../index.html">PEP Index</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>PEP 266 -- Optimizing Global Variable/Attribute Access</li>
+</ul>
+
+
+                    
+<style>
+   .pep-page pre {
+        padding: .5em;
+        background: inherit;
+        border-left: 0px;
+        -webkit-box-shadow: 0 0 0 0;
+        -moz-box-shadow: 0 0 0 0;
+        box-shadow: 0 0 0 0;
+   }
+</style>
+
+    
+    <article class="text">
+        
+
+        <header class="article-header">
+            <h1 class="page-title">PEP 266 -- Optimizing Global Variable/Attribute Access</h1>
+        </header>
+
+        <html>
+ <body>
+  <div class="header">
+   <table border="0">
+    <tr>
+     <th>
+      PEP:
+     </th>
+     <td>
+      266
+     </td>
+    </tr>
+    <tr>
+     <th>
+      Title:
+     </th>
+     <td>
+      Optimizing Global Variable/Attribute Access
+     </td>
+    </tr>
+    <tr>
+     <th>
+      Author:
+     </th>
+     <td>
+      Skip Montanaro &lt;skip at pobox.com&gt;
+     </td>
+    </tr>
+    <tr>
+     <th>
+      Status:
+     </th>
+     <td>
+      Withdrawn
+     </td>
+    </tr>
+    <tr>
+     <th>
+      Type:
+     </th>
+     <td>
+      Standards Track
+     </td>
+    </tr>
+    <tr>
+     <th>
+      Created:
+     </th>
+     <td>
+      13-Aug-2001
+     </td>
+    </tr>
+    <tr>
+     <th>
+      Python-Version:
+     </th>
+     <td>
+      2.3
+     </td>
+    </tr>
+    <tr>
+     <th>
+      Post-History:
+     </th>
+     <td>
+     </td>
+    </tr>
+   </table>
+  </div>
+  <div class="content">
+   <h3>
+    Abstract
+   </h3>
+   <pre>
+    The bindings for most global variables and attributes of other
+    modules typically never change during the execution of a Python
+    program, but because of Python's dynamic nature, code which
+    accesses such global objects must run through a full lookup each
+    time the object is needed.  This PEP proposes a mechanism that
+    allows code that accesses most global objects to treat them as
+    local objects and places the burden of updating references on the
+    code that changes the name bindings of such objects.
+
+
+</pre>
+   <h3>
+    Introduction
+   </h3>
+   <pre>
+    Consider the workhorse function sre_compile._compile.  It is the
+    internal compilation function for the sre module.  It consists
+    almost entirely of a loop over the elements of the pattern being
+    compiled, comparing opcodes with known constant values and
+    appending tokens to an output list.  Most of the comparisons are
+    with constants imported from the sre_constants module.  This means
+    there are lots of LOAD_GLOBAL bytecodes in the compiled output of
+    this module.  Just by reading the code it's apparent that the
+    author intended LITERAL, NOT_LITERAL, OPCODES and many other
+    symbols to be constants.  Still, each time they are involved in an
+    expression, they must be looked up anew.
+
+    Most global accesses are actually to objects that are "almost
+    constants".  This includes global variables in the current module
+    as well as the attributes of other imported modules.  Since they
+    rarely change, it seems reasonable to place the burden of updating
+    references to such objects on the code that changes the name
+    bindings.  If sre_constants.LITERAL is changed to refer to another
+    object, perhaps it would be worthwhile for the code that modifies
+    the sre_constants module dict to correct any active references to
+    that object.  By doing so, in many cases global variables and the
+    attributes of many objects could be cached as local variables.  If
+    the bindings between the names given to the objects and the
+    objects themselves changes rarely, the cost of keeping track of
+    such objects should be low and the potential payoff fairly large.
+
+    In an attempt to gauge the effect of this proposal, I modified the
+    Pystone benchmark program included in the Python distribution to
+    cache global functions.  Its main function, Proc0, makes calls to
+    ten different functions inside its for loop.  In addition, Func2
+    calls Func1 repeatedly inside a loop.  If local copies of these 11
+    global idenfiers are made before the functions' loops are entered,
+    performance on this particular benchmark improves by about two per
+    cent (from 5561 pystones to 5685 on my laptop).  It gives some
+    indication that performance would be improved by caching most
+    global variable access.  Note also that the pystone benchmark
+    makes essentially no accesses of global module attributes, an
+    anticipated area of improvement for this PEP.
+
+</pre>
+   <h3>
+    Proposed Change
+   </h3>
+   <pre>
+    I propose that the Python virtual machine be modified to include
+    TRACK_OBJECT and UNTRACK_OBJECT opcodes.  TRACK_OBJECT would
+    associate a global name or attribute of a global name with a slot
+    in the local variable array and perform an initial lookup of the
+    associated object to fill in the slot with a valid value.  The
+    association it creates would be noted by the code responsible for
+    changing the name-to-object binding to cause the associated local
+    variable to be updated.  The UNTRACK_OBJECT opcode would delete
+    any association between the name and the local variable slot.
+
+
+</pre>
+   <h3>
+    Threads
+   </h3>
+   <pre>
+    Operation of this code in threaded programs will be no different
+    than in unthreaded programs.  If you need to lock an object to
+    access it, you would have had to do that before TRACK_OBJECT would
+    have been executed and retain that lock until after you stop using
+    it.
+
+    FIXME: I suspect I need more here.
+
+
+</pre>
+   <h3>
+    Rationale
+   </h3>
+   <pre>
+    Global variables and attributes rarely change.  For example, once
+    a function imports the math module, the binding between the name
+    "math" and the module it refers to aren't likely to change.
+    Similarly, if the function that uses the math module refers to its
+    "sin" attribute, it's unlikely to change.  Still, every time the
+    module wants to call the math.sin function, it must first execute
+    a pair of instructions:
+
+        LOAD_GLOBAL     math
+        LOAD_ATTR       sin
+
+    If the client module always assumed that math.sin was a local
+    constant and it was the responsibility of "external forces"
+    outside the function to keep the reference correct, we might have
+    code like this:
+
+        TRACK_OBJECT       math.sin
+        ...
+        LOAD_FAST          math.sin
+        ...
+        UNTRACK_OBJECT     math.sin
+
+    If the LOAD_FAST was in a loop the payoff in reduced global loads
+    and attribute lookups could be significant.
+
+    This technique could, in theory, be applied to any global variable
+    access or attribute lookup.  Consider this code:
+
+        l = []
+        for i in range(10):
+            l.append(math.sin(i))
+        return l
+
+    Even though l is a local variable, you still pay the cost of
+    loading l.append ten times in the loop.  The compiler (or an
+    optimizer) could recognize that both math.sin and l.append are
+    being called in the loop and decide to generate the tracked local
+    code, avoiding it for the builtin range() function because it's
+    only called once during loop setup.  Performance issues related to
+    accessing local variables make tracking l.append less attractive
+    than tracking globals such as math.sin.
+
+    According to a post to python-dev by Marc-Andre Lemburg [1],
+    LOAD_GLOBAL opcodes account for over 7% of all instructions
+    executed by the Python virtual machine.  This can be a very
+    expensive instruction, at least relative to a LOAD_FAST
+    instruction, which is a simple array index and requires no extra
+    function calls by the virtual machine.  I believe many LOAD_GLOBAL
+    instructions and LOAD_GLOBAL/LOAD_ATTR pairs could be converted to
+    LOAD_FAST instructions.
+
+    Code that uses global variables heavily often resorts to various
+    tricks to avoid global variable and attribute lookup.  The
+    aforementioned sre_compile._compile function caches the append
+    method of the growing output list.  Many people commonly abuse
+    functions' default argument feature to cache global variable
+    lookups.  Both of these schemes are hackish and rarely address all
+    the available opportunities for optimization.  (For example,
+    sre_compile._compile does not cache the two globals that it uses
+    most frequently: the builtin len function and the global OPCODES
+    array that it imports from sre_constants.py.
+
+
+</pre>
+   <h3>
+    Questions
+   </h3>
+   <pre>
+    Q.  What about threads?  What if math.sin changes while in cache?
+
+    A.  I believe the global interpreter lock will protect values from
+        being corrupted.  In any case, the situation would be no worse
+        than it is today.  If one thread modified math.sin after another
+        thread had already executed "LOAD_GLOBAL math", but before it
+        executed "LOAD_ATTR sin", the client thread would see the old
+        value of math.sin.
+
+        The idea is this.  I use a multi-attribute load below as an
+        example, not because it would happen very often, but because by
+        demonstrating the recursive nature with an extra call hopefully
+        it will become clearer what I have in mind.  Suppose a function
+        defined in module foo wants to access spam.eggs.ham and that
+        spam is a module imported at the module level in foo:
+
+            import spam
+            ...
+            def somefunc():
+                ...
+                x = spam.eggs.ham
+
+        Upon entry to somefunc, a TRACK_GLOBAL instruction will be
+        executed:
+
+            TRACK_GLOBAL spam.eggs.ham n
+
+        "spam.eggs.ham" is a string literal stored in the function's
+        constants array.  "n" is a fastlocals index.  "&amp;fastlocals[n]"
+        is a reference to slot "n" in the executing frame's fastlocals
+        array, the location in which the spam.eggs.ham reference will
+        be stored.  Here's what I envision happening:
+
+        1. The TRACK_GLOBAL instruction locates the object referred to
+           by the name "spam" and finds it in its module scope.  It
+           then executes a C function like
+
+               _PyObject_TrackName(m, "spam.eggs.ham", &amp;fastlocals[n])
+
+           where "m" is the module object with an attribute "spam".
+
+        2. The module object strips the leading "spam." stores the
+           necessary information ("eggs.ham" and &amp;fastlocals[n]) in
+           case its binding for the name "eggs" changes.  It then
+           locates the object referred to by the key "eggs" in its
+           dict and recursively calls
+
+               _PyObject_TrackName(eggs, "eggs.ham", &amp;fastlocals[n])
+
+        3. The eggs object strips the leading "eggs.", stores the
+           ("ham", &amp;fastlocals[n]) info, locates the object in its
+           namespace called "ham" and calls _PyObject_TrackName once
+           again:
+
+               _PyObject_TrackName(ham, "ham", &amp;fastlocals[n])
+
+        4. The "ham" object strips the leading string (no "." this
+           time, but that's a minor point), sees that the result is
+           empty, then uses its own value (self, probably) to update
+           the location it was handed:
+
+               Py_XDECREF(&amp;fastlocals[n]);
+               &amp;fastlocals[n] = self;
+               Py_INCREF(&amp;fastlocals[n]);
+
+        At this point, each object involved in resolving
+        "spam.eggs.ham" knows which entry in its namespace needs to be
+        tracked and what location to update if that name changes.
+        Furthermore, if the one name it is tracking in its local
+        storage changes, it can call _PyObject_TrackName using the new
+        object once the change has been made.  At the bottom end of
+        the food chain, the last object will always strip a name, see
+        the empty string and know that its value should be stuffed
+        into the location it's been passed.
+
+        When the object referred to by the dotted expression
+        "spam.eggs.ham" is going to go out of scope, an
+        "UNTRACK_GLOBAL spam.eggs.ham n" instruction is executed.  It
+        has the effect of deleting all the tracking information that
+        TRACK_GLOBAL established.
+
+        The tracking operation may seem expensive, but recall that the
+        objects being tracked are assumed to be "almost constant", so
+        the setup cost will be traded off against hopefully multiple
+        local instead of global loads.  For globals with attributes
+        the tracking setup cost grows but is offset by avoiding the
+        extra LOAD_ATTR cost.  The TRACK_GLOBAL instruction needs to
+        perform a PyDict_GetItemString for the first name in the chain
+        to determine where the top-level object resides.  Each object
+        in the chain has to store a string and an address somewhere,
+        probably in a dict that uses storage locations as keys
+        (e.g. the &amp;fastlocals[n]) and strings as values.  (This dict
+        could possibly be a central dict of dicts whose keys are
+        object addresses instead of a per-object dict.)  It shouldn't
+        be the other way around because multiple active frames may
+        want to track "spam.eggs.ham", but only one frame will want to
+        associate that name with one of its fast locals slots.
+
+
+</pre>
+   <h3>
+    Unresolved Issues
+   </h3>
+   <pre>
+    Threading -
+
+    What about this (dumb) code?
+
+        l = []
+        lock = threading.Lock()
+        ...
+        def fill_l():
+            for i in range(1000):
+                lock.acquire()
+                l.append(math.sin(i))
+                lock.release()
+        ...
+        def consume_l():
+            while 1:
+                lock.acquire()
+                if l:
+                    elt = l.pop()
+                lock.release()
+                fiddle(elt)
+
+    It's not clear from a static analysis of the code what the lock is
+    protecting.  (You can't tell at compile-time that threads are even
+    involved can you?)  Would or should it affect attempts to track
+    "l.append" or "math.sin" in the fill_l function?
+
+    If we annotate the code with mythical track_object and untrack_object
+    builtins (I'm not proposing this, just illustrating where stuff would
+    go!), we get
+
+        l = []
+        lock = threading.Lock()
+        ...
+        def fill_l():
+            track_object("l.append", append)
+            track_object("math.sin", sin)
+            for i in range(1000):
+                lock.acquire()
+                append(sin(i))
+                lock.release()
+            untrack_object("math.sin", sin)
+            untrack_object("l.append", append)
+        ...
+        def consume_l():
+            while 1:
+                lock.acquire()
+                if l:
+                    elt = l.pop()
+                lock.release()
+                fiddle(elt)
+
+    Is that correct both with and without threads (or at least equally
+    incorrect with and without threads)?
+
+    Nested Scopes -
+
+    The presence of nested scopes will affect where TRACK_GLOBAL finds
+    a global variable, but shouldn't affect anything after that.  (I
+    think.)
+
+    Missing Attributes -
+
+    Suppose I am tracking the object referred to by "spam.eggs.ham"
+    and "spam.eggs" is rebound to an object that does not have a "ham"
+    attribute.  It's clear this will be an AttributeError if the
+    programmer attempts to resolve "spam.eggs.ham" in the current
+    Python virtual machine, but suppose the programmer has anticipated
+    this case:
+
+        if hasattr(spam.eggs, "ham"):
+            print spam.eggs.ham
+        elif hasattr(spam.eggs, "bacon"):
+            print spam.eggs.bacon
+        else:
+            print "what? no meat?"
+
+    You can't raise an AttributeError when the tracking information is
+    recalculated.  If it does not raise AttributeError and instead
+    lets the tracking stand, it may be setting the programmer up for a
+    very subtle error.
+
+    One solution to this problem would be to track the shortest
+    possible root of each dotted expression the function refers to
+    directly.  In the above example, "spam.eggs" would be tracked, but
+    "spam.eggs.ham" and "spam.eggs.bacon" would not.
+
+    Who does the dirty work? -
+
+    In the Questions section I postulated the existence of a
+    _PyObject_TrackName function.  While the API is fairly easy to
+    specify, the implementation behind-the-scenes is not so obvious.
+    A central dictionary could be used to track the name/location
+    mappings, but it appears that all setattr functions might need to
+    be modified to accommodate this new functionality.
+
+    If all types used the PyObject_GenericSetAttr function to set
+    attributes that would localize the update code somewhat.  They
+    don't however (which is not too surprising), so it seems that all
+    getattrfunc and getattrofunc functions will have to be updated.
+    In addition, this would place an absolute requirement on C
+    extension module authors to call some function when an attribute
+    changes value (PyObject_TrackUpdate?).
+
+    Finally, it's quite possible that some attributes will be set by
+    side effect and not by any direct call to a setattr method of some
+    sort.  Consider a device interface module that has an interrupt
+    routine that copies the contents of a device register into a slot
+    in the object's struct whenever it changes.  In these situations,
+    more extensive modifications would have to be made by the module
+    author.  To identify such situations at compile time would be
+    impossible.  I think an extra slot could be added to PyTypeObjects
+    to indicate if an object's code is safe for global tracking.  It
+    would have a default value of 0 (Py_TRACKING_NOT_SAFE).  If an
+    extension module author has implemented the necessary tracking
+    support, that field could be initialized to 1 (Py_TRACKING_SAFE).
+    _PyObject_TrackName could check that field and issue a warning if
+    it is asked to track an object that the author has not explicitly
+    said was safe for tracking.
+
+</pre>
+   <h3>
+    Discussion
+   </h3>
+   <pre>
+    Jeremy Hylton has an alternate proposal on the table [2].  His
+    proposal seeks to create a hybrid dictionary/list object for use
+    in global name lookups that would make global variable access look
+    more like local variable access.  While there is no C code
+    available to examine, the Python implementation given in his
+    proposal still appears to require dictionary key lookup.  It
+    doesn't appear that his proposal could speed local variable
+    attribute lookup, which might be worthwhile in some situations if
+    potential performance burdens could be addressed.
+
+
+</pre>
+   <h3>
+    Backwards Compatibility
+   </h3>
+   <pre>
+    I don't believe there will be any serious issues of backward
+    compatibility.  Obviously, Python bytecode that contains
+    TRACK_OBJECT opcodes could not be executed by earlier versions of
+    the interpreter, but breakage at the bytecode level is often
+    assumed between versions.
+
+
+</pre>
+   <h3>
+    Implementation
+   </h3>
+   <pre>
+    TBD.  This is where I need help.  I believe there should be either
+    a central name/location registry or the code that modifies object
+    attributes should be modified, but I'm not sure the best way to go
+    about this.  If you look at the code that implements the
+    STORE_GLOBAL and STORE_ATTR opcodes, it seems likely that some
+    changes will be required to PyDict_SetItem and PyObject_SetAttr or
+    their String variants.  Ideally, there'd be a fairly central place
+    to localize these changes.  If you begin considering tracking
+    attributes of local variables you get into issues of modifying
+    STORE_FAST as well, which could be a problem, since the name
+    bindings for local variables are changed much more frequently.  (I
+    think an optimizer could avoid inserting the tracking code for the
+    attributes for any local variables where the variable's name
+    binding changes.)
+
+
+</pre>
+   <h3>
+    Performance
+   </h3>
+   <pre>
+    I believe (though I have no code to prove it at this point), that
+    implementing TRACK_OBJECT will generally not be much more
+    expensive than a single LOAD_GLOBAL instruction or a
+    LOAD_GLOBAL/LOAD_ATTR pair.  An optimizer should be able to avoid
+    converting LOAD_GLOBAL and LOAD_GLOBAL/LOAD_ATTR to the new scheme
+    unless the object access occurred within a loop.  Further down the
+    line, a register-oriented replacement for the current Python
+    virtual machine [3] could conceivably eliminate most of the
+    LOAD_FAST instructions as well.
+
+    The number of tracked objects should be relatively small.  All
+    active frames of all active threads could conceivably be tracking
+    objects, but this seems small compared to the number of functions
+    defined in a given application.
+
+
+</pre>
+   <h3>
+    References
+   </h3>
+   <pre>
+    [1] <a href="http://mail.python.org/pipermail/python-dev/2000-July/007609.html">http://mail.python.org/pipermail/python-dev/2000-July/007609.html</a>
+
+    [2] <a href="http://www.zope.org/Members/jeremy/CurrentAndFutureProjects/FastGlobalsPEP">http://www.zope.org/Members/jeremy/CurrentAndFutureProjects/FastGlobalsPEP</a>
+
+    [3] <a href="http://www.musi-cal.com/~skip/python/rattlesnake20010813.tar.gz">http://www.musi-cal.com/~skip/python/rattlesnake20010813.tar.gz</a>
+
+
+</pre>
+   <h3>
+    Copyright
+   </h3>
+   <pre>
+    This document has been placed in the public domain.
+
+
+
+</pre>
+  </div>
+ </body>
+
+<!-- Mirrored from www.python.org/dev/peps/pep-0266/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 03 Sep 2015 04:37:15 GMT -->
+</html>Source: <a href="https://hg.python.org/peps/file/tip/pep-0266.txt">https://hg.python.org/peps/file/tip/pep-0266.txt</a>
+
+    </article>
+
+
+                </section>
+
+                
+
+
+<aside class="left-sidebar" role="secondary">
+
+    
+
+
+
+
+
+
+    
+
+
+
+
+
+        <div class="twitter-widget sidebar-widget">
+        <a class="twitter-timeline" data-dnt="true" href="https://twitter.com/ThePSF" data-widget-id="434113224703610882">Tweets by @ThePSF</a>
+        <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+    </div>
+
+    <div class="psf-sidebar-widget sidebar-widget">
+        <h3 class="widget-title">The PSF</h3>
+<p>The Python Software Foundation is the organization behind Python. Become a member of the PSF and help advance the software and our mission. </p>
+
+    </div>
+
+</aside>
+
+
+
+                
+                
+
+
+            </div><!-- end .container -->
+        </div><!-- end #content .content-wrapper -->
+
+        <!-- Footer and social media list -->
+        <footer id="site-map" class="main-footer" role="contentinfo">
+            <div class="main-footer-links">
+                <div class="container">
+
+                    
+                    <a id="back-to-top-1" class="jump-link" href="#python-network"><span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> Back to Top</a>
+
+                    
+
+<ul class="sitemap navigation menu do-not-print" role="tree" id="container">
+    
+    <li class="tier-1 element-1">
+        <a href="https://www.python.org/about/" >About</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/apps/" title="">Applications</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/quotes/" title="">Quotes</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/gettingstarted/" title="">Getting Started</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/help/" title="">Help</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-2">
+        <a href="https://www.python.org/downloads/" >Downloads</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/downloads/" title="">All releases</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/downloads/source/" title="">Source code</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/downloads/windows/" title="">Windows</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/downloads/mac-osx/" title="">Mac OS X</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/download/other/" title="">Other Platforms</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://docs.python.org/3/license.html" title="">License</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/download/alternatives" title="">Alternative Implementations</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-3">
+        <a href="https://www.python.org/doc/" >Documentation</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/doc/" title="">Docs</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/doc/av" title="">Audio/Visual Talks</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://wiki.python.org/moin/BeginnersGuide" title="">Beginner&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://docs.python.org/faq/" title="">FAQ</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="http://wiki.python.org/moin/Languages" title="">Non-English Docs</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="../index.html" title="">PEP Index</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://wiki.python.org/moin/PythonBooks" title="">Python Books</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-4">
+        <a href="https://www.python.org/community/" >Community</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/community/diversity/" title="">Diversity</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/community/irc/" title="">IRC</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/community/lists/" title="">Mailing Lists</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/workshops/" title="">Python Conferences</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/community/sigs/" title="">Special Interest Groups</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://wiki.python.org/moin/" title="">Python Wiki</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/community/logos/" title="">Python Logo</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://www.python.org/community/merchandise/" title="">Merchandise</a></li>
+    
+        <li class="tier-2 element-9" role="treeitem"><a href="https://www.python.org/community/awards" title="">Community Awards</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-5">
+        <a href="https://www.python.org/about/success/" title="success-stories">Success Stories</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/success/#arts" title="">Arts</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/success/#business" title="">Business</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/success/#education" title="">Education</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/success/#engineering" title="">Engineering</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/about/success/#government" title="">Government</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://www.python.org/about/success/#scientific" title="">Scientific</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/about/success/#software-development" title="">Software Development</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-6">
+        <a href="https://www.python.org/blogs/" title="News from around the Python world">News</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/blogs/" title="Python Insider Blog Posts">Python News</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://planetpython.org/" title="Planet Python">Community News</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="http://pyfound.blogspot.com/" title="PSF Blog">PSF News</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pycon.blogspot.com/" title="PyCon Blog">PyCon News</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-7">
+        <a href="https://www.python.org/events/" >Events</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/events/python-events/" title="">Python Events</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/events/python-user-group/" title="">User Group Events</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/events/python-events/past/" title="">Python Events Archive</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/events/python-user-group/past/" title="">User Group Events Archive</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://wiki.python.org/moin/PythonEventsCalendar#Submitting_an_Event" title="">Submit an Event</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-8">
+        <a href="https://www.python.org/dev/" >Contributing</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="http://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://bugs.python.org/" title="">Issue Tracker</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://mail.python.org/mailman/listinfo/python-dev" title="">python-dev list</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pythonmentors.com/" title="">Core Mentorship</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+</ul>
+
+
+                    <a id="back-to-top-2" class="jump-link" href="#python-network"><span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> Back to Top</a>
+                    
+
+                </div><!-- end .container -->
+            </div> <!-- end .main-footer-links -->
+
+            <div class="site-base">
+                <div class="container">
+                    
+                    <ul class="footer-links navigation menu do-not-print" role="tree">
+                        <li class="tier-1 element-1"><a href="https://www.python.org/about/help/">Help &amp; <span class="say-no-more">General</span> Contact</a></li>
+                        <li class="tier-1 element-2"><a href="https://www.python.org/community/diversity/">Diversity <span class="say-no-more">Initiatives</span></a></li>
+                        <li class="tier-1 element-3"><a href="https://github.com/python/pythondotorg/issues">Submit Website Bug</a></li>
+                        <!--<li class="tier-1 element-3"><a href="#"><span class="say-no-more">Website</span> Colophon</a></li>-->
+                    </ul>
+
+                    <div class="copyright">
+                        <p><small>
+                            <span class="pre">Copyright &copy;2001-2015.</span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/psf-landing/">Python Software Foundation</a></span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/about/legal/">Legal Statements</a></span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/privacy/">Privacy Policy</a></span>
+                        </small></p>
+                    </div>
+
+                </div><!-- end .container -->
+            </div><!-- end .site-base -->
+
+        </footer>
+
+    </div><!-- end #touchnav-wrapper -->
+
+    
+    <script src="../../../../ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="../../../static/js/libs/jquery-1.8.2.min.js"><\/script>')</script>
+
+    <script src="../../../static/js/libs/masonry.pkgd.min.js"></script>
+
+    <script type="text/javascript" src="../../../static/js/main-min.js" charset="utf-8"></script>
+    
+
+    <!--[if lte IE 7]>
+    <script type="text/javascript" src="/static/js/plugins/IE8-min.js" charset="utf-8"></script>
+    
+    
+    <![endif]-->
+
+    <!--[if lte IE 8]>
+    <script type="text/javascript" src="/static/js/plugins/getComputedStyle-min.js" charset="utf-8"></script>
+    
+    
+    <![endif]-->
+
+    
+
+    
+    
+
+</body>
+</html>

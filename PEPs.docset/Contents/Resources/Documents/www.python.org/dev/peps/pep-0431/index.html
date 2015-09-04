@@ -1,0 +1,1791 @@
+<!doctype html>
+<!--[if lt IE 7]>   <html class="no-js ie6 lt-ie7 lt-ie8 lt-ie9">   <![endif]-->
+<!--[if IE 7]>      <html class="no-js ie7 lt-ie8 lt-ie9">          <![endif]-->
+<!--[if IE 8]>      <html class="no-js ie8 lt-ie9">                 <![endif]-->
+<!--[if gt IE 8]><!--><html class="no-js" lang="en" dir="ltr">  <!--<![endif]-->
+
+
+<!-- Mirrored from www.python.org/dev/peps/pep-0431/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 03 Sep 2015 04:38:15 GMT -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <link rel="prefetch" href="../../../../ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js">
+
+    <meta name="application-name" content="Python.org">
+    <meta name="msapplication-tooltip" content="The official home of the Python Programming Language">
+    <meta name="apple-mobile-web-app-title" content="Python.org">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="format-detection" content="telephone=no">
+    <meta http-equiv="cleartype" content="on">
+    <meta http-equiv="imagetoolbar" content="false">
+
+    <script src="../../../static/js/libs/modernizr.js"></script>
+
+    <link href="../../../static/stylesheets/style.css" rel="stylesheet" type="text/css" title="default" />
+    <link href="../../../static/stylesheets/mq.css" rel="stylesheet" type="text/css" media="not print, braille, embossed, speech, tty" />
+    
+
+    <!--[if (lte IE 8)&(!IEMobile)]>
+    <link href="/static/stylesheets/no-mq.css" rel="stylesheet" type="text/css" media="screen" />
+    
+    
+    <![endif]-->
+
+    
+    <link rel="icon" type="image/x-icon" href="https://www.python.org/static/favicon.ico">
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="../../../static/apple-touch-icon-144x144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="../../../static/apple-touch-icon-114x114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="../../../static/apple-touch-icon-72x72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="../../../static/apple-touch-icon-precomposed.png">
+    <link rel="apple-touch-icon" href="../../../static/apple-touch-icon-precomposed.png">
+
+    
+    <meta name="msapplication-TileImage" content="/static/metro-icon-144x144-precomposed.png"><!-- white shape -->
+    <meta name="msapplication-TileColor" content="#3673a5"><!-- python blue -->
+    <meta name="msapplication-navbutton-color" content="#3673a5">
+
+    <meta property="og:site_name" content="Python.org">
+    <meta property="og:type" content="website">
+
+    <title>PEP 0431 -- Time zone support improvements | Python.org</title>
+    <meta property="og:title" content="Welcome to Python.org">
+
+    
+    <meta name="description" content="The official home of the Python Programming Language">
+    <meta name="og:description" content="The official home of the Python Programming Language">
+    <meta name="keywords" content="Python programming language object oriented web free open source software license documentation download community">
+    <meta property="og:tag" content="Python programming language object oriented web free open source software license documentation download community">
+    <meta property="og:published_time" content="">
+    <meta property="og:modified_time" content="">
+    <meta property="og:author" content="">
+    <meta property="og:section" content=""> 
+    <meta property="og:url" content="">
+    <meta property="og:image" content="">
+    <meta property="og:video" content="">
+
+    <link rel="author" href="https://www.python.org/static/humans.txt">
+
+    
+
+    
+    <script type="application/ld+json">
+     {
+       "@context": "http://schema.org",
+       "@type": "WebSite",
+       "url": "https://www.python.org/",
+       "potentialAction": {
+         "@type": "SearchAction",
+         "target": "https://www.python.org/search/?q={search_term_string}",
+         "query-input": "required name=search_term_string"
+       }
+     }
+    </script>
+
+    
+    <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-39055973-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+    </script>
+    
+</head>
+
+<body class="python pages pep-page">
+
+    <div id="touchnav-wrapper">
+
+        <div id="nojs" class="do-not-print">
+            <p><strong>Notice:</strong> While Javascript is not essential for this website, your interaction with the content will be limited. Please turn Javascript on for the full experience. </p>
+        </div>
+
+        <!--[if lt IE 8]>
+        <div id="oldie-warning" class="do-not-print">
+            <p><strong>Notice:</strong> Your browser is <em>ancient</em> and <a href="http://www.ie6countdown.com/">Microsoft agrees</a>. <a href="http://browsehappy.com/">Upgrade to a different browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to experience a better web.</p>
+        </div>
+        <![endif]-->
+
+        <!-- Sister Site Links -->
+        <div id="top" class="top-bar do-not-print">
+
+            <nav class="meta-navigation container" role="navigation">
+
+                
+                <div class="skip-link screen-reader-text">
+                    <a href="#content" title="Skip to content">Skip to content</a>
+                </div>
+
+                
+                <a id="close-python-network" class="jump-link" href="#python-network" aria-hidden="true">
+                    <span aria-hidden="true" class="icon-arrow-down"><span>&#9660;</span></span> Close
+                </a>
+
+                
+
+<ul class="menu" role="tree">
+    
+    <li class="python-meta ">
+        <a href="https://www.python.org/" title="The Python Programming Language" >Python</a>
+    </li>
+    
+    <li class="psf-meta ">
+        <a href="https://www.python.org/psf-landing/" title="The Python Software Foundation" >PSF</a>
+    </li>
+    
+    <li class="docs-meta ">
+        <a href="https://docs.python.org/" title="Python Documentation" >Docs</a>
+    </li>
+    
+    <li class="pypi-meta ">
+        <a href="https://pypi.python.org/" title="Python Package Index" >PyPI</a>
+    </li>
+    
+    <li class="jobs-meta ">
+        <a href="https://www.python.org/jobs/" title="Python Job Board" >Jobs</a>
+    </li>
+    
+    <li class="shop-meta ">
+        <a href="https://www.python.org/community/" title="Python Community" >Community</a>
+    </li>
+    
+</ul>
+
+
+                <a id="python-network" class="jump-link" href="#top" aria-hidden="true">
+                    <span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> The Python Network
+                </a>
+
+            </nav>
+
+        </div>
+
+        <!-- Header elements -->
+        <header class="main-header" role="banner">
+            <div class="container">
+
+                <h1 class="site-headline">
+                    <a href="https://www.python.org/"><img class="python-logo" src="../../../static/img/python-logo.png" alt="python&trade;"></a>
+                </h1>
+
+                <div class="options-bar do-not-print">
+
+                    
+                    <a id="site-map-link" class="jump-to-menu" href="#site-map"><span class="menu-icon">&equiv;</span> Menu</a><form class="search-the-site" action="https://www.python.org/search/" method="get">
+                        <fieldset title="Search Python.org">
+
+                            <span aria-hidden="true" class="icon-search"></span>
+
+                            <label class="screen-reader-text" for="id-search-field">Search This Site</label>
+                            <input id="id-search-field" name="q" type="search" role="textbox" class="search-field" placeholder="Search" value="" tabindex="1">
+
+                            <button type="submit" name="submit" id="submit" class="search-button" title="Submit this Search" tabindex="3">
+                                GO
+                            </button>
+
+                            
+                            <!--[if IE]><input type="text" style="display: none;" disabled="disabled" size="1" tabindex="4"><![endif]-->
+
+                        </fieldset>
+                    </form><span class="breaker"></span><div class="adjust-font-size" aria-hidden="true">
+                        <ul class="navigation menu" aria-label="Adjust Text Size on Page">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                <a href="#" class="action-trigger"><strong><small>A</small> A</strong></a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a class="text-shrink" title="Make Text Smaller" href="javascript:;">Smaller</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a class="text-grow" title="Make Text Larger" href="javascript:;">Larger</a></li>
+                                    <li class="tier-2 element-3" role="treeitem"><a class="text-reset" title="Reset any font size changes I have made" href="javascript:;">Reset</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div><div class="winkwink-nudgenudge">
+                        <ul class="navigation menu" aria-label="Social Media Navigation">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                <a href="#" class="action-trigger">Socialize</a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a href="http://plus.google.com/+Python"><span aria-hidden="true" class="icon-google-plus"></span>Google+</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a href="http://www.facebook.com/pythonlang?fref=ts"><span aria-hidden="true" class="icon-facebook"></span>Facebook</a></li>
+                                    <li class="tier-2 element-3" role="treeitem"><a href="http://twitter.com/ThePSF"><span aria-hidden="true" class="icon-twitter"></span>Twitter</a></li>
+                                    <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/irc/"><span aria-hidden="true" class="icon-freenode"></span>Chat on IRC</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div><div class="account-signin">
+                        <ul class="navigation menu" aria-label="Social Media Navigation">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                
+                                <a href="https://www.python.org/accounts/login/" title="Sign Up or Sign In to Python.org">Sign In</a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/accounts/signup/">Sign Up / Register</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/accounts/login/">Sign In</a></li>
+                                </ul>
+                                
+                            </li>
+                        </ul>
+                    </div>
+
+                </div><!-- end options-bar -->
+
+                <nav id="mainnav" class="python-navigation main-navigation do-not-print" role="navigation">
+                    
+                        
+<ul class="navigation menu" role="menubar" aria-label="Main Navigation">
+  
+    
+    
+    <li id="about" class="tier-1 element-1  " aria-haspopup="true">
+        <a href="https://www.python.org/about/" title="" class="">About</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/apps/" title="">Applications</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/quotes/" title="">Quotes</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/gettingstarted/" title="">Getting Started</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/help/" title="">Help</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="downloads" class="tier-1 element-2  " aria-haspopup="true">
+        <a href="https://www.python.org/downloads/" title="" class="">Downloads</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/downloads/" title="">All releases</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/downloads/source/" title="">Source code</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/downloads/windows/" title="">Windows</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/downloads/mac-osx/" title="">Mac OS X</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/download/other/" title="">Other Platforms</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://docs.python.org/3/license.html" title="">License</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/download/alternatives" title="">Alternative Implementations</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="documentation" class="tier-1 element-3  " aria-haspopup="true">
+        <a href="https://www.python.org/doc/" title="" class="">Documentation</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/doc/" title="">Docs</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/doc/av" title="">Audio/Visual Talks</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://wiki.python.org/moin/BeginnersGuide" title="">Beginner&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://docs.python.org/faq/" title="">FAQ</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="http://wiki.python.org/moin/Languages" title="">Non-English Docs</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="../index.html" title="">PEP Index</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://wiki.python.org/moin/PythonBooks" title="">Python Books</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="community" class="tier-1 element-4  " aria-haspopup="true">
+        <a href="https://www.python.org/community/" title="" class="">Community</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/community/diversity/" title="">Diversity</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/community/irc/" title="">IRC</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/community/lists/" title="">Mailing Lists</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/workshops/" title="">Python Conferences</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/community/sigs/" title="">Special Interest Groups</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://wiki.python.org/moin/" title="">Python Wiki</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/community/logos/" title="">Python Logo</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://www.python.org/community/merchandise/" title="">Merchandise</a></li>
+    
+        <li class="tier-2 element-9" role="treeitem"><a href="https://www.python.org/community/awards" title="">Community Awards</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="success-stories" class="tier-1 element-5  " aria-haspopup="true">
+        <a href="https://www.python.org/about/success/" title="success-stories" class="">Success Stories</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/success/#arts" title="">Arts</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/success/#business" title="">Business</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/success/#education" title="">Education</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/success/#engineering" title="">Engineering</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/about/success/#government" title="">Government</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://www.python.org/about/success/#scientific" title="">Scientific</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/about/success/#software-development" title="">Software Development</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="news" class="tier-1 element-6  " aria-haspopup="true">
+        <a href="https://www.python.org/blogs/" title="News from around the Python world" class="">News</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/blogs/" title="Python Insider Blog Posts">Python News</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://planetpython.org/" title="Planet Python">Community News</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="http://pyfound.blogspot.com/" title="PSF Blog">PSF News</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pycon.blogspot.com/" title="PyCon Blog">PyCon News</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="events" class="tier-1 element-7  " aria-haspopup="true">
+        <a href="https://www.python.org/events/" title="" class="">Events</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/events/python-events/" title="">Python Events</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/events/python-user-group/" title="">User Group Events</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/events/python-events/past/" title="">Python Events Archive</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/events/python-user-group/past/" title="">User Group Events Archive</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://wiki.python.org/moin/PythonEventsCalendar#Submitting_an_Event" title="">Submit an Event</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    
+  
+</ul>
+
+                    
+                </nav>
+
+                <div class="header-banner "> <!-- for optional "do-not-print" class -->
+                    
+                    
+                </div>
+
+                
+                
+
+             </div><!-- end .container -->
+        </header>
+
+        <div id="content" class="content-wrapper">
+            <!-- Main Content Column -->
+            <div class="container">
+
+                <section class="main-content with-left-sidebar" role="main">
+
+                    
+<ul class="breadcrumbs menu">
+    <li>
+        <a href="https://www.python.org/" title="The Python Programming Language">Python</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>
+        <a href="https://www.python.org/dev/">Python Developer's Guide</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>
+        <a href="../index.html">PEP Index</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>PEP 0431 -- Time zone support improvements</li>
+</ul>
+
+
+                    
+<style>
+   .pep-page pre {
+        padding: .5em;
+        background: inherit;
+        border-left: 0px;
+        -webkit-box-shadow: 0 0 0 0;
+        -moz-box-shadow: 0 0 0 0;
+        box-shadow: 0 0 0 0;
+   }
+</style>
+
+    
+    <article class="text">
+        
+
+        <header class="article-header">
+            <h1 class="page-title">PEP 0431 -- Time zone support improvements</h1>
+        </header>
+
+        <!--
+This HTML is auto-generated.  DO NOT EDIT THIS FILE!  If you are writing a new
+PEP, see http://www.python.org/dev/peps/pep-0001 for instructions and links
+to templates.  DO NOT USE THIS HTML FILE AS YOUR TEMPLATE!
+-->
+<html>
+ <body>
+  <table class="rfc2822 docutils field-list" frame="void" rules="none">
+   <col class="field-name">
+   </col>
+   <col class="field-body">
+   </col>
+   <tbody valign="top">
+    <tr class="field">
+     <th class="field-name">
+      PEP:
+     </th>
+     <td class="field-body">
+      431
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Title:
+     </th>
+     <td class="field-body">
+      Time zone support improvements
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Author:
+     </th>
+     <td class="field-body">
+      Lennart Regebro &lt;regebro at gmail.com&gt;
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      BDFL-Delegate:
+     </th>
+     <td class="field-body">
+      Barry Warsaw &lt;
+      <a class="reference external" href="mailto:barry@python.org">
+       barry@python.org
+      </a>
+      &gt;
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Status:
+     </th>
+     <td class="field-body">
+      Withdrawn
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Type:
+     </th>
+     <td class="field-body">
+      Standards Track
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Created:
+     </th>
+     <td class="field-body">
+      11-Dec-2012
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Post-History:
+     </th>
+     <td class="field-body">
+      11-Dec-2012, 28-Dec-2012, 28-Jan-2013
+     </td>
+    </tr>
+   </tbody>
+  </table>
+  <hr/>
+  <div class="contents topic" id="contents">
+   <p class="topic-title first">
+    Contents
+   </p>
+   <ul class="simple">
+    <li>
+     <a class="reference internal" href="#abstract" id="id2">
+      Abstract
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#withdrawal" id="id3">
+      Withdrawal
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#proposal" id="id4">
+      Proposal
+     </a>
+     <ul>
+      <li>
+       <a class="reference internal" href="#concrete-time-zone-support" id="id5">
+        Concrete time zone support
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#getting-the-local-time-zone" id="id6">
+        Getting the local time zone
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#ambiguous-times" id="id7">
+        Ambiguous times
+       </a>
+      </li>
+     </ul>
+    </li>
+    <li>
+     <a class="reference internal" href="#implementation-api" id="id8">
+      Implementation API
+     </a>
+     <ul>
+      <li>
+       <a class="reference internal" href="#the-zoneinfo-database" id="id9">
+        The zoneinfo database
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#changes-in-the-datetime-module" id="id10">
+        Changes in the
+        <tt class="docutils literal">
+         datetime
+        </tt>
+        -module
+       </a>
+       <ul>
+        <li>
+         <a class="reference internal" href="#new-class-dsttimezone" id="id11">
+          New class
+          <tt class="docutils literal">
+           dsttimezone
+          </tt>
+         </a>
+        </li>
+        <li>
+         <a class="reference internal" href="#new-function-zoneinfo-name-none-db-path-none" id="id12">
+          New function
+          <tt class="docutils literal">
+           zoneinfo(name=None, db_path=None)
+          </tt>
+         </a>
+        </li>
+        <li>
+         <a class="reference internal" href="#new-parameter-is-dst" id="id13">
+          New parameter
+          <tt class="docutils literal">
+           is_dst
+          </tt>
+         </a>
+        </li>
+        <li>
+         <a class="reference internal" href="#new-exceptions" id="id14">
+          New exceptions
+         </a>
+        </li>
+        <li>
+         <a class="reference internal" href="#new-collections" id="id15">
+          New collections
+         </a>
+        </li>
+       </ul>
+      </li>
+      <li>
+       <a class="reference internal" href="#the-tzdata-update-package" id="id16">
+        The
+        <tt class="docutils literal">
+         <span class="pre">
+          tzdata-update
+         </span>
+        </tt>
+        -package
+       </a>
+      </li>
+     </ul>
+    </li>
+    <li>
+     <a class="reference internal" href="#differences-from-the-pytz-api" id="id17">
+      Differences from the
+      <tt class="docutils literal">
+       pytz
+      </tt>
+      API
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#resources" id="id18">
+      Resources
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#copyright" id="id19">
+      Copyright
+     </a>
+    </li>
+   </ul>
+  </div>
+  <div class="section" id="abstract">
+   <h1>
+    <a class="toc-backref" href="#id2">
+     Abstract
+    </a>
+   </h1>
+   <p>
+    This PEP proposes the implementation of concrete time zone support in the
+Python standard library, and also improvements to the time zone API to deal
+with ambiguous time specifications during DST changes.
+   </p>
+  </div>
+  <div class="section" id="withdrawal">
+   <h1>
+    <a class="toc-backref" href="#id3">
+     Withdrawal
+    </a>
+   </h1>
+   <p>
+    After lengthy discussion it has turned out that the things I thought was
+problem in datetime's implementation are intentional. Those include
+completely ignoring DST transistions when making date time arithmetic.
+That makes the is_dst flags part of this PEP pointless, as they would
+have no useful function.
+    <tt class="docutils literal">
+     datetime
+    </tt>
+    by design does not separate between
+ambiguous datetimes and will never do so.
+   </p>
+   <p>
+    I therefore withdraw this PEP.
+   </p>
+  </div>
+  <div class="section" id="proposal">
+   <h1>
+    <a class="toc-backref" href="#id4">
+     Proposal
+    </a>
+   </h1>
+   <div class="section" id="concrete-time-zone-support">
+    <h2>
+     <a class="toc-backref" href="#id5">
+      Concrete time zone support
+     </a>
+    </h2>
+    <p>
+     The time zone support in Python has no concrete implementation in the
+standard library outside of a tzinfo baseclass that supports fixed offsets.
+To properly support time zones you need to include a database over all time
+zones, both current and historical, including daylight saving changes.
+But such information changes frequently, so even if we include the last
+information in a Python release, that information would be outdated just a
+few months later.
+    </p>
+    <p>
+     Time zone support has therefore only been available through two third-party
+modules,
+     <tt class="docutils literal">
+      pytz
+     </tt>
+     and
+     <tt class="docutils literal">
+      dateutil
+     </tt>
+     , both who include and wrap the "zoneinfo"
+database. This database, also called "tz" or "The Olsen database", is the
+de-facto standard time zone database over time zones, and it is included in
+most Unix and Unix-like operating systems, including OS X.
+    </p>
+    <p>
+     This gives us the opportunity to include the code that supports the zoneinfo
+data in the standard library, but by default use the operating system's copy
+of the data, which typically will be kept updated by the updating mechanism
+of the operating system or distribution.
+    </p>
+    <p>
+     For those who have an operating system that does not include the zoneinfo
+database, for example Windows, the Python source distribution will include a
+copy of the zoneinfo database, and a distribution containing the latest
+zoneinfo database will also be available at the Python Package Index, so it
+can be easily installed with the Python packaging tools such as
+     <tt class="docutils literal">
+      easy_install
+     </tt>
+     or
+     <tt class="docutils literal">
+      pip
+     </tt>
+     . This could also be done on Unices that are no
+longer receiving updates and therefore have an outdated database.
+    </p>
+    <p>
+     With such a mechanism Python would have full time zone support in the
+standard library on any platform, and a simple package installation would
+provide an updated time zone database on those platforms where the zoneinfo
+database isn't included, such as Windows, or on platforms where OS updates
+are no longer provided.
+    </p>
+    <p>
+     The time zone support will be implemented by making the
+     <tt class="docutils literal">
+      datetime
+     </tt>
+     module
+into a package, and adding time zone support to
+     <tt class="docutils literal">
+      datetime
+     </tt>
+     based on Stuart
+Bishop's
+     <tt class="docutils literal">
+      pytz
+     </tt>
+     module.
+    </p>
+   </div>
+   <div class="section" id="getting-the-local-time-zone">
+    <h2>
+     <a class="toc-backref" href="#id6">
+      Getting the local time zone
+     </a>
+    </h2>
+    <p>
+     On Unix there is no standard way of finding the name of the time zone that is
+being used. All the information that is available is the time zone
+abbreviations, such as
+     <tt class="docutils literal">
+      EST
+     </tt>
+     and
+     <tt class="docutils literal">
+      PDT
+     </tt>
+     , but many of those abbreviations
+are ambiguous and therefore you can't rely on them to figure out which time
+zone you are located in.
+    </p>
+    <p>
+     There is however a standard for finding the compiled time zone information
+since it's located in
+     <tt class="docutils literal">
+      /etc/localtime
+     </tt>
+     . Therefore it is possible to create
+a local time zone object with the correct time zone information even though
+you don't know the name of the time zone. A function in
+     <tt class="docutils literal">
+      datetime
+     </tt>
+     should
+be provided to return the local time zone.
+    </p>
+    <p>
+     The support for this will be made by integrating Lennart Regebro's
+     <tt class="docutils literal">
+      tzlocal
+     </tt>
+     module into the new
+     <tt class="docutils literal">
+      datetime
+     </tt>
+     module.
+    </p>
+    <p>
+     For Windows it will look up the local Windows time zone name, and use a
+mapping between Windows time zone names and zoneinfo time zone names provided
+by the Unicode consortium to convert that to a zoneinfo time zone.
+    </p>
+    <p>
+     The mapping should be updated before each major or bugfix release, scripts
+for doing so will be provided in the
+     <tt class="docutils literal">
+      Tools/
+     </tt>
+     directory.
+    </p>
+   </div>
+   <div class="section" id="ambiguous-times">
+    <h2>
+     <a class="toc-backref" href="#id7">
+      Ambiguous times
+     </a>
+    </h2>
+    <p>
+     When changing over from daylight savings time (DST) the clock is turned back
+one hour. This means that the times during that hour happens twice, once
+with DST and then once without DST. Similarly, when changing to daylight
+savings time, one hour goes missing.
+    </p>
+    <p>
+     The current time zone API can not differentiate between the two ambiguous
+times during a change from DST. For example, in Stockholm the time of
+2012-11-28 02:00:00 happens twice, both at UTC 2012-11-28 00:00:00 and also
+at 2012-11-28 01:00:00.
+    </p>
+    <p>
+     The current time zone API can not disambiguate this and therefore it's
+unclear which time should be returned:
+    </p>
+    <pre class="literal-block">
+# This could be either 00:00 or 01:00 UTC:
+&gt;&gt;&gt; dt = datetime(2012, 10, 28, 2, 0, tzinfo=zoneinfo('Europe/Stockholm'))
+# But we can not specify which:
+&gt;&gt;&gt; dt.astimezone(zoneinfo('UTC'))
+datetime.datetime(2012, 10, 28, 1, 0, tzinfo=&lt;UTC&gt;)
+</pre>
+    <p>
+     <tt class="docutils literal">
+      pytz
+     </tt>
+     solved this problem by adding
+     <tt class="docutils literal">
+      is_dst
+     </tt>
+     parameters to several
+methods of the tzinfo objects to make it possible to disambiguate times when
+this is desired.
+    </p>
+    <p>
+     This PEP proposes to add these
+     <tt class="docutils literal">
+      is_dst
+     </tt>
+     parameters to the relevant methods
+of the
+     <tt class="docutils literal">
+      datetime
+     </tt>
+     API, and therefore add this functionality directly to
+     <tt class="docutils literal">
+      datetime
+     </tt>
+     . This is likely the hardest part of this PEP as this involves
+updating the C version of the
+     <tt class="docutils literal">
+      datetime
+     </tt>
+     library with this functionality,
+as this involved writing new code, and not just reorganizing existing
+external libraries.
+    </p>
+   </div>
+  </div>
+  <div class="section" id="implementation-api">
+   <h1>
+    <a class="toc-backref" href="#id8">
+     Implementation API
+    </a>
+   </h1>
+   <div class="section" id="the-zoneinfo-database">
+    <h2>
+     <a class="toc-backref" href="#id9">
+      The zoneinfo database
+     </a>
+    </h2>
+    <p>
+     The latest version of the zoneinfo database should exist in the
+     <tt class="docutils literal">
+      Lib/tzdata
+     </tt>
+     directory of the Python source control system. This copy of
+the database should be updated before every Python feature and bug-fix
+release, but not for releases of Python versions that are in
+security-fix-only-mode.
+    </p>
+    <p>
+     Scripts to update the database will be provided in
+     <tt class="docutils literal">
+      Tools/
+     </tt>
+     , and the
+release instructions will be updated to include this update.
+    </p>
+    <p>
+     New configure options
+     <tt class="docutils literal">
+      <span class="pre">
+       --enable-internal-timezone-database
+      </span>
+     </tt>
+     and
+     <tt class="docutils literal">
+      <span class="pre">
+       --disable-internal-timezone-database
+      </span>
+     </tt>
+     will be implemented to enable and
+disable the installation of this database when installing from source. A
+source install will default to installing them.
+    </p>
+    <p>
+     Binary installers for systems that have a system-provided zoneinfo database
+may skip installing the included database since it would never be used for
+these platforms. For other platforms, for example Windows, binary installers
+must install the included database.
+    </p>
+   </div>
+   <div class="section" id="changes-in-the-datetime-module">
+    <h2>
+     <a class="toc-backref" href="#id10">
+      Changes in the
+      <tt class="docutils literal">
+       datetime
+      </tt>
+      -module
+     </a>
+    </h2>
+    <p>
+     The public API of the new time zone support contains one new class, one new
+function, one new exception and four new collections. In addition to this, several
+methods on the datetime object gets a new
+     <tt class="docutils literal">
+      is_dst
+     </tt>
+     parameter.
+    </p>
+    <div class="section" id="new-class-dsttimezone">
+     <h3>
+      <a class="toc-backref" href="#id11">
+       New class
+       <tt class="docutils literal">
+        dsttimezone
+       </tt>
+      </a>
+     </h3>
+     <p>
+      This class provides a concrete implementation of the
+      <tt class="docutils literal">
+       tzinfo
+      </tt>
+      base
+class that implements DST support.
+     </p>
+    </div>
+    <div class="section" id="new-function-zoneinfo-name-none-db-path-none">
+     <h3>
+      <a class="toc-backref" href="#id12">
+       New function
+       <tt class="docutils literal">
+        zoneinfo(name=None, db_path=None)
+       </tt>
+      </a>
+     </h3>
+     <p>
+      This function takes a name string that must be a string specifying a
+valid zoneinfo time zone, i.e. "US/Eastern", "Europe/Warsaw" or "Etc/GMT".
+If not given, the local time zone will be looked up. If an invalid zone name
+is given, or the local time zone can not be retrieved, the function raises
+      <cite>
+       UnknownTimeZoneError
+      </cite>
+      .
+     </p>
+     <p>
+      The function also takes an optional path to the location of the zoneinfo
+database which should be used. If not specified, the function will look for
+databases in the following order:
+     </p>
+     <ol class="arabic simple">
+      <li>
+       Check if the
+       <cite>
+        tzdata-update
+       </cite>
+       module is installed, and then use that
+database.
+      </li>
+      <li>
+       Use the database in
+       <tt class="docutils literal">
+        /usr/share/zoneinfo
+       </tt>
+       , if it exists.
+      </li>
+      <li>
+       Use the Python-provided database in
+       <tt class="docutils literal">
+        Lib/tzdata
+       </tt>
+       .
+      </li>
+     </ol>
+     <p>
+      If no database is found an
+      <tt class="docutils literal">
+       UnknownTimeZoneError
+      </tt>
+      or subclass thereof will
+be raised with a message explaining that no zoneinfo database can be found,
+but that you can install one with the
+      <tt class="docutils literal">
+       <span class="pre">
+        tzdata-update
+       </span>
+      </tt>
+      package.
+     </p>
+    </div>
+    <div class="section" id="new-parameter-is-dst">
+     <h3>
+      <a class="toc-backref" href="#id13">
+       New parameter
+       <tt class="docutils literal">
+        is_dst
+       </tt>
+      </a>
+     </h3>
+     <p>
+      A new
+      <tt class="docutils literal">
+       is_dst
+      </tt>
+      parameter is added to several methods to handle time
+ambiguity during DST changeovers.
+     </p>
+     <ul class="simple">
+      <li>
+       <tt class="docutils literal">
+        tzinfo.utcoffset(dt, is_dst=False)
+       </tt>
+      </li>
+      <li>
+       <tt class="docutils literal">
+        tzinfo.dst(dt, is_dst=False)
+       </tt>
+      </li>
+      <li>
+       <tt class="docutils literal">
+        tzinfo.tzname(dt, is_dst=False)
+       </tt>
+      </li>
+      <li>
+       <tt class="docutils literal">
+        datetime.astimezone(tz, is_dst=False)
+       </tt>
+      </li>
+     </ul>
+     <p>
+      The
+      <tt class="docutils literal">
+       is_dst
+      </tt>
+      parameter can be
+      <tt class="docutils literal">
+       False
+      </tt>
+      (default),
+      <tt class="docutils literal">
+       True
+      </tt>
+      , or
+      <tt class="docutils literal">
+       None
+      </tt>
+      .
+     </p>
+     <p>
+      <tt class="docutils literal">
+       False
+      </tt>
+      will specify that the given datetime should be interpreted as not
+happening during daylight savings time, i.e. that the time specified is after
+the change from DST. This is default to preserve existing behavior.
+     </p>
+     <p>
+      <tt class="docutils literal">
+       True
+      </tt>
+      will specify that the given datetime should be interpreted as happening
+during daylight savings time, i.e. that the time specified is before the change
+from DST.
+     </p>
+     <p>
+      <tt class="docutils literal">
+       None
+      </tt>
+      will raise an
+      <tt class="docutils literal">
+       AmbiguousTimeError
+      </tt>
+      exception if the time specified
+was during a DST change over. It will also raise a
+      <tt class="docutils literal">
+       NonExistentTimeError
+      </tt>
+      if a time is specified during the "missing time" in a change to DST.
+     </p>
+    </div>
+    <div class="section" id="new-exceptions">
+     <h3>
+      <a class="toc-backref" href="#id14">
+       New exceptions
+      </a>
+     </h3>
+     <ul>
+      <li>
+       <p class="first">
+        <tt class="docutils literal">
+         UnknownTimeZoneError
+        </tt>
+       </p>
+       <p>
+        This exception is a subclass of KeyError and raised when giving a time
+zone specification that can't be found:
+       </p>
+       <pre class="literal-block">
+&gt;&gt;&gt; datetime.zoneinfo('Europe/New_York')
+Traceback (most recent call last):
+...
+UnknownTimeZoneError: There is no time zone called 'Europe/New_York'
+</pre>
+      </li>
+      <li>
+       <p class="first">
+        <tt class="docutils literal">
+         InvalidTimeError
+        </tt>
+       </p>
+       <p>
+        This exception serves as a base for
+        <tt class="docutils literal">
+         AmbiguousTimeError
+        </tt>
+        and
+        <tt class="docutils literal">
+         NonExistentTimeError
+        </tt>
+        , to enable you to trap these two separately. It
+will subclass from ValueError, so that you can catch these errors together
+with inputs like the 29th of February 2011.
+       </p>
+      </li>
+      <li>
+       <p class="first">
+        <tt class="docutils literal">
+         AmbiguousTimeError
+        </tt>
+       </p>
+       <p>
+        This exception is raised when giving a datetime specification that is ambiguous
+while setting
+        <tt class="docutils literal">
+         is_dst
+        </tt>
+        to None:
+       </p>
+       <pre class="literal-block">
+&gt;&gt;&gt; datetime(2012, 11, 28, 2, 0, tzinfo=zoneinfo('Europe/Stockholm'), is_dst=None)
+&gt;&gt;&gt;
+Traceback (most recent call last):
+...
+AmbiguousTimeError: 2012-10-28 02:00:00 is ambiguous in time zone Europe/Stockholm
+</pre>
+      </li>
+      <li>
+       <p class="first">
+        <tt class="docutils literal">
+         NonExistentTimeError
+        </tt>
+       </p>
+       <p>
+        This exception is raised when giving a datetime specification for a time that due to
+daylight saving does not exist, while setting
+        <tt class="docutils literal">
+         is_dst
+        </tt>
+        to None:
+       </p>
+       <pre class="literal-block">
+&gt;&gt;&gt; datetime(2012, 3, 25, 2, 0, tzinfo=zoneinfo('Europe/Stockholm'), is_dst=None)
+&gt;&gt;&gt;
+Traceback (most recent call last):
+...
+NonExistentTimeError: 2012-03-25 02:00:00 does not exist in time zone Europe/Stockholm
+</pre>
+      </li>
+     </ul>
+    </div>
+    <div class="section" id="new-collections">
+     <h3>
+      <a class="toc-backref" href="#id15">
+       New collections
+      </a>
+     </h3>
+     <ul class="simple">
+      <li>
+       <tt class="docutils literal">
+        all_timezones
+       </tt>
+       is the exhaustive list of the time zone names that can
+be used, listed alphabethically.
+      </li>
+      <li>
+       <tt class="docutils literal">
+        common_timezones
+       </tt>
+       is a list of useful, current time zones, listed
+alphabethically.
+      </li>
+     </ul>
+    </div>
+   </div>
+   <div class="section" id="the-tzdata-update-package">
+    <h2>
+     <a class="toc-backref" href="#id16">
+      The
+      <tt class="docutils literal">
+       <span class="pre">
+        tzdata-update
+       </span>
+      </tt>
+      -package
+     </a>
+    </h2>
+    <p>
+     The zoneinfo database will be packaged for easy installation with
+     <tt class="docutils literal">
+      easy_install
+     </tt>
+     /
+     <tt class="docutils literal">
+      pip
+     </tt>
+     /
+     <tt class="docutils literal">
+      buildout
+     </tt>
+     . This package will not install any
+Python code, and will not contain any Python code except that which is needed
+for installation.
+    </p>
+    <p>
+     It will be kept updated with the same tools as the internal database, but
+released whenever the
+     <tt class="docutils literal">
+      zoneinfo
+     </tt>
+     -database is updated, and use the same
+version schema.
+    </p>
+   </div>
+  </div>
+  <div class="section" id="differences-from-the-pytz-api">
+   <h1>
+    <a class="toc-backref" href="#id17">
+     Differences from the
+     <tt class="docutils literal">
+      pytz
+     </tt>
+     API
+    </a>
+   </h1>
+   <ul class="simple">
+    <li>
+     <tt class="docutils literal">
+      pytz
+     </tt>
+     has the functions
+     <tt class="docutils literal">
+      localize()
+     </tt>
+     and
+     <tt class="docutils literal">
+      normalize()
+     </tt>
+     to work
+around that
+     <tt class="docutils literal">
+      tzinfo
+     </tt>
+     doesn't have is_dst. When
+     <tt class="docutils literal">
+      is_dst
+     </tt>
+     is
+implemented directly in
+     <tt class="docutils literal">
+      datetime.tzinfo
+     </tt>
+     they are no longer needed.
+    </li>
+    <li>
+     The
+     <tt class="docutils literal">
+      timezone()
+     </tt>
+     function is called
+     <tt class="docutils literal">
+      zoneinfo()
+     </tt>
+     to avoid clashing with
+the
+     <tt class="docutils literal">
+      timezone
+     </tt>
+     class introduced in Python 3.2.
+    </li>
+    <li>
+     <tt class="docutils literal">
+      zoneinfo()
+     </tt>
+     will return the local time zone if called without arguments.
+    </li>
+    <li>
+     The class
+     <tt class="docutils literal">
+      pytz.StaticTzInfo
+     </tt>
+     is there to provide the
+     <tt class="docutils literal">
+      is_dst
+     </tt>
+     support for static
+time zones. When
+     <tt class="docutils literal">
+      is_dst
+     </tt>
+     support is included in
+     <tt class="docutils literal">
+      datetime.tzinfo
+     </tt>
+     it is no longer needed.
+    </li>
+    <li>
+     <tt class="docutils literal">
+      InvalidTimeError
+     </tt>
+     subclasses from
+     <tt class="docutils literal">
+      ValueError
+     </tt>
+     .
+    </li>
+   </ul>
+  </div>
+  <div class="section" id="resources">
+   <h1>
+    <a class="toc-backref" href="#id18">
+     Resources
+    </a>
+   </h1>
+   <ul class="simple">
+    <li>
+     <a class="reference external" href="http://pytz.sourceforge.net/">
+      http://pytz.sourceforge.net/
+     </a>
+    </li>
+    <li>
+     <a class="reference external" href="http://pypi.python.org/pypi/tzlocal">
+      http://pypi.python.org/pypi/tzlocal
+     </a>
+    </li>
+    <li>
+     <a class="reference external" href="http://pypi.python.org/pypi/python-dateutil">
+      http://pypi.python.org/pypi/python-dateutil
+     </a>
+    </li>
+    <li>
+     <a class="reference external" href="http://unicode.org/cldr/data/common/supplemental/windowsZones.xml">
+      http://unicode.org/cldr/data/common/supplemental/windowsZones.xml
+     </a>
+    </li>
+   </ul>
+  </div>
+  <div class="section" id="copyright">
+   <h1>
+    <a class="toc-backref" href="#id19">
+     Copyright
+    </a>
+   </h1>
+   <p>
+    This document has been placed in the public domain.
+   </p>
+  </div>
+ </body>
+
+<!-- Mirrored from www.python.org/dev/peps/pep-0431/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 03 Sep 2015 04:38:15 GMT -->
+</html>Source: <a href="https://hg.python.org/peps/file/tip/pep-0431.txt">https://hg.python.org/peps/file/tip/pep-0431.txt</a>
+
+    </article>
+
+
+                </section>
+
+                
+
+
+<aside class="left-sidebar" role="secondary">
+
+    
+
+
+
+
+
+
+    
+
+
+
+
+
+        <div class="twitter-widget sidebar-widget">
+        <a class="twitter-timeline" data-dnt="true" href="https://twitter.com/ThePSF" data-widget-id="434113224703610882">Tweets by @ThePSF</a>
+        <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+    </div>
+
+    <div class="psf-sidebar-widget sidebar-widget">
+        <h3 class="widget-title">The PSF</h3>
+<p>The Python Software Foundation is the organization behind Python. Become a member of the PSF and help advance the software and our mission. </p>
+
+    </div>
+
+</aside>
+
+
+
+                
+                
+
+
+            </div><!-- end .container -->
+        </div><!-- end #content .content-wrapper -->
+
+        <!-- Footer and social media list -->
+        <footer id="site-map" class="main-footer" role="contentinfo">
+            <div class="main-footer-links">
+                <div class="container">
+
+                    
+                    <a id="back-to-top-1" class="jump-link" href="#python-network"><span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> Back to Top</a>
+
+                    
+
+<ul class="sitemap navigation menu do-not-print" role="tree" id="container">
+    
+    <li class="tier-1 element-1">
+        <a href="https://www.python.org/about/" >About</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/apps/" title="">Applications</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/quotes/" title="">Quotes</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/gettingstarted/" title="">Getting Started</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/help/" title="">Help</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-2">
+        <a href="https://www.python.org/downloads/" >Downloads</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/downloads/" title="">All releases</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/downloads/source/" title="">Source code</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/downloads/windows/" title="">Windows</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/downloads/mac-osx/" title="">Mac OS X</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/download/other/" title="">Other Platforms</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://docs.python.org/3/license.html" title="">License</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/download/alternatives" title="">Alternative Implementations</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-3">
+        <a href="https://www.python.org/doc/" >Documentation</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/doc/" title="">Docs</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/doc/av" title="">Audio/Visual Talks</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://wiki.python.org/moin/BeginnersGuide" title="">Beginner&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://docs.python.org/faq/" title="">FAQ</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="http://wiki.python.org/moin/Languages" title="">Non-English Docs</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="../index.html" title="">PEP Index</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://wiki.python.org/moin/PythonBooks" title="">Python Books</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-4">
+        <a href="https://www.python.org/community/" >Community</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/community/diversity/" title="">Diversity</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/community/irc/" title="">IRC</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/community/lists/" title="">Mailing Lists</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/workshops/" title="">Python Conferences</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/community/sigs/" title="">Special Interest Groups</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://wiki.python.org/moin/" title="">Python Wiki</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/community/logos/" title="">Python Logo</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://www.python.org/community/merchandise/" title="">Merchandise</a></li>
+    
+        <li class="tier-2 element-9" role="treeitem"><a href="https://www.python.org/community/awards" title="">Community Awards</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-5">
+        <a href="https://www.python.org/about/success/" title="success-stories">Success Stories</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/success/#arts" title="">Arts</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/success/#business" title="">Business</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/success/#education" title="">Education</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/success/#engineering" title="">Engineering</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/about/success/#government" title="">Government</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://www.python.org/about/success/#scientific" title="">Scientific</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/about/success/#software-development" title="">Software Development</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-6">
+        <a href="https://www.python.org/blogs/" title="News from around the Python world">News</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/blogs/" title="Python Insider Blog Posts">Python News</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://planetpython.org/" title="Planet Python">Community News</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="http://pyfound.blogspot.com/" title="PSF Blog">PSF News</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pycon.blogspot.com/" title="PyCon Blog">PyCon News</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-7">
+        <a href="https://www.python.org/events/" >Events</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/events/python-events/" title="">Python Events</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/events/python-user-group/" title="">User Group Events</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/events/python-events/past/" title="">Python Events Archive</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/events/python-user-group/past/" title="">User Group Events Archive</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://wiki.python.org/moin/PythonEventsCalendar#Submitting_an_Event" title="">Submit an Event</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-8">
+        <a href="https://www.python.org/dev/" >Contributing</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="http://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://bugs.python.org/" title="">Issue Tracker</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://mail.python.org/mailman/listinfo/python-dev" title="">python-dev list</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pythonmentors.com/" title="">Core Mentorship</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+</ul>
+
+
+                    <a id="back-to-top-2" class="jump-link" href="#python-network"><span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> Back to Top</a>
+                    
+
+                </div><!-- end .container -->
+            </div> <!-- end .main-footer-links -->
+
+            <div class="site-base">
+                <div class="container">
+                    
+                    <ul class="footer-links navigation menu do-not-print" role="tree">
+                        <li class="tier-1 element-1"><a href="https://www.python.org/about/help/">Help &amp; <span class="say-no-more">General</span> Contact</a></li>
+                        <li class="tier-1 element-2"><a href="https://www.python.org/community/diversity/">Diversity <span class="say-no-more">Initiatives</span></a></li>
+                        <li class="tier-1 element-3"><a href="https://github.com/python/pythondotorg/issues">Submit Website Bug</a></li>
+                        <!--<li class="tier-1 element-3"><a href="#"><span class="say-no-more">Website</span> Colophon</a></li>-->
+                    </ul>
+
+                    <div class="copyright">
+                        <p><small>
+                            <span class="pre">Copyright &copy;2001-2015.</span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/psf-landing/">Python Software Foundation</a></span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/about/legal/">Legal Statements</a></span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/privacy/">Privacy Policy</a></span>
+                        </small></p>
+                    </div>
+
+                </div><!-- end .container -->
+            </div><!-- end .site-base -->
+
+        </footer>
+
+    </div><!-- end #touchnav-wrapper -->
+
+    
+    <script src="../../../../ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="../../../static/js/libs/jquery-1.8.2.min.js"><\/script>')</script>
+
+    <script src="../../../static/js/libs/masonry.pkgd.min.js"></script>
+
+    <script type="text/javascript" src="../../../static/js/main-min.js" charset="utf-8"></script>
+    
+
+    <!--[if lte IE 7]>
+    <script type="text/javascript" src="/static/js/plugins/IE8-min.js" charset="utf-8"></script>
+    
+    
+    <![endif]-->
+
+    <!--[if lte IE 8]>
+    <script type="text/javascript" src="/static/js/plugins/getComputedStyle-min.js" charset="utf-8"></script>
+    
+    
+    <![endif]-->
+
+    
+
+    
+    
+
+</body>
+</html>

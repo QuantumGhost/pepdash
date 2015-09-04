@@ -1,0 +1,1572 @@
+<!doctype html>
+<!--[if lt IE 7]>   <html class="no-js ie6 lt-ie7 lt-ie8 lt-ie9">   <![endif]-->
+<!--[if IE 7]>      <html class="no-js ie7 lt-ie8 lt-ie9">          <![endif]-->
+<!--[if IE 8]>      <html class="no-js ie8 lt-ie9">                 <![endif]-->
+<!--[if gt IE 8]><!--><html class="no-js" lang="en" dir="ltr">  <!--<![endif]-->
+
+
+<!-- Mirrored from www.python.org/dev/peps/pep-0377/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 03 Sep 2015 04:37:49 GMT -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <link rel="prefetch" href="../../../../ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js">
+
+    <meta name="application-name" content="Python.org">
+    <meta name="msapplication-tooltip" content="The official home of the Python Programming Language">
+    <meta name="apple-mobile-web-app-title" content="Python.org">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="format-detection" content="telephone=no">
+    <meta http-equiv="cleartype" content="on">
+    <meta http-equiv="imagetoolbar" content="false">
+
+    <script src="../../../static/js/libs/modernizr.js"></script>
+
+    <link href="../../../static/stylesheets/style.css" rel="stylesheet" type="text/css" title="default" />
+    <link href="../../../static/stylesheets/mq.css" rel="stylesheet" type="text/css" media="not print, braille, embossed, speech, tty" />
+    
+
+    <!--[if (lte IE 8)&(!IEMobile)]>
+    <link href="/static/stylesheets/no-mq.css" rel="stylesheet" type="text/css" media="screen" />
+    
+    
+    <![endif]-->
+
+    
+    <link rel="icon" type="image/x-icon" href="https://www.python.org/static/favicon.ico">
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="../../../static/apple-touch-icon-144x144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="../../../static/apple-touch-icon-114x114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="../../../static/apple-touch-icon-72x72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="../../../static/apple-touch-icon-precomposed.png">
+    <link rel="apple-touch-icon" href="../../../static/apple-touch-icon-precomposed.png">
+
+    
+    <meta name="msapplication-TileImage" content="/static/metro-icon-144x144-precomposed.png"><!-- white shape -->
+    <meta name="msapplication-TileColor" content="#3673a5"><!-- python blue -->
+    <meta name="msapplication-navbutton-color" content="#3673a5">
+
+    <meta property="og:site_name" content="Python.org">
+    <meta property="og:type" content="website">
+
+    <title>PEP 0377 -- Allow __enter__() methods to skip the statement body | Python.org</title>
+    <meta property="og:title" content="Welcome to Python.org">
+
+    
+    <meta name="description" content="The official home of the Python Programming Language">
+    <meta name="og:description" content="The official home of the Python Programming Language">
+    <meta name="keywords" content="Python programming language object oriented web free open source software license documentation download community">
+    <meta property="og:tag" content="Python programming language object oriented web free open source software license documentation download community">
+    <meta property="og:published_time" content="">
+    <meta property="og:modified_time" content="">
+    <meta property="og:author" content="">
+    <meta property="og:section" content=""> 
+    <meta property="og:url" content="">
+    <meta property="og:image" content="">
+    <meta property="og:video" content="">
+
+    <link rel="author" href="https://www.python.org/static/humans.txt">
+
+    
+
+    
+    <script type="application/ld+json">
+     {
+       "@context": "http://schema.org",
+       "@type": "WebSite",
+       "url": "https://www.python.org/",
+       "potentialAction": {
+         "@type": "SearchAction",
+         "target": "https://www.python.org/search/?q={search_term_string}",
+         "query-input": "required name=search_term_string"
+       }
+     }
+    </script>
+
+    
+    <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-39055973-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+    </script>
+    
+</head>
+
+<body class="python pages pep-page">
+
+    <div id="touchnav-wrapper">
+
+        <div id="nojs" class="do-not-print">
+            <p><strong>Notice:</strong> While Javascript is not essential for this website, your interaction with the content will be limited. Please turn Javascript on for the full experience. </p>
+        </div>
+
+        <!--[if lt IE 8]>
+        <div id="oldie-warning" class="do-not-print">
+            <p><strong>Notice:</strong> Your browser is <em>ancient</em> and <a href="http://www.ie6countdown.com/">Microsoft agrees</a>. <a href="http://browsehappy.com/">Upgrade to a different browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to experience a better web.</p>
+        </div>
+        <![endif]-->
+
+        <!-- Sister Site Links -->
+        <div id="top" class="top-bar do-not-print">
+
+            <nav class="meta-navigation container" role="navigation">
+
+                
+                <div class="skip-link screen-reader-text">
+                    <a href="#content" title="Skip to content">Skip to content</a>
+                </div>
+
+                
+                <a id="close-python-network" class="jump-link" href="#python-network" aria-hidden="true">
+                    <span aria-hidden="true" class="icon-arrow-down"><span>&#9660;</span></span> Close
+                </a>
+
+                
+
+<ul class="menu" role="tree">
+    
+    <li class="python-meta ">
+        <a href="https://www.python.org/" title="The Python Programming Language" >Python</a>
+    </li>
+    
+    <li class="psf-meta ">
+        <a href="https://www.python.org/psf-landing/" title="The Python Software Foundation" >PSF</a>
+    </li>
+    
+    <li class="docs-meta ">
+        <a href="https://docs.python.org/" title="Python Documentation" >Docs</a>
+    </li>
+    
+    <li class="pypi-meta ">
+        <a href="https://pypi.python.org/" title="Python Package Index" >PyPI</a>
+    </li>
+    
+    <li class="jobs-meta ">
+        <a href="https://www.python.org/jobs/" title="Python Job Board" >Jobs</a>
+    </li>
+    
+    <li class="shop-meta ">
+        <a href="https://www.python.org/community/" title="Python Community" >Community</a>
+    </li>
+    
+</ul>
+
+
+                <a id="python-network" class="jump-link" href="#top" aria-hidden="true">
+                    <span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> The Python Network
+                </a>
+
+            </nav>
+
+        </div>
+
+        <!-- Header elements -->
+        <header class="main-header" role="banner">
+            <div class="container">
+
+                <h1 class="site-headline">
+                    <a href="https://www.python.org/"><img class="python-logo" src="../../../static/img/python-logo.png" alt="python&trade;"></a>
+                </h1>
+
+                <div class="options-bar do-not-print">
+
+                    
+                    <a id="site-map-link" class="jump-to-menu" href="#site-map"><span class="menu-icon">&equiv;</span> Menu</a><form class="search-the-site" action="https://www.python.org/search/" method="get">
+                        <fieldset title="Search Python.org">
+
+                            <span aria-hidden="true" class="icon-search"></span>
+
+                            <label class="screen-reader-text" for="id-search-field">Search This Site</label>
+                            <input id="id-search-field" name="q" type="search" role="textbox" class="search-field" placeholder="Search" value="" tabindex="1">
+
+                            <button type="submit" name="submit" id="submit" class="search-button" title="Submit this Search" tabindex="3">
+                                GO
+                            </button>
+
+                            
+                            <!--[if IE]><input type="text" style="display: none;" disabled="disabled" size="1" tabindex="4"><![endif]-->
+
+                        </fieldset>
+                    </form><span class="breaker"></span><div class="adjust-font-size" aria-hidden="true">
+                        <ul class="navigation menu" aria-label="Adjust Text Size on Page">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                <a href="#" class="action-trigger"><strong><small>A</small> A</strong></a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a class="text-shrink" title="Make Text Smaller" href="javascript:;">Smaller</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a class="text-grow" title="Make Text Larger" href="javascript:;">Larger</a></li>
+                                    <li class="tier-2 element-3" role="treeitem"><a class="text-reset" title="Reset any font size changes I have made" href="javascript:;">Reset</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div><div class="winkwink-nudgenudge">
+                        <ul class="navigation menu" aria-label="Social Media Navigation">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                <a href="#" class="action-trigger">Socialize</a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a href="http://plus.google.com/+Python"><span aria-hidden="true" class="icon-google-plus"></span>Google+</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a href="http://www.facebook.com/pythonlang?fref=ts"><span aria-hidden="true" class="icon-facebook"></span>Facebook</a></li>
+                                    <li class="tier-2 element-3" role="treeitem"><a href="http://twitter.com/ThePSF"><span aria-hidden="true" class="icon-twitter"></span>Twitter</a></li>
+                                    <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/irc/"><span aria-hidden="true" class="icon-freenode"></span>Chat on IRC</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div><div class="account-signin">
+                        <ul class="navigation menu" aria-label="Social Media Navigation">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                
+                                <a href="https://www.python.org/accounts/login/" title="Sign Up or Sign In to Python.org">Sign In</a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/accounts/signup/">Sign Up / Register</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/accounts/login/">Sign In</a></li>
+                                </ul>
+                                
+                            </li>
+                        </ul>
+                    </div>
+
+                </div><!-- end options-bar -->
+
+                <nav id="mainnav" class="python-navigation main-navigation do-not-print" role="navigation">
+                    
+                        
+<ul class="navigation menu" role="menubar" aria-label="Main Navigation">
+  
+    
+    
+    <li id="about" class="tier-1 element-1  " aria-haspopup="true">
+        <a href="https://www.python.org/about/" title="" class="">About</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/apps/" title="">Applications</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/quotes/" title="">Quotes</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/gettingstarted/" title="">Getting Started</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/help/" title="">Help</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="downloads" class="tier-1 element-2  " aria-haspopup="true">
+        <a href="https://www.python.org/downloads/" title="" class="">Downloads</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/downloads/" title="">All releases</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/downloads/source/" title="">Source code</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/downloads/windows/" title="">Windows</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/downloads/mac-osx/" title="">Mac OS X</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/download/other/" title="">Other Platforms</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://docs.python.org/3/license.html" title="">License</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/download/alternatives" title="">Alternative Implementations</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="documentation" class="tier-1 element-3  " aria-haspopup="true">
+        <a href="https://www.python.org/doc/" title="" class="">Documentation</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/doc/" title="">Docs</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/doc/av" title="">Audio/Visual Talks</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://wiki.python.org/moin/BeginnersGuide" title="">Beginner&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://docs.python.org/faq/" title="">FAQ</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="http://wiki.python.org/moin/Languages" title="">Non-English Docs</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="../index.html" title="">PEP Index</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://wiki.python.org/moin/PythonBooks" title="">Python Books</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="community" class="tier-1 element-4  " aria-haspopup="true">
+        <a href="https://www.python.org/community/" title="" class="">Community</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/community/diversity/" title="">Diversity</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/community/irc/" title="">IRC</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/community/lists/" title="">Mailing Lists</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/workshops/" title="">Python Conferences</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/community/sigs/" title="">Special Interest Groups</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://wiki.python.org/moin/" title="">Python Wiki</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/community/logos/" title="">Python Logo</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://www.python.org/community/merchandise/" title="">Merchandise</a></li>
+    
+        <li class="tier-2 element-9" role="treeitem"><a href="https://www.python.org/community/awards" title="">Community Awards</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="success-stories" class="tier-1 element-5  " aria-haspopup="true">
+        <a href="https://www.python.org/about/success/" title="success-stories" class="">Success Stories</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/success/#arts" title="">Arts</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/success/#business" title="">Business</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/success/#education" title="">Education</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/success/#engineering" title="">Engineering</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/about/success/#government" title="">Government</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://www.python.org/about/success/#scientific" title="">Scientific</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/about/success/#software-development" title="">Software Development</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="news" class="tier-1 element-6  " aria-haspopup="true">
+        <a href="https://www.python.org/blogs/" title="News from around the Python world" class="">News</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/blogs/" title="Python Insider Blog Posts">Python News</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://planetpython.org/" title="Planet Python">Community News</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="http://pyfound.blogspot.com/" title="PSF Blog">PSF News</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pycon.blogspot.com/" title="PyCon Blog">PyCon News</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="events" class="tier-1 element-7  " aria-haspopup="true">
+        <a href="https://www.python.org/events/" title="" class="">Events</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/events/python-events/" title="">Python Events</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/events/python-user-group/" title="">User Group Events</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/events/python-events/past/" title="">Python Events Archive</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/events/python-user-group/past/" title="">User Group Events Archive</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://wiki.python.org/moin/PythonEventsCalendar#Submitting_an_Event" title="">Submit an Event</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    
+  
+</ul>
+
+                    
+                </nav>
+
+                <div class="header-banner "> <!-- for optional "do-not-print" class -->
+                    
+                    
+                </div>
+
+                
+                
+
+             </div><!-- end .container -->
+        </header>
+
+        <div id="content" class="content-wrapper">
+            <!-- Main Content Column -->
+            <div class="container">
+
+                <section class="main-content with-left-sidebar" role="main">
+
+                    
+<ul class="breadcrumbs menu">
+    <li>
+        <a href="https://www.python.org/" title="The Python Programming Language">Python</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>
+        <a href="https://www.python.org/dev/">Python Developer's Guide</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>
+        <a href="../index.html">PEP Index</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>PEP 0377 -- Allow __enter__() methods to skip the statement body</li>
+</ul>
+
+
+                    
+<style>
+   .pep-page pre {
+        padding: .5em;
+        background: inherit;
+        border-left: 0px;
+        -webkit-box-shadow: 0 0 0 0;
+        -moz-box-shadow: 0 0 0 0;
+        box-shadow: 0 0 0 0;
+   }
+</style>
+
+    
+    <article class="text">
+        
+
+        <header class="article-header">
+            <h1 class="page-title">PEP 0377 -- Allow __enter__() methods to skip the statement body</h1>
+        </header>
+
+        <!--
+This HTML is auto-generated.  DO NOT EDIT THIS FILE!  If you are writing a new
+PEP, see http://www.python.org/dev/peps/pep-0001 for instructions and links
+to templates.  DO NOT USE THIS HTML FILE AS YOUR TEMPLATE!
+-->
+<html>
+ <body>
+  <table class="rfc2822 docutils field-list" frame="void" rules="none">
+   <col class="field-name">
+   </col>
+   <col class="field-body">
+   </col>
+   <tbody valign="top">
+    <tr class="field">
+     <th class="field-name">
+      PEP:
+     </th>
+     <td class="field-body">
+      377
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Title:
+     </th>
+     <td class="field-body">
+      Allow __enter__() methods to skip the statement body
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Author:
+     </th>
+     <td class="field-body">
+      Nick Coghlan &lt;ncoghlan at gmail.com&gt;
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Status:
+     </th>
+     <td class="field-body">
+      Rejected
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Type:
+     </th>
+     <td class="field-body">
+      Standards Track
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Created:
+     </th>
+     <td class="field-body">
+      8-Mar-2009
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Python-Version:
+     </th>
+     <td class="field-body">
+      2.7, 3.1
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Post-History:
+     </th>
+     <td class="field-body">
+      8-Mar-2009
+     </td>
+    </tr>
+   </tbody>
+  </table>
+  <hr/>
+  <div class="contents topic" id="contents">
+   <p class="topic-title first">
+    Contents
+   </p>
+   <ul class="simple">
+    <li>
+     <a class="reference internal" href="#abstract" id="id10">
+      Abstract
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#pep-rejection" id="id11">
+      PEP Rejection
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#proposed-change" id="id12">
+      Proposed Change
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#rationale-for-change" id="id13">
+      Rationale for Change
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#performance-impact" id="id14">
+      Performance Impact
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#reference-implementation" id="id15">
+      Reference Implementation
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#acknowledgements" id="id16">
+      Acknowledgements
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#references" id="id17">
+      References
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#copyright" id="id18">
+      Copyright
+     </a>
+    </li>
+   </ul>
+  </div>
+  <div class="section" id="abstract">
+   <h1>
+    <a class="toc-backref" href="#id10">
+     Abstract
+    </a>
+   </h1>
+   <p>
+    This PEP proposes a backwards compatible mechanism that allows
+    <tt class="docutils literal">
+     __enter__()
+    </tt>
+    methods to skip the body of the associated
+    <tt class="docutils literal">
+     with
+    </tt>
+    statement. The lack of
+this ability currently means the
+    <tt class="docutils literal">
+     contextlib.contextmanager
+    </tt>
+    decorator
+is unable to fulfil its specification of being able to turn arbitrary
+code into a context manager by moving it into a generator function
+with a yield in the appropriate location. One symptom of this is that
+    <tt class="docutils literal">
+     contextlib.nested
+    </tt>
+    will currently raise
+    <tt class="docutils literal">
+     RuntimeError
+    </tt>
+    in
+situations where writing out the corresponding nested
+    <tt class="docutils literal">
+     with
+    </tt>
+    statements would not
+    <a class="footnote-reference" href="#id6" id="id1">
+     [1]
+    </a>
+    .
+   </p>
+   <p>
+    The proposed change is to introduce a new flow control exception
+    <tt class="docutils literal">
+     SkipStatement
+    </tt>
+    , and skip the execution of the
+    <tt class="docutils literal">
+     with
+    </tt>
+    statement body if
+    <tt class="docutils literal">
+     __enter__()
+    </tt>
+    raises this exception.
+   </p>
+  </div>
+  <div class="section" id="pep-rejection">
+   <h1>
+    <a class="toc-backref" href="#id11">
+     PEP Rejection
+    </a>
+   </h1>
+   <p>
+    This PEP was rejected by Guido
+    <a class="footnote-reference" href="#id9" id="id2">
+     [4]
+    </a>
+    as it imposes too great an increase
+in complexity without a proportional increase in expressiveness and
+correctness. In the absence of compelling use cases that need the more
+complex semantics proposed by this PEP the existing behaviour is
+considered acceptable.
+   </p>
+  </div>
+  <div class="section" id="proposed-change">
+   <h1>
+    <a class="toc-backref" href="#id12">
+     Proposed Change
+    </a>
+   </h1>
+   <p>
+    The semantics of the
+    <tt class="docutils literal">
+     with
+    </tt>
+    statement will be changed to include a
+new
+    <tt class="docutils literal">
+     try
+    </tt>
+    /
+    <tt class="docutils literal">
+     except
+    </tt>
+    /
+    <tt class="docutils literal">
+     else
+    </tt>
+    block around the call to
+    <tt class="docutils literal">
+     __enter__()
+    </tt>
+    .
+If
+    <tt class="docutils literal">
+     SkipStatement
+    </tt>
+    is raised by the
+    <tt class="docutils literal">
+     __enter__()
+    </tt>
+    method, then
+the main section of the
+    <tt class="docutils literal">
+     with
+    </tt>
+    statement (now located in the
+    <tt class="docutils literal">
+     else
+    </tt>
+    clause) will not be executed. To avoid leaving the names in any
+    <tt class="docutils literal">
+     as
+    </tt>
+    clause unbound in this case, a new
+    <tt class="docutils literal">
+     StatementSkipped
+    </tt>
+    singleton
+(similar to the existing
+    <tt class="docutils literal">
+     NotImplemented
+    </tt>
+    singleton) will be
+assigned to all names that appear in the
+    <tt class="docutils literal">
+     as
+    </tt>
+    clause.
+   </p>
+   <p>
+    The components of the
+    <tt class="docutils literal">
+     with
+    </tt>
+    statement remain as described in
+    <a class="reference external" href="../pep-0343/index.html">
+     PEP 343
+    </a>
+    <a class="footnote-reference" href="#id7" id="id3">
+     [2]
+    </a>
+    :
+   </p>
+   <pre class="literal-block">
+with EXPR as VAR:
+    BLOCK
+</pre>
+   <p>
+    After the modification, the
+    <tt class="docutils literal">
+     with
+    </tt>
+    statement semantics would
+be as follows:
+   </p>
+   <pre class="literal-block">
+mgr = (EXPR)
+exit = mgr.__exit__  # Not calling it yet
+try:
+    value = mgr.__enter__()
+except SkipStatement:
+    VAR = StatementSkipped
+    # Only if "as VAR" is present and
+    # VAR is a single name
+    # If VAR is a tuple of names, then StatementSkipped
+    # will be assigned to each name in the tuple
+else:
+    exc = True
+    try:
+        try:
+            VAR = value  # Only if "as VAR" is present
+            BLOCK
+        except:
+            # The exceptional case is handled here
+            exc = False
+            if not exit(*sys.exc_info()):
+                raise
+            # The exception is swallowed if exit() returns true
+    finally:
+        # The normal and non-local-goto cases are handled here
+        if exc:
+            exit(None, None, None)
+</pre>
+   <p>
+    With the above change in place for the
+    <tt class="docutils literal">
+     with
+    </tt>
+    statement semantics,
+    <tt class="docutils literal">
+     contextlib.contextmanager()
+    </tt>
+    will then be modified to raise
+    <tt class="docutils literal">
+     SkipStatement
+    </tt>
+    instead of
+    <tt class="docutils literal">
+     RuntimeError
+    </tt>
+    when the underlying
+generator doesn't yield.
+   </p>
+  </div>
+  <div class="section" id="rationale-for-change">
+   <h1>
+    <a class="toc-backref" href="#id13">
+     Rationale for Change
+    </a>
+   </h1>
+   <p>
+    Currently, some apparently innocuous context managers may raise
+    <tt class="docutils literal">
+     RuntimeError
+    </tt>
+    when executed. This occurs when the context
+manager's
+    <tt class="docutils literal">
+     __enter__()
+    </tt>
+    method encounters a situation where
+the written out version of the code corresponding to the
+context manager would skip the code that is now the body
+of the
+    <tt class="docutils literal">
+     with
+    </tt>
+    statement. Since the
+    <tt class="docutils literal">
+     __enter__()
+    </tt>
+    method
+has no mechanism available to signal this to the interpreter,
+it is instead forced to raise an exception that not only
+skips the body of the
+    <tt class="docutils literal">
+     with
+    </tt>
+    statement, but also jumps over
+all code until the nearest exception handler. This goes against
+one of the design goals of the
+    <tt class="docutils literal">
+     with
+    </tt>
+    statement, which was to
+be able to factor out arbitrary common exception handling code
+into a single context manager by putting into a generator
+function and replacing the variant part of the code with a
+    <tt class="docutils literal">
+     yield
+    </tt>
+    statement.
+   </p>
+   <p>
+    Specifically, the following examples behave differently if
+    <tt class="docutils literal">
+     <span class="pre">
+      cmB().__enter__()
+     </span>
+    </tt>
+    raises an exception which
+    <tt class="docutils literal">
+     <span class="pre">
+      cmA().__exit__()
+     </span>
+    </tt>
+    then handles and suppresses:
+   </p>
+   <pre class="literal-block">
+with cmA():
+  with cmB():
+    do_stuff()
+# This will resume here without executing "do_stuff()"
+
+@contextlib.contextmanager
+def combined():
+  with cmA():
+    with cmB():
+      yield
+
+with combined():
+  do_stuff()
+# This will raise a RuntimeError complaining that the context
+# manager's underlying generator didn't yield
+
+with contextlib.nested(cmA(), cmB()):
+  do_stuff()
+# This will raise the same RuntimeError as the contextmanager()
+# example (unsurprising, given that the nested() implementation
+# uses contextmanager())
+
+# The following class based version shows that the issue isn't
+# specific to contextlib.contextmanager() (it also shows how
+# much simpler it is to write context managers as generators
+# instead of as classes!)
+class CM(object):
+  def __init__(self):
+    self.cmA = None
+    self.cmB = None
+
+  def __enter__(self):
+    if self.cmA is not None:
+      raise RuntimeError("Can't re-use this CM")
+    self.cmA = cmA()
+    self.cmA.__enter__()
+    try:
+      self.cmB = cmB()
+      self.cmB.__enter__()
+    except:
+      self.cmA.__exit__(*sys.exc_info())
+      # Can't suppress in __enter__(), so must raise
+      raise
+
+  def __exit__(self, *args):
+    suppress = False
+    try:
+      if self.cmB is not None:
+        suppress = self.cmB.__exit__(*args)
+    except:
+      suppress = self.cmA.__exit__(*sys.exc_info()):
+      if not suppress:
+        # Exception has changed, so reraise explicitly
+        raise
+    else:
+      if suppress:
+        # cmB already suppressed the exception,
+        # so don't pass it to cmA
+        suppress = self.cmA.__exit__(None, None, None):
+      else:
+        suppress = self.cmA.__exit__(*args):
+    return suppress
+</pre>
+   <p>
+    With the proposed semantic change in place, the contextlib based examples
+above would then "just work", but the class based version would need
+a small adjustment to take advantage of the new semantics:
+   </p>
+   <pre class="literal-block">
+class CM(object):
+  def __init__(self):
+    self.cmA = None
+    self.cmB = None
+
+  def __enter__(self):
+    if self.cmA is not None:
+      raise RuntimeError("Can't re-use this CM")
+    self.cmA = cmA()
+    self.cmA.__enter__()
+    try:
+      self.cmB = cmB()
+      self.cmB.__enter__()
+    except:
+      if self.cmA.__exit__(*sys.exc_info()):
+        # Suppress the exception, but don't run
+        # the body of the with statement either
+        raise SkipStatement
+      raise
+
+  def __exit__(self, *args):
+    suppress = False
+    try:
+      if self.cmB is not None:
+        suppress = self.cmB.__exit__(*args)
+    except:
+      suppress = self.cmA.__exit__(*sys.exc_info()):
+      if not suppress:
+        # Exception has changed, so reraise explicitly
+        raise
+    else:
+      if suppress:
+        # cmB already suppressed the exception,
+        # so don't pass it to cmA
+        suppress = self.cmA.__exit__(None, None, None):
+      else:
+        suppress = self.cmA.__exit__(*args):
+    return suppress
+</pre>
+   <p>
+    There is currently a tentative suggestion
+    <a class="footnote-reference" href="#id8" id="id4">
+     [3]
+    </a>
+    to add import-style syntax to
+the
+    <tt class="docutils literal">
+     with
+    </tt>
+    statement to allow multiple context managers to be included in
+a single
+    <tt class="docutils literal">
+     with
+    </tt>
+    statement without needing to use
+    <tt class="docutils literal">
+     contextlib.nested
+    </tt>
+    . In
+that case the compiler has the option of simply emitting multiple
+    <tt class="docutils literal">
+     with
+    </tt>
+    statements at the AST level, thus allowing the semantics of actual nested
+    <tt class="docutils literal">
+     with
+    </tt>
+    statements to be reproduced accurately. However, such a change
+would highlight rather than alleviate the problem the current PEP aims to
+address: it would not be possible to use
+    <tt class="docutils literal">
+     contextlib.contextmanager
+    </tt>
+    to
+reliably factor out such
+    <tt class="docutils literal">
+     with
+    </tt>
+    statements, as they would exhibit exactly
+the same semantic differences as are seen with the
+    <tt class="docutils literal">
+     combined()
+    </tt>
+    context
+manager in the above example.
+   </p>
+  </div>
+  <div class="section" id="performance-impact">
+   <h1>
+    <a class="toc-backref" href="#id14">
+     Performance Impact
+    </a>
+   </h1>
+   <p>
+    Implementing the new semantics makes it necessary to store the references
+to the
+    <tt class="docutils literal">
+     __enter__
+    </tt>
+    and
+    <tt class="docutils literal">
+     __exit__
+    </tt>
+    methods in temporary variables instead
+of on the stack. This results in a slight regression in
+    <tt class="docutils literal">
+     with
+    </tt>
+    statement
+speed relative to Python 2.6/3.1. However, implementing a custom
+    <tt class="docutils literal">
+     SETUP_WITH
+    </tt>
+    opcode would negate any differences between the two
+approaches (as well as dramatically improving speed by eliminating more
+than a dozen unnecessary trips around the eval loop).
+   </p>
+  </div>
+  <div class="section" id="reference-implementation">
+   <h1>
+    <a class="toc-backref" href="#id15">
+     Reference Implementation
+    </a>
+   </h1>
+   <p>
+    Patch attached to Issue 5251
+    <a class="footnote-reference" href="#id6" id="id5">
+     [1]
+    </a>
+    . That patch uses only existing opcodes
+(i.e. no
+    <tt class="docutils literal">
+     SETUP_WITH
+    </tt>
+    ).
+   </p>
+  </div>
+  <div class="section" id="acknowledgements">
+   <h1>
+    <a class="toc-backref" href="#id16">
+     Acknowledgements
+    </a>
+   </h1>
+   <p>
+    James William Pye both raised the issue and suggested the basic outline of
+the solution described in this PEP.
+   </p>
+  </div>
+  <div class="section" id="references">
+   <h1>
+    <a class="toc-backref" href="#id17">
+     References
+    </a>
+   </h1>
+   <table class="docutils footnote" frame="void" id="id6" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       [1]
+      </td>
+      <td>
+       <em>
+        (
+        <a class="fn-backref" href="#id1">
+         1
+        </a>
+        ,
+        <a class="fn-backref" href="#id5">
+         2
+        </a>
+        )
+       </em>
+       Issue 5251: contextlib.nested inconsistent with nested with statements
+(
+       <a class="reference external" href="http://bugs.python.org/issue5251">
+        http://bugs.python.org/issue5251
+       </a>
+       )
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id7" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id3">
+        [2]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="../pep-0343/index.html">
+        PEP 343
+       </a>
+       : The "with" Statement
+(
+       <a class="reference external" href="../pep-0343/index.html">
+        http://www.python.org/dev/peps/pep-0343/
+       </a>
+       )
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id8" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id4">
+        [3]
+       </a>
+      </td>
+      <td>
+       Import-style syntax to reduce indentation of nested with statements
+(
+       <a class="reference external" href="http://mail.python.org/pipermail/python-ideas/2009-March/003188.html">
+        http://mail.python.org/pipermail/python-ideas/2009-March/003188.html
+       </a>
+       )
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id9" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id2">
+        [4]
+       </a>
+      </td>
+      <td>
+       Guido's rejection of the PEP
+(
+       <a class="reference external" href="http://mail.python.org/pipermail/python-dev/2009-March/087263.html">
+        http://mail.python.org/pipermail/python-dev/2009-March/087263.html
+       </a>
+       )
+      </td>
+     </tr>
+    </tbody>
+   </table>
+  </div>
+  <div class="section" id="copyright">
+   <h1>
+    <a class="toc-backref" href="#id18">
+     Copyright
+    </a>
+   </h1>
+   <p>
+    This document has been placed in the public domain.
+   </p>
+   <!-- Local Variables:
+mode: indented-text
+indent-tabs-mode: nil
+sentence-end-double-space: t
+fill-column: 70
+End: -->
+  </div>
+ </body>
+
+<!-- Mirrored from www.python.org/dev/peps/pep-0377/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 03 Sep 2015 04:37:50 GMT -->
+</html>Source: <a href="https://hg.python.org/peps/file/tip/pep-0377.txt">https://hg.python.org/peps/file/tip/pep-0377.txt</a>
+
+    </article>
+
+
+                </section>
+
+                
+
+
+<aside class="left-sidebar" role="secondary">
+
+    
+
+
+
+
+
+
+    
+
+
+
+
+
+        <div class="twitter-widget sidebar-widget">
+        <a class="twitter-timeline" data-dnt="true" href="https://twitter.com/ThePSF" data-widget-id="434113224703610882">Tweets by @ThePSF</a>
+        <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+    </div>
+
+    <div class="psf-sidebar-widget sidebar-widget">
+        <h3 class="widget-title">The PSF</h3>
+<p>The Python Software Foundation is the organization behind Python. Become a member of the PSF and help advance the software and our mission. </p>
+
+    </div>
+
+</aside>
+
+
+
+                
+                
+
+
+            </div><!-- end .container -->
+        </div><!-- end #content .content-wrapper -->
+
+        <!-- Footer and social media list -->
+        <footer id="site-map" class="main-footer" role="contentinfo">
+            <div class="main-footer-links">
+                <div class="container">
+
+                    
+                    <a id="back-to-top-1" class="jump-link" href="#python-network"><span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> Back to Top</a>
+
+                    
+
+<ul class="sitemap navigation menu do-not-print" role="tree" id="container">
+    
+    <li class="tier-1 element-1">
+        <a href="https://www.python.org/about/" >About</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/apps/" title="">Applications</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/quotes/" title="">Quotes</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/gettingstarted/" title="">Getting Started</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/help/" title="">Help</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-2">
+        <a href="https://www.python.org/downloads/" >Downloads</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/downloads/" title="">All releases</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/downloads/source/" title="">Source code</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/downloads/windows/" title="">Windows</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/downloads/mac-osx/" title="">Mac OS X</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/download/other/" title="">Other Platforms</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://docs.python.org/3/license.html" title="">License</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/download/alternatives" title="">Alternative Implementations</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-3">
+        <a href="https://www.python.org/doc/" >Documentation</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/doc/" title="">Docs</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/doc/av" title="">Audio/Visual Talks</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://wiki.python.org/moin/BeginnersGuide" title="">Beginner&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://docs.python.org/faq/" title="">FAQ</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="http://wiki.python.org/moin/Languages" title="">Non-English Docs</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="../index.html" title="">PEP Index</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://wiki.python.org/moin/PythonBooks" title="">Python Books</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-4">
+        <a href="https://www.python.org/community/" >Community</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/community/diversity/" title="">Diversity</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/community/irc/" title="">IRC</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/community/lists/" title="">Mailing Lists</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/workshops/" title="">Python Conferences</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/community/sigs/" title="">Special Interest Groups</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://wiki.python.org/moin/" title="">Python Wiki</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/community/logos/" title="">Python Logo</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://www.python.org/community/merchandise/" title="">Merchandise</a></li>
+    
+        <li class="tier-2 element-9" role="treeitem"><a href="https://www.python.org/community/awards" title="">Community Awards</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-5">
+        <a href="https://www.python.org/about/success/" title="success-stories">Success Stories</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/success/#arts" title="">Arts</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/success/#business" title="">Business</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/success/#education" title="">Education</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/success/#engineering" title="">Engineering</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/about/success/#government" title="">Government</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://www.python.org/about/success/#scientific" title="">Scientific</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/about/success/#software-development" title="">Software Development</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-6">
+        <a href="https://www.python.org/blogs/" title="News from around the Python world">News</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/blogs/" title="Python Insider Blog Posts">Python News</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://planetpython.org/" title="Planet Python">Community News</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="http://pyfound.blogspot.com/" title="PSF Blog">PSF News</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pycon.blogspot.com/" title="PyCon Blog">PyCon News</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-7">
+        <a href="https://www.python.org/events/" >Events</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/events/python-events/" title="">Python Events</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/events/python-user-group/" title="">User Group Events</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/events/python-events/past/" title="">Python Events Archive</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/events/python-user-group/past/" title="">User Group Events Archive</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://wiki.python.org/moin/PythonEventsCalendar#Submitting_an_Event" title="">Submit an Event</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-8">
+        <a href="https://www.python.org/dev/" >Contributing</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="http://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://bugs.python.org/" title="">Issue Tracker</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://mail.python.org/mailman/listinfo/python-dev" title="">python-dev list</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pythonmentors.com/" title="">Core Mentorship</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+</ul>
+
+
+                    <a id="back-to-top-2" class="jump-link" href="#python-network"><span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> Back to Top</a>
+                    
+
+                </div><!-- end .container -->
+            </div> <!-- end .main-footer-links -->
+
+            <div class="site-base">
+                <div class="container">
+                    
+                    <ul class="footer-links navigation menu do-not-print" role="tree">
+                        <li class="tier-1 element-1"><a href="https://www.python.org/about/help/">Help &amp; <span class="say-no-more">General</span> Contact</a></li>
+                        <li class="tier-1 element-2"><a href="https://www.python.org/community/diversity/">Diversity <span class="say-no-more">Initiatives</span></a></li>
+                        <li class="tier-1 element-3"><a href="https://github.com/python/pythondotorg/issues">Submit Website Bug</a></li>
+                        <!--<li class="tier-1 element-3"><a href="#"><span class="say-no-more">Website</span> Colophon</a></li>-->
+                    </ul>
+
+                    <div class="copyright">
+                        <p><small>
+                            <span class="pre">Copyright &copy;2001-2015.</span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/psf-landing/">Python Software Foundation</a></span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/about/legal/">Legal Statements</a></span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/privacy/">Privacy Policy</a></span>
+                        </small></p>
+                    </div>
+
+                </div><!-- end .container -->
+            </div><!-- end .site-base -->
+
+        </footer>
+
+    </div><!-- end #touchnav-wrapper -->
+
+    
+    <script src="../../../../ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="../../../static/js/libs/jquery-1.8.2.min.js"><\/script>')</script>
+
+    <script src="../../../static/js/libs/masonry.pkgd.min.js"></script>
+
+    <script type="text/javascript" src="../../../static/js/main-min.js" charset="utf-8"></script>
+    
+
+    <!--[if lte IE 7]>
+    <script type="text/javascript" src="/static/js/plugins/IE8-min.js" charset="utf-8"></script>
+    
+    
+    <![endif]-->
+
+    <!--[if lte IE 8]>
+    <script type="text/javascript" src="/static/js/plugins/getComputedStyle-min.js" charset="utf-8"></script>
+    
+    
+    <![endif]-->
+
+    
+
+    
+    
+
+</body>
+</html>

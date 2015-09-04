@@ -1,0 +1,1843 @@
+<!doctype html>
+<!--[if lt IE 7]>   <html class="no-js ie6 lt-ie7 lt-ie8 lt-ie9">   <![endif]-->
+<!--[if IE 7]>      <html class="no-js ie7 lt-ie8 lt-ie9">          <![endif]-->
+<!--[if IE 8]>      <html class="no-js ie8 lt-ie9">                 <![endif]-->
+<!--[if gt IE 8]><!--><html class="no-js" lang="en" dir="ltr">  <!--<![endif]-->
+
+
+<!-- Mirrored from www.python.org/dev/peps/pep-0381/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 03 Sep 2015 04:33:09 GMT -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <link rel="prefetch" href="../../../../ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js">
+
+    <meta name="application-name" content="Python.org">
+    <meta name="msapplication-tooltip" content="The official home of the Python Programming Language">
+    <meta name="apple-mobile-web-app-title" content="Python.org">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="format-detection" content="telephone=no">
+    <meta http-equiv="cleartype" content="on">
+    <meta http-equiv="imagetoolbar" content="false">
+
+    <script src="../../../static/js/libs/modernizr.js"></script>
+
+    <link href="../../../static/stylesheets/style.css" rel="stylesheet" type="text/css" title="default" />
+    <link href="../../../static/stylesheets/mq.css" rel="stylesheet" type="text/css" media="not print, braille, embossed, speech, tty" />
+    
+
+    <!--[if (lte IE 8)&(!IEMobile)]>
+    <link href="/static/stylesheets/no-mq.css" rel="stylesheet" type="text/css" media="screen" />
+    
+    
+    <![endif]-->
+
+    
+    <link rel="icon" type="image/x-icon" href="https://www.python.org/static/favicon.ico">
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="../../../static/apple-touch-icon-144x144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="../../../static/apple-touch-icon-114x114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="../../../static/apple-touch-icon-72x72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="../../../static/apple-touch-icon-precomposed.png">
+    <link rel="apple-touch-icon" href="../../../static/apple-touch-icon-precomposed.png">
+
+    
+    <meta name="msapplication-TileImage" content="/static/metro-icon-144x144-precomposed.png"><!-- white shape -->
+    <meta name="msapplication-TileColor" content="#3673a5"><!-- python blue -->
+    <meta name="msapplication-navbutton-color" content="#3673a5">
+
+    <meta property="og:site_name" content="Python.org">
+    <meta property="og:type" content="website">
+
+    <title>PEP 0381 -- Mirroring infrastructure for PyPI | Python.org</title>
+    <meta property="og:title" content="Welcome to Python.org">
+
+    
+    <meta name="description" content="The official home of the Python Programming Language">
+    <meta name="og:description" content="The official home of the Python Programming Language">
+    <meta name="keywords" content="Python programming language object oriented web free open source software license documentation download community">
+    <meta property="og:tag" content="Python programming language object oriented web free open source software license documentation download community">
+    <meta property="og:published_time" content="">
+    <meta property="og:modified_time" content="">
+    <meta property="og:author" content="">
+    <meta property="og:section" content=""> 
+    <meta property="og:url" content="">
+    <meta property="og:image" content="">
+    <meta property="og:video" content="">
+
+    <link rel="author" href="https://www.python.org/static/humans.txt">
+
+    
+
+    
+    <script type="application/ld+json">
+     {
+       "@context": "http://schema.org",
+       "@type": "WebSite",
+       "url": "https://www.python.org/",
+       "potentialAction": {
+         "@type": "SearchAction",
+         "target": "https://www.python.org/search/?q={search_term_string}",
+         "query-input": "required name=search_term_string"
+       }
+     }
+    </script>
+
+    
+    <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-39055973-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+    </script>
+    
+</head>
+
+<body class="python pages pep-page">
+
+    <div id="touchnav-wrapper">
+
+        <div id="nojs" class="do-not-print">
+            <p><strong>Notice:</strong> While Javascript is not essential for this website, your interaction with the content will be limited. Please turn Javascript on for the full experience. </p>
+        </div>
+
+        <!--[if lt IE 8]>
+        <div id="oldie-warning" class="do-not-print">
+            <p><strong>Notice:</strong> Your browser is <em>ancient</em> and <a href="http://www.ie6countdown.com/">Microsoft agrees</a>. <a href="http://browsehappy.com/">Upgrade to a different browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to experience a better web.</p>
+        </div>
+        <![endif]-->
+
+        <!-- Sister Site Links -->
+        <div id="top" class="top-bar do-not-print">
+
+            <nav class="meta-navigation container" role="navigation">
+
+                
+                <div class="skip-link screen-reader-text">
+                    <a href="#content" title="Skip to content">Skip to content</a>
+                </div>
+
+                
+                <a id="close-python-network" class="jump-link" href="#python-network" aria-hidden="true">
+                    <span aria-hidden="true" class="icon-arrow-down"><span>&#9660;</span></span> Close
+                </a>
+
+                
+
+<ul class="menu" role="tree">
+    
+    <li class="python-meta ">
+        <a href="https://www.python.org/" title="The Python Programming Language" >Python</a>
+    </li>
+    
+    <li class="psf-meta ">
+        <a href="https://www.python.org/psf-landing/" title="The Python Software Foundation" >PSF</a>
+    </li>
+    
+    <li class="docs-meta ">
+        <a href="https://docs.python.org/" title="Python Documentation" >Docs</a>
+    </li>
+    
+    <li class="pypi-meta ">
+        <a href="https://pypi.python.org/" title="Python Package Index" >PyPI</a>
+    </li>
+    
+    <li class="jobs-meta ">
+        <a href="https://www.python.org/jobs/" title="Python Job Board" >Jobs</a>
+    </li>
+    
+    <li class="shop-meta ">
+        <a href="https://www.python.org/community/" title="Python Community" >Community</a>
+    </li>
+    
+</ul>
+
+
+                <a id="python-network" class="jump-link" href="#top" aria-hidden="true">
+                    <span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> The Python Network
+                </a>
+
+            </nav>
+
+        </div>
+
+        <!-- Header elements -->
+        <header class="main-header" role="banner">
+            <div class="container">
+
+                <h1 class="site-headline">
+                    <a href="https://www.python.org/"><img class="python-logo" src="../../../static/img/python-logo.png" alt="python&trade;"></a>
+                </h1>
+
+                <div class="options-bar do-not-print">
+
+                    
+                    <a id="site-map-link" class="jump-to-menu" href="#site-map"><span class="menu-icon">&equiv;</span> Menu</a><form class="search-the-site" action="https://www.python.org/search/" method="get">
+                        <fieldset title="Search Python.org">
+
+                            <span aria-hidden="true" class="icon-search"></span>
+
+                            <label class="screen-reader-text" for="id-search-field">Search This Site</label>
+                            <input id="id-search-field" name="q" type="search" role="textbox" class="search-field" placeholder="Search" value="" tabindex="1">
+
+                            <button type="submit" name="submit" id="submit" class="search-button" title="Submit this Search" tabindex="3">
+                                GO
+                            </button>
+
+                            
+                            <!--[if IE]><input type="text" style="display: none;" disabled="disabled" size="1" tabindex="4"><![endif]-->
+
+                        </fieldset>
+                    </form><span class="breaker"></span><div class="adjust-font-size" aria-hidden="true">
+                        <ul class="navigation menu" aria-label="Adjust Text Size on Page">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                <a href="#" class="action-trigger"><strong><small>A</small> A</strong></a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a class="text-shrink" title="Make Text Smaller" href="javascript:;">Smaller</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a class="text-grow" title="Make Text Larger" href="javascript:;">Larger</a></li>
+                                    <li class="tier-2 element-3" role="treeitem"><a class="text-reset" title="Reset any font size changes I have made" href="javascript:;">Reset</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div><div class="winkwink-nudgenudge">
+                        <ul class="navigation menu" aria-label="Social Media Navigation">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                <a href="#" class="action-trigger">Socialize</a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a href="http://plus.google.com/+Python"><span aria-hidden="true" class="icon-google-plus"></span>Google+</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a href="http://www.facebook.com/pythonlang?fref=ts"><span aria-hidden="true" class="icon-facebook"></span>Facebook</a></li>
+                                    <li class="tier-2 element-3" role="treeitem"><a href="http://twitter.com/ThePSF"><span aria-hidden="true" class="icon-twitter"></span>Twitter</a></li>
+                                    <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/irc/"><span aria-hidden="true" class="icon-freenode"></span>Chat on IRC</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div><div class="account-signin">
+                        <ul class="navigation menu" aria-label="Social Media Navigation">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                
+                                <a href="https://www.python.org/accounts/login/" title="Sign Up or Sign In to Python.org">Sign In</a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/accounts/signup/">Sign Up / Register</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/accounts/login/">Sign In</a></li>
+                                </ul>
+                                
+                            </li>
+                        </ul>
+                    </div>
+
+                </div><!-- end options-bar -->
+
+                <nav id="mainnav" class="python-navigation main-navigation do-not-print" role="navigation">
+                    
+                        
+<ul class="navigation menu" role="menubar" aria-label="Main Navigation">
+  
+    
+    
+    <li id="about" class="tier-1 element-1  " aria-haspopup="true">
+        <a href="https://www.python.org/about/" title="" class="">About</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/apps/" title="">Applications</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/quotes/" title="">Quotes</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/gettingstarted/" title="">Getting Started</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/help/" title="">Help</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="downloads" class="tier-1 element-2  " aria-haspopup="true">
+        <a href="https://www.python.org/downloads/" title="" class="">Downloads</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/downloads/" title="">All releases</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/downloads/source/" title="">Source code</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/downloads/windows/" title="">Windows</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/downloads/mac-osx/" title="">Mac OS X</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/download/other/" title="">Other Platforms</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://docs.python.org/3/license.html" title="">License</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/download/alternatives" title="">Alternative Implementations</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="documentation" class="tier-1 element-3  " aria-haspopup="true">
+        <a href="https://www.python.org/doc/" title="" class="">Documentation</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/doc/" title="">Docs</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/doc/av" title="">Audio/Visual Talks</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://wiki.python.org/moin/BeginnersGuide" title="">Beginner&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://docs.python.org/faq/" title="">FAQ</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="http://wiki.python.org/moin/Languages" title="">Non-English Docs</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="../index.html" title="">PEP Index</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://wiki.python.org/moin/PythonBooks" title="">Python Books</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="community" class="tier-1 element-4  " aria-haspopup="true">
+        <a href="https://www.python.org/community/" title="" class="">Community</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/community/diversity/" title="">Diversity</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/community/irc/" title="">IRC</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/community/lists/" title="">Mailing Lists</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/workshops/" title="">Python Conferences</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/community/sigs/" title="">Special Interest Groups</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://wiki.python.org/moin/" title="">Python Wiki</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/community/logos/" title="">Python Logo</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://www.python.org/community/merchandise/" title="">Merchandise</a></li>
+    
+        <li class="tier-2 element-9" role="treeitem"><a href="https://www.python.org/community/awards" title="">Community Awards</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="success-stories" class="tier-1 element-5  " aria-haspopup="true">
+        <a href="https://www.python.org/about/success/" title="success-stories" class="">Success Stories</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/success/#arts" title="">Arts</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/success/#business" title="">Business</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/success/#education" title="">Education</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/success/#engineering" title="">Engineering</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/about/success/#government" title="">Government</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://www.python.org/about/success/#scientific" title="">Scientific</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/about/success/#software-development" title="">Software Development</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="news" class="tier-1 element-6  " aria-haspopup="true">
+        <a href="https://www.python.org/blogs/" title="News from around the Python world" class="">News</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/blogs/" title="Python Insider Blog Posts">Python News</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://planetpython.org/" title="Planet Python">Community News</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="http://pyfound.blogspot.com/" title="PSF Blog">PSF News</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pycon.blogspot.com/" title="PyCon Blog">PyCon News</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="events" class="tier-1 element-7  " aria-haspopup="true">
+        <a href="https://www.python.org/events/" title="" class="">Events</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/events/python-events/" title="">Python Events</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/events/python-user-group/" title="">User Group Events</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/events/python-events/past/" title="">Python Events Archive</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/events/python-user-group/past/" title="">User Group Events Archive</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://wiki.python.org/moin/PythonEventsCalendar#Submitting_an_Event" title="">Submit an Event</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    
+  
+</ul>
+
+                    
+                </nav>
+
+                <div class="header-banner "> <!-- for optional "do-not-print" class -->
+                    
+                    
+                </div>
+
+                
+                
+
+             </div><!-- end .container -->
+        </header>
+
+        <div id="content" class="content-wrapper">
+            <!-- Main Content Column -->
+            <div class="container">
+
+                <section class="main-content with-left-sidebar" role="main">
+
+                    
+<ul class="breadcrumbs menu">
+    <li>
+        <a href="https://www.python.org/" title="The Python Programming Language">Python</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>
+        <a href="https://www.python.org/dev/">Python Developer's Guide</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>
+        <a href="../index.html">PEP Index</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>PEP 0381 -- Mirroring infrastructure for PyPI</li>
+</ul>
+
+
+                    
+<style>
+   .pep-page pre {
+        padding: .5em;
+        background: inherit;
+        border-left: 0px;
+        -webkit-box-shadow: 0 0 0 0;
+        -moz-box-shadow: 0 0 0 0;
+        box-shadow: 0 0 0 0;
+   }
+</style>
+
+    
+    <article class="text">
+        
+
+        <header class="article-header">
+            <h1 class="page-title">PEP 0381 -- Mirroring infrastructure for PyPI</h1>
+        </header>
+
+        <!--
+This HTML is auto-generated.  DO NOT EDIT THIS FILE!  If you are writing a new
+PEP, see http://www.python.org/dev/peps/pep-0001 for instructions and links
+to templates.  DO NOT USE THIS HTML FILE AS YOUR TEMPLATE!
+-->
+<html>
+ <body>
+  <table class="rfc2822 docutils field-list" frame="void" rules="none">
+   <col class="field-name">
+   </col>
+   <col class="field-body">
+   </col>
+   <tbody valign="top">
+    <tr class="field">
+     <th class="field-name">
+      PEP:
+     </th>
+     <td class="field-body">
+      381
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Title:
+     </th>
+     <td class="field-body">
+      Mirroring infrastructure for PyPI
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Author:
+     </th>
+     <td class="field-body">
+      Tarek Ziadé &lt;tarek at ziade.org&gt;, Martin v. Löwis &lt;martin at v.loewis.de&gt;
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Status:
+     </th>
+     <td class="field-body">
+      Draft
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Type:
+     </th>
+     <td class="field-body">
+      Standards Track
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Created:
+     </th>
+     <td class="field-body">
+      21-March-2009
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Python-Version:
+     </th>
+     <td class="field-body">
+      N.A.
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Post-History:
+     </th>
+     <td class="field-body">
+     </td>
+    </tr>
+   </tbody>
+  </table>
+  <hr/>
+  <div class="contents topic" id="contents">
+   <p class="topic-title first">
+    Contents
+   </p>
+   <ul class="simple">
+    <li>
+     <a class="reference internal" href="#abstract" id="id9">
+      Abstract
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#rationale" id="id10">
+      Rationale
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#mirror-listing-and-registering" id="id11">
+      Mirror listing and registering
+     </a>
+     <ul>
+      <li>
+       <a class="reference internal" href="#statistics-page" id="id12">
+        Statistics page
+       </a>
+      </li>
+     </ul>
+    </li>
+    <li>
+     <a class="reference internal" href="#mirror-authenticity" id="id13">
+      Mirror Authenticity
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#special-pages-a-mirror-needs-to-provide" id="id14">
+      Special pages a mirror needs to provide
+     </a>
+     <ul>
+      <li>
+       <a class="reference internal" href="#last-modified-date" id="id15">
+        Last modified date
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#local-statistics" id="id16">
+        Local statistics
+       </a>
+      </li>
+     </ul>
+    </li>
+    <li>
+     <a class="reference internal" href="#how-a-mirror-should-synchronize-with-pypi" id="id17">
+      How a mirror should synchronize with PyPI
+     </a>
+     <ul>
+      <li>
+       <a class="reference internal" href="#the-mirroring-protocol" id="id18">
+        The mirroring protocol
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#user-agent-request-header" id="id19">
+        User-agent request header
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#how-a-client-can-use-pypi-and-its-mirrors" id="id20">
+        How a client can use PyPI and its mirrors
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#fail-over-mechanism" id="id21">
+        Fail-over mechanism
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#extra-package-indexes" id="id22">
+        Extra package indexes
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#merging-several-indexes" id="id23">
+        Merging several indexes
+       </a>
+      </li>
+     </ul>
+    </li>
+    <li>
+     <a class="reference internal" href="#references" id="id24">
+      References
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#acknowledgments" id="id25">
+      Acknowledgments
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#copyright" id="id26">
+      Copyright
+     </a>
+    </li>
+   </ul>
+  </div>
+  <div class="section" id="abstract">
+   <h1>
+    <a class="toc-backref" href="#id9">
+     Abstract
+    </a>
+   </h1>
+   <p>
+    This PEP describes a mirroring infrastructure for PyPI.
+   </p>
+  </div>
+  <div class="section" id="rationale">
+   <h1>
+    <a class="toc-backref" href="#id10">
+     Rationale
+    </a>
+   </h1>
+   <p>
+    PyPI is hosting over 6000 projects and is used on a daily basis
+by people to build applications. Especially systems like
+    <cite>
+     easy_install
+    </cite>
+    and
+    <cite>
+     zc.buildout
+    </cite>
+    make intensive usage of PyPI.
+   </p>
+   <p>
+    For people making intensive use of PyPI, it can act as a single point
+of failure.  People have started to set up some mirrors, both private
+and public.  Those mirrors are active mirrors, which means that they
+are browsing PyPI to get synced.
+   </p>
+   <p>
+    In order to make the system more reliable, this PEP describes:
+   </p>
+   <ul class="simple">
+    <li>
+     the mirror listing and registering at PyPI
+    </li>
+    <li>
+     the pages a public mirror should maintain.  These pages will be used
+by PyPI, in order to get hit counts and the last modified date.
+    </li>
+    <li>
+     how a mirror should synchronize with PyPI
+    </li>
+    <li>
+     how a client can implement a fail-over mechanism
+    </li>
+   </ul>
+  </div>
+  <div class="section" id="mirror-listing-and-registering">
+   <h1>
+    <a class="toc-backref" href="#id11">
+     Mirror listing and registering
+    </a>
+   </h1>
+   <p>
+    People that wants to mirror PyPI make a proposal on catalog-SIG.
+When a mirror is proposed on the mailing list, it is manually
+added in a mirror list in the PyPI application after it
+has been checked to be compliant with the mirroring rules.
+   </p>
+   <p>
+    The mirror list is provided as a list of host names of the
+form
+   </p>
+   <blockquote>
+    X.pypi.python.org
+   </blockquote>
+   <p>
+    The values of X are the sequence a,b,c,...,aa,ab,...
+a.pypi.python.org is the master server; the mirrors start
+with b. A CNAME record last.pypi.python.org points to the
+last host name. Mirror operators should use a static address,
+and report planned changes to that address in advance to
+distutils-sig.
+   </p>
+   <p>
+    The new mirror also appears at
+    <cite>
+     http://pypi.python.org/mirrors
+    </cite>
+    which is a human-readable page that gives the list of mirrors.
+This page also explains how to register a new mirror.
+   </p>
+   <div class="section" id="statistics-page">
+    <h2>
+     <a class="toc-backref" href="#id12">
+      Statistics page
+     </a>
+    </h2>
+    <p>
+     PyPI provides statistics on downloads at
+     <cite>
+      /stats
+     </cite>
+     . This page is
+calculated daily by PyPI, by reading all mirrors' local stats and
+summing them.
+    </p>
+    <p>
+     The stats are presented in daily or montly files, under
+     <cite>
+      /stats/days
+     </cite>
+     and
+     <cite>
+      /stats/months
+     </cite>
+     . Each file is a
+     <cite>
+      bzip2
+     </cite>
+     file with these formats:
+    </p>
+    <ul class="simple">
+     <li>
+      YYYY-MM-DD.bz2 for daily files
+     </li>
+     <li>
+      YYYY-MM.bz2 for monthly files
+     </li>
+    </ul>
+    <p>
+     Examples:
+    </p>
+    <ul class="simple">
+     <li>
+      /stats/days/2008-11-06.bz2
+     </li>
+     <li>
+      /stats/days/2008-11-07.bz2
+     </li>
+     <li>
+      /stats/days/2008-11-08.bz2
+     </li>
+     <li>
+      /stats/months/2008-11.bz2
+     </li>
+     <li>
+      /stats/months/2008-10.bz2
+     </li>
+    </ul>
+   </div>
+  </div>
+  <div class="section" id="mirror-authenticity">
+   <h1>
+    <a class="toc-backref" href="#id13">
+     Mirror Authenticity
+    </a>
+   </h1>
+   <p>
+    With a distributed mirroring system, clients may want to verify that
+the mirrored copies are authentic. There are multiple threats to
+consider:
+   </p>
+   <ol class="arabic simple">
+    <li>
+     the central index may get compromised
+    </li>
+    <li>
+     the central index is assumed to be trusted, but the mirrors might
+be tampered.
+    </li>
+    <li>
+     a man in the middle between the central index and the end user,
+or between a mirror and the end user might tamper with datagrams.
+    </li>
+   </ol>
+   <p>
+    This specification only deals with the second threat. Some provisions
+are made to detect man-in-the-middle attacks. To detect the first
+attack, package authors need to sign their packages using PGP keys, so
+that users verify that the package comes from the author they trust.
+   </p>
+   <p>
+    The central index provides a DSA key at the URL /serverkey, in the PEM
+format as generated by "openssl dsa -pubout" (i.e.
+    <a class="reference external" href="http://www.faqs.org/rfcs/rfc3280.html">
+     RFC 3280
+    </a>
+    SubjectPublicKeyInfo, with the algorithm 1.3.14.3.2.12). This URL must
+    <em>
+     not
+    </em>
+    be mirrored, and clients must fetch the official serverkey from
+PyPI directly, or use the copy that came with the PyPI client software.
+Mirrors should still download the key, to detect a key rollover.
+   </p>
+   <p>
+    For each package, a mirrored signature is provided at
+/serversig/&lt;package&gt;. This is the DSA signature of the parallel URL
+/simple/&lt;package&gt;, in DER form, using SHA-1 with DSA (i.e. as a
+    <a class="reference external" href="http://www.faqs.org/rfcs/rfc3279.html">
+     RFC
+3279
+    </a>
+    Dsa-Sig-Value, created by algorithm 1.2.840.10040.4.3)
+   </p>
+   <p>
+    Clients using a mirror need to perform the following steps to verify
+a package:
+   </p>
+   <ol class="arabic simple">
+    <li>
+     download the /simple page, and compute its SHA-1 hash
+    </li>
+    <li>
+     compute the DSA signature of that hash
+    </li>
+    <li>
+     download the corresponding /serversig, and compare it (byte-for-byte)
+with the value computed in step 2.
+    </li>
+    <li>
+     compute and verify (against the /simple page) the MD-5 hashes
+of all files they download from the mirror.
+    </li>
+   </ol>
+   <p>
+    An implementation of the verification algorithm is available from
+    <a class="reference external" href="https://svn.python.org/packages/trunk/pypi/tools/verify.py">
+     https://svn.python.org/packages/trunk/pypi/tools/verify.py
+    </a>
+   </p>
+   <p>
+    Verification is not needed when downloading from central index, and
+should be avoided to reduce the computation overhead.
+   </p>
+   <p>
+    About once a year, the key will be replaced with a new one. Mirrors
+will have to re-fetch all /serversig pages. Clients using mirrors need
+to find a trusted copy of the new server key. One way to obtain one
+is to download it from
+    <a class="reference external" href="https://pypi.python.org/serverkey">
+     https://pypi.python.org/serverkey
+    </a>
+    . To detect
+man-in-the-middle attacks, clients need to verify the SSL server
+certificate, which will be signed by the CACert authority.
+   </p>
+  </div>
+  <div class="section" id="special-pages-a-mirror-needs-to-provide">
+   <h1>
+    <a class="toc-backref" href="#id14">
+     Special pages a mirror needs to provide
+    </a>
+   </h1>
+   <p>
+    A mirror is a subset copy of PyPI, so it provides the same structure
+by copying it.
+   </p>
+   <ul class="simple">
+    <li>
+     simple: rest version of the package index
+    </li>
+    <li>
+     packages: packages, stored by Python version, and letters
+    </li>
+    <li>
+     serversig: signatures for the simple pages
+    </li>
+   </ul>
+   <p>
+    It also needs to provide two specific elements:
+   </p>
+   <ul class="simple">
+    <li>
+     last-modified
+    </li>
+    <li>
+     local-stats
+    </li>
+   </ul>
+   <div class="section" id="last-modified-date">
+    <h2>
+     <a class="toc-backref" href="#id15">
+      Last modified date
+     </a>
+    </h2>
+    <p>
+     CPAN uses a freshness date system where the mirror's last
+synchronisation date is made available.
+    </p>
+    <p>
+     For PyPI, each mirror needs to maintain a URL with simple text content
+that represents the last synchronisation date the mirror maintains.
+    </p>
+    <p>
+     The date is provided in GMT time, using the ISO 8601 format
+     <a class="footnote-reference" href="#iso8601" id="id1">
+      [3]
+     </a>
+     .
+Each mirror will be responsible to maintain its last modified date.
+    </p>
+    <p>
+     This page must be located at :
+     <cite>
+      /last-modified
+     </cite>
+     and must be a
+text/plain page.
+    </p>
+   </div>
+   <div class="section" id="local-statistics">
+    <h2>
+     <a class="toc-backref" href="#id16">
+      Local statistics
+     </a>
+    </h2>
+    <p>
+     Each mirror is responsible to count all the downloads that where done
+via it.  This is used by PyPI to sum up all downloads, to be able to
+display the grand total.
+    </p>
+    <p>
+     These statistics are in CSV-like form, with a header in the first
+line.  It needs to obey
+     <a class="reference external" href="../pep-0305/index.html">
+      PEP 305
+     </a>
+     <a class="footnote-reference" href="#pep305" id="id2">
+      [1]
+     </a>
+     .  Basically, it should be
+readable by Python's
+     <cite>
+      csv
+     </cite>
+     module.
+    </p>
+    <p>
+     The fields in this file are:
+    </p>
+    <ul class="simple">
+     <li>
+      package: the distutils id of the package.
+     </li>
+     <li>
+      filename: the filename that has been downloaded.
+     </li>
+     <li>
+      useragent: the User-Agent of the client that has downloaded the
+package.
+     </li>
+     <li>
+      count: the number of downloads.
+     </li>
+    </ul>
+    <p>
+     The content will look like this:
+    </p>
+    <pre class="literal-block">
+# package,filename,useragent,count
+zc.buildout,zc.buildout-1.6.0.tgz,MyAgent,142
+...
+</pre>
+    <p>
+     The counting starts the day the mirror is launched, and there is one
+file per day, compressed using the
+     <cite>
+      bzip2
+     </cite>
+     format.  Each file is named
+like the day.  For example
+     <cite>
+      2008-11-06.bz2
+     </cite>
+     is the file for the 6th of
+November 2008.
+    </p>
+    <p>
+     They are then provided in a folder called
+     <cite>
+      days
+     </cite>
+     . For example:
+    </p>
+    <ul class="simple">
+     <li>
+      /local-stats/days/2008-11-06.bz2
+     </li>
+     <li>
+      /local-stats/days/2008-11-07.bz2
+     </li>
+     <li>
+      /local-stats/days/2008-11-08.bz2
+     </li>
+    </ul>
+    <p>
+     This page must be located at
+     <cite>
+      /local-stats
+     </cite>
+     .
+    </p>
+   </div>
+  </div>
+  <div class="section" id="how-a-mirror-should-synchronize-with-pypi">
+   <h1>
+    <a class="toc-backref" href="#id17">
+     How a mirror should synchronize with PyPI
+    </a>
+   </h1>
+   <p>
+    A mirroring protocol called
+    <cite>
+     Simple Index
+    </cite>
+    was described and
+implemented by Martin v. Loewis and Jim Fulton, based on how
+    <cite>
+     easy_install
+    </cite>
+    works.  This section synthesizes it and gives a few
+relevant links, plus a small part about
+    <cite>
+     User-Agent
+    </cite>
+    .
+   </p>
+   <div class="section" id="the-mirroring-protocol">
+    <h2>
+     <a class="toc-backref" href="#id18">
+      The mirroring protocol
+     </a>
+    </h2>
+    <p>
+     Mirrors must reduce the amount of data transfered between the central
+server and the mirror. To achieve that, they MUST use the changelog()
+PyPI XML-RPC call, and only refetch the packages that have been
+changed since the last time. For each package P, they MUST copy
+documents /simple/P/ and /serversig/P. If a package is deleted on the
+central server, they MUST delete the package and all associated files.
+To detect modification of package files, they MAY cache the file's
+ETag, and MAY request skipping it using the If-none-match header.
+    </p>
+    <p>
+     Each mirroring tool MUST identify itself using a descripte User-agent
+header.
+    </p>
+    <p>
+     The pep381client package
+     <a class="footnote-reference" href="#pep381client" id="id3">
+      [2]
+     </a>
+     provides an application that
+respects this protocol to browse PyPI.
+    </p>
+   </div>
+   <div class="section" id="user-agent-request-header">
+    <h2>
+     <a class="toc-backref" href="#id19">
+      User-agent request header
+     </a>
+    </h2>
+    <p>
+     In order to be able to differentiate actions taken by clients over
+PyPI, a specific user agent name should be provided by all mirroring
+softwares.
+    </p>
+    <p>
+     This is also true for all clients like:
+    </p>
+    <ul class="simple">
+     <li>
+      zc.buildout
+      <a class="footnote-reference" href="#zc-buildout" id="id4">
+       [4]
+      </a>
+      .
+     </li>
+     <li>
+      setuptools
+      <a class="footnote-reference" href="#setuptools" id="id5">
+       [5]
+      </a>
+      .
+     </li>
+     <li>
+      pip
+      <a class="footnote-reference" href="#pip" id="id6">
+       [6]
+      </a>
+      .
+     </li>
+    </ul>
+    <p>
+     XXX user agent registering mechanism at PyPI ?
+    </p>
+   </div>
+   <div class="section" id="how-a-client-can-use-pypi-and-its-mirrors">
+    <h2>
+     <a class="toc-backref" href="#id20">
+      How a client can use PyPI and its mirrors
+     </a>
+    </h2>
+    <p>
+     Clients that are browsing PyPI should be able to use alternative
+mirrors, by getting the list of the mirrors using
+     <cite>
+      last.pypi.python.org
+     </cite>
+     .
+    </p>
+    <p>
+     Code example:
+    </p>
+    <pre class="literal-block">
+&gt;&gt;&gt; import socket
+&gt;&gt;&gt; socket.gethostbyname_ex('last.pypi.python.org')[0]
+'h.pypi.python.org'
+</pre>
+    <p>
+     The clients so far that could use this mechanism:
+    </p>
+    <ul class="simple">
+     <li>
+      setuptools
+     </li>
+     <li>
+      zc.buildout (through setuptools)
+     </li>
+     <li>
+      pip
+     </li>
+    </ul>
+   </div>
+   <div class="section" id="fail-over-mechanism">
+    <h2>
+     <a class="toc-backref" href="#id21">
+      Fail-over mechanism
+     </a>
+    </h2>
+    <p>
+     Clients that are browsing PyPI should be able to use a fail-over
+mechanism when PyPI or the used mirror is not responding.
+    </p>
+    <p>
+     It is up to the client to decide wich mirror should be used, maybe by
+looking at its geographical location and its responsivness.
+    </p>
+    <p>
+     This PEP does not describe how this fail-over mechanism should work,
+but it is strongly encouraged that the clients try to use the nearest
+mirror.
+    </p>
+    <p>
+     The clients so far that could use this mechanism:
+    </p>
+    <ul class="simple">
+     <li>
+      setuptools
+     </li>
+     <li>
+      zc.buildout (through setuptools)
+     </li>
+     <li>
+      pip
+     </li>
+    </ul>
+   </div>
+   <div class="section" id="extra-package-indexes">
+    <h2>
+     <a class="toc-backref" href="#id22">
+      Extra package indexes
+     </a>
+    </h2>
+    <p>
+     It is obvious that some packages will not be uploaded to PyPI, whether
+because they are private or whether because the project maintainer
+runs his own server where people might get the project package.
+However, it is strongly encouraged that a public package index follows
+PyPI and Distutils protocols.
+    </p>
+    <p>
+     In other words, the
+     <cite>
+      register
+     </cite>
+     and
+     <cite>
+      upload
+     </cite>
+     command should be
+compatible with any package index server out there.
+    </p>
+    <p>
+     Softwares that are compatible with PyPI and Distutils so far:
+    </p>
+    <ul class="simple">
+     <li>
+      PloneSoftwareCenter
+      <a class="footnote-reference" href="#psc" id="id7">
+       [7]
+      </a>
+      wich is used to run plone.org products section.
+     </li>
+     <li>
+      EggBasket
+      <a class="footnote-reference" href="#eggbasket" id="id8">
+       [8]
+      </a>
+      .
+     </li>
+    </ul>
+    <p>
+     <strong>
+      An extra package index is not a mirror of PyPI, but can have some
+mirrors itself.
+     </strong>
+    </p>
+   </div>
+   <div class="section" id="merging-several-indexes">
+    <h2>
+     <a class="toc-backref" href="#id23">
+      Merging several indexes
+     </a>
+    </h2>
+    <p>
+     When a client needs to get some packages from several distinct
+indexes, it should be able to use each one of them as a potential
+source of packages.  Different indexes should be defined as a sorted
+list for the client to look for a package.
+    </p>
+    <p>
+     Each independant index can of course provide a list of its mirrors.
+    </p>
+    <p>
+     XXX define how to get the hostname for the mirrors of an arbitrary
+index.
+    </p>
+    <p>
+     That permits all combinations at client level, for a reliable
+packaging system with all levels of privacy.
+    </p>
+    <p>
+     It is up the client to deal with the merging.
+    </p>
+   </div>
+  </div>
+  <div class="section" id="references">
+   <h1>
+    <a class="toc-backref" href="#id24">
+     References
+    </a>
+   </h1>
+   <table class="docutils footnote" frame="void" id="pep305" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id2">
+        [1]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="../pep-0305/index.html#id19">
+        http://www.python.org/dev/peps/pep-0305/#id19
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="pep381client" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id3">
+        [2]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="http://pypi.python.org/pypi/pep381client">
+        http://pypi.python.org/pypi/pep381client
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="iso8601" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id1">
+        [3]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="http://en.wikipedia.org/wiki/ISO_8601">
+        http://en.wikipedia.org/wiki/ISO_8601
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="zc-buildout" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id4">
+        [4]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="http://pypi.python.org/pypi/zc.buildout">
+        http://pypi.python.org/pypi/zc.buildout
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="setuptools" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id5">
+        [5]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="http://pypi.python.org/pypi/setuptools">
+        http://pypi.python.org/pypi/setuptools
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="pip" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id6">
+        [6]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="http://pypi.python.org/pypi/pip">
+        http://pypi.python.org/pypi/pip
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="psc" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id7">
+        [7]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="http://plone.org/products/plonesoftwarecenter">
+        http://plone.org/products/plonesoftwarecenter
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="eggbasket" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id8">
+        [8]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="http://www.chrisarndt.de/projects/eggbasket">
+        http://www.chrisarndt.de/projects/eggbasket
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+  </div>
+  <div class="section" id="acknowledgments">
+   <h1>
+    <a class="toc-backref" href="#id25">
+     Acknowledgments
+    </a>
+   </h1>
+   <p>
+    Georg Brandl.
+   </p>
+  </div>
+  <div class="section" id="copyright">
+   <h1>
+    <a class="toc-backref" href="#id26">
+     Copyright
+    </a>
+   </h1>
+   <p>
+    This document has been placed in the public domain.
+   </p>
+   <!-- Local Variables:
+mode: indented-text
+indent-tabs-mode: nil
+sentence-end-double-space: t
+fill-column: 70
+coding: utf-8
+End: -->
+  </div>
+ </body>
+
+<!-- Mirrored from www.python.org/dev/peps/pep-0381/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 03 Sep 2015 04:33:10 GMT -->
+</html>Source: <a href="https://hg.python.org/peps/file/tip/pep-0381.txt">https://hg.python.org/peps/file/tip/pep-0381.txt</a>
+
+    </article>
+
+
+                </section>
+
+                
+
+
+<aside class="left-sidebar" role="secondary">
+
+    
+
+
+
+
+
+
+    
+
+
+
+
+
+        <div class="twitter-widget sidebar-widget">
+        <a class="twitter-timeline" data-dnt="true" href="https://twitter.com/ThePSF" data-widget-id="434113224703610882">Tweets by @ThePSF</a>
+        <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+    </div>
+
+    <div class="psf-sidebar-widget sidebar-widget">
+        <h3 class="widget-title">The PSF</h3>
+<p>The Python Software Foundation is the organization behind Python. Become a member of the PSF and help advance the software and our mission. </p>
+
+    </div>
+
+</aside>
+
+
+
+                
+                
+
+
+            </div><!-- end .container -->
+        </div><!-- end #content .content-wrapper -->
+
+        <!-- Footer and social media list -->
+        <footer id="site-map" class="main-footer" role="contentinfo">
+            <div class="main-footer-links">
+                <div class="container">
+
+                    
+                    <a id="back-to-top-1" class="jump-link" href="#python-network"><span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> Back to Top</a>
+
+                    
+
+<ul class="sitemap navigation menu do-not-print" role="tree" id="container">
+    
+    <li class="tier-1 element-1">
+        <a href="https://www.python.org/about/" >About</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/apps/" title="">Applications</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/quotes/" title="">Quotes</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/gettingstarted/" title="">Getting Started</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/help/" title="">Help</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-2">
+        <a href="https://www.python.org/downloads/" >Downloads</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/downloads/" title="">All releases</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/downloads/source/" title="">Source code</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/downloads/windows/" title="">Windows</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/downloads/mac-osx/" title="">Mac OS X</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/download/other/" title="">Other Platforms</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://docs.python.org/3/license.html" title="">License</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/download/alternatives" title="">Alternative Implementations</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-3">
+        <a href="https://www.python.org/doc/" >Documentation</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/doc/" title="">Docs</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/doc/av" title="">Audio/Visual Talks</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://wiki.python.org/moin/BeginnersGuide" title="">Beginner&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://docs.python.org/faq/" title="">FAQ</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="http://wiki.python.org/moin/Languages" title="">Non-English Docs</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="../index.html" title="">PEP Index</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://wiki.python.org/moin/PythonBooks" title="">Python Books</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-4">
+        <a href="https://www.python.org/community/" >Community</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/community/diversity/" title="">Diversity</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/community/irc/" title="">IRC</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/community/lists/" title="">Mailing Lists</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/workshops/" title="">Python Conferences</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/community/sigs/" title="">Special Interest Groups</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://wiki.python.org/moin/" title="">Python Wiki</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/community/logos/" title="">Python Logo</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://www.python.org/community/merchandise/" title="">Merchandise</a></li>
+    
+        <li class="tier-2 element-9" role="treeitem"><a href="https://www.python.org/community/awards" title="">Community Awards</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-5">
+        <a href="https://www.python.org/about/success/" title="success-stories">Success Stories</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/success/#arts" title="">Arts</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/success/#business" title="">Business</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/success/#education" title="">Education</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/success/#engineering" title="">Engineering</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/about/success/#government" title="">Government</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://www.python.org/about/success/#scientific" title="">Scientific</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/about/success/#software-development" title="">Software Development</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-6">
+        <a href="https://www.python.org/blogs/" title="News from around the Python world">News</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/blogs/" title="Python Insider Blog Posts">Python News</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://planetpython.org/" title="Planet Python">Community News</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="http://pyfound.blogspot.com/" title="PSF Blog">PSF News</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pycon.blogspot.com/" title="PyCon Blog">PyCon News</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-7">
+        <a href="https://www.python.org/events/" >Events</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/events/python-events/" title="">Python Events</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/events/python-user-group/" title="">User Group Events</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/events/python-events/past/" title="">Python Events Archive</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/events/python-user-group/past/" title="">User Group Events Archive</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://wiki.python.org/moin/PythonEventsCalendar#Submitting_an_Event" title="">Submit an Event</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-8">
+        <a href="https://www.python.org/dev/" >Contributing</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="http://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://bugs.python.org/" title="">Issue Tracker</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://mail.python.org/mailman/listinfo/python-dev" title="">python-dev list</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pythonmentors.com/" title="">Core Mentorship</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+</ul>
+
+
+                    <a id="back-to-top-2" class="jump-link" href="#python-network"><span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> Back to Top</a>
+                    
+
+                </div><!-- end .container -->
+            </div> <!-- end .main-footer-links -->
+
+            <div class="site-base">
+                <div class="container">
+                    
+                    <ul class="footer-links navigation menu do-not-print" role="tree">
+                        <li class="tier-1 element-1"><a href="https://www.python.org/about/help/">Help &amp; <span class="say-no-more">General</span> Contact</a></li>
+                        <li class="tier-1 element-2"><a href="https://www.python.org/community/diversity/">Diversity <span class="say-no-more">Initiatives</span></a></li>
+                        <li class="tier-1 element-3"><a href="https://github.com/python/pythondotorg/issues">Submit Website Bug</a></li>
+                        <!--<li class="tier-1 element-3"><a href="#"><span class="say-no-more">Website</span> Colophon</a></li>-->
+                    </ul>
+
+                    <div class="copyright">
+                        <p><small>
+                            <span class="pre">Copyright &copy;2001-2015.</span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/psf-landing/">Python Software Foundation</a></span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/about/legal/">Legal Statements</a></span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/privacy/">Privacy Policy</a></span>
+                        </small></p>
+                    </div>
+
+                </div><!-- end .container -->
+            </div><!-- end .site-base -->
+
+        </footer>
+
+    </div><!-- end #touchnav-wrapper -->
+
+    
+    <script src="../../../../ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="../../../static/js/libs/jquery-1.8.2.min.js"><\/script>')</script>
+
+    <script src="../../../static/js/libs/masonry.pkgd.min.js"></script>
+
+    <script type="text/javascript" src="../../../static/js/main-min.js" charset="utf-8"></script>
+    
+
+    <!--[if lte IE 7]>
+    <script type="text/javascript" src="/static/js/plugins/IE8-min.js" charset="utf-8"></script>
+    
+    
+    <![endif]-->
+
+    <!--[if lte IE 8]>
+    <script type="text/javascript" src="/static/js/plugins/getComputedStyle-min.js" charset="utf-8"></script>
+    
+    
+    <![endif]-->
+
+    
+
+    
+    
+
+</body>
+</html>

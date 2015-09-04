@@ -1,0 +1,5896 @@
+<!doctype html>
+<!--[if lt IE 7]>   <html class="no-js ie6 lt-ie7 lt-ie8 lt-ie9">   <![endif]-->
+<!--[if IE 7]>      <html class="no-js ie7 lt-ie8 lt-ie9">          <![endif]-->
+<!--[if IE 8]>      <html class="no-js ie8 lt-ie9">                 <![endif]-->
+<!--[if gt IE 8]><!--><html class="no-js" lang="en" dir="ltr">  <!--<![endif]-->
+
+
+<!-- Mirrored from www.python.org/dev/peps/pep-0418/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 03 Sep 2015 04:34:32 GMT -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <link rel="prefetch" href="../../../../ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js">
+
+    <meta name="application-name" content="Python.org">
+    <meta name="msapplication-tooltip" content="The official home of the Python Programming Language">
+    <meta name="apple-mobile-web-app-title" content="Python.org">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="format-detection" content="telephone=no">
+    <meta http-equiv="cleartype" content="on">
+    <meta http-equiv="imagetoolbar" content="false">
+
+    <script src="../../../static/js/libs/modernizr.js"></script>
+
+    <link href="../../../static/stylesheets/style.css" rel="stylesheet" type="text/css" title="default" />
+    <link href="../../../static/stylesheets/mq.css" rel="stylesheet" type="text/css" media="not print, braille, embossed, speech, tty" />
+    
+
+    <!--[if (lte IE 8)&(!IEMobile)]>
+    <link href="/static/stylesheets/no-mq.css" rel="stylesheet" type="text/css" media="screen" />
+    
+    
+    <![endif]-->
+
+    
+    <link rel="icon" type="image/x-icon" href="https://www.python.org/static/favicon.ico">
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="../../../static/apple-touch-icon-144x144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="../../../static/apple-touch-icon-114x114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="../../../static/apple-touch-icon-72x72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="../../../static/apple-touch-icon-precomposed.png">
+    <link rel="apple-touch-icon" href="../../../static/apple-touch-icon-precomposed.png">
+
+    
+    <meta name="msapplication-TileImage" content="/static/metro-icon-144x144-precomposed.png"><!-- white shape -->
+    <meta name="msapplication-TileColor" content="#3673a5"><!-- python blue -->
+    <meta name="msapplication-navbutton-color" content="#3673a5">
+
+    <meta property="og:site_name" content="Python.org">
+    <meta property="og:type" content="website">
+
+    <title>PEP 0418 -- Add monotonic time, performance counter, and process time functions | Python.org</title>
+    <meta property="og:title" content="Welcome to Python.org">
+
+    
+    <meta name="description" content="The official home of the Python Programming Language">
+    <meta name="og:description" content="The official home of the Python Programming Language">
+    <meta name="keywords" content="Python programming language object oriented web free open source software license documentation download community">
+    <meta property="og:tag" content="Python programming language object oriented web free open source software license documentation download community">
+    <meta property="og:published_time" content="">
+    <meta property="og:modified_time" content="">
+    <meta property="og:author" content="">
+    <meta property="og:section" content=""> 
+    <meta property="og:url" content="">
+    <meta property="og:image" content="">
+    <meta property="og:video" content="">
+
+    <link rel="author" href="https://www.python.org/static/humans.txt">
+
+    
+
+    
+    <script type="application/ld+json">
+     {
+       "@context": "http://schema.org",
+       "@type": "WebSite",
+       "url": "https://www.python.org/",
+       "potentialAction": {
+         "@type": "SearchAction",
+         "target": "https://www.python.org/search/?q={search_term_string}",
+         "query-input": "required name=search_term_string"
+       }
+     }
+    </script>
+
+    
+    <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-39055973-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+    </script>
+    
+</head>
+
+<body class="python pages pep-page">
+
+    <div id="touchnav-wrapper">
+
+        <div id="nojs" class="do-not-print">
+            <p><strong>Notice:</strong> While Javascript is not essential for this website, your interaction with the content will be limited. Please turn Javascript on for the full experience. </p>
+        </div>
+
+        <!--[if lt IE 8]>
+        <div id="oldie-warning" class="do-not-print">
+            <p><strong>Notice:</strong> Your browser is <em>ancient</em> and <a href="http://www.ie6countdown.com/">Microsoft agrees</a>. <a href="http://browsehappy.com/">Upgrade to a different browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to experience a better web.</p>
+        </div>
+        <![endif]-->
+
+        <!-- Sister Site Links -->
+        <div id="top" class="top-bar do-not-print">
+
+            <nav class="meta-navigation container" role="navigation">
+
+                
+                <div class="skip-link screen-reader-text">
+                    <a href="#content" title="Skip to content">Skip to content</a>
+                </div>
+
+                
+                <a id="close-python-network" class="jump-link" href="#python-network" aria-hidden="true">
+                    <span aria-hidden="true" class="icon-arrow-down"><span>&#9660;</span></span> Close
+                </a>
+
+                
+
+<ul class="menu" role="tree">
+    
+    <li class="python-meta ">
+        <a href="https://www.python.org/" title="The Python Programming Language" >Python</a>
+    </li>
+    
+    <li class="psf-meta ">
+        <a href="https://www.python.org/psf-landing/" title="The Python Software Foundation" >PSF</a>
+    </li>
+    
+    <li class="docs-meta ">
+        <a href="https://docs.python.org/" title="Python Documentation" >Docs</a>
+    </li>
+    
+    <li class="pypi-meta ">
+        <a href="https://pypi.python.org/" title="Python Package Index" >PyPI</a>
+    </li>
+    
+    <li class="jobs-meta ">
+        <a href="https://www.python.org/jobs/" title="Python Job Board" >Jobs</a>
+    </li>
+    
+    <li class="shop-meta ">
+        <a href="https://www.python.org/community/" title="Python Community" >Community</a>
+    </li>
+    
+</ul>
+
+
+                <a id="python-network" class="jump-link" href="#top" aria-hidden="true">
+                    <span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> The Python Network
+                </a>
+
+            </nav>
+
+        </div>
+
+        <!-- Header elements -->
+        <header class="main-header" role="banner">
+            <div class="container">
+
+                <h1 class="site-headline">
+                    <a href="https://www.python.org/"><img class="python-logo" src="../../../static/img/python-logo.png" alt="python&trade;"></a>
+                </h1>
+
+                <div class="options-bar do-not-print">
+
+                    
+                    <a id="site-map-link" class="jump-to-menu" href="#site-map"><span class="menu-icon">&equiv;</span> Menu</a><form class="search-the-site" action="https://www.python.org/search/" method="get">
+                        <fieldset title="Search Python.org">
+
+                            <span aria-hidden="true" class="icon-search"></span>
+
+                            <label class="screen-reader-text" for="id-search-field">Search This Site</label>
+                            <input id="id-search-field" name="q" type="search" role="textbox" class="search-field" placeholder="Search" value="" tabindex="1">
+
+                            <button type="submit" name="submit" id="submit" class="search-button" title="Submit this Search" tabindex="3">
+                                GO
+                            </button>
+
+                            
+                            <!--[if IE]><input type="text" style="display: none;" disabled="disabled" size="1" tabindex="4"><![endif]-->
+
+                        </fieldset>
+                    </form><span class="breaker"></span><div class="adjust-font-size" aria-hidden="true">
+                        <ul class="navigation menu" aria-label="Adjust Text Size on Page">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                <a href="#" class="action-trigger"><strong><small>A</small> A</strong></a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a class="text-shrink" title="Make Text Smaller" href="javascript:;">Smaller</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a class="text-grow" title="Make Text Larger" href="javascript:;">Larger</a></li>
+                                    <li class="tier-2 element-3" role="treeitem"><a class="text-reset" title="Reset any font size changes I have made" href="javascript:;">Reset</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div><div class="winkwink-nudgenudge">
+                        <ul class="navigation menu" aria-label="Social Media Navigation">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                <a href="#" class="action-trigger">Socialize</a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a href="http://plus.google.com/+Python"><span aria-hidden="true" class="icon-google-plus"></span>Google+</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a href="http://www.facebook.com/pythonlang?fref=ts"><span aria-hidden="true" class="icon-facebook"></span>Facebook</a></li>
+                                    <li class="tier-2 element-3" role="treeitem"><a href="http://twitter.com/ThePSF"><span aria-hidden="true" class="icon-twitter"></span>Twitter</a></li>
+                                    <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/irc/"><span aria-hidden="true" class="icon-freenode"></span>Chat on IRC</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div><div class="account-signin">
+                        <ul class="navigation menu" aria-label="Social Media Navigation">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                
+                                <a href="https://www.python.org/accounts/login/" title="Sign Up or Sign In to Python.org">Sign In</a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/accounts/signup/">Sign Up / Register</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/accounts/login/">Sign In</a></li>
+                                </ul>
+                                
+                            </li>
+                        </ul>
+                    </div>
+
+                </div><!-- end options-bar -->
+
+                <nav id="mainnav" class="python-navigation main-navigation do-not-print" role="navigation">
+                    
+                        
+<ul class="navigation menu" role="menubar" aria-label="Main Navigation">
+  
+    
+    
+    <li id="about" class="tier-1 element-1  " aria-haspopup="true">
+        <a href="https://www.python.org/about/" title="" class="">About</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/apps/" title="">Applications</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/quotes/" title="">Quotes</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/gettingstarted/" title="">Getting Started</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/help/" title="">Help</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="downloads" class="tier-1 element-2  " aria-haspopup="true">
+        <a href="https://www.python.org/downloads/" title="" class="">Downloads</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/downloads/" title="">All releases</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/downloads/source/" title="">Source code</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/downloads/windows/" title="">Windows</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/downloads/mac-osx/" title="">Mac OS X</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/download/other/" title="">Other Platforms</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://docs.python.org/3/license.html" title="">License</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/download/alternatives" title="">Alternative Implementations</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="documentation" class="tier-1 element-3  " aria-haspopup="true">
+        <a href="https://www.python.org/doc/" title="" class="">Documentation</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/doc/" title="">Docs</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/doc/av" title="">Audio/Visual Talks</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://wiki.python.org/moin/BeginnersGuide" title="">Beginner&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://docs.python.org/faq/" title="">FAQ</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="http://wiki.python.org/moin/Languages" title="">Non-English Docs</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="../index.html" title="">PEP Index</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://wiki.python.org/moin/PythonBooks" title="">Python Books</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="community" class="tier-1 element-4  " aria-haspopup="true">
+        <a href="https://www.python.org/community/" title="" class="">Community</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/community/diversity/" title="">Diversity</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/community/irc/" title="">IRC</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/community/lists/" title="">Mailing Lists</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/workshops/" title="">Python Conferences</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/community/sigs/" title="">Special Interest Groups</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://wiki.python.org/moin/" title="">Python Wiki</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/community/logos/" title="">Python Logo</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://www.python.org/community/merchandise/" title="">Merchandise</a></li>
+    
+        <li class="tier-2 element-9" role="treeitem"><a href="https://www.python.org/community/awards" title="">Community Awards</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="success-stories" class="tier-1 element-5  " aria-haspopup="true">
+        <a href="https://www.python.org/about/success/" title="success-stories" class="">Success Stories</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/success/#arts" title="">Arts</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/success/#business" title="">Business</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/success/#education" title="">Education</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/success/#engineering" title="">Engineering</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/about/success/#government" title="">Government</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://www.python.org/about/success/#scientific" title="">Scientific</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/about/success/#software-development" title="">Software Development</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="news" class="tier-1 element-6  " aria-haspopup="true">
+        <a href="https://www.python.org/blogs/" title="News from around the Python world" class="">News</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/blogs/" title="Python Insider Blog Posts">Python News</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://planetpython.org/" title="Planet Python">Community News</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="http://pyfound.blogspot.com/" title="PSF Blog">PSF News</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pycon.blogspot.com/" title="PyCon Blog">PyCon News</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="events" class="tier-1 element-7  " aria-haspopup="true">
+        <a href="https://www.python.org/events/" title="" class="">Events</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/events/python-events/" title="">Python Events</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/events/python-user-group/" title="">User Group Events</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/events/python-events/past/" title="">Python Events Archive</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/events/python-user-group/past/" title="">User Group Events Archive</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://wiki.python.org/moin/PythonEventsCalendar#Submitting_an_Event" title="">Submit an Event</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    
+  
+</ul>
+
+                    
+                </nav>
+
+                <div class="header-banner "> <!-- for optional "do-not-print" class -->
+                    
+                    
+                </div>
+
+                
+                
+
+             </div><!-- end .container -->
+        </header>
+
+        <div id="content" class="content-wrapper">
+            <!-- Main Content Column -->
+            <div class="container">
+
+                <section class="main-content with-left-sidebar" role="main">
+
+                    
+<ul class="breadcrumbs menu">
+    <li>
+        <a href="https://www.python.org/" title="The Python Programming Language">Python</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>
+        <a href="https://www.python.org/dev/">Python Developer's Guide</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>
+        <a href="../index.html">PEP Index</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>PEP 0418 -- Add monotonic time, performance counter, and process time functions</li>
+</ul>
+
+
+                    
+<style>
+   .pep-page pre {
+        padding: .5em;
+        background: inherit;
+        border-left: 0px;
+        -webkit-box-shadow: 0 0 0 0;
+        -moz-box-shadow: 0 0 0 0;
+        box-shadow: 0 0 0 0;
+   }
+</style>
+
+    
+    <article class="text">
+        
+
+        <header class="article-header">
+            <h1 class="page-title">PEP 0418 -- Add monotonic time, performance counter, and process time functions</h1>
+        </header>
+
+        <!--
+This HTML is auto-generated.  DO NOT EDIT THIS FILE!  If you are writing a new
+PEP, see http://www.python.org/dev/peps/pep-0001 for instructions and links
+to templates.  DO NOT USE THIS HTML FILE AS YOUR TEMPLATE!
+-->
+<html>
+ <body>
+  <table class="rfc2822 docutils field-list" frame="void" rules="none">
+   <col class="field-name">
+   </col>
+   <col class="field-body">
+   </col>
+   <tbody valign="top">
+    <tr class="field">
+     <th class="field-name">
+      PEP:
+     </th>
+     <td class="field-body">
+      418
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Title:
+     </th>
+     <td class="field-body">
+      Add monotonic time, performance counter, and process time functions
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Author:
+     </th>
+     <td class="field-body">
+      Cameron Simpson &lt;cs at zip.com.au&gt;, Jim Jewett &lt;jimjjewett at gmail.com&gt;, Stephen J. Turnbull &lt;stephen at xemacs.org&gt;, Victor Stinner &lt;victor.stinner at gmail.com&gt;
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Status:
+     </th>
+     <td class="field-body">
+      Final
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Type:
+     </th>
+     <td class="field-body">
+      Standards Track
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Created:
+     </th>
+     <td class="field-body">
+      26-March-2012
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Python-Version:
+     </th>
+     <td class="field-body">
+      3.3
+     </td>
+    </tr>
+   </tbody>
+  </table>
+  <hr/>
+  <div class="contents topic" id="contents">
+   <p class="topic-title first">
+    Contents
+   </p>
+   <ul class="simple">
+    <li>
+     <a class="reference internal" href="#abstract" id="id18">
+      Abstract
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#rationale" id="id19">
+      Rationale
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#python-functions" id="id20">
+      Python functions
+     </a>
+     <ul>
+      <li>
+       <a class="reference internal" href="#new-functions" id="id21">
+        New Functions
+       </a>
+       <ul>
+        <li>
+         <a class="reference internal" href="#time-get-clock-info-name" id="id22">
+          time.get_clock_info(name)
+         </a>
+        </li>
+        <li>
+         <a class="reference internal" href="#time-monotonic" id="id23">
+          time.monotonic()
+         </a>
+        </li>
+        <li>
+         <a class="reference internal" href="#time-perf-counter" id="id24">
+          time.perf_counter()
+         </a>
+        </li>
+        <li>
+         <a class="reference internal" href="#time-process-time" id="id25">
+          time.process_time()
+         </a>
+        </li>
+       </ul>
+      </li>
+      <li>
+       <a class="reference internal" href="#existing-functions" id="id26">
+        Existing Functions
+       </a>
+       <ul>
+        <li>
+         <a class="reference internal" href="#time-time" id="id27">
+          time.time()
+         </a>
+        </li>
+        <li>
+         <a class="reference internal" href="#time-sleep" id="id28">
+          time.sleep()
+         </a>
+        </li>
+       </ul>
+      </li>
+      <li>
+       <a class="reference internal" href="#deprecated-function" id="id29">
+        Deprecated Function
+       </a>
+       <ul>
+        <li>
+         <a class="reference internal" href="#time-clock" id="id30">
+          time.clock()
+         </a>
+        </li>
+       </ul>
+      </li>
+     </ul>
+    </li>
+    <li>
+     <a class="reference internal" href="#alternatives-api-design" id="id31">
+      Alternatives: API design
+     </a>
+     <ul>
+      <li>
+       <a class="reference internal" href="#other-names-for-time-monotonic" id="id32">
+        Other names for time.monotonic()
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#other-names-for-time-perf-counter" id="id33">
+        Other names for time.perf_counter()
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#only-expose-operating-system-clocks" id="id34">
+        Only expose operating system clocks
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#time-monotonic-fallback-to-system-time" id="id35">
+        time.monotonic(): Fallback to system time
+       </a>
+       <ul>
+        <li>
+         <a class="reference internal" href="#one-function-with-a-flag-time-monotonic-fallback-true" id="id36">
+          One function with a flag: time.monotonic(fallback=True)
+         </a>
+        </li>
+        <li>
+         <a class="reference internal" href="#one-time-monotonic-function-no-flag" id="id37">
+          One time.monotonic() function, no flag
+         </a>
+        </li>
+       </ul>
+      </li>
+      <li>
+       <a class="reference internal" href="#choosing-the-clock-from-a-list-of-constraints" id="id38">
+        Choosing the clock from a list of constraints
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#working-around-operating-system-bugs" id="id39">
+        Working around operating system bugs?
+       </a>
+      </li>
+     </ul>
+    </li>
+    <li>
+     <a class="reference internal" href="#glossary" id="id40">
+      Glossary
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#hardware-clocks" id="id41">
+      Hardware clocks
+     </a>
+     <ul>
+      <li>
+       <a class="reference internal" href="#list-of-hardware-clocks" id="id42">
+        List of hardware clocks
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#linux-clocksource" id="id43">
+        Linux clocksource
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#freebsd-timecounter" id="id44">
+        FreeBSD timecounter
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#performance" id="id45">
+        Performance
+       </a>
+      </li>
+     </ul>
+    </li>
+    <li>
+     <a class="reference internal" href="#ntp-adjustment" id="id46">
+      NTP adjustment
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#operating-system-time-functions" id="id47">
+      Operating system time functions
+     </a>
+     <ul>
+      <li>
+       <a class="reference internal" href="#monotonic-clocks" id="id48">
+        Monotonic Clocks
+       </a>
+       <ul>
+        <li>
+         <a class="reference internal" href="#mach-absolute-time" id="id49">
+          mach_absolute_time
+         </a>
+        </li>
+        <li>
+         <a class="reference internal" href="#clock-monotonic-clock-monotonic-raw-clock-boottime" id="id50">
+          CLOCK_MONOTONIC, CLOCK_MONOTONIC_RAW, CLOCK_BOOTTIME
+         </a>
+        </li>
+        <li>
+         <a class="reference internal" href="#windows-queryperformancecounter" id="id51">
+          Windows: QueryPerformanceCounter
+         </a>
+        </li>
+        <li>
+         <a class="reference internal" href="#windows-gettickcount-gettickcount64" id="id52">
+          Windows: GetTickCount(), GetTickCount64()
+         </a>
+        </li>
+        <li>
+         <a class="reference internal" href="#windows-timegettime" id="id53">
+          Windows: timeGetTime
+         </a>
+        </li>
+        <li>
+         <a class="reference internal" href="#solaris-clock-highres" id="id54">
+          Solaris: CLOCK_HIGHRES
+         </a>
+        </li>
+        <li>
+         <a class="reference internal" href="#solaris-gethrtime" id="id55">
+          Solaris: gethrtime
+         </a>
+        </li>
+       </ul>
+      </li>
+      <li>
+       <a class="reference internal" href="#system-time" id="id56">
+        System Time
+       </a>
+       <ul>
+        <li>
+         <a class="reference internal" href="#windows-getsystemtimeasfiletime" id="id57">
+          Windows: GetSystemTimeAsFileTime
+         </a>
+        </li>
+        <li>
+         <a class="reference internal" href="#system-time-on-unix" id="id58">
+          System time on UNIX
+         </a>
+        </li>
+       </ul>
+      </li>
+      <li>
+       <a class="reference internal" href="#process-time" id="id59">
+        Process Time
+       </a>
+       <ul>
+        <li>
+         <a class="reference internal" href="#functions" id="id60">
+          Functions
+         </a>
+        </li>
+       </ul>
+      </li>
+      <li>
+       <a class="reference internal" href="#thread-time" id="id61">
+        Thread Time
+       </a>
+       <ul>
+        <li>
+         <a class="reference internal" href="#id9" id="id62">
+          Functions
+         </a>
+        </li>
+       </ul>
+      </li>
+      <li>
+       <a class="reference internal" href="#windows-queryunbiasedinterrupttime" id="id63">
+        Windows: QueryUnbiasedInterruptTime
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#sleep" id="id64">
+        Sleep
+       </a>
+       <ul>
+        <li>
+         <a class="reference internal" href="#id10" id="id65">
+          Functions
+         </a>
+        </li>
+        <li>
+         <a class="reference internal" href="#clock-nanosleep" id="id66">
+          clock_nanosleep
+         </a>
+        </li>
+        <li>
+         <a class="reference internal" href="#select" id="id67">
+          select()
+         </a>
+        </li>
+        <li>
+         <a class="reference internal" href="#other-functions" id="id68">
+          Other functions
+         </a>
+        </li>
+       </ul>
+      </li>
+     </ul>
+    </li>
+    <li>
+     <a class="reference internal" href="#system-standby" id="id69">
+      System Standby
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#footnotes" id="id70">
+      Footnotes
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#links" id="id71">
+      Links
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#acceptance" id="id72">
+      Acceptance
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#references" id="id73">
+      References
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#copyright" id="id74">
+      Copyright
+     </a>
+    </li>
+   </ul>
+  </div>
+  <div class="section" id="abstract">
+   <h1>
+    <a class="toc-backref" href="#id18">
+     Abstract
+    </a>
+   </h1>
+   <p>
+    This PEP proposes to add
+    <tt class="docutils literal">
+     time.get_clock_info(name)
+    </tt>
+    ,
+    <tt class="docutils literal">
+     time.monotonic()
+    </tt>
+    ,
+    <tt class="docutils literal">
+     time.perf_counter()
+    </tt>
+    and
+    <tt class="docutils literal">
+     time.process_time()
+    </tt>
+    functions to Python 3.3.
+   </p>
+  </div>
+  <div class="section" id="rationale">
+   <h1>
+    <a class="toc-backref" href="#id19">
+     Rationale
+    </a>
+   </h1>
+   <p>
+    If a program uses the system time to schedule events or to implement
+a timeout, it may fail to run events at the right moment or stop the
+timeout too early or too late when the system time is changed manually or
+adjusted automatically by NTP.  A monotonic clock should be used
+instead to not be affected by system time updates:
+    <tt class="docutils literal">
+     time.monotonic()
+    </tt>
+    .
+   </p>
+   <p>
+    To measure the performance of a function,
+    <tt class="docutils literal">
+     time.clock()
+    </tt>
+    can be used
+but it is very different on Windows and on Unix.  On Windows,
+    <tt class="docutils literal">
+     time.clock()
+    </tt>
+    includes time elapsed during sleep, whereas it does
+not on Unix.
+    <tt class="docutils literal">
+     time.clock()
+    </tt>
+    resolution is very good on Windows, but
+very bad on Unix.  The new
+    <tt class="docutils literal">
+     time.perf_counter()
+    </tt>
+    function should be
+used instead to always get the most precise performance counter with a
+portable behaviour (ex: include time spend during sleep).
+   </p>
+   <p>
+    Until now, Python did not provide directly a portable
+function to measure CPU time.
+    <tt class="docutils literal">
+     time.clock()
+    </tt>
+    can be used on Unix,
+but it has bad
+resolution.
+    <tt class="docutils literal">
+     resource.getrusage()
+    </tt>
+    or
+    <tt class="docutils literal">
+     os.times()
+    </tt>
+    can also be
+used on Unix, but they require to compute the sum of time
+spent in kernel space and user space.  The new
+    <tt class="docutils literal">
+     time.process_time()
+    </tt>
+    function acts as a portable counter that always measures CPU time
+(excluding time elapsed during sleep) and has the best available
+resolution.
+   </p>
+   <p>
+    Each operating system implements clocks and performance counters
+differently, and it is useful to know exactly which function is used
+and some properties of the clock like its resolution.  The new
+    <tt class="docutils literal">
+     time.get_clock_info()
+    </tt>
+    function gives access to all available
+information about each Python time function.
+   </p>
+   <p>
+    New functions:
+   </p>
+   <ul class="simple">
+    <li>
+     <tt class="docutils literal">
+      time.monotonic()
+     </tt>
+     : timeout and scheduling, not affected by system
+clock updates
+    </li>
+    <li>
+     <tt class="docutils literal">
+      time.perf_counter()
+     </tt>
+     : benchmarking, most precise clock for short
+period
+    </li>
+    <li>
+     <tt class="docutils literal">
+      time.process_time()
+     </tt>
+     : profiling, CPU time of the process
+    </li>
+   </ul>
+   <p>
+    Users of new functions:
+   </p>
+   <ul class="simple">
+    <li>
+     time.monotonic(): concurrent.futures, multiprocessing, queue, subprocess,
+telnet and threading modules to implement timeout
+    </li>
+    <li>
+     time.perf_counter(): trace and timeit modules, pybench program
+    </li>
+    <li>
+     time.process_time(): profile module
+    </li>
+    <li>
+     time.get_clock_info(): pybench program to display information about the
+timer like the resolution
+    </li>
+   </ul>
+   <p>
+    The
+    <tt class="docutils literal">
+     time.clock()
+    </tt>
+    function is deprecated because it is not
+portable: it behaves differently depending on the operating system.
+    <tt class="docutils literal">
+     time.perf_counter()
+    </tt>
+    or
+    <tt class="docutils literal">
+     time.process_time()
+    </tt>
+    should be used
+instead, depending on your requirements.
+    <tt class="docutils literal">
+     time.clock()
+    </tt>
+    is marked as
+deprecated but is not planned for removal.
+   </p>
+   <p>
+    Limitations:
+   </p>
+   <ul class="simple">
+    <li>
+     The behaviour of clocks after a system suspend is not defined in the
+documentation of new functions. The behaviour depends on the
+operating system: see the
+     <a class="reference internal" href="#monotonic-clocks">
+      Monotonic Clocks
+     </a>
+     section below. Some
+recent operating systems provide two clocks, one including time
+elapsed during system suspsend, one not including this time. Most
+operating systems only provide one kind of clock.
+    </li>
+    <li>
+     time.monotonic() and time.perf_counter() may or may not be adjusted.
+For example,
+     <tt class="docutils literal">
+      CLOCK_MONOTONIC
+     </tt>
+     is slewed on Linux, whereas
+     <tt class="docutils literal">
+      GetTickCount()
+     </tt>
+     is not adjusted on Windows.
+     <tt class="docutils literal">
+      <span class="pre">
+       time.get_clock_info('monotonic')['adjustable']
+      </span>
+     </tt>
+     can be used to check
+if the monotonic clock is adjustable or not.
+    </li>
+    <li>
+     No time.thread_time() function is proposed by this PEP because it is
+not needed by Python standard library nor a common asked feature.
+Such function would only be available on Windows and Linux. On
+Linux, it is possible to use
+     <tt class="docutils literal">
+      time.clock_gettime(CLOCK_THREAD_CPUTIME_ID)
+     </tt>
+     . On Windows, ctypes or
+another module can be used to call the
+     <tt class="docutils literal">
+      GetThreadTimes()
+     </tt>
+     function.
+    </li>
+   </ul>
+  </div>
+  <div class="section" id="python-functions">
+   <h1>
+    <a class="toc-backref" href="#id20">
+     Python functions
+    </a>
+   </h1>
+   <div class="section" id="new-functions">
+    <h2>
+     <a class="toc-backref" href="#id21">
+      New Functions
+     </a>
+    </h2>
+    <div class="section" id="time-get-clock-info-name">
+     <h3>
+      <a class="toc-backref" href="#id22">
+       time.get_clock_info(name)
+      </a>
+     </h3>
+     <p>
+      Get information on the specified clock.  Supported clock names:
+     </p>
+     <ul class="simple">
+      <li>
+       <tt class="docutils literal">
+        "clock"
+       </tt>
+       :
+       <tt class="docutils literal">
+        time.clock()
+       </tt>
+      </li>
+      <li>
+       <tt class="docutils literal">
+        "monotonic"
+       </tt>
+       :
+       <tt class="docutils literal">
+        time.monotonic()
+       </tt>
+      </li>
+      <li>
+       <tt class="docutils literal">
+        "perf_counter"
+       </tt>
+       :
+       <tt class="docutils literal">
+        time.perf_counter()
+       </tt>
+      </li>
+      <li>
+       <tt class="docutils literal">
+        "process_time"
+       </tt>
+       :
+       <tt class="docutils literal">
+        time.process_time()
+       </tt>
+      </li>
+      <li>
+       <tt class="docutils literal">
+        "time"
+       </tt>
+       :
+       <tt class="docutils literal">
+        time.time()
+       </tt>
+      </li>
+     </ul>
+     <p>
+      Return a
+      <tt class="docutils literal">
+       time.clock_info
+      </tt>
+      object which has the following attributes:
+     </p>
+     <blockquote>
+      <ul class="simple">
+       <li>
+        <tt class="docutils literal">
+         implementation
+        </tt>
+        (str): name of the underlying operating system
+function.  Examples:
+        <tt class="docutils literal">
+         <span class="pre">
+          "QueryPerformanceCounter()"
+         </span>
+        </tt>
+        ,
+        <tt class="docutils literal">
+         "clock_gettime(CLOCK_REALTIME)"
+        </tt>
+        .
+       </li>
+       <li>
+        <tt class="docutils literal">
+         monotonic
+        </tt>
+        (bool): True if the clock cannot go backward.
+       </li>
+       <li>
+        <tt class="docutils literal">
+         adjustable
+        </tt>
+        (bool):
+        <tt class="docutils literal">
+         True
+        </tt>
+        if the clock can be changed automatically
+(e.g. by a NTP daemon) or manually by the system administrator,
+        <tt class="docutils literal">
+         False
+        </tt>
+        otherwise
+       </li>
+       <li>
+        <tt class="docutils literal">
+         resolution
+        </tt>
+        (float): resolution in seconds of the clock.
+       </li>
+      </ul>
+     </blockquote>
+    </div>
+    <div class="section" id="time-monotonic">
+     <h3>
+      <a class="toc-backref" href="#id23">
+       time.monotonic()
+      </a>
+     </h3>
+     <p>
+      Monotonic clock, i.e. cannot go backward.  It is not affected by system
+clock updates.  The reference point of the returned value is
+undefined, so that only the difference between the results of
+consecutive calls is valid and is a number of seconds.
+     </p>
+     <p>
+      On Windows versions older than Vista,
+      <tt class="docutils literal">
+       time.monotonic()
+      </tt>
+      detects
+      <tt class="docutils literal">
+       GetTickCount()
+      </tt>
+      integer overflow (32 bits, roll-over after 49.7
+days).  It increases an internal epoch (reference time by) 2
+      <sup>
+       32
+      </sup>
+      each time that an overflow is detected.  The epoch is stored
+in the process-local state and so
+the value of
+      <tt class="docutils literal">
+       time.monotonic()
+      </tt>
+      may be different in two Python
+processes running for more than 49 days. On more recent versions of
+Windows and on other operating systems,
+      <tt class="docutils literal">
+       time.monotonic()
+      </tt>
+      is
+system-wide.
+     </p>
+     <p>
+      Availability: Windows, Mac OS X, Linux, FreeBSD, OpenBSD, Solaris.
+Not available on GNU/Hurd.
+     </p>
+     <p>
+      Pseudo-code
+      <a class="footnote-reference" href="#pseudo" id="id1">
+       [2]
+      </a>
+      :
+     </p>
+     <pre class="literal-block">
+if os.name == 'nt':
+    # GetTickCount64() requires Windows Vista, Server 2008 or later
+    if hasattr(_time, 'GetTickCount64'):
+        def monotonic():
+            return _time.GetTickCount64() * 1e-3
+    else:
+        def monotonic():
+            ticks = _time.GetTickCount()
+            if ticks &lt; monotonic.last:
+                # Integer overflow detected
+                monotonic.delta += 2**32
+            monotonic.last = ticks
+            return (ticks + monotonic.delta) * 1e-3
+        monotonic.last = 0
+        monotonic.delta = 0
+
+elif sys.platform == 'darwin':
+    def monotonic():
+        if monotonic.factor is None:
+            factor = _time.mach_timebase_info()
+            monotonic.factor = timebase[0] / timebase[1] * 1e-9
+        return _time.mach_absolute_time() * monotonic.factor
+    monotonic.factor = None
+
+elif hasattr(time, "clock_gettime") and hasattr(time, "CLOCK_HIGHRES"):
+    def monotonic():
+        return time.clock_gettime(time.CLOCK_HIGHRES)
+
+elif hasattr(time, "clock_gettime") and hasattr(time, "CLOCK_MONOTONIC"):
+    def monotonic():
+        return time.clock_gettime(time.CLOCK_MONOTONIC)
+</pre>
+     <p>
+      On Windows,
+      <tt class="docutils literal">
+       QueryPerformanceCounter()
+      </tt>
+      is not used even though it
+has a better resolution than
+      <tt class="docutils literal">
+       GetTickCount()
+      </tt>
+      .  It is not reliable
+and has too many issues.
+     </p>
+    </div>
+    <div class="section" id="time-perf-counter">
+     <h3>
+      <a class="toc-backref" href="#id24">
+       time.perf_counter()
+      </a>
+     </h3>
+     <p>
+      Performance counter with the highest available resolution to measure a
+short duration.  It does include time elapsed during sleep and is
+system-wide.  The reference point of the returned value is undefined,
+so that only the difference between the results of consecutive calls
+is valid and is a number of seconds.
+     </p>
+     <p>
+      It is available on all platforms.
+     </p>
+     <p>
+      Pseudo-code:
+     </p>
+     <pre class="literal-block">
+if os.name == 'nt':
+    def _win_perf_counter():
+        if _win_perf_counter.frequency is None:
+            _win_perf_counter.frequency = _time.QueryPerformanceFrequency()
+        return _time.QueryPerformanceCounter() / _win_perf_counter.frequency
+    _win_perf_counter.frequency = None
+
+def perf_counter():
+    if perf_counter.use_performance_counter:
+        try:
+            return _win_perf_counter()
+        except OSError:
+            # QueryPerformanceFrequency() fails if the installed
+            # hardware does not support a high-resolution performance
+            # counter
+            perf_counter.use_performance_counter = False
+    if perf_counter.use_monotonic:
+        # The monotonic clock is preferred over the system time
+        try:
+            return time.monotonic()
+        except OSError:
+            perf_counter.use_monotonic = False
+    return time.time()
+perf_counter.use_performance_counter = (os.name == 'nt')
+perf_counter.use_monotonic = hasattr(time, 'monotonic')
+</pre>
+    </div>
+    <div class="section" id="time-process-time">
+     <h3>
+      <a class="toc-backref" href="#id25">
+       time.process_time()
+      </a>
+     </h3>
+     <p>
+      Sum of the system and user CPU time of the current process. It does
+not include time elapsed during sleep. It is process-wide by
+definition.  The reference point of the returned value is undefined,
+so that only the difference between the results of consecutive calls
+is valid.
+     </p>
+     <p>
+      It is available on all platforms.
+     </p>
+     <p>
+      Pseudo-code
+      <a class="footnote-reference" href="#pseudo" id="id2">
+       [2]
+      </a>
+      :
+     </p>
+     <pre class="literal-block">
+if os.name == 'nt':
+    def process_time():
+        handle = _time.GetCurrentProcess()
+        process_times = _time.GetProcessTimes(handle)
+        return (process_times['UserTime'] + process_times['KernelTime']) * 1e-7
+else:
+    try:
+        import resource
+    except ImportError:
+        has_resource = False
+    else:
+        has_resource = True
+
+    def process_time():
+        if process_time.clock_id is not None:
+            try:
+                return time.clock_gettime(process_time.clock_id)
+            except OSError:
+                process_time.clock_id = None
+        if process_time.use_getrusage:
+            try:
+                usage = resource.getrusage(resource.RUSAGE_SELF)
+                return usage[0] + usage[1]
+            except OSError:
+                process_time.use_getrusage = False
+        if process_time.use_times:
+            try:
+                times = _time.times()
+                cpu_time = times.tms_utime + times.tms_stime
+                return cpu_time / process_time.ticks_per_seconds
+            except OSError:
+                process_time.use_getrusage = False
+        return _time.clock()
+    if (hasattr(time, 'clock_gettime')
+        and hasattr(time, 'CLOCK_PROF')):
+        process_time.clock_id = time.CLOCK_PROF
+    elif (hasattr(time, 'clock_gettime')
+          and hasattr(time, 'CLOCK_PROCESS_CPUTIME_ID')):
+        process_time.clock_id = time.CLOCK_PROCESS_CPUTIME_ID
+    else:
+        process_time.clock_id = None
+    process_time.use_getrusage = has_resource
+    process_time.use_times = hasattr(_time, 'times')
+    if process_time.use_times:
+        # sysconf("SC_CLK_TCK"), or the HZ constant, or 60
+        process_time.ticks_per_seconds = _times.ticks_per_seconds
+</pre>
+    </div>
+   </div>
+   <div class="section" id="existing-functions">
+    <h2>
+     <a class="toc-backref" href="#id26">
+      Existing Functions
+     </a>
+    </h2>
+    <div class="section" id="time-time">
+     <h3>
+      <a class="toc-backref" href="#id27">
+       time.time()
+      </a>
+     </h3>
+     <p>
+      The system time which is usually the civil time. It is system-wide by
+definition. It can be set manually by the system administrator or
+automatically by a NTP daemon.
+     </p>
+     <p>
+      It is available on all platforms and cannot fail.
+     </p>
+     <p>
+      Pseudo-code
+      <a class="footnote-reference" href="#pseudo" id="id3">
+       [2]
+      </a>
+      :
+     </p>
+     <pre class="literal-block">
+if os.name == "nt":
+    def time():
+        return _time.GetSystemTimeAsFileTime()
+else:
+    def time():
+        if hasattr(time, "clock_gettime"):
+            try:
+                return time.clock_gettime(time.CLOCK_REALTIME)
+            except OSError:
+                # CLOCK_REALTIME is not supported (unlikely)
+                pass
+        if hasattr(_time, "gettimeofday"):
+            try:
+                return _time.gettimeofday()
+            except OSError:
+                # gettimeofday() should not fail
+                pass
+        if hasattr(_time, "ftime"):
+            return _time.ftime()
+        else:
+            return _time.time()
+</pre>
+    </div>
+    <div class="section" id="time-sleep">
+     <h3>
+      <a class="toc-backref" href="#id28">
+       time.sleep()
+      </a>
+     </h3>
+     <p>
+      Suspend execution for the given number of seconds.  The actual
+suspension time may be less than that requested because any caught
+signal will terminate the
+      <tt class="docutils literal">
+       time.sleep()
+      </tt>
+      following execution of that
+signal's catching routine.  Also, the suspension time may be longer
+than requested by an arbitrary amount because of the scheduling of
+other activity in the system.
+     </p>
+     <p>
+      Pseudo-code
+      <a class="footnote-reference" href="#pseudo" id="id4">
+       [2]
+      </a>
+      :
+     </p>
+     <pre class="literal-block">
+try:
+    import select
+except ImportError:
+    has_select = False
+else:
+    has_select = hasattr(select, "select")
+
+if has_select:
+    def sleep(seconds):
+        return select.select([], [], [], seconds)
+
+elif hasattr(_time, "delay"):
+    def sleep(seconds):
+        milliseconds = int(seconds * 1000)
+        _time.delay(milliseconds)
+
+elif os.name == "nt":
+    def sleep(seconds):
+        milliseconds = int(seconds * 1000)
+        win32api.ResetEvent(hInterruptEvent);
+        win32api.WaitForSingleObject(sleep.sigint_event, milliseconds)
+
+    sleep.sigint_event = win32api.CreateEvent(NULL, TRUE, FALSE, FALSE)
+    # SetEvent(sleep.sigint_event) will be called by the signal handler of SIGINT
+
+elif os.name == "os2":
+    def sleep(seconds):
+        milliseconds = int(seconds * 1000)
+        DosSleep(milliseconds)
+
+else:
+    def sleep(seconds):
+        seconds = int(seconds)
+        _time.sleep(seconds)
+</pre>
+    </div>
+   </div>
+   <div class="section" id="deprecated-function">
+    <h2>
+     <a class="toc-backref" href="#id29">
+      Deprecated Function
+     </a>
+    </h2>
+    <div class="section" id="time-clock">
+     <h3>
+      <a class="toc-backref" href="#id30">
+       time.clock()
+      </a>
+     </h3>
+     <p>
+      On Unix, return the current processor time as a floating point number
+expressed in seconds. It is process-wide by definition. The resolution,
+and in fact the very definition of the meaning of "processor time",
+depends on that of the C function of the same name, but in any case,
+this is the function to use for benchmarking Python or timing
+algorithms.
+     </p>
+     <p>
+      On Windows, this function returns wall-clock seconds elapsed since the
+first call to this function, as a floating point number, based on the
+Win32 function
+      <tt class="docutils literal">
+       QueryPerformanceCounter()
+      </tt>
+      .  The resolution is
+typically better than one microsecond.  It is system-wide.
+     </p>
+     <p>
+      Pseudo-code
+      <a class="footnote-reference" href="#pseudo" id="id5">
+       [2]
+      </a>
+      :
+     </p>
+     <pre class="literal-block">
+if os.name == 'nt':
+    def clock():
+        try:
+            return _win_perf_counter()
+        except OSError:
+            # QueryPerformanceFrequency() fails if the installed
+            # hardware does not support a high-resolution performance
+            # counter
+            pass
+        return _time.clock()
+else:
+    clock = _time.clock
+</pre>
+    </div>
+   </div>
+  </div>
+  <div class="section" id="alternatives-api-design">
+   <h1>
+    <a class="toc-backref" href="#id31">
+     Alternatives: API design
+    </a>
+   </h1>
+   <div class="section" id="other-names-for-time-monotonic">
+    <h2>
+     <a class="toc-backref" href="#id32">
+      Other names for time.monotonic()
+     </a>
+    </h2>
+    <ul class="simple">
+     <li>
+      time.counter()
+     </li>
+     <li>
+      time.metronomic()
+     </li>
+     <li>
+      time.seconds()
+     </li>
+     <li>
+      time.steady(): "steady" is ambiguous: it means different things to
+different people. For example, on Linux, CLOCK_MONOTONIC is
+adjusted. If we uses the real time as the reference clock, we may
+say that CLOCK_MONOTONIC is steady.  But CLOCK_MONOTONIC gets
+suspended on system suspend, whereas real time includes any time
+spent in suspend.
+     </li>
+     <li>
+      time.timeout_clock()
+     </li>
+     <li>
+      time.wallclock(): time.monotonic() is not the system time aka the
+"wall clock", but a monotonic clock with an unspecified starting
+point.
+     </li>
+    </ul>
+    <p>
+     The name "time.try_monotonic()" was also proposed for an older
+version of time.monotonic() which would fall back to the system
+time when no monotonic clock was available.
+    </p>
+   </div>
+   <div class="section" id="other-names-for-time-perf-counter">
+    <h2>
+     <a class="toc-backref" href="#id33">
+      Other names for time.perf_counter()
+     </a>
+    </h2>
+    <ul class="simple">
+     <li>
+      time.high_precision()
+     </li>
+     <li>
+      time.highres()
+     </li>
+     <li>
+      time.hires()
+     </li>
+     <li>
+      time.performance_counter()
+     </li>
+     <li>
+      time.timer()
+     </li>
+    </ul>
+   </div>
+   <div class="section" id="only-expose-operating-system-clocks">
+    <h2>
+     <a class="toc-backref" href="#id34">
+      Only expose operating system clocks
+     </a>
+    </h2>
+    <p>
+     To not have to define high-level clocks, which is a difficult task, a
+simpler approach is to only expose operating system clocks.
+time.clock_gettime() and related clock identifiers were already added
+to Python 3.3 for example.
+    </p>
+   </div>
+   <div class="section" id="time-monotonic-fallback-to-system-time">
+    <h2>
+     <a class="toc-backref" href="#id35">
+      time.monotonic(): Fallback to system time
+     </a>
+    </h2>
+    <p>
+     If no monotonic clock is available, time.monotonic() falls back to the
+system time.
+    </p>
+    <p>
+     Issues:
+    </p>
+    <ul class="simple">
+     <li>
+      It is hard to define such a function correctly in the documentation:
+is it monotonic? Is it steady? Is it adjusted?
+     </li>
+     <li>
+      Some users want to decide what to do when no monotonic clock is
+available: use another clock, display an error, or do something
+else.
+     </li>
+    </ul>
+    <p>
+     Different APIs were proposed to define such function.
+    </p>
+    <div class="section" id="one-function-with-a-flag-time-monotonic-fallback-true">
+     <h3>
+      <a class="toc-backref" href="#id36">
+       One function with a flag: time.monotonic(fallback=True)
+      </a>
+     </h3>
+     <ul class="simple">
+      <li>
+       time.monotonic(fallback=True) falls back to the system time if no
+monotonic clock is available or if the monotonic clock failed.
+      </li>
+      <li>
+       time.monotonic(fallback=False) raises OSError if monotonic clock
+fails and NotImplementedError if the system does not provide a
+monotonic clock
+      </li>
+     </ul>
+     <p>
+      A keyword argument that gets passed as a constant in the caller is
+usually poor API.
+     </p>
+     <p>
+      Raising NotImplementedError for a function is something uncommon in
+Python and should be avoided.
+     </p>
+    </div>
+    <div class="section" id="one-time-monotonic-function-no-flag">
+     <h3>
+      <a class="toc-backref" href="#id37">
+       One time.monotonic() function, no flag
+      </a>
+     </h3>
+     <p>
+      time.monotonic() returns (time: float, is_monotonic: bool).
+     </p>
+     <p>
+      An alternative is to use a function attribute:
+time.monotonic.is_monotonic.  The attribute value would be None before
+the first call to time.monotonic().
+     </p>
+    </div>
+   </div>
+   <div class="section" id="choosing-the-clock-from-a-list-of-constraints">
+    <h2>
+     <a class="toc-backref" href="#id38">
+      Choosing the clock from a list of constraints
+     </a>
+    </h2>
+    <p>
+     The PEP as proposed offers a few new clocks, but their guarantees
+are deliberately loose in order to offer useful clocks on different
+platforms. This inherently embeds policy in the calls, and the
+caller must thus choose a policy.
+    </p>
+    <p>
+     The "choose a clock" approach suggests an additional API to let
+callers implement their own policy if necessary
+by making most platform clocks available and letting the caller pick amongst them.
+The PEP's suggested clocks are still expected to be available for the common
+simple use cases.
+    </p>
+    <p>
+     To do this two facilities are needed:
+an enumeration of clocks, and metadata on the clocks to enable the user to
+evaluate their suitability.
+    </p>
+    <p>
+     The primary interface is a function make simple choices easy:
+the caller can use
+     <tt class="docutils literal">
+      <span class="pre">
+       time.get_clock(*flags)
+      </span>
+     </tt>
+     with some combination of flags.
+This includes at least:
+    </p>
+    <ul class="simple">
+     <li>
+      time.MONOTONIC: clock cannot go backward
+     </li>
+     <li>
+      time.STEADY: clock rate is steady
+     </li>
+     <li>
+      time.ADJUSTED: clock may be adjusted, for example by NTP
+     </li>
+     <li>
+      time.HIGHRES: clock with the highest resolution
+     </li>
+    </ul>
+    <p>
+     It returns a clock object with a .now() method returning the current time.
+The clock object is annotated with metadata describing the clock feature set;
+its .flags field will contain at least all the requested flags.
+    </p>
+    <p>
+     time.get_clock() returns None if no matching clock is found and so calls can
+be chained using the or operator.  Example of a simple policy decision:
+    </p>
+    <pre class="literal-block">
+T = get_clock(MONOTONIC) or get_clock(STEADY) or get_clock()
+t = T.now()
+</pre>
+    <p>
+     The available clocks always at least include a wrapper for
+     <tt class="docutils literal">
+      time.time()
+     </tt>
+     ,
+so a final call with no flags can always be used to obtain a working clock.
+    </p>
+    <p>
+     Examples of flags of system clocks:
+    </p>
+    <ul class="simple">
+     <li>
+      QueryPerformanceCounter: MONOTONIC | HIGHRES
+     </li>
+     <li>
+      GetTickCount: MONOTONIC | STEADY
+     </li>
+     <li>
+      CLOCK_MONOTONIC: MONOTONIC | STEADY (or only MONOTONIC on Linux)
+     </li>
+     <li>
+      CLOCK_MONOTONIC_RAW: MONOTONIC | STEADY
+     </li>
+     <li>
+      gettimeofday(): (no flag)
+     </li>
+    </ul>
+    <p>
+     The clock objects contain other metadata including the clock flags
+with additional feature flags above those listed above, the name
+of the underlying OS facility, and clock precisions.
+    </p>
+    <p>
+     <tt class="docutils literal">
+      time.get_clock()
+     </tt>
+     still chooses a single clock; an enumeration
+facility is also required.
+The most obvious method is to offer
+     <tt class="docutils literal">
+      time.get_clocks()
+     </tt>
+     with the
+same signature as
+     <tt class="docutils literal">
+      time.get_clock()
+     </tt>
+     , but returning a sequence
+of all clocks matching the requested flags.
+Requesting no flags would thus enumerate all available clocks,
+allowing the caller to make an arbitrary choice amongst them based
+on their metadata.
+    </p>
+    <p>
+     Example partial implementation:
+     <a class="reference external" href="http://hg.python.org/peps/file/tip/pep-0418/clockutils.py">
+      clockutils.py
+     </a>
+     .
+    </p>
+   </div>
+   <div class="section" id="working-around-operating-system-bugs">
+    <h2>
+     <a class="toc-backref" href="#id39">
+      Working around operating system bugs?
+     </a>
+    </h2>
+    <p>
+     Should Python ensure that a monotonic clock is truly
+monotonic by computing the maximum with the clock value and the
+previous value?
+    </p>
+    <p>
+     Since it's relatively straightforward to cache the last value returned
+using a static variable, it might be interesting to use this to make
+sure that the values returned are indeed monotonic.
+    </p>
+    <ul class="simple">
+     <li>
+      Virtual machines provide less reliable clocks.
+     </li>
+     <li>
+      QueryPerformanceCounter() has known bugs (only one is not fixed yet)
+     </li>
+    </ul>
+    <p>
+     Python may only work around a specific known operating system bug:
+     <a class="reference external" href="http://support.microsoft.com/?id=274323">
+      KB274323
+     </a>
+     <a class="footnote-reference" href="#id15" id="id16">
+      [4]
+     </a>
+     contains a code example to workaround the bug (use
+GetTickCount() to detect QueryPerformanceCounter() leap).
+    </p>
+    <p>
+     Issues with "correcting" non-monotonicities:
+    </p>
+    <ul class="simple">
+     <li>
+      if the clock is accidentally set forward by an hour and then back
+again, you wouldn't have a useful clock for an hour
+     </li>
+     <li>
+      the cache is not shared between processes so different processes
+wouldn't see the same clock value
+     </li>
+    </ul>
+   </div>
+  </div>
+  <div class="section" id="glossary">
+   <h1>
+    <a class="toc-backref" href="#id40">
+     Glossary
+    </a>
+   </h1>
+   <table class="docutils field-list" frame="void" rules="none">
+    <col class="field-name">
+    </col>
+    <col class="field-body">
+    </col>
+    <tbody valign="top">
+     <tr class="field">
+      <th class="field-name">
+       Accuracy:
+      </th>
+      <td class="field-body">
+       The amount of deviation of measurements by a given instrument from
+true values. See also
+       <a class="reference external" href="http://en.wikipedia.org/wiki/Accuracy_and_precision">
+        Accuracy and precision
+       </a>
+       .
+Inaccuracy in clocks may be caused by lack of precision, drift, or an
+incorrect initial setting of the clock (e.g., timing of threads is
+inherently inaccurate because perfect synchronization in resetting
+counters is quite difficult).
+      </td>
+     </tr>
+     <tr class="field">
+      <th class="field-name">
+       Adjusted:
+      </th>
+      <td class="field-body">
+       Resetting a clock to the correct time.  This may be done either
+with a &lt;Step&gt; or by &lt;Slewing&gt;.
+      </td>
+     </tr>
+     <tr class="field">
+      <th class="field-name">
+       Civil Time:
+      </th>
+      <td class="field-body">
+       Time of day; external to the system.  10:45:13am is a Civil time;
+45 seconds is not.  Provided by existing function
+       <tt class="docutils literal">
+        time.localtime()
+       </tt>
+       and
+       <tt class="docutils literal">
+        time.gmtime()
+       </tt>
+       .  Not changed by this
+PEP.
+      </td>
+     </tr>
+     <tr class="field">
+      <th class="field-name">
+       Clock:
+      </th>
+      <td class="field-body">
+       An instrument for measuring time.  Different clocks have different
+characteristics; for example, a clock with nanosecond
+&lt;precision&gt; may start to &lt;drift&gt; after a few minutes, while a less
+precise clock remained accurate for days.  This PEP is primarily
+concerned with clocks which use a unit of seconds.
+      </td>
+     </tr>
+     <tr class="field">
+      <th class="field-name">
+       Counter:
+      </th>
+      <td class="field-body">
+       A clock which increments each time a certain event occurs.  A
+counter is strictly monotonic, but not a monotonic clock.  It can
+be used to generate a unique (and ordered) timestamp, but these
+timestamps cannot be mapped to &lt;civil time&gt;; tick creation may well
+be bursty, with several advances in the same millisecond followed
+by several days without any advance.
+      </td>
+     </tr>
+     <tr class="field">
+      <th class="field-name">
+       CPU Time:
+      </th>
+      <td class="field-body">
+       A measure of how much CPU effort has been spent on a certain task.
+CPU seconds are often normalized (so that a variable number can
+occur in the same actual second).  CPU seconds can be important
+when profiling, but they do not map directly to user response time,
+nor are they directly comparable to (real time) seconds.
+      </td>
+     </tr>
+     <tr class="field">
+      <th class="field-name">
+       Drift:
+      </th>
+      <td class="field-body">
+       The accumulated error against "true" time, as defined externally to
+the system.  Drift may be due to imprecision, or to a difference
+between the average rate at which clock time advances and that of
+real time.
+      </td>
+     </tr>
+     <tr class="field">
+      <th class="field-name">
+       Epoch:
+      </th>
+      <td class="field-body">
+       The reference point of a clock.  For clocks providing &lt;civil time&gt;,
+this is often midnight as the day (and year) rolled over to January
+1, 1970.  For a &lt;clock_monotonic&gt; clock, the epoch may be undefined
+(represented as None).
+      </td>
+     </tr>
+     <tr class="field">
+      <th class="field-name">
+       Latency:
+      </th>
+      <td class="field-body">
+       Delay.  By the time a clock call returns, the &lt;real time&gt; has
+advanced, possibly by more than the precision of the clock.
+      </td>
+     </tr>
+     <tr class="field">
+      <th class="field-name">
+       Monotonic:
+      </th>
+      <td class="field-body">
+       The characteristics expected of a monotonic clock in practice.
+Moving in at most one direction; for clocks, that direction is
+forward. The &lt;clock&gt; should also be &lt;steady&gt;, and should be
+convertible to a unit of seconds.  The tradeoffs often include lack
+of a defined &lt;epoch&gt; or mapping to &lt;Civil Time&gt;.
+      </td>
+     </tr>
+     <tr class="field">
+      <th class="field-name">
+       Precision:
+      </th>
+      <td class="field-body">
+       The amount of deviation among measurements of the same physical
+value by a single instrument.  Imprecision in clocks may be caused by
+a fluctuation of the rate at which clock time advances relative to
+real time, including clock adjustment by slewing.
+      </td>
+     </tr>
+     <tr class="field">
+      <th class="field-name">
+       Process Time:
+      </th>
+      <td class="field-body">
+       Time elapsed since the process began.  It is typically measured in
+&lt;CPU time&gt; rather than &lt;real time&gt;, and typically does not advance
+while the process is suspended.
+      </td>
+     </tr>
+     <tr class="field">
+      <th class="field-name">
+       Real Time:
+      </th>
+      <td class="field-body">
+       Time in the real world.  This differs from &lt;Civil time&gt; in that it
+is not &lt;adjusted&gt;, but they should otherwise advance in lockstep.
+It is not related to the "real time" of "Real Time [Operating]
+Systems".  It is sometimes called "wall clock time" to avoid that
+ambiguity; unfortunately, that introduces different ambiguities.
+      </td>
+     </tr>
+     <tr class="field">
+      <th class="field-name">
+       Resolution:
+      </th>
+      <td class="field-body">
+       The smallest difference between two physical values that results
+in a different measurement by a given instrument.
+      </td>
+     </tr>
+     <tr class="field">
+      <th class="field-name">
+       Slew:
+      </th>
+      <td class="field-body">
+       A slight change to a clock's speed, usually intended to correct
+&lt;drift&gt; with respect to an external authority.
+      </td>
+     </tr>
+     <tr class="field">
+      <th class="field-name">
+       Stability:
+      </th>
+      <td class="field-body">
+       Persistence of accuracy.  A measure of expected &lt;drift&gt;.
+      </td>
+     </tr>
+     <tr class="field">
+      <th class="field-name">
+       Steady:
+      </th>
+      <td class="field-body">
+       A clock with high &lt;stability&gt; and relatively high &lt;accuracy&gt; and
+&lt;precision&gt;.  In practice, it is often used to indicate a
+&lt;clock_monotonic&gt; clock, but places greater emphasis on the
+consistency of the duration between subsequent ticks.
+      </td>
+     </tr>
+     <tr class="field">
+      <th class="field-name">
+       Step:
+      </th>
+      <td class="field-body">
+       An instantaneous change in the represented time.  Instead of
+speeding or slowing the clock (&lt;slew&gt;), a single offset is
+permanently added.
+      </td>
+     </tr>
+     <tr class="field">
+      <th class="field-name">
+       System Time:
+      </th>
+      <td class="field-body">
+       Time as represented by the Operating System.
+      </td>
+     </tr>
+     <tr class="field">
+      <th class="field-name">
+       Thread Time:
+      </th>
+      <td class="field-body">
+       Time elapsed since the thread began.  It is typically measured in
+&lt;CPU time&gt; rather than &lt;real time&gt;, and typically does not advance
+while the thread is idle.
+      </td>
+     </tr>
+     <tr class="field">
+      <th class="field-name">
+       Wallclock:
+      </th>
+      <td class="field-body">
+       What the clock on the wall says.  This is typically used as a
+synonym for &lt;real time&gt;; unfortunately, wall time is itself
+ambiguous.
+      </td>
+     </tr>
+    </tbody>
+   </table>
+  </div>
+  <div class="section" id="hardware-clocks">
+   <h1>
+    <a class="toc-backref" href="#id41">
+     Hardware clocks
+    </a>
+   </h1>
+   <div class="section" id="list-of-hardware-clocks">
+    <h2>
+     <a class="toc-backref" href="#id42">
+      List of hardware clocks
+     </a>
+    </h2>
+    <ul class="simple">
+     <li>
+      HPET: An High Precision Event Timer (HPET) chip consists of a 64-bit
+up-counter (main counter) counting at least at 10 MHz and a set of
+up to 256 comparators (at least 3).  Each HPET can have up to 32
+timers.  HPET can cause around 3 seconds of drift per day.
+     </li>
+     <li>
+      TSC (Time Stamp Counter): Historically, the TSC increased with every
+internal processor clock cycle, but now the rate is usually constant
+(even if the processor changes frequency) and usually equals the
+maximum processor frequency.  Multiple cores have different TSC
+values.  Hibernation of system will reset TSC value.  The RDTSC
+instruction can be used to read this counter.  CPU frequency scaling
+for power saving.
+     </li>
+     <li>
+      ACPI Power Management Timer: ACPI 24-bit timer with a frequency of
+3.5 MHz (3,579,545 Hz).
+     </li>
+     <li>
+      Cyclone: The Cyclone timer uses a 32-bit counter on IBM Extended
+X-Architecture (EXA) chipsets which include computers that use the
+IBM "Summit" series chipsets (ex: x440).  This is available in IA32
+and IA64 architectures.
+     </li>
+     <li>
+      PIT (programmable interrupt timer): Intel 8253/8254 chipsets with a
+configurable frequency in range 18.2 Hz - 1.2 MHz.  It uses a 16-bit
+counter.
+     </li>
+     <li>
+      RTC (Real-time clock).  Most RTCs use a crystal oscillator with a
+frequency of 32,768 Hz.
+     </li>
+    </ul>
+   </div>
+   <div class="section" id="linux-clocksource">
+    <h2>
+     <a class="toc-backref" href="#id43">
+      Linux clocksource
+     </a>
+    </h2>
+    <p>
+     There were 4 implementations of the time in the Linux kernel: UTIME
+(1996), timer wheel (1997), HRT (2001) and hrtimers (2007).  The
+latter is the result of the "high-res-timers" project started by
+George Anzinger in 2001, with contributions by Thomas Gleixner and
+Douglas Niehaus.  The hrtimers implementation was merged into Linux
+2.6.21, released in 2007.
+    </p>
+    <p>
+     hrtimers supports various clock sources.  It sets a priority to each
+source to decide which one will be used. Linux supports the following
+clock sources:
+    </p>
+    <ul class="simple">
+     <li>
+      tsc
+     </li>
+     <li>
+      hpet
+     </li>
+     <li>
+      pit
+     </li>
+     <li>
+      pmtmr: ACPI Power Management Timer
+     </li>
+     <li>
+      cyclone
+     </li>
+    </ul>
+    <p>
+     High-resolution timers are not supported on all hardware
+architectures.  They are at least provided on x86/x86_64, ARM and
+PowerPC.
+    </p>
+    <p>
+     clock_getres() returns 1 nanosecond for
+     <tt class="docutils literal">
+      CLOCK_REALTIME
+     </tt>
+     and
+     <tt class="docutils literal">
+      CLOCK_MONOTONIC
+     </tt>
+     regardless of underlying clock source.  Read
+     <a class="reference external" href="http://lkml.org/lkml/2012/2/9/100">
+      Re:
+clock_getres() and real resolution
+     </a>
+     from Thomas Gleixner (9 Feb
+2012) for an explanation.
+    </p>
+    <p>
+     The
+     <tt class="docutils literal">
+      /sys/devices/system/clocksource/clocksource0
+     </tt>
+     directory
+contains two useful files:
+    </p>
+    <ul class="simple">
+     <li>
+      <tt class="docutils literal">
+       available_clocksource
+      </tt>
+      : list of available clock sources
+     </li>
+     <li>
+      <tt class="docutils literal">
+       current_clocksource
+      </tt>
+      : clock source currently used.  It is
+possible to change the current clocksource by writing the name of a
+clocksource into this file.
+     </li>
+    </ul>
+    <p>
+     <tt class="docutils literal">
+      /proc/timer_list
+     </tt>
+     contains the list of all hardware timers.
+    </p>
+    <p>
+     Read also the
+     <a class="reference external" href="http://www.kernel.org/doc/man-pages/online/pages/man7/time.7.html">
+      time(7) manual page
+     </a>
+     :
+"overview of time and timers".
+    </p>
+   </div>
+   <div class="section" id="freebsd-timecounter">
+    <h2>
+     <a class="toc-backref" href="#id44">
+      FreeBSD timecounter
+     </a>
+    </h2>
+    <p>
+     kern.timecounter.choice lists available hardware clocks with their
+priority.  The sysctl program can be used to change the timecounter.
+Example:
+    </p>
+    <pre class="literal-block">
+# dmesg | grep Timecounter
+Timecounter "i8254" frequency 1193182 Hz quality 0
+Timecounter "ACPI-safe" frequency 3579545 Hz quality 850
+Timecounter "HPET" frequency 100000000 Hz quality 900
+Timecounter "TSC" frequency 3411154800 Hz quality 800
+Timecounters tick every 10.000 msec
+# sysctl kern.timecounter.choice
+kern.timecounter.choice: TSC(800) HPET(900) ACPI-safe(850) i8254(0) dummy(-1000000)
+# sysctl kern.timecounter.hardware="ACPI-fast"
+kern.timecounter.hardware: HPET -&gt; ACPI-fast
+</pre>
+    <p>
+     Available clocks:
+    </p>
+    <ul class="simple">
+     <li>
+      "TSC": Time Stamp Counter of the processor
+     </li>
+     <li>
+      "HPET": High Precision Event Timer
+     </li>
+     <li>
+      "ACPI-fast": ACPI Power Management timer (fast mode)
+     </li>
+     <li>
+      "ACPI-safe": ACPI Power Management timer (safe mode)
+     </li>
+     <li>
+      "i8254": PIT with Intel 8254 chipset
+     </li>
+    </ul>
+    <p>
+     The
+     <a class="reference external" href="http://svnweb.freebsd.org/base?view=revision&amp;revision=222222">
+      commit 222222
+     </a>
+     (May
+2011) decreased ACPI-fast timecounter quality to 900 and increased
+HPET timecounter quality to 950: "HPET on modern platforms usually
+have better resolution and lower latency than ACPI timer".
+    </p>
+    <p>
+     Read
+     <a class="reference external" href="http://phk.freebsd.dk/pubs/timecounter.pdf">
+      Timecounters: Efficient and precise timekeeping in SMP kernels
+     </a>
+     by Poul-Henning Kamp
+(2002) for the FreeBSD Project.
+    </p>
+   </div>
+   <div class="section" id="performance">
+    <h2>
+     <a class="toc-backref" href="#id45">
+      Performance
+     </a>
+    </h2>
+    <p>
+     Reading a hardware clock has a cost.  The following table compares
+the performance of different hardware clocks on Linux 3.3 with Intel
+Core i7-2600 at 3.40GHz (8 cores). The
+     <a class="reference external" href="http://hg.python.org/peps/file/tip/pep-0418/bench_time.c">
+      bench_time.c
+     </a>
+     program
+was used to fill these tables.
+    </p>
+    <table border="1" class="docutils">
+     <colgroup>
+      <col width="56%">
+      </col>
+      <col width="14%">
+      </col>
+      <col width="16%">
+      </col>
+      <col width="14%">
+      </col>
+     </colgroup>
+     <thead valign="bottom">
+      <tr>
+       <th class="head">
+        Function
+       </th>
+       <th class="head">
+        TSC
+       </th>
+       <th class="head">
+        ACPI PM
+       </th>
+       <th class="head">
+        HPET
+       </th>
+      </tr>
+     </thead>
+     <tbody valign="top">
+      <tr>
+       <td>
+        time()
+       </td>
+       <td>
+        2 ns
+       </td>
+       <td>
+        2 ns
+       </td>
+       <td>
+        2 ns
+       </td>
+      </tr>
+      <tr>
+       <td>
+        CLOCK_REALTIME_COARSE
+       </td>
+       <td>
+        10 ns
+       </td>
+       <td>
+        10 ns
+       </td>
+       <td>
+        10 ns
+       </td>
+      </tr>
+      <tr>
+       <td>
+        CLOCK_MONOTONIC_COARSE
+       </td>
+       <td>
+        12 ns
+       </td>
+       <td>
+        13 ns
+       </td>
+       <td>
+        12 ns
+       </td>
+      </tr>
+      <tr>
+       <td>
+        CLOCK_THREAD_CPUTIME_ID
+       </td>
+       <td>
+        134 ns
+       </td>
+       <td>
+        135 ns
+       </td>
+       <td>
+        135 ns
+       </td>
+      </tr>
+      <tr>
+       <td>
+        CLOCK_PROCESS_CPUTIME_ID
+       </td>
+       <td>
+        127 ns
+       </td>
+       <td>
+        129 ns
+       </td>
+       <td>
+        129 ns
+       </td>
+      </tr>
+      <tr>
+       <td>
+        clock()
+       </td>
+       <td>
+        146 ns
+       </td>
+       <td>
+        146 ns
+       </td>
+       <td>
+        143 ns
+       </td>
+      </tr>
+      <tr>
+       <td>
+        gettimeofday()
+       </td>
+       <td>
+        23 ns
+       </td>
+       <td>
+        726 ns
+       </td>
+       <td>
+        637 ns
+       </td>
+      </tr>
+      <tr>
+       <td>
+        CLOCK_MONOTONIC_RAW
+       </td>
+       <td>
+        31 ns
+       </td>
+       <td>
+        716 ns
+       </td>
+       <td>
+        607 ns
+       </td>
+      </tr>
+      <tr>
+       <td>
+        CLOCK_REALTIME
+       </td>
+       <td>
+        27 ns
+       </td>
+       <td>
+        707 ns
+       </td>
+       <td>
+        629 ns
+       </td>
+      </tr>
+      <tr>
+       <td>
+        CLOCK_MONOTONIC
+       </td>
+       <td>
+        27 ns
+       </td>
+       <td>
+        723 ns
+       </td>
+       <td>
+        635 ns
+       </td>
+      </tr>
+     </tbody>
+    </table>
+    <p>
+     FreeBSD 8.0 in kvm with hardware virtualization:
+    </p>
+    <table border="1" class="docutils">
+     <colgroup>
+      <col width="45%">
+      </col>
+      <col width="11%">
+      </col>
+      <col width="17%">
+      </col>
+      <col width="13%">
+      </col>
+      <col width="13%">
+      </col>
+     </colgroup>
+     <thead valign="bottom">
+      <tr>
+       <th class="head">
+        Function
+       </th>
+       <th class="head">
+        TSC
+       </th>
+       <th class="head">
+        ACPI-Safe
+       </th>
+       <th class="head">
+        HPET
+       </th>
+       <th class="head">
+        i8254
+       </th>
+      </tr>
+     </thead>
+     <tbody valign="top">
+      <tr>
+       <td>
+        time()
+       </td>
+       <td>
+        191 ns
+       </td>
+       <td>
+        188 ns
+       </td>
+       <td>
+        189 ns
+       </td>
+       <td>
+        188 ns
+       </td>
+      </tr>
+      <tr>
+       <td>
+        CLOCK_SECOND
+       </td>
+       <td>
+        187 ns
+       </td>
+       <td>
+        184 ns
+       </td>
+       <td>
+        187 ns
+       </td>
+       <td>
+        183 ns
+       </td>
+      </tr>
+      <tr>
+       <td>
+        CLOCK_REALTIME_FAST
+       </td>
+       <td>
+        189 ns
+       </td>
+       <td>
+        180 ns
+       </td>
+       <td>
+        187 ns
+       </td>
+       <td>
+        190 ns
+       </td>
+      </tr>
+      <tr>
+       <td>
+        CLOCK_UPTIME_FAST
+       </td>
+       <td>
+        191 ns
+       </td>
+       <td>
+        185 ns
+       </td>
+       <td>
+        186 ns
+       </td>
+       <td>
+        196 ns
+       </td>
+      </tr>
+      <tr>
+       <td>
+        CLOCK_MONOTONIC_FAST
+       </td>
+       <td>
+        188 ns
+       </td>
+       <td>
+        187 ns
+       </td>
+       <td>
+        188 ns
+       </td>
+       <td>
+        189 ns
+       </td>
+      </tr>
+      <tr>
+       <td>
+        CLOCK_THREAD_CPUTIME_ID
+       </td>
+       <td>
+        208 ns
+       </td>
+       <td>
+        206 ns
+       </td>
+       <td>
+        207 ns
+       </td>
+       <td>
+        220 ns
+       </td>
+      </tr>
+      <tr>
+       <td>
+        CLOCK_VIRTUAL
+       </td>
+       <td>
+        280 ns
+       </td>
+       <td>
+        279 ns
+       </td>
+       <td>
+        283 ns
+       </td>
+       <td>
+        296 ns
+       </td>
+      </tr>
+      <tr>
+       <td>
+        CLOCK_PROF
+       </td>
+       <td>
+        289 ns
+       </td>
+       <td>
+        280 ns
+       </td>
+       <td>
+        282 ns
+       </td>
+       <td>
+        286 ns
+       </td>
+      </tr>
+      <tr>
+       <td>
+        clock()
+       </td>
+       <td>
+        342 ns
+       </td>
+       <td>
+        340 ns
+       </td>
+       <td>
+        337 ns
+       </td>
+       <td>
+        344 ns
+       </td>
+      </tr>
+      <tr>
+       <td>
+        CLOCK_UPTIME_PRECISE
+       </td>
+       <td>
+        197 ns
+       </td>
+       <td>
+        10380 ns
+       </td>
+       <td>
+        4402 ns
+       </td>
+       <td>
+        4097 ns
+       </td>
+      </tr>
+      <tr>
+       <td>
+        CLOCK_REALTIME
+       </td>
+       <td>
+        196 ns
+       </td>
+       <td>
+        10376 ns
+       </td>
+       <td>
+        4337 ns
+       </td>
+       <td>
+        4054 ns
+       </td>
+      </tr>
+      <tr>
+       <td>
+        CLOCK_MONOTONIC_PRECISE
+       </td>
+       <td>
+        198 ns
+       </td>
+       <td>
+        10493 ns
+       </td>
+       <td>
+        4413 ns
+       </td>
+       <td>
+        3958 ns
+       </td>
+      </tr>
+      <tr>
+       <td>
+        CLOCK_UPTIME
+       </td>
+       <td>
+        197 ns
+       </td>
+       <td>
+        10523 ns
+       </td>
+       <td>
+        4458 ns
+       </td>
+       <td>
+        4058 ns
+       </td>
+      </tr>
+      <tr>
+       <td>
+        gettimeofday()
+       </td>
+       <td>
+        202 ns
+       </td>
+       <td>
+        10524 ns
+       </td>
+       <td>
+        4186 ns
+       </td>
+       <td>
+        3962 ns
+       </td>
+      </tr>
+      <tr>
+       <td>
+        CLOCK_REALTIME_PRECISE
+       </td>
+       <td>
+        197 ns
+       </td>
+       <td>
+        10599 ns
+       </td>
+       <td>
+        4394 ns
+       </td>
+       <td>
+        4060 ns
+       </td>
+      </tr>
+      <tr>
+       <td>
+        CLOCK_MONOTONIC
+       </td>
+       <td>
+        201 ns
+       </td>
+       <td>
+        10766 ns
+       </td>
+       <td>
+        4498 ns
+       </td>
+       <td>
+        3943 ns
+       </td>
+      </tr>
+     </tbody>
+    </table>
+    <p>
+     Each function was called 100,000 times and CLOCK_MONOTONIC was used to
+get the time before and after.  The benchmark was run 5 times, keeping
+the minimum time.
+    </p>
+   </div>
+  </div>
+  <div class="section" id="ntp-adjustment">
+   <h1>
+    <a class="toc-backref" href="#id46">
+     NTP adjustment
+    </a>
+   </h1>
+   <p>
+    NTP has different methods to adjust a clock:
+   </p>
+   <ul class="simple">
+    <li>
+     "slewing": change the clock frequency to be slightly faster or
+slower (which is done with
+     <tt class="docutils literal">
+      adjtime()
+     </tt>
+     ).  Since the slew rate is
+limited to 0.5 millisecond per second, each second of adjustment requires an
+amortization interval of 2000 seconds.  Thus, an adjustment of many
+seconds can take hours or days to amortize.
+    </li>
+    <li>
+     "stepping": jump by a large amount in a single discrete step (which
+is done with
+     <tt class="docutils literal">
+      settimeofday()
+     </tt>
+     )
+    </li>
+   </ul>
+   <p>
+    By default, the time is slewed if the offset is less than 128 ms, but
+stepped otherwise.
+   </p>
+   <p>
+    Slewing is generally desirable (i.e. we should use CLOCK_MONOTONIC,
+not CLOCK_MONOTONIC_RAW) if one wishes to measure "real" time (and not
+a time-like object like CPU cycles).  This is because the clock on the
+other end of the NTP connection from you is probably better at keeping
+time: hopefully that thirty-five thousand dollars of Cesium
+timekeeping goodness is doing something better than your PC's $3
+quartz crystal, after all.
+   </p>
+   <p>
+    Get more detail in the
+    <a class="reference external" href="http://doc.ntp.org/4.1.2/ntpd.htm">
+     documentation of the NTP daemon
+    </a>
+    .
+   </p>
+  </div>
+  <div class="section" id="operating-system-time-functions">
+   <h1>
+    <a class="toc-backref" href="#id47">
+     Operating system time functions
+    </a>
+   </h1>
+   <div class="section" id="monotonic-clocks">
+    <h2>
+     <a class="toc-backref" href="#id48">
+      Monotonic Clocks
+     </a>
+    </h2>
+    <table border="1" class="docutils">
+     <colgroup>
+      <col width="31%">
+      </col>
+      <col width="15%">
+      </col>
+      <col width="19%">
+      </col>
+      <col width="16%">
+      </col>
+      <col width="19%">
+      </col>
+     </colgroup>
+     <thead valign="bottom">
+      <tr>
+       <th class="head">
+        Name
+       </th>
+       <th class="head">
+        C Resolution
+       </th>
+       <th class="head">
+        Adjusted
+       </th>
+       <th class="head">
+        Include Sleep
+       </th>
+       <th class="head">
+        Include Suspend
+       </th>
+      </tr>
+     </thead>
+     <tbody valign="top">
+      <tr>
+       <td>
+        gethrtime()
+       </td>
+       <td>
+        1 ns
+       </td>
+       <td>
+        No
+       </td>
+       <td>
+        Yes
+       </td>
+       <td>
+        Yes
+       </td>
+      </tr>
+      <tr>
+       <td>
+        CLOCK_HIGHRES
+       </td>
+       <td>
+        1 ns
+       </td>
+       <td>
+        No
+       </td>
+       <td>
+        Yes
+       </td>
+       <td>
+        Yes
+       </td>
+      </tr>
+      <tr>
+       <td>
+        CLOCK_MONOTONIC
+       </td>
+       <td>
+        1 ns
+       </td>
+       <td>
+        Slewed on Linux
+       </td>
+       <td>
+        Yes
+       </td>
+       <td>
+        No
+       </td>
+      </tr>
+      <tr>
+       <td>
+        CLOCK_MONOTONIC_COARSE
+       </td>
+       <td>
+        1 ns
+       </td>
+       <td>
+        Slewed on Linux
+       </td>
+       <td>
+        Yes
+       </td>
+       <td>
+        No
+       </td>
+      </tr>
+      <tr>
+       <td>
+        CLOCK_MONOTONIC_RAW
+       </td>
+       <td>
+        1 ns
+       </td>
+       <td>
+        No
+       </td>
+       <td>
+        Yes
+       </td>
+       <td>
+        No
+       </td>
+      </tr>
+      <tr>
+       <td>
+        CLOCK_BOOTTIME
+       </td>
+       <td>
+        1 ns
+       </td>
+       <td>
+        ?
+       </td>
+       <td>
+        Yes
+       </td>
+       <td>
+        Yes
+       </td>
+      </tr>
+      <tr>
+       <td>
+        CLOCK_UPTIME
+       </td>
+       <td>
+        1 ns
+       </td>
+       <td>
+        No
+       </td>
+       <td>
+        Yes
+       </td>
+       <td>
+        ?
+       </td>
+      </tr>
+      <tr>
+       <td>
+        mach_absolute_time()
+       </td>
+       <td>
+        1 ns
+       </td>
+       <td>
+        No
+       </td>
+       <td>
+        Yes
+       </td>
+       <td>
+        No
+       </td>
+      </tr>
+      <tr>
+       <td>
+        QueryPerformanceCounter()
+       </td>
+       <td>
+        -
+       </td>
+       <td>
+        No
+       </td>
+       <td>
+        Yes
+       </td>
+       <td>
+        ?
+       </td>
+      </tr>
+      <tr>
+       <td>
+        GetTickCount[64]()
+       </td>
+       <td>
+        1 ms
+       </td>
+       <td>
+        No
+       </td>
+       <td>
+        Yes
+       </td>
+       <td>
+        Yes
+       </td>
+      </tr>
+      <tr>
+       <td>
+        timeGetTime()
+       </td>
+       <td>
+        1 ms
+       </td>
+       <td>
+        No
+       </td>
+       <td>
+        Yes
+       </td>
+       <td>
+        ?
+       </td>
+      </tr>
+     </tbody>
+    </table>
+    <p>
+     The "C Resolution" column is the resolution of the underlying C
+structure.
+    </p>
+    <p>
+     Examples of clock resolution on x86_64:
+    </p>
+    <table border="1" class="docutils">
+     <colgroup>
+      <col width="35%">
+      </col>
+      <col width="23%">
+      </col>
+      <col width="18%">
+      </col>
+      <col width="24%">
+      </col>
+     </colgroup>
+     <thead valign="bottom">
+      <tr>
+       <th class="head">
+        Name
+       </th>
+       <th class="head">
+        Operating system
+       </th>
+       <th class="head">
+        OS Resolution
+       </th>
+       <th class="head">
+        Python Resolution
+       </th>
+      </tr>
+     </thead>
+     <tbody valign="top">
+      <tr>
+       <td>
+        QueryPerformanceCounter
+       </td>
+       <td>
+        Windows Seven
+       </td>
+       <td>
+        10 ns
+       </td>
+       <td>
+        10 ns
+       </td>
+      </tr>
+      <tr>
+       <td>
+        CLOCK_HIGHRES
+       </td>
+       <td>
+        SunOS 5.11
+       </td>
+       <td>
+        2 ns
+       </td>
+       <td>
+        265 ns
+       </td>
+      </tr>
+      <tr>
+       <td>
+        CLOCK_MONOTONIC
+       </td>
+       <td>
+        Linux 3.0
+       </td>
+       <td>
+        1 ns
+       </td>
+       <td>
+        322 ns
+       </td>
+      </tr>
+      <tr>
+       <td>
+        CLOCK_MONOTONIC_RAW
+       </td>
+       <td>
+        Linux 3.3
+       </td>
+       <td>
+        1 ns
+       </td>
+       <td>
+        628 ns
+       </td>
+      </tr>
+      <tr>
+       <td>
+        CLOCK_BOOTTIME
+       </td>
+       <td>
+        Linux 3.3
+       </td>
+       <td>
+        1 ns
+       </td>
+       <td>
+        628 ns
+       </td>
+      </tr>
+      <tr>
+       <td>
+        mach_absolute_time()
+       </td>
+       <td>
+        Mac OS 10.6
+       </td>
+       <td>
+        1 ns
+       </td>
+       <td>
+        3 µs
+       </td>
+      </tr>
+      <tr>
+       <td>
+        CLOCK_MONOTONIC
+       </td>
+       <td>
+        FreeBSD 8.2
+       </td>
+       <td>
+        11 ns
+       </td>
+       <td>
+        5 µs
+       </td>
+      </tr>
+      <tr>
+       <td>
+        CLOCK_MONOTONIC
+       </td>
+       <td>
+        OpenBSD 5.0
+       </td>
+       <td>
+        10 ms
+       </td>
+       <td>
+        5 µs
+       </td>
+      </tr>
+      <tr>
+       <td>
+        CLOCK_UPTIME
+       </td>
+       <td>
+        FreeBSD 8.2
+       </td>
+       <td>
+        11 ns
+       </td>
+       <td>
+        6 µs
+       </td>
+      </tr>
+      <tr>
+       <td>
+        CLOCK_MONOTONIC_COARSE
+       </td>
+       <td>
+        Linux 3.3
+       </td>
+       <td>
+        1 ms
+       </td>
+       <td>
+        1 ms
+       </td>
+      </tr>
+      <tr>
+       <td>
+        CLOCK_MONOTONIC_COARSE
+       </td>
+       <td>
+        Linux 3.0
+       </td>
+       <td>
+        4 ms
+       </td>
+       <td>
+        4 ms
+       </td>
+      </tr>
+      <tr>
+       <td>
+        GetTickCount64()
+       </td>
+       <td>
+        Windows Seven
+       </td>
+       <td>
+        16 ms
+       </td>
+       <td>
+        15 ms
+       </td>
+      </tr>
+     </tbody>
+    </table>
+    <p>
+     The "OS Resolution" is the resolution announced by the operating
+system.
+The "Python Resolution" is the smallest difference between two calls
+to the time function computed in Python using the
+     <a class="reference external" href="http://hg.python.org/peps/file/tip/pep-0418/clock_resolution.py">
+      clock_resolution.py
+     </a>
+     program.
+    </p>
+    <div class="section" id="mach-absolute-time">
+     <h3>
+      <a class="toc-backref" href="#id49">
+       mach_absolute_time
+      </a>
+     </h3>
+     <p>
+      Mac OS X provides a monotonic clock: mach_absolute_time().  It is
+based on absolute elapsed time since system boot.  It is not
+adjusted and cannot be set.
+     </p>
+     <p>
+      mach_timebase_info() gives a fraction to convert the clock value to a number of
+nanoseconds.  See also the
+      <a class="reference external" href="https://developer.apple.com/library/mac/#qa/qa1398/">
+       Technical Q&amp;A QA1398
+      </a>
+      .
+     </p>
+     <p>
+      mach_absolute_time() stops during a sleep on a PowerPC CPU, but not on
+an Intel CPU:
+      <a class="reference external" href="http://lists.apple.com/archives/PerfOptimization-dev/2006/Jul/msg00024.html">
+       Different behaviour of mach_absolute_time() on i386/ppc
+      </a>
+      .
+     </p>
+    </div>
+    <div class="section" id="clock-monotonic-clock-monotonic-raw-clock-boottime">
+     <h3>
+      <a class="toc-backref" href="#id50">
+       CLOCK_MONOTONIC, CLOCK_MONOTONIC_RAW, CLOCK_BOOTTIME
+      </a>
+     </h3>
+     <p>
+      CLOCK_MONOTONIC and CLOCK_MONOTONIC_RAW represent monotonic time since
+some unspecified starting point.  They cannot be set.  The resolution
+can be read using
+      <tt class="docutils literal">
+       clock_getres()
+      </tt>
+      .
+     </p>
+     <p>
+      Documentation: refer to the manual page of your operating system.
+Examples:
+     </p>
+     <ul class="simple">
+      <li>
+       <a class="reference external" href="http://www.freebsd.org/cgi/man.cgi?query=clock_gettime">
+        FreeBSD clock_gettime() manual page
+       </a>
+      </li>
+      <li>
+       <a class="reference external" href="http://linux.die.net/man/3/clock_gettime">
+        Linux clock_gettime() manual page
+       </a>
+      </li>
+     </ul>
+     <p>
+      CLOCK_MONOTONIC is available at least on the following operating
+systems:
+     </p>
+     <ul class="simple">
+      <li>
+       DragonFly BSD, FreeBSD &gt;= 5.0, OpenBSD, NetBSD
+      </li>
+      <li>
+       Linux
+      </li>
+      <li>
+       Solaris
+      </li>
+     </ul>
+     <p>
+      The following operating systems don't support CLOCK_MONOTONIC:
+     </p>
+     <ul class="simple">
+      <li>
+       GNU/Hurd (see
+       <a class="reference external" href="http://www.gnu.org/software/hurd/open_issues/clock_gettime.html">
+        open issues/ clock_gettime
+       </a>
+       )
+      </li>
+      <li>
+       Mac OS X
+      </li>
+      <li>
+       Windows
+      </li>
+     </ul>
+     <p>
+      On Linux, NTP may adjust the CLOCK_MONOTONIC rate (slewed), but it cannot
+jump backward.
+     </p>
+     <p>
+      CLOCK_MONOTONIC_RAW is specific to Linux.  It is similar to
+CLOCK_MONOTONIC, but provides access to a raw hardware-based time that
+is not subject to NTP adjustments.  CLOCK_MONOTONIC_RAW requires Linux
+2.6.28 or later.
+     </p>
+     <p>
+      Linux 2.6.39 and glibc 2.14 introduces a new clock: CLOCK_BOOTTIME.
+CLOCK_BOOTTIME is idential to CLOCK_MONOTONIC, except that it also
+includes any time spent in suspend.  Read also
+      <a class="reference external" href="http://lwn.net/Articles/429925/">
+       Waking systems from
+suspend
+      </a>
+      (March, 2011).
+     </p>
+     <p>
+      CLOCK_MONOTONIC stops while the machine is suspended.
+     </p>
+     <p>
+      Linux provides also CLOCK_MONOTONIC_COARSE since Linux 2.6.32. It is
+similar to CLOCK_MONOTONIC, less precise but faster.
+     </p>
+     <p>
+      <tt class="docutils literal">
+       clock_gettime()
+      </tt>
+      fails if the system does not support the specified
+clock, even if the standard C library supports it.  For example,
+CLOCK_MONOTONIC_RAW requires a kernel version 2.6.28 or later.
+     </p>
+    </div>
+    <div class="section" id="windows-queryperformancecounter">
+     <h3>
+      <a class="toc-backref" href="#id51">
+       Windows: QueryPerformanceCounter
+      </a>
+     </h3>
+     <p>
+      High-resolution performance counter.  It is monotonic.
+The frequency of the counter can be read using QueryPerformanceFrequency().
+The resolution is 1 / QueryPerformanceFrequency().
+     </p>
+     <p>
+      It has a much higher resolution, but has lower long term precision
+than GetTickCount() and timeGetTime() clocks.  For example, it will
+drift compared to the low precision clocks.
+     </p>
+     <p>
+      Documentation:
+     </p>
+     <ul class="simple">
+      <li>
+       <a class="reference external" href="http://msdn.microsoft.com/en-us/library/windows/desktop/ms644904(v=vs.85).aspx">
+        MSDN: QueryPerformanceCounter() documentation
+       </a>
+      </li>
+      <li>
+       <a class="reference external" href="http://msdn.microsoft.com/en-us/library/windows/desktop/ms644905(v=vs.85).aspx">
+        MSDN: QueryPerformanceFrequency() documentation
+       </a>
+      </li>
+     </ul>
+     <p>
+      Hardware clocks used by QueryPerformanceCounter:
+     </p>
+     <ul class="simple">
+      <li>
+       Windows XP: RDTSC instruction of Intel processors, the clock
+frequency is the frequency of the processor (between 200 MHz and 3
+GHz, usually greater than 1 GHz nowadays).
+      </li>
+      <li>
+       Windows 2000: ACPI power management timer, frequency = 3,549,545 Hz.
+It can be forced through the "/usepmtimer" flag in boot.ini.
+      </li>
+     </ul>
+     <!-- * Windows 95/98: 8245 PIT chipset, frequency = 1,193,181 Hz -->
+     <p>
+      QueryPerformanceFrequency() should only be called once: the frequency
+will not change while the system is running.  It fails if the
+installed hardware does not support a high-resolution performance
+counter.
+     </p>
+     <p>
+      QueryPerformanceCounter() cannot be adjusted:
+      <a class="reference external" href="http://msdn.microsoft.com/en-us/library/windows/desktop/ms724943(v=vs.85).aspx">
+       SetSystemTimeAdjustment()
+      </a>
+      only adjusts the system time.
+     </p>
+     <p>
+      Bugs:
+     </p>
+     <ul class="simple">
+      <li>
+       The performance counter value may unexpectedly leap forward because
+of a hardware bug, see
+       <a class="reference external" href="http://support.microsoft.com/?id=274323">
+        KB274323
+       </a>
+       <a class="footnote-reference" href="#id15" id="id17">
+        [4]
+       </a>
+       .
+      </li>
+      <li>
+       On VirtualBox, QueryPerformanceCounter() does not increment the high
+part every time the low part overflows, see
+       <a class="reference external" href="http://code-factor.blogspot.fr/2009/11/monotonic-timers.html">
+        Monotonic timers
+       </a>
+       (2009).
+      </li>
+      <li>
+       VirtualBox had a bug in its HPET virtualized device:
+QueryPerformanceCounter() did jump forward by approx. 42 seconds (
+       <a class="reference external" href="https://www.virtualbox.org/ticket/8707">
+        issue
+#8707
+       </a>
+       ).
+      </li>
+      <li>
+       Windows XP had a bug (see
+       <a class="reference external" href="http://support.microsoft.com/?id=896256">
+        KB896256
+       </a>
+       <a class="footnote-reference" href="#id13" id="id14">
+        [3]
+       </a>
+       ): on a multiprocessor
+computer, QueryPerformanceCounter() returned a different value for
+each processor.  The bug was fixed in Windows XP SP2.
+      </li>
+      <li>
+       Issues with processor with variable frequency: the frequency is
+changed depending on the workload to reduce memory consumption.
+      </li>
+      <li>
+       Chromium don't use QueryPerformanceCounter() on Athlon X2 CPUs
+(model 15) because "QueryPerformanceCounter is unreliable" (see
+base/time_win.cc in Chromium source code)
+      </li>
+     </ul>
+    </div>
+    <div class="section" id="windows-gettickcount-gettickcount64">
+     <h3>
+      <a class="toc-backref" href="#id52">
+       Windows: GetTickCount(), GetTickCount64()
+      </a>
+     </h3>
+     <p>
+      GetTickCount() and GetTickCount64() are monotonic, cannot fail and are
+not adjusted by SetSystemTimeAdjustment().  MSDN documentation:
+      <a class="reference external" href="http://msdn.microsoft.com/en-us/library/windows/desktop/ms724408(v=vs.85).aspx">
+       GetTickCount()
+      </a>
+      ,
+      <a class="reference external" href="http://msdn.microsoft.com/en-us/library/windows/desktop/ms724411(v=vs.85).aspx">
+       GetTickCount64()
+      </a>
+      .
+The resolution can be read using GetSystemTimeAdjustment().
+     </p>
+     <p>
+      The elapsed time retrieved by GetTickCount() or GetTickCount64()
+includes time the system spends in sleep or hibernation.
+     </p>
+     <p>
+      GetTickCount64() was added to Windows Vista and Windows Server 2008.
+     </p>
+     <p>
+      It is possible to improve the precision using the
+      <a class="reference external" href="http://undocumented.ntinternals.net/UserMode/Undocumented Functions/Time/NtSetTimerResolution.html">
+       undocumented
+NtSetTimerResolution() function
+      </a>
+      .
+There are applications using this undocumented function, example:
+      <a class="reference external" href="http://www.lucashale.com/timer-resolution/">
+       Timer
+Resolution
+      </a>
+      .
+     </p>
+     <p>
+      WaitForSingleObject() uses the same timer as GetTickCount() with the
+same precision.
+     </p>
+    </div>
+    <div class="section" id="windows-timegettime">
+     <h3>
+      <a class="toc-backref" href="#id53">
+       Windows: timeGetTime
+      </a>
+     </h3>
+     <p>
+      The timeGetTime function retrieves the system time, in milliseconds.
+The system time is the time elapsed since Windows was started.  Read
+the
+      <a class="reference external" href="http://msdn.microsoft.com/en-us/library/windows/desktop/dd757629(v=vs.85).aspx">
+       timeGetTime() documentation
+      </a>
+      .
+     </p>
+     <p>
+      The return type of timeGetTime() is a 32-bit unsigned integer.  As
+GetTickCount(), timeGetTime() rolls over after 2^32 milliseconds (49.7
+days).
+     </p>
+     <p>
+      The elapsed time retrieved by timeGetTime() includes time the system
+spends in sleep.
+     </p>
+     <p>
+      The default precision of the timeGetTime function can be five
+milliseconds or more, depending on the machine.
+     </p>
+     <p>
+      timeBeginPeriod() can be used to increase the precision of
+timeGetTime() up to 1 millisecond, but it negatively affects power
+consumption.  Calling timeBeginPeriod() also affects the granularity
+of some other timing calls, such as CreateWaitableTimer(),
+WaitForSingleObject() and Sleep().
+     </p>
+     <div class="note">
+      <p class="first admonition-title">
+       Note
+      </p>
+      <p class="last">
+       timeGetTime() and timeBeginPeriod() are part the Windows multimedia
+library and so require to link the program against winmm or to
+dynamically load the library.
+      </p>
+     </div>
+    </div>
+    <div class="section" id="solaris-clock-highres">
+     <h3>
+      <a class="toc-backref" href="#id54">
+       Solaris: CLOCK_HIGHRES
+      </a>
+     </h3>
+     <p>
+      The Solaris OS has a CLOCK_HIGHRES timer that attempts to use an
+optimal hardware source, and may give close to nanosecond resolution.
+CLOCK_HIGHRES is the nonadjustable, high-resolution clock.  For timers
+created with a clockid_t value of CLOCK_HIGHRES, the system will
+attempt to use an optimal hardware source.
+     </p>
+     <p>
+      The resolution of CLOCK_HIGHRES can be read using
+      <tt class="docutils literal">
+       clock_getres()
+      </tt>
+      .
+     </p>
+    </div>
+    <div class="section" id="solaris-gethrtime">
+     <h3>
+      <a class="toc-backref" href="#id55">
+       Solaris: gethrtime
+      </a>
+     </h3>
+     <p>
+      The gethrtime() function returns the current high-resolution real
+time.  Time is expressed as nanoseconds since some arbitrary time in
+the past; it is not correlated in any way to the time of day, and thus
+is not subject to resetting or drifting by way of adjtime() or
+settimeofday().  The hires timer is ideally suited to performance
+measurement tasks, where cheap, accurate interval timing is required.
+     </p>
+     <p>
+      The linearity of gethrtime() is not preserved across a suspend-resume
+cycle (
+      <a class="reference external" href="http://wesunsolve.net/bugid/id/4272663">
+       Bug 4272663
+      </a>
+      ).
+     </p>
+     <p>
+      Read the
+      <a class="reference external" href="http://docs.oracle.com/cd/E23824_01/html/821-1465/gethrtime-3c.html#scrolltoc">
+       gethrtime() manual page of Solaris 11
+      </a>
+      .
+     </p>
+     <p>
+      On Solaris, gethrtime() is the same as clock_gettime(CLOCK_MONOTONIC).
+     </p>
+    </div>
+   </div>
+   <div class="section" id="system-time">
+    <h2>
+     <a class="toc-backref" href="#id56">
+      System Time
+     </a>
+    </h2>
+    <table border="1" class="docutils">
+     <colgroup>
+      <col width="38%">
+      </col>
+      <col width="18%">
+      </col>
+      <col width="20%">
+      </col>
+      <col width="23%">
+      </col>
+     </colgroup>
+     <thead valign="bottom">
+      <tr>
+       <th class="head">
+        Name
+       </th>
+       <th class="head">
+        C Resolution
+       </th>
+       <th class="head">
+        Include Sleep
+       </th>
+       <th class="head">
+        Include Suspend
+       </th>
+      </tr>
+     </thead>
+     <tbody valign="top">
+      <tr>
+       <td>
+        CLOCK_REALTIME
+       </td>
+       <td>
+        1 ns
+       </td>
+       <td>
+        Yes
+       </td>
+       <td>
+        Yes
+       </td>
+      </tr>
+      <tr>
+       <td>
+        CLOCK_REALTIME_COARSE
+       </td>
+       <td>
+        1 ns
+       </td>
+       <td>
+        Yes
+       </td>
+       <td>
+        Yes
+       </td>
+      </tr>
+      <tr>
+       <td>
+        GetSystemTimeAsFileTime
+       </td>
+       <td>
+        100 ns
+       </td>
+       <td>
+        Yes
+       </td>
+       <td>
+        Yes
+       </td>
+      </tr>
+      <tr>
+       <td>
+        gettimeofday()
+       </td>
+       <td>
+        1 µs
+       </td>
+       <td>
+        Yes
+       </td>
+       <td>
+        Yes
+       </td>
+      </tr>
+      <tr>
+       <td>
+        ftime()
+       </td>
+       <td>
+        1 ms
+       </td>
+       <td>
+        Yes
+       </td>
+       <td>
+        Yes
+       </td>
+      </tr>
+      <tr>
+       <td>
+        time()
+       </td>
+       <td>
+        1 sec
+       </td>
+       <td>
+        Yes
+       </td>
+       <td>
+        Yes
+       </td>
+      </tr>
+     </tbody>
+    </table>
+    <p>
+     The "C Resolution" column is the resolution of the underlying C
+structure.
+    </p>
+    <p>
+     Examples of clock resolution on x86_64:
+    </p>
+    <table border="1" class="docutils">
+     <colgroup>
+      <col width="35%">
+      </col>
+      <col width="23%">
+      </col>
+      <col width="18%">
+      </col>
+      <col width="24%">
+      </col>
+     </colgroup>
+     <thead valign="bottom">
+      <tr>
+       <th class="head">
+        Name
+       </th>
+       <th class="head">
+        Operating system
+       </th>
+       <th class="head">
+        OS Resolution
+       </th>
+       <th class="head">
+        Python Resolution
+       </th>
+      </tr>
+     </thead>
+     <tbody valign="top">
+      <tr>
+       <td>
+        CLOCK_REALTIME
+       </td>
+       <td>
+        SunOS 5.11
+       </td>
+       <td>
+        10 ms
+       </td>
+       <td>
+        238 ns
+       </td>
+      </tr>
+      <tr>
+       <td>
+        CLOCK_REALTIME
+       </td>
+       <td>
+        Linux 3.0
+       </td>
+       <td>
+        1 ns
+       </td>
+       <td>
+        238 ns
+       </td>
+      </tr>
+      <tr>
+       <td>
+        gettimeofday()
+       </td>
+       <td>
+        Mac OS 10.6
+       </td>
+       <td>
+        1 µs
+       </td>
+       <td>
+        4 µs
+       </td>
+      </tr>
+      <tr>
+       <td>
+        CLOCK_REALTIME
+       </td>
+       <td>
+        FreeBSD 8.2
+       </td>
+       <td>
+        11 ns
+       </td>
+       <td>
+        6 µs
+       </td>
+      </tr>
+      <tr>
+       <td>
+        CLOCK_REALTIME
+       </td>
+       <td>
+        OpenBSD 5.0
+       </td>
+       <td>
+        10 ms
+       </td>
+       <td>
+        5 µs
+       </td>
+      </tr>
+      <tr>
+       <td>
+        CLOCK_REALTIME_COARSE
+       </td>
+       <td>
+        Linux 3.3
+       </td>
+       <td>
+        1 ms
+       </td>
+       <td>
+        1 ms
+       </td>
+      </tr>
+      <tr>
+       <td>
+        CLOCK_REALTIME_COARSE
+       </td>
+       <td>
+        Linux 3.0
+       </td>
+       <td>
+        4 ms
+       </td>
+       <td>
+        4 ms
+       </td>
+      </tr>
+      <tr>
+       <td>
+        GetSystemTimeAsFileTime()
+       </td>
+       <td>
+        Windows Seven
+       </td>
+       <td>
+        16 ms
+       </td>
+       <td>
+        1 ms
+       </td>
+      </tr>
+      <tr>
+       <td>
+        ftime()
+       </td>
+       <td>
+        Windows Seven
+       </td>
+       <td>
+        -
+       </td>
+       <td>
+        1 ms
+       </td>
+      </tr>
+     </tbody>
+    </table>
+    <p>
+     The "OS Resolution" is the resolution announced by the operating
+system.
+The "Python Resolution" is the smallest difference between two calls
+to the time function computed in Python using the
+     <a class="reference external" href="http://hg.python.org/peps/file/tip/pep-0418/clock_resolution.py">
+      clock_resolution.py
+     </a>
+     program.
+    </p>
+    <div class="section" id="windows-getsystemtimeasfiletime">
+     <h3>
+      <a class="toc-backref" href="#id57">
+       Windows: GetSystemTimeAsFileTime
+      </a>
+     </h3>
+     <p>
+      The system time can be read using GetSystemTimeAsFileTime(), ftime() and
+time(). The resolution of the system time can be read using
+GetSystemTimeAdjustment().
+     </p>
+     <p>
+      Read the
+      <a class="reference external" href="http://msdn.microsoft.com/en-us/library/windows/desktop/ms724397(v=vs.85).aspx">
+       GetSystemTimeAsFileTime() documentation
+      </a>
+      .
+     </p>
+     <p>
+      The system time can be set using SetSystemTime().
+     </p>
+    </div>
+    <div class="section" id="system-time-on-unix">
+     <h3>
+      <a class="toc-backref" href="#id58">
+       System time on UNIX
+      </a>
+     </h3>
+     <p>
+      gettimeofday(), ftime(), time() and clock_gettime(CLOCK_REALTIME) return
+the system time. The resolution of CLOCK_REALTIME can be read using
+clock_getres().
+     </p>
+     <p>
+      The system time can be set using settimeofday() or
+clock_settime(CLOCK_REALTIME).
+     </p>
+     <p>
+      Linux provides also CLOCK_REALTIME_COARSE since Linux 2.6.32. It is similar
+to CLOCK_REALTIME, less precise but faster.
+     </p>
+     <p>
+      Alexander Shishkin proposed an API for Linux to be notified when the system
+clock is changed:
+      <a class="reference external" href="http://lwn.net/Articles/432395/">
+       timerfd: add TFD_NOTIFY_CLOCK_SET to watch for clock changes
+      </a>
+      (4th version of the API, March 2011). The
+API is not accepted yet, but CLOCK_BOOTTIME provides a similar feature.
+     </p>
+    </div>
+   </div>
+   <div class="section" id="process-time">
+    <h2>
+     <a class="toc-backref" href="#id59">
+      Process Time
+     </a>
+    </h2>
+    <p>
+     The process time cannot be set.  It is not monotonic: the clocks stop
+while the process is idle.
+    </p>
+    <table border="1" class="docutils">
+     <colgroup>
+      <col width="31%">
+      </col>
+      <col width="15%">
+      </col>
+      <col width="35%">
+      </col>
+      <col width="19%">
+      </col>
+     </colgroup>
+     <thead valign="bottom">
+      <tr>
+       <th class="head">
+        Name
+       </th>
+       <th class="head">
+        C Resolution
+       </th>
+       <th class="head">
+        Include Sleep
+       </th>
+       <th class="head">
+        Include Suspend
+       </th>
+      </tr>
+     </thead>
+     <tbody valign="top">
+      <tr>
+       <td>
+        GetProcessTimes()
+       </td>
+       <td>
+        100 ns
+       </td>
+       <td>
+        No
+       </td>
+       <td>
+        No
+       </td>
+      </tr>
+      <tr>
+       <td>
+        CLOCK_PROCESS_CPUTIME_ID
+       </td>
+       <td>
+        1 ns
+       </td>
+       <td>
+        No
+       </td>
+       <td>
+        No
+       </td>
+      </tr>
+      <tr>
+       <td>
+        getrusage(RUSAGE_SELF)
+       </td>
+       <td>
+        1 µs
+       </td>
+       <td>
+        No
+       </td>
+       <td>
+        No
+       </td>
+      </tr>
+      <tr>
+       <td>
+        times()
+       </td>
+       <td>
+        -
+       </td>
+       <td>
+        No
+       </td>
+       <td>
+        No
+       </td>
+      </tr>
+      <tr>
+       <td>
+        clock()
+       </td>
+       <td>
+        -
+       </td>
+       <td>
+        Yes on Windows, No otherwise
+       </td>
+       <td>
+        No
+       </td>
+      </tr>
+     </tbody>
+    </table>
+    <p>
+     The "C Resolution" column is the resolution of the underlying C
+structure.
+    </p>
+    <p>
+     Examples of clock resolution on x86_64:
+    </p>
+    <table border="1" class="docutils">
+     <colgroup>
+      <col width="34%">
+      </col>
+      <col width="22%">
+      </col>
+      <col width="18%">
+      </col>
+      <col width="26%">
+      </col>
+     </colgroup>
+     <thead valign="bottom">
+      <tr>
+       <th class="head">
+        Name
+       </th>
+       <th class="head">
+        Operating system
+       </th>
+       <th class="head">
+        OS Resolution
+       </th>
+       <th class="head">
+        Python Resolution
+       </th>
+      </tr>
+     </thead>
+     <tbody valign="top">
+      <tr>
+       <td>
+        CLOCK_PROCESS_CPUTIME_ID
+       </td>
+       <td>
+        Linux 3.3
+       </td>
+       <td>
+        1 ns
+       </td>
+       <td>
+        1 ns
+       </td>
+      </tr>
+      <tr>
+       <td>
+        CLOCK_PROF
+       </td>
+       <td>
+        FreeBSD 8.2
+       </td>
+       <td>
+        10 ms
+       </td>
+       <td>
+        1 µs
+       </td>
+      </tr>
+      <tr>
+       <td>
+        getrusage(RUSAGE_SELF)
+       </td>
+       <td>
+        FreeBSD 8.2
+       </td>
+       <td>
+        -
+       </td>
+       <td>
+        1 µs
+       </td>
+      </tr>
+      <tr>
+       <td>
+        getrusage(RUSAGE_SELF)
+       </td>
+       <td>
+        SunOS 5.11
+       </td>
+       <td>
+        -
+       </td>
+       <td>
+        1 µs
+       </td>
+      </tr>
+      <tr>
+       <td>
+        CLOCK_PROCESS_CPUTIME_ID
+       </td>
+       <td>
+        Linux 3.0
+       </td>
+       <td>
+        1 ns
+       </td>
+       <td>
+        1 µs
+       </td>
+      </tr>
+      <tr>
+       <td>
+        getrusage(RUSAGE_SELF)
+       </td>
+       <td>
+        Mac OS 10.6
+       </td>
+       <td>
+        -
+       </td>
+       <td>
+        5 µs
+       </td>
+      </tr>
+      <tr>
+       <td>
+        clock()
+       </td>
+       <td>
+        Mac OS 10.6
+       </td>
+       <td>
+        1 µs
+       </td>
+       <td>
+        5 µs
+       </td>
+      </tr>
+      <tr>
+       <td>
+        CLOCK_PROF
+       </td>
+       <td>
+        OpenBSD 5.0
+       </td>
+       <td>
+        -
+       </td>
+       <td>
+        5 µs
+       </td>
+      </tr>
+      <tr>
+       <td>
+        getrusage(RUSAGE_SELF)
+       </td>
+       <td>
+        Linux 3.0
+       </td>
+       <td>
+        -
+       </td>
+       <td>
+        4 ms
+       </td>
+      </tr>
+      <tr>
+       <td>
+        getrusage(RUSAGE_SELF)
+       </td>
+       <td>
+        OpenBSD 5.0
+       </td>
+       <td>
+        -
+       </td>
+       <td>
+        8 ms
+       </td>
+      </tr>
+      <tr>
+       <td>
+        clock()
+       </td>
+       <td>
+        FreeBSD 8.2
+       </td>
+       <td>
+        8 ms
+       </td>
+       <td>
+        8 ms
+       </td>
+      </tr>
+      <tr>
+       <td>
+        clock()
+       </td>
+       <td>
+        Linux 3.0
+       </td>
+       <td>
+        1 µs
+       </td>
+       <td>
+        10 ms
+       </td>
+      </tr>
+      <tr>
+       <td>
+        times()
+       </td>
+       <td>
+        Linux 3.0
+       </td>
+       <td>
+        10 ms
+       </td>
+       <td>
+        10 ms
+       </td>
+      </tr>
+      <tr>
+       <td>
+        clock()
+       </td>
+       <td>
+        OpenBSD 5.0
+       </td>
+       <td>
+        10 ms
+       </td>
+       <td>
+        10 ms
+       </td>
+      </tr>
+      <tr>
+       <td>
+        times()
+       </td>
+       <td>
+        OpenBSD 5.0
+       </td>
+       <td>
+        10 ms
+       </td>
+       <td>
+        10 ms
+       </td>
+      </tr>
+      <tr>
+       <td>
+        times()
+       </td>
+       <td>
+        Mac OS 10.6
+       </td>
+       <td>
+        10 ms
+       </td>
+       <td>
+        10 ms
+       </td>
+      </tr>
+      <tr>
+       <td>
+        clock()
+       </td>
+       <td>
+        SunOS 5.11
+       </td>
+       <td>
+        1 µs
+       </td>
+       <td>
+        10 ms
+       </td>
+      </tr>
+      <tr>
+       <td>
+        times()
+       </td>
+       <td>
+        SunOS 5.11
+       </td>
+       <td>
+        1 µs
+       </td>
+       <td>
+        10 ms
+       </td>
+      </tr>
+      <tr>
+       <td>
+        GetProcessTimes()
+       </td>
+       <td>
+        Windows Seven
+       </td>
+       <td>
+        16 ms
+       </td>
+       <td>
+        16 ms
+       </td>
+      </tr>
+      <tr>
+       <td>
+        clock()
+       </td>
+       <td>
+        Windows Seven
+       </td>
+       <td>
+        1 ms
+       </td>
+       <td>
+        1 ms
+       </td>
+      </tr>
+     </tbody>
+    </table>
+    <p>
+     The "OS Resolution" is the resolution announced by the operating
+system.
+The "Python Resolution" is the smallest difference between two calls
+to the time function computed in Python using the
+     <a class="reference external" href="http://hg.python.org/peps/file/tip/pep-0418/clock_resolution.py">
+      clock_resolution.py
+     </a>
+     program.
+    </p>
+    <div class="section" id="functions">
+     <h3>
+      <a class="toc-backref" href="#id60">
+       Functions
+      </a>
+     </h3>
+     <ul class="simple">
+      <li>
+       Windows:
+       <a class="reference external" href="http://msdn.microsoft.com/en-us/library/windows/desktop/ms683223(v=vs.85).aspx">
+        GetProcessTimes()
+       </a>
+       .
+The resolution can be read using GetSystemTimeAdjustment().
+      </li>
+      <li>
+       clock_gettime(CLOCK_PROCESS_CPUTIME_ID): High-resolution per-process
+timer from the CPU. The resolution can be read using clock_getres().
+      </li>
+      <li>
+       clock(). The resolution is 1 / CLOCKS_PER_SEC.
+       <ul>
+        <li>
+         Windows: The elapsed wall-clock time since the start of the
+process (elapsed time in seconds times CLOCKS_PER_SEC). Include
+time elapsed during sleep.  It can fail.
+        </li>
+        <li>
+         UNIX: returns an approximation of processor time used by the
+program.
+        </li>
+       </ul>
+      </li>
+      <li>
+       getrusage(RUSAGE_SELF) returns a structure of resource usage of the currenet
+process.  ru_utime is user CPU time and ru_stime is the system CPU time.
+      </li>
+      <li>
+       times(): structure of process times. The resolution is 1 / ticks_per_seconds,
+where ticks_per_seconds is sysconf(_SC_CLK_TCK) or the HZ constant.
+      </li>
+     </ul>
+     <p>
+      Python source code includes a portable library to get the process time (CPU
+time):
+      <a class="reference external" href="http://hg.python.org/cpython/file/tip/Tools/pybench/systimes.py">
+       Tools/pybench/systimes.py
+      </a>
+      .
+     </p>
+     <p>
+      See also the
+      <a class="reference external" href="http://msdn.microsoft.com/en-us/library/windows/desktop/ms684929(v=vs.85).aspx">
+       QueryProcessCycleTime() function
+      </a>
+      (sum of the cycle time of all threads) and
+      <a class="reference external" href="http://www.kernel.org/doc/man-pages/online/pages/man3/clock_getcpuclockid.3.html">
+       clock_getcpuclockid()
+      </a>
+      .
+     </p>
+    </div>
+   </div>
+   <div class="section" id="thread-time">
+    <h2>
+     <a class="toc-backref" href="#id61">
+      Thread Time
+     </a>
+    </h2>
+    <p>
+     The thread time cannot be set.  It is not monotonic: the clocks stop
+while the thread is idle.
+    </p>
+    <table border="1" class="docutils">
+     <colgroup>
+      <col width="38%">
+      </col>
+      <col width="18%">
+      </col>
+      <col width="20%">
+      </col>
+      <col width="23%">
+      </col>
+     </colgroup>
+     <thead valign="bottom">
+      <tr>
+       <th class="head">
+        Name
+       </th>
+       <th class="head">
+        C Resolution
+       </th>
+       <th class="head">
+        Include Sleep
+       </th>
+       <th class="head">
+        Include Suspend
+       </th>
+      </tr>
+     </thead>
+     <tbody valign="top">
+      <tr>
+       <td>
+        CLOCK_THREAD_CPUTIME_ID
+       </td>
+       <td>
+        1 ns
+       </td>
+       <td>
+        Yes
+       </td>
+       <td>
+        Epoch changes
+       </td>
+      </tr>
+      <tr>
+       <td>
+        GetThreadTimes()
+       </td>
+       <td>
+        100 ns
+       </td>
+       <td>
+        No
+       </td>
+       <td>
+        ?
+       </td>
+      </tr>
+     </tbody>
+    </table>
+    <p>
+     The "C Resolution" column is the resolution of the underlying C
+structure.
+    </p>
+    <p>
+     Examples of clock resolution on x86_64:
+    </p>
+    <table border="1" class="docutils">
+     <colgroup>
+      <col width="35%">
+      </col>
+      <col width="23%">
+      </col>
+      <col width="18%">
+      </col>
+      <col width="24%">
+      </col>
+     </colgroup>
+     <thead valign="bottom">
+      <tr>
+       <th class="head">
+        Name
+       </th>
+       <th class="head">
+        Operating system
+       </th>
+       <th class="head">
+        OS Resolution
+       </th>
+       <th class="head">
+        Python Resolution
+       </th>
+      </tr>
+     </thead>
+     <tbody valign="top">
+      <tr>
+       <td>
+        CLOCK_THREAD_CPUTIME_ID
+       </td>
+       <td>
+        FreeBSD 8.2
+       </td>
+       <td>
+        1 µs
+       </td>
+       <td>
+        1 µs
+       </td>
+      </tr>
+      <tr>
+       <td>
+        CLOCK_THREAD_CPUTIME_ID
+       </td>
+       <td>
+        Linux 3.3
+       </td>
+       <td>
+        1 ns
+       </td>
+       <td>
+        649 ns
+       </td>
+      </tr>
+      <tr>
+       <td>
+        GetThreadTimes()
+       </td>
+       <td>
+        Windows Seven
+       </td>
+       <td>
+        16 ms
+       </td>
+       <td>
+        16 ms
+       </td>
+      </tr>
+     </tbody>
+    </table>
+    <p>
+     The "OS Resolution" is the resolution announced by the operating
+system.
+The "Python Resolution" is the smallest difference between two calls
+to the time function computed in Python using the
+     <a class="reference external" href="http://hg.python.org/peps/file/tip/pep-0418/clock_resolution.py">
+      clock_resolution.py
+     </a>
+     program.
+    </p>
+    <div class="section" id="id9">
+     <h3>
+      <a class="toc-backref" href="#id62">
+       Functions
+      </a>
+     </h3>
+     <ul class="simple">
+      <li>
+       Windows:
+       <a class="reference external" href="http://msdn.microsoft.com/en-us/library/windows/desktop/ms683237(v=vs.85).aspx">
+        GetThreadTimes()
+       </a>
+       .
+The resolution can be read using GetSystemTimeAdjustment().
+      </li>
+      <li>
+       clock_gettime(CLOCK_THREAD_CPUTIME_ID): Thread-specific CPU-time
+clock. It uses a number of CPU cycles, not a number of seconds.
+The resolution can be read using of clock_getres().
+      </li>
+     </ul>
+     <p>
+      See also the
+      <a class="reference external" href="http://msdn.microsoft.com/en-us/library/windows/desktop/ms684943(v=vs.85).aspx">
+       QueryThreadCycleTime() function
+      </a>
+      (cycle time for the specified thread) and pthread_getcpuclockid().
+     </p>
+    </div>
+   </div>
+   <div class="section" id="windows-queryunbiasedinterrupttime">
+    <h2>
+     <a class="toc-backref" href="#id63">
+      Windows: QueryUnbiasedInterruptTime
+     </a>
+    </h2>
+    <p>
+     Gets the current unbiased interrupt time from the biased interrupt
+time and the current sleep bias amount.  This time is not affected by
+power management sleep transitions.
+    </p>
+    <p>
+     The elapsed time retrieved by the QueryUnbiasedInterruptTime function
+includes only time that the system spends in the working state.
+QueryUnbiasedInterruptTime() is not monotonic.
+    </p>
+    <p>
+     QueryUnbiasedInterruptTime() was introduced in Windows 7.
+    </p>
+    <p>
+     See also
+     <a class="reference external" href="http://msdn.microsoft.com/en-us/library/windows/desktop/ms684922(v=vs.85).aspx">
+      QueryIdleProcessorCycleTime() function
+     </a>
+     (cycle time for the idle thread of each processor)
+    </p>
+   </div>
+   <div class="section" id="sleep">
+    <h2>
+     <a class="toc-backref" href="#id64">
+      Sleep
+     </a>
+    </h2>
+    <p>
+     Suspend execution of the process for the given number of seconds.
+Sleep is not affected by system time updates. Sleep is paused during
+system suspend. For example, if a process sleeps for 60 seconds and
+the system is suspended for 30 seconds in the middle of the sleep, the
+sleep duration is 90 seconds in the real time.
+    </p>
+    <p>
+     Sleep can be interrupted by a signal: the function fails with EINTR.
+    </p>
+    <table border="1" class="docutils">
+     <colgroup>
+      <col width="67%">
+      </col>
+      <col width="33%">
+      </col>
+     </colgroup>
+     <thead valign="bottom">
+      <tr>
+       <th class="head">
+        Name
+       </th>
+       <th class="head">
+        C Resolution
+       </th>
+      </tr>
+     </thead>
+     <tbody valign="top">
+      <tr>
+       <td>
+        nanosleep()
+       </td>
+       <td>
+        1 ns
+       </td>
+      </tr>
+      <tr>
+       <td>
+        clock_nanosleep()
+       </td>
+       <td>
+        1 ns
+       </td>
+      </tr>
+      <tr>
+       <td>
+        usleep()
+       </td>
+       <td>
+        1 µs
+       </td>
+      </tr>
+      <tr>
+       <td>
+        delay()
+       </td>
+       <td>
+        1 µs
+       </td>
+      </tr>
+      <tr>
+       <td>
+        sleep()
+       </td>
+       <td>
+        1 sec
+       </td>
+      </tr>
+     </tbody>
+    </table>
+    <p>
+     Other functions:
+    </p>
+    <table border="1" class="docutils">
+     <colgroup>
+      <col width="67%">
+      </col>
+      <col width="33%">
+      </col>
+     </colgroup>
+     <thead valign="bottom">
+      <tr>
+       <th class="head">
+        Name
+       </th>
+       <th class="head">
+        C Resolution
+       </th>
+      </tr>
+     </thead>
+     <tbody valign="top">
+      <tr>
+       <td>
+        sigtimedwait()
+       </td>
+       <td>
+        1 ns
+       </td>
+      </tr>
+      <tr>
+       <td>
+        pthread_cond_timedwait()
+       </td>
+       <td>
+        1 ns
+       </td>
+      </tr>
+      <tr>
+       <td>
+        sem_timedwait()
+       </td>
+       <td>
+        1 ns
+       </td>
+      </tr>
+      <tr>
+       <td>
+        select()
+       </td>
+       <td>
+        1 µs
+       </td>
+      </tr>
+      <tr>
+       <td>
+        epoll()
+       </td>
+       <td>
+        1 ms
+       </td>
+      </tr>
+      <tr>
+       <td>
+        poll()
+       </td>
+       <td>
+        1 ms
+       </td>
+      </tr>
+      <tr>
+       <td>
+        WaitForSingleObject()
+       </td>
+       <td>
+        1 ms
+       </td>
+      </tr>
+     </tbody>
+    </table>
+    <p>
+     The "C Resolution" column is the resolution of the underlying C
+structure.
+    </p>
+    <div class="section" id="id10">
+     <h3>
+      <a class="toc-backref" href="#id65">
+       Functions
+      </a>
+     </h3>
+     <ul class="simple">
+      <li>
+       sleep(seconds)
+      </li>
+      <li>
+       usleep(microseconds)
+      </li>
+      <li>
+       nanosleep(nanoseconds, remaining):
+       <a class="reference external" href="http://www.kernel.org/doc/man-pages/online/pages/man2/nanosleep.2.html">
+        Linux manpage of nanosleep()
+       </a>
+      </li>
+      <li>
+       delay(milliseconds)
+      </li>
+     </ul>
+    </div>
+    <div class="section" id="clock-nanosleep">
+     <h3>
+      <a class="toc-backref" href="#id66">
+       clock_nanosleep
+      </a>
+     </h3>
+     <p>
+      clock_nanosleep(clock_id, flags, nanoseconds, remaining):
+      <a class="reference external" href="http://www.kernel.org/doc/man-pages/online/pages/man2/clock_nanosleep.2.html">
+       Linux
+manpage of clock_nanosleep()
+      </a>
+      .
+     </p>
+     <p>
+      If flags is TIMER_ABSTIME, then request is interpreted as an absolute
+time as measured by the clock, clock_id.  If request is less than or
+equal to the current value of the clock, then clock_nanosleep()
+returns immediately without suspending the calling thread.
+     </p>
+     <p>
+      POSIX.1 specifies that changing the value of the CLOCK_REALTIME clock
+via clock_settime(2) shall have no effect on a thread that is blocked
+on a relative clock_nanosleep().
+     </p>
+    </div>
+    <div class="section" id="select">
+     <h3>
+      <a class="toc-backref" href="#id67">
+       select()
+      </a>
+     </h3>
+     <p>
+      select(nfds, readfds, writefds, exceptfs, timeout).
+     </p>
+     <p>
+      Since Linux 2.6.28, select() uses high-resolution timers to handle the
+timeout.  A process has a "slack" attribute to configure the precision
+of the timeout, the default slack is 50 microseconds.  Before Linux
+2.6.28, timeouts for select() were handled by the main timing
+subsystem at a jiffy-level resolution.  Read also
+      <a class="reference external" href="http://lwn.net/Articles/296578/">
+       High- (but not too
+high-) resolution timeouts
+      </a>
+      and
+      <a class="reference external" href="http://lwn.net/Articles/369549/">
+       Timer slack
+      </a>
+      .
+     </p>
+    </div>
+    <div class="section" id="other-functions">
+     <h3>
+      <a class="toc-backref" href="#id68">
+       Other functions
+      </a>
+     </h3>
+     <ul class="simple">
+      <li>
+       poll(), epoll()
+      </li>
+      <li>
+       sigtimedwait(). POSIX: "If the Monotonic Clock option is supported,
+the CLOCK_MONOTONIC clock shall be used to measure the time
+interval specified by the timeout argument."
+      </li>
+      <li>
+       pthread_cond_timedwait(), pthread_condattr_setclock(). "The default
+value of the clock attribute shall refer to the system time."
+      </li>
+      <li>
+       sem_timedwait(): "If the Timers option is supported, the timeout
+shall be based on the CLOCK_REALTIME clock.  If the Timers option is
+not supported, the timeout shall be based on the system time as
+returned by the time() function.  The precision of the timeout
+shall be the precision of the clock on which it is based."
+      </li>
+      <li>
+       WaitForSingleObject(): use the same timer than GetTickCount() with
+the same precision.
+      </li>
+     </ul>
+    </div>
+   </div>
+  </div>
+  <div class="section" id="system-standby">
+   <h1>
+    <a class="toc-backref" href="#id69">
+     System Standby
+    </a>
+   </h1>
+   <p>
+    The ACPI power state "S3" is a system standby mode, also called
+"Suspend to RAM". RAM remains powered.
+   </p>
+   <p>
+    On Windows, the
+    <tt class="docutils literal">
+     WM_POWERBROADCAST
+    </tt>
+    message is sent to Windows
+applications to notify them of power-management events (ex: owner status
+has changed).
+   </p>
+   <p>
+    For Mac OS X, read
+    <a class="reference external" href="http://developer.apple.com/library/mac/#qa/qa1340/_index.html">
+     Registering and unregistering for sleep and wake
+notifications
+    </a>
+    (Technical Q&amp;A QA1340).
+   </p>
+  </div>
+  <div class="section" id="footnotes">
+   <h1>
+    <a class="toc-backref" href="#id70">
+     Footnotes
+    </a>
+   </h1>
+   <table class="docutils footnote" frame="void" id="pseudo" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       [2]
+      </td>
+      <td>
+       <em>
+        (
+        <a class="fn-backref" href="#id1">
+         1
+        </a>
+        ,
+        <a class="fn-backref" href="#id2">
+         2
+        </a>
+        ,
+        <a class="fn-backref" href="#id3">
+         3
+        </a>
+        ,
+        <a class="fn-backref" href="#id4">
+         4
+        </a>
+        ,
+        <a class="fn-backref" href="#id5">
+         5
+        </a>
+        )
+       </em>
+       "_time" is an hypothetical module only used for the example.
+The time module is implemented in C and so there is no need for
+such a module.
+      </td>
+     </tr>
+    </tbody>
+   </table>
+  </div>
+  <div class="section" id="links">
+   <h1>
+    <a class="toc-backref" href="#id71">
+     Links
+    </a>
+   </h1>
+   <p>
+    Related Python issues:
+   </p>
+   <ul class="simple">
+    <li>
+     <a class="reference external" href="http://bugs.python.org/issue12822">
+      Issue #12822: NewGIL should use CLOCK_MONOTONIC if possible.
+     </a>
+    </li>
+    <li>
+     <a class="reference external" href="http://bugs.python.org/issue14222">
+      Issue #14222: Use time.steady() to implement timeout
+     </a>
+    </li>
+    <li>
+     <a class="reference external" href="http://bugs.python.org/issue14309">
+      Issue #14309: Deprecate time.clock()
+     </a>
+    </li>
+    <li>
+     <a class="reference external" href="http://bugs.python.org/issue14397">
+      Issue #14397: Use GetTickCount/GetTickCount64 instead of
+QueryPerformanceCounter for monotonic clock
+     </a>
+    </li>
+    <li>
+     <a class="reference external" href="http://bugs.python.org/issue14428">
+      Issue #14428: Implementation of the PEP 418
+     </a>
+    </li>
+    <li>
+     <a class="reference external" href="http://bugs.python.org/issue14555">
+      Issue #14555: clock_gettime/settime/getres: Add more clock identifiers
+     </a>
+    </li>
+   </ul>
+   <p>
+    Libraries exposing monotonic clocks:
+   </p>
+   <ul class="simple">
+    <li>
+     <a class="reference external" href="http://docs.oracle.com/javase/1.5.0/docs/api/java/lang/System.html#nanoTime()">
+      Java: System.nanoTime
+     </a>
+    </li>
+    <li>
+     <a class="reference external" href="http://qt-project.org/doc/qt-4.8/qelapsedtimer.html">
+      Qt library: QElapsedTimer
+     </a>
+    </li>
+    <li>
+     <a class="reference external" href="http://developer.gnome.org/glib/2.30/glib-Date-and-Time-Functions.html#g-get-monotonic-time">
+      glib library: g_get_monotonic_time ()
+     </a>
+     uses GetTickCount64()/GetTickCount() on Windows,
+clock_gettime(CLOCK_MONOTONIC) on UNIX or falls back to the system
+clock
+    </li>
+    <li>
+     <a class="reference external" href="http://code.google.com/p/python-monotonic-time/">
+      python-monotonic-time
+     </a>
+     (
+     <a class="reference external" href="https://github.com/gavinbeatty/python-monotonic-time">
+      github
+     </a>
+     )
+    </li>
+    <li>
+     <a class="reference external" href="https://github.com/ludios/Monoclock">
+      Monoclock.nano_count()
+     </a>
+     uses clock_gettime(CLOCK_MONOTONIC)
+and returns a number of nanoseconds
+    </li>
+    <li>
+     <a class="reference external" href="https://github.com/ThomasHabets/monotonic_clock">
+      monotonic_clock
+     </a>
+     by Thomas Habets
+    </li>
+    <li>
+     <a class="reference external" href="http://perldoc.perl.org/Time/HiRes.html">
+      Perl: Time::HiRes
+     </a>
+     exposes clock_gettime(CLOCK_MONOTONIC)
+    </li>
+    <li>
+     <a class="reference external" href="https://github.com/bwbuchanan/absolute_time/">
+      Ruby: AbsoluteTime.now
+     </a>
+     : use
+clock_gettime(CLOCK_MONOTONIC), mach_absolute_time() or
+gettimeofday().  "AbsoluteTime.monotonic?" method indicates if
+AbsoluteTime.now is monotonic or not.
+    </li>
+    <li>
+     <a class="reference external" href="http://code.google.com/p/libpthread/">
+      libpthread
+     </a>
+     : POSIX thread library for Windows
+(
+     <a class="reference external" href="http://code.google.com/p/libpthread/source/browse/src/clock.c">
+      clock.c
+     </a>
+     )
+    </li>
+    <li>
+     <a class="reference external" href="http://www.boost.org/doc/libs/1_49_0/doc/html/chrono.html">
+      Boost.Chrono
+     </a>
+     uses:
+     <ul>
+      <li>
+       system_clock:
+       <ul>
+        <li>
+         mac = gettimeofday()
+        </li>
+        <li>
+         posix = clock_gettime(CLOCK_REALTIME)
+        </li>
+        <li>
+         win = GetSystemTimeAsFileTime()
+        </li>
+       </ul>
+      </li>
+      <li>
+       steady_clock:
+       <ul>
+        <li>
+         mac = mach_absolute_time()
+        </li>
+        <li>
+         posix = clock_gettime(CLOCK_MONOTONIC)
+        </li>
+        <li>
+         win = QueryPerformanceCounter()
+        </li>
+       </ul>
+      </li>
+      <li>
+       high_resolution_clock:
+       <ul>
+        <li>
+         steady_clock, if available system_clock, otherwise
+        </li>
+       </ul>
+      </li>
+     </ul>
+    </li>
+   </ul>
+   <p>
+    Time:
+   </p>
+   <ul class="simple">
+    <li>
+     <a class="reference external" href="http://twistedmatrix.com/trac/ticket/2424">
+      Twisted issue #2424: Add reactor option to start with monotonic clock
+     </a>
+    </li>
+    <li>
+     <a class="reference external" href="http://blog.habets.pp.se/2010/09/gettimeofday-should-never-be-used-to-measure-time">
+      gettimeofday() should never be used to measure time
+     </a>
+     by Thomas Habets (2010-09-05)
+    </li>
+    <li>
+     <a class="reference external" href="http://www.kernel.org/doc/Documentation/timers/hrtimers.txt">
+      hrtimers - subsystem for high-resolution kernel timers
+     </a>
+    </li>
+    <li>
+     <a class="reference external" href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2010/n3128.html">
+      C++ Timeout Specification
+     </a>
+     by Lawrence Crowl (2010-08-19)
+    </li>
+    <li>
+     <a class="reference external" href="http://msdn.microsoft.com/en-us/library/ee417693.aspx">
+      Windows: Game Timing and Multicore Processors
+     </a>
+     by Chuck Walbourn (December 2005)
+    </li>
+    <li>
+     <a class="reference external" href="http://msdn.microsoft.com/en-us/magazine/cc163996.aspx">
+      Implement a Continuously Updating, High-Resolution Time Provider
+for Windows
+     </a>
+     by Johan Nilsson (March 2004)
+    </li>
+    <li>
+     <a class="reference external" href="http://cr.yp.to/clockspeed.html">
+      clockspeed
+     </a>
+     uses a hardware tick
+counter to compensate for a persistently fast or slow system time, by D. J. Bernstein (1998)
+    </li>
+    <li>
+     <a class="reference external" href="http://en.wikipedia.org/wiki/System_time#Retrieving_system_time">
+      Retrieving system time
+     </a>
+     lists hardware clocks and time functions with their resolution and
+epoch or range
+    </li>
+    <li>
+     On Windows, the JavaScript runtime of Firefox interpolates
+GetSystemTimeAsFileTime() with QueryPerformanceCounter() to get an
+higher resolution. See the
+     <a class="reference external" href="https://bugzilla.mozilla.org/show_bug.cgi?id=363258">
+      Bug 363258 - bad millisecond resolution
+for (new Date).getTime() / Date.now() on Windows
+     </a>
+     .
+    </li>
+    <li>
+     <a class="reference external" href="http://www.ibm.com/developerworks/library/i-seconds/">
+      When microseconds matter
+     </a>
+     : How the
+IBM High Resolution Time Stamp Facility accurately measures itty
+bits of time, by W. Nathaniel Mills, III (Apr 2002)
+    </li>
+    <li>
+     <a class="reference external" href="http://drdobbs.com/windows/184416651">
+      Win32 Performance Measurement Options
+     </a>
+     by Matthew Wilson (May, 2003)
+    </li>
+    <li>
+     <a class="reference external" href="http://www.cubinlab.ee.unimelb.edu.au/~jrid/Publications/ridoux_ispcs09.pdf">
+      Counter Availability and Characteristics for Feed-forward Based Synchronization
+     </a>
+     by Timothy Broomhead, Julien Ridoux, Darryl Veitch (2009)
+    </li>
+    <li>
+     System Management Interrupt (SMI) issues:
+     <ul>
+      <li>
+       <a class="reference external" href="http://linuxplumbersconf.org/2009/slides/Keith-Mannthey-SMI-plumers-2009.pdf">
+        System Management Interrupt Free Hardware
+       </a>
+       by Keith Mannthey (2009)
+      </li>
+      <li>
+       <a class="reference external" href="http://lwn.net/Articles/318725/">
+        IBM Real-Time "SMI Free" mode driver
+       </a>
+       by Keith Mannthey (Feb 2009)
+      </li>
+      <li>
+       <a class="reference external" href="http://wiki.linuxcnc.org/cgi-bin/wiki.pl?FixingSMIIssues">
+        Fixing Realtime problems caused by SMI on Ubuntu
+       </a>
+      </li>
+      <li>
+       <a class="reference external" href="http://lwn.net/Articles/316622/">
+        [RFC] simple SMI detector
+       </a>
+       by Jon Masters (Jan 2009)
+      </li>
+      <li>
+       <a class="reference external" href="http://marc.info/?l=linux-kernel&amp;m=127058720921201&amp;w=1">
+        [PATCH 2.6.34-rc3] A nonintrusive SMI sniffer for x86
+       </a>
+       by Joe Korty (2010-04)
+      </li>
+     </ul>
+    </li>
+   </ul>
+  </div>
+  <div class="section" id="acceptance">
+   <h1>
+    <a class="toc-backref" href="#id72">
+     Acceptance
+    </a>
+   </h1>
+   <p>
+    The PEP was accepted on 2012-04-28 by Guido van Rossum
+    <a class="footnote-reference" href="#id12" id="id11">
+     [1]
+    </a>
+    .  The PEP
+implementation has since been committed to the repository.
+   </p>
+  </div>
+  <div class="section" id="references">
+   <h1>
+    <a class="toc-backref" href="#id73">
+     References
+    </a>
+   </h1>
+   <table class="docutils footnote" frame="void" id="id12" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id11">
+        [1]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="http://mail.python.org/pipermail/python-dev/2012-April/119094.html">
+        http://mail.python.org/pipermail/python-dev/2012-April/119094.html
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id13" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id14">
+        [3]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="http://support.microsoft.com/?id=896256">
+        http://support.microsoft.com/?id=896256
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id15" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       [4]
+      </td>
+      <td>
+       <em>
+        (
+        <a class="fn-backref" href="#id16">
+         1
+        </a>
+        ,
+        <a class="fn-backref" href="#id17">
+         2
+        </a>
+        )
+       </em>
+       <a class="reference external" href="http://support.microsoft.com/?id=274323">
+        http://support.microsoft.com/?id=274323
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+  </div>
+  <div class="section" id="copyright">
+   <h1>
+    <a class="toc-backref" href="#id74">
+     Copyright
+    </a>
+   </h1>
+   <p>
+    This document has been placed in the public domain.
+   </p>
+   <!-- Local Variables:
+mode: indented-text
+indent-tabs-mode: nil
+sentence-end-double-space: t
+fill-column: 70
+coding: utf-8
+End: -->
+  </div>
+ </body>
+
+<!-- Mirrored from www.python.org/dev/peps/pep-0418/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 03 Sep 2015 04:34:32 GMT -->
+</html>Source: <a href="https://hg.python.org/peps/file/tip/pep-0418.txt">https://hg.python.org/peps/file/tip/pep-0418.txt</a>
+
+    </article>
+
+
+                </section>
+
+                
+
+
+<aside class="left-sidebar" role="secondary">
+
+    
+
+
+
+
+
+
+    
+
+
+
+
+
+        <div class="twitter-widget sidebar-widget">
+        <a class="twitter-timeline" data-dnt="true" href="https://twitter.com/ThePSF" data-widget-id="434113224703610882">Tweets by @ThePSF</a>
+        <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+    </div>
+
+    <div class="psf-sidebar-widget sidebar-widget">
+        <h3 class="widget-title">The PSF</h3>
+<p>The Python Software Foundation is the organization behind Python. Become a member of the PSF and help advance the software and our mission. </p>
+
+    </div>
+
+</aside>
+
+
+
+                
+                
+
+
+            </div><!-- end .container -->
+        </div><!-- end #content .content-wrapper -->
+
+        <!-- Footer and social media list -->
+        <footer id="site-map" class="main-footer" role="contentinfo">
+            <div class="main-footer-links">
+                <div class="container">
+
+                    
+                    <a id="back-to-top-1" class="jump-link" href="#python-network"><span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> Back to Top</a>
+
+                    
+
+<ul class="sitemap navigation menu do-not-print" role="tree" id="container">
+    
+    <li class="tier-1 element-1">
+        <a href="https://www.python.org/about/" >About</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/apps/" title="">Applications</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/quotes/" title="">Quotes</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/gettingstarted/" title="">Getting Started</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/help/" title="">Help</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-2">
+        <a href="https://www.python.org/downloads/" >Downloads</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/downloads/" title="">All releases</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/downloads/source/" title="">Source code</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/downloads/windows/" title="">Windows</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/downloads/mac-osx/" title="">Mac OS X</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/download/other/" title="">Other Platforms</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://docs.python.org/3/license.html" title="">License</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/download/alternatives" title="">Alternative Implementations</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-3">
+        <a href="https://www.python.org/doc/" >Documentation</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/doc/" title="">Docs</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/doc/av" title="">Audio/Visual Talks</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://wiki.python.org/moin/BeginnersGuide" title="">Beginner&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://docs.python.org/faq/" title="">FAQ</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="http://wiki.python.org/moin/Languages" title="">Non-English Docs</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="../index.html" title="">PEP Index</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://wiki.python.org/moin/PythonBooks" title="">Python Books</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-4">
+        <a href="https://www.python.org/community/" >Community</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/community/diversity/" title="">Diversity</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/community/irc/" title="">IRC</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/community/lists/" title="">Mailing Lists</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/workshops/" title="">Python Conferences</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/community/sigs/" title="">Special Interest Groups</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://wiki.python.org/moin/" title="">Python Wiki</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/community/logos/" title="">Python Logo</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://www.python.org/community/merchandise/" title="">Merchandise</a></li>
+    
+        <li class="tier-2 element-9" role="treeitem"><a href="https://www.python.org/community/awards" title="">Community Awards</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-5">
+        <a href="https://www.python.org/about/success/" title="success-stories">Success Stories</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/success/#arts" title="">Arts</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/success/#business" title="">Business</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/success/#education" title="">Education</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/success/#engineering" title="">Engineering</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/about/success/#government" title="">Government</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://www.python.org/about/success/#scientific" title="">Scientific</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/about/success/#software-development" title="">Software Development</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-6">
+        <a href="https://www.python.org/blogs/" title="News from around the Python world">News</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/blogs/" title="Python Insider Blog Posts">Python News</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://planetpython.org/" title="Planet Python">Community News</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="http://pyfound.blogspot.com/" title="PSF Blog">PSF News</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pycon.blogspot.com/" title="PyCon Blog">PyCon News</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-7">
+        <a href="https://www.python.org/events/" >Events</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/events/python-events/" title="">Python Events</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/events/python-user-group/" title="">User Group Events</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/events/python-events/past/" title="">Python Events Archive</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/events/python-user-group/past/" title="">User Group Events Archive</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://wiki.python.org/moin/PythonEventsCalendar#Submitting_an_Event" title="">Submit an Event</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-8">
+        <a href="https://www.python.org/dev/" >Contributing</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="http://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://bugs.python.org/" title="">Issue Tracker</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://mail.python.org/mailman/listinfo/python-dev" title="">python-dev list</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pythonmentors.com/" title="">Core Mentorship</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+</ul>
+
+
+                    <a id="back-to-top-2" class="jump-link" href="#python-network"><span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> Back to Top</a>
+                    
+
+                </div><!-- end .container -->
+            </div> <!-- end .main-footer-links -->
+
+            <div class="site-base">
+                <div class="container">
+                    
+                    <ul class="footer-links navigation menu do-not-print" role="tree">
+                        <li class="tier-1 element-1"><a href="https://www.python.org/about/help/">Help &amp; <span class="say-no-more">General</span> Contact</a></li>
+                        <li class="tier-1 element-2"><a href="https://www.python.org/community/diversity/">Diversity <span class="say-no-more">Initiatives</span></a></li>
+                        <li class="tier-1 element-3"><a href="https://github.com/python/pythondotorg/issues">Submit Website Bug</a></li>
+                        <!--<li class="tier-1 element-3"><a href="#"><span class="say-no-more">Website</span> Colophon</a></li>-->
+                    </ul>
+
+                    <div class="copyright">
+                        <p><small>
+                            <span class="pre">Copyright &copy;2001-2015.</span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/psf-landing/">Python Software Foundation</a></span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/about/legal/">Legal Statements</a></span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/privacy/">Privacy Policy</a></span>
+                        </small></p>
+                    </div>
+
+                </div><!-- end .container -->
+            </div><!-- end .site-base -->
+
+        </footer>
+
+    </div><!-- end #touchnav-wrapper -->
+
+    
+    <script src="../../../../ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="../../../static/js/libs/jquery-1.8.2.min.js"><\/script>')</script>
+
+    <script src="../../../static/js/libs/masonry.pkgd.min.js"></script>
+
+    <script type="text/javascript" src="../../../static/js/main-min.js" charset="utf-8"></script>
+    
+
+    <!--[if lte IE 7]>
+    <script type="text/javascript" src="/static/js/plugins/IE8-min.js" charset="utf-8"></script>
+    
+    
+    <![endif]-->
+
+    <!--[if lte IE 8]>
+    <script type="text/javascript" src="/static/js/plugins/getComputedStyle-min.js" charset="utf-8"></script>
+    
+    
+    <![endif]-->
+
+    
+
+    
+    
+
+</body>
+</html>

@@ -1,0 +1,1383 @@
+<!doctype html>
+<!--[if lt IE 7]>   <html class="no-js ie6 lt-ie7 lt-ie8 lt-ie9">   <![endif]-->
+<!--[if IE 7]>      <html class="no-js ie7 lt-ie8 lt-ie9">          <![endif]-->
+<!--[if IE 8]>      <html class="no-js ie8 lt-ie9">                 <![endif]-->
+<!--[if gt IE 8]><!--><html class="no-js" lang="en" dir="ltr">  <!--<![endif]-->
+
+
+<!-- Mirrored from www.python.org/dev/peps/pep-0234/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 03 Sep 2015 04:34:06 GMT -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <link rel="prefetch" href="../../../../ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js">
+
+    <meta name="application-name" content="Python.org">
+    <meta name="msapplication-tooltip" content="The official home of the Python Programming Language">
+    <meta name="apple-mobile-web-app-title" content="Python.org">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="format-detection" content="telephone=no">
+    <meta http-equiv="cleartype" content="on">
+    <meta http-equiv="imagetoolbar" content="false">
+
+    <script src="../../../static/js/libs/modernizr.js"></script>
+
+    <link href="../../../static/stylesheets/style.css" rel="stylesheet" type="text/css" title="default" />
+    <link href="../../../static/stylesheets/mq.css" rel="stylesheet" type="text/css" media="not print, braille, embossed, speech, tty" />
+    
+
+    <!--[if (lte IE 8)&(!IEMobile)]>
+    <link href="/static/stylesheets/no-mq.css" rel="stylesheet" type="text/css" media="screen" />
+    
+    
+    <![endif]-->
+
+    
+    <link rel="icon" type="image/x-icon" href="https://www.python.org/static/favicon.ico">
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="../../../static/apple-touch-icon-144x144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="../../../static/apple-touch-icon-114x114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="../../../static/apple-touch-icon-72x72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="../../../static/apple-touch-icon-precomposed.png">
+    <link rel="apple-touch-icon" href="../../../static/apple-touch-icon-precomposed.png">
+
+    
+    <meta name="msapplication-TileImage" content="/static/metro-icon-144x144-precomposed.png"><!-- white shape -->
+    <meta name="msapplication-TileColor" content="#3673a5"><!-- python blue -->
+    <meta name="msapplication-navbutton-color" content="#3673a5">
+
+    <meta property="og:site_name" content="Python.org">
+    <meta property="og:type" content="website">
+
+    <title>PEP 234 -- Iterators | Python.org</title>
+    <meta property="og:title" content="Welcome to Python.org">
+
+    
+    <meta name="description" content="The official home of the Python Programming Language">
+    <meta name="og:description" content="The official home of the Python Programming Language">
+    <meta name="keywords" content="Python programming language object oriented web free open source software license documentation download community">
+    <meta property="og:tag" content="Python programming language object oriented web free open source software license documentation download community">
+    <meta property="og:published_time" content="">
+    <meta property="og:modified_time" content="">
+    <meta property="og:author" content="">
+    <meta property="og:section" content=""> 
+    <meta property="og:url" content="">
+    <meta property="og:image" content="">
+    <meta property="og:video" content="">
+
+    <link rel="author" href="https://www.python.org/static/humans.txt">
+
+    
+
+    
+    <script type="application/ld+json">
+     {
+       "@context": "http://schema.org",
+       "@type": "WebSite",
+       "url": "https://www.python.org/",
+       "potentialAction": {
+         "@type": "SearchAction",
+         "target": "https://www.python.org/search/?q={search_term_string}",
+         "query-input": "required name=search_term_string"
+       }
+     }
+    </script>
+
+    
+    <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-39055973-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+    </script>
+    
+</head>
+
+<body class="python pages pep-page">
+
+    <div id="touchnav-wrapper">
+
+        <div id="nojs" class="do-not-print">
+            <p><strong>Notice:</strong> While Javascript is not essential for this website, your interaction with the content will be limited. Please turn Javascript on for the full experience. </p>
+        </div>
+
+        <!--[if lt IE 8]>
+        <div id="oldie-warning" class="do-not-print">
+            <p><strong>Notice:</strong> Your browser is <em>ancient</em> and <a href="http://www.ie6countdown.com/">Microsoft agrees</a>. <a href="http://browsehappy.com/">Upgrade to a different browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to experience a better web.</p>
+        </div>
+        <![endif]-->
+
+        <!-- Sister Site Links -->
+        <div id="top" class="top-bar do-not-print">
+
+            <nav class="meta-navigation container" role="navigation">
+
+                
+                <div class="skip-link screen-reader-text">
+                    <a href="#content" title="Skip to content">Skip to content</a>
+                </div>
+
+                
+                <a id="close-python-network" class="jump-link" href="#python-network" aria-hidden="true">
+                    <span aria-hidden="true" class="icon-arrow-down"><span>&#9660;</span></span> Close
+                </a>
+
+                
+
+<ul class="menu" role="tree">
+    
+    <li class="python-meta ">
+        <a href="https://www.python.org/" title="The Python Programming Language" >Python</a>
+    </li>
+    
+    <li class="psf-meta ">
+        <a href="https://www.python.org/psf-landing/" title="The Python Software Foundation" >PSF</a>
+    </li>
+    
+    <li class="docs-meta ">
+        <a href="https://docs.python.org/" title="Python Documentation" >Docs</a>
+    </li>
+    
+    <li class="pypi-meta ">
+        <a href="https://pypi.python.org/" title="Python Package Index" >PyPI</a>
+    </li>
+    
+    <li class="jobs-meta ">
+        <a href="https://www.python.org/jobs/" title="Python Job Board" >Jobs</a>
+    </li>
+    
+    <li class="shop-meta ">
+        <a href="https://www.python.org/community/" title="Python Community" >Community</a>
+    </li>
+    
+</ul>
+
+
+                <a id="python-network" class="jump-link" href="#top" aria-hidden="true">
+                    <span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> The Python Network
+                </a>
+
+            </nav>
+
+        </div>
+
+        <!-- Header elements -->
+        <header class="main-header" role="banner">
+            <div class="container">
+
+                <h1 class="site-headline">
+                    <a href="https://www.python.org/"><img class="python-logo" src="../../../static/img/python-logo.png" alt="python&trade;"></a>
+                </h1>
+
+                <div class="options-bar do-not-print">
+
+                    
+                    <a id="site-map-link" class="jump-to-menu" href="#site-map"><span class="menu-icon">&equiv;</span> Menu</a><form class="search-the-site" action="https://www.python.org/search/" method="get">
+                        <fieldset title="Search Python.org">
+
+                            <span aria-hidden="true" class="icon-search"></span>
+
+                            <label class="screen-reader-text" for="id-search-field">Search This Site</label>
+                            <input id="id-search-field" name="q" type="search" role="textbox" class="search-field" placeholder="Search" value="" tabindex="1">
+
+                            <button type="submit" name="submit" id="submit" class="search-button" title="Submit this Search" tabindex="3">
+                                GO
+                            </button>
+
+                            
+                            <!--[if IE]><input type="text" style="display: none;" disabled="disabled" size="1" tabindex="4"><![endif]-->
+
+                        </fieldset>
+                    </form><span class="breaker"></span><div class="adjust-font-size" aria-hidden="true">
+                        <ul class="navigation menu" aria-label="Adjust Text Size on Page">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                <a href="#" class="action-trigger"><strong><small>A</small> A</strong></a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a class="text-shrink" title="Make Text Smaller" href="javascript:;">Smaller</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a class="text-grow" title="Make Text Larger" href="javascript:;">Larger</a></li>
+                                    <li class="tier-2 element-3" role="treeitem"><a class="text-reset" title="Reset any font size changes I have made" href="javascript:;">Reset</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div><div class="winkwink-nudgenudge">
+                        <ul class="navigation menu" aria-label="Social Media Navigation">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                <a href="#" class="action-trigger">Socialize</a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a href="http://plus.google.com/+Python"><span aria-hidden="true" class="icon-google-plus"></span>Google+</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a href="http://www.facebook.com/pythonlang?fref=ts"><span aria-hidden="true" class="icon-facebook"></span>Facebook</a></li>
+                                    <li class="tier-2 element-3" role="treeitem"><a href="http://twitter.com/ThePSF"><span aria-hidden="true" class="icon-twitter"></span>Twitter</a></li>
+                                    <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/irc/"><span aria-hidden="true" class="icon-freenode"></span>Chat on IRC</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div><div class="account-signin">
+                        <ul class="navigation menu" aria-label="Social Media Navigation">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                
+                                <a href="https://www.python.org/accounts/login/" title="Sign Up or Sign In to Python.org">Sign In</a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/accounts/signup/">Sign Up / Register</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/accounts/login/">Sign In</a></li>
+                                </ul>
+                                
+                            </li>
+                        </ul>
+                    </div>
+
+                </div><!-- end options-bar -->
+
+                <nav id="mainnav" class="python-navigation main-navigation do-not-print" role="navigation">
+                    
+                        
+<ul class="navigation menu" role="menubar" aria-label="Main Navigation">
+  
+    
+    
+    <li id="about" class="tier-1 element-1  " aria-haspopup="true">
+        <a href="https://www.python.org/about/" title="" class="">About</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/apps/" title="">Applications</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/quotes/" title="">Quotes</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/gettingstarted/" title="">Getting Started</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/help/" title="">Help</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="downloads" class="tier-1 element-2  " aria-haspopup="true">
+        <a href="https://www.python.org/downloads/" title="" class="">Downloads</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/downloads/" title="">All releases</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/downloads/source/" title="">Source code</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/downloads/windows/" title="">Windows</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/downloads/mac-osx/" title="">Mac OS X</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/download/other/" title="">Other Platforms</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://docs.python.org/3/license.html" title="">License</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/download/alternatives" title="">Alternative Implementations</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="documentation" class="tier-1 element-3  " aria-haspopup="true">
+        <a href="https://www.python.org/doc/" title="" class="">Documentation</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/doc/" title="">Docs</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/doc/av" title="">Audio/Visual Talks</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://wiki.python.org/moin/BeginnersGuide" title="">Beginner&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://docs.python.org/faq/" title="">FAQ</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="http://wiki.python.org/moin/Languages" title="">Non-English Docs</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="../index.html" title="">PEP Index</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://wiki.python.org/moin/PythonBooks" title="">Python Books</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="community" class="tier-1 element-4  " aria-haspopup="true">
+        <a href="https://www.python.org/community/" title="" class="">Community</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/community/diversity/" title="">Diversity</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/community/irc/" title="">IRC</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/community/lists/" title="">Mailing Lists</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/workshops/" title="">Python Conferences</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/community/sigs/" title="">Special Interest Groups</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://wiki.python.org/moin/" title="">Python Wiki</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/community/logos/" title="">Python Logo</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://www.python.org/community/merchandise/" title="">Merchandise</a></li>
+    
+        <li class="tier-2 element-9" role="treeitem"><a href="https://www.python.org/community/awards" title="">Community Awards</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="success-stories" class="tier-1 element-5  " aria-haspopup="true">
+        <a href="https://www.python.org/about/success/" title="success-stories" class="">Success Stories</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/success/#arts" title="">Arts</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/success/#business" title="">Business</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/success/#education" title="">Education</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/success/#engineering" title="">Engineering</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/about/success/#government" title="">Government</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://www.python.org/about/success/#scientific" title="">Scientific</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/about/success/#software-development" title="">Software Development</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="news" class="tier-1 element-6  " aria-haspopup="true">
+        <a href="https://www.python.org/blogs/" title="News from around the Python world" class="">News</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/blogs/" title="Python Insider Blog Posts">Python News</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://planetpython.org/" title="Planet Python">Community News</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="http://pyfound.blogspot.com/" title="PSF Blog">PSF News</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pycon.blogspot.com/" title="PyCon Blog">PyCon News</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="events" class="tier-1 element-7  " aria-haspopup="true">
+        <a href="https://www.python.org/events/" title="" class="">Events</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/events/python-events/" title="">Python Events</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/events/python-user-group/" title="">User Group Events</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/events/python-events/past/" title="">Python Events Archive</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/events/python-user-group/past/" title="">User Group Events Archive</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://wiki.python.org/moin/PythonEventsCalendar#Submitting_an_Event" title="">Submit an Event</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    
+  
+</ul>
+
+                    
+                </nav>
+
+                <div class="header-banner "> <!-- for optional "do-not-print" class -->
+                    
+                    
+                </div>
+
+                
+                
+
+             </div><!-- end .container -->
+        </header>
+
+        <div id="content" class="content-wrapper">
+            <!-- Main Content Column -->
+            <div class="container">
+
+                <section class="main-content with-left-sidebar" role="main">
+
+                    
+<ul class="breadcrumbs menu">
+    <li>
+        <a href="https://www.python.org/" title="The Python Programming Language">Python</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>
+        <a href="https://www.python.org/dev/">Python Developer's Guide</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>
+        <a href="../index.html">PEP Index</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>PEP 234 -- Iterators</li>
+</ul>
+
+
+                    
+<style>
+   .pep-page pre {
+        padding: .5em;
+        background: inherit;
+        border-left: 0px;
+        -webkit-box-shadow: 0 0 0 0;
+        -moz-box-shadow: 0 0 0 0;
+        box-shadow: 0 0 0 0;
+   }
+</style>
+
+    
+    <article class="text">
+        
+
+        <header class="article-header">
+            <h1 class="page-title">PEP 234 -- Iterators</h1>
+        </header>
+
+        <html>
+ <body>
+  <div class="header">
+   <table border="0">
+    <tr>
+     <th>
+      PEP:
+     </th>
+     <td>
+      234
+     </td>
+    </tr>
+    <tr>
+     <th>
+      Title:
+     </th>
+     <td>
+      Iterators
+     </td>
+    </tr>
+    <tr>
+     <th>
+      Author:
+     </th>
+     <td>
+      Ka-Ping Yee &lt;ping at zesty.ca&gt;, Guido van Rossum &lt;guido at python.org&gt;
+     </td>
+    </tr>
+    <tr>
+     <th>
+      Status:
+     </th>
+     <td>
+      Final
+     </td>
+    </tr>
+    <tr>
+     <th>
+      Type:
+     </th>
+     <td>
+      Standards Track
+     </td>
+    </tr>
+    <tr>
+     <th>
+      Created:
+     </th>
+     <td>
+      30-Jan-2001
+     </td>
+    </tr>
+    <tr>
+     <th>
+      Python-Version:
+     </th>
+     <td>
+      2.1
+     </td>
+    </tr>
+    <tr>
+     <th>
+      Post-History:
+     </th>
+     <td>
+      30-Apr-2001
+     </td>
+    </tr>
+   </table>
+  </div>
+  <div class="content">
+   <h3>
+    Abstract
+   </h3>
+   <pre>
+    This document proposes an iteration interface that objects can
+    provide to control the behaviour of 'for' loops.  Looping is
+    customized by providing a method that produces an iterator object.
+    The iterator provides a 'get next value' operation that produces
+    the next item in the sequence each time it is called, raising an
+    exception when no more items are available.
+
+    In addition, specific iterators over the keys of a dictionary and
+    over the lines of a file are proposed, and a proposal is made to
+    allow spelling dict.has_key(key) as "key in dict".
+
+    Note: this is an almost complete rewrite of this PEP by the second
+    author, describing the actual implementation checked into the
+    trunk of the Python 2.2 CVS tree.  It is still open for
+    discussion.  Some of the more esoteric proposals in the original
+    version of this PEP have been withdrawn for now; these may be the
+    subject of a separate PEP in the future.
+
+
+</pre>
+   <h3>
+    C API Specification
+   </h3>
+   <pre>
+    A new exception is defined, StopIteration, which can be used to
+    signal the end of an iteration.
+
+    A new slot named tp_iter for requesting an iterator is added to
+    the type object structure.  This should be a function of one
+    PyObject * argument returning a PyObject *, or NULL.  To use this
+    slot, a new C API function PyObject_GetIter() is added, with the
+    same signature as the tp_iter slot function.
+
+    Another new slot, named tp_iternext, is added to the type
+    structure, for obtaining the next value in the iteration.  To use
+    this slot, a new C API function PyIter_Next() is added.  The
+    signature for both the slot and the API function is as follows,
+    although the NULL return conditions differ:  the argument is a
+    PyObject * and so is the return value.  When the return value is
+    non-NULL, it is the next value in the iteration.  When it is NULL,
+    then for the tp_iternext slot there are three possibilities:
+
+    - No exception is set; this implies the end of the iteration.
+
+    - The StopIteration exception (or a derived exception class) is
+      set; this implies the end of the iteration.
+
+    - Some other exception is set; this means that an error occurred
+      that should be propagated normally.
+
+    The higher-level PyIter_Next() function clears the StopIteration
+    exception (or derived exception) when it occurs, so its NULL return
+    conditions are simpler:
+
+    - No exception is set; this means iteration has ended.
+
+    - Some exception is set; this means an error occurred, and should
+      be propagated normally.
+
+    Iterators implemented in C should *not* implement a next() method
+    with similar semantics as the tp_iternext slot!  When the type's
+    dictionary is initialized (by PyType_Ready()), the presence of a
+    tp_iternext slot causes a method next() wrapping that slot to be
+    added to the type's tp_dict.  (Exception: if the type doesn't use
+    PyObject_GenericGetAttr() to access instance attributes, the
+    next() method in the type's tp_dict may not be seen.)  (Due to a
+    misunderstanding in the original text of this PEP, in Python 2.2,
+    all iterator types implemented a next() method that was overridden
+    by the wrapper; this has been fixed in Python 2.3.)
+
+    To ensure binary backwards compatibility, a new flag
+    Py_TPFLAGS_HAVE_ITER is added to the set of flags in the tp_flags
+    field, and to the default flags macro.  This flag must be tested
+    before accessing the tp_iter or tp_iternext slots.  The macro
+    PyIter_Check() tests whether an object has the appropriate flag
+    set and has a non-NULL tp_iternext slot.  There is no such macro
+    for the tp_iter slot (since the only place where this slot is
+    referenced should be PyObject_GetIter(), and this can check for
+    the Py_TPFLAGS_HAVE_ITER flag directly).
+
+    (Note: the tp_iter slot can be present on any object; the
+    tp_iternext slot should only be present on objects that act as
+    iterators.)
+
+    For backwards compatibility, the PyObject_GetIter() function
+    implements fallback semantics when its argument is a sequence that
+    does not implement a tp_iter function: a lightweight sequence
+    iterator object is constructed in that case which iterates over
+    the items of the sequence in the natural order.
+
+    The Python bytecode generated for 'for' loops is changed to use
+    new opcodes, GET_ITER and FOR_ITER, that use the iterator protocol
+    rather than the sequence protocol to get the next value for the
+    loop variable.  This makes it possible to use a 'for' loop to loop
+    over non-sequence objects that support the tp_iter slot.  Other
+    places where the interpreter loops over the values of a sequence
+    should also be changed to use iterators.
+
+    Iterators ought to implement the tp_iter slot as returning a
+    reference to themselves; this is needed to make it possible to
+    use an iterator (as opposed to a sequence) in a for loop.
+
+    Iterator implementations (in C or in Python) should guarantee that
+    once the iterator has signalled its exhaustion, subsequent calls
+    to tp_iternext or to the next() method will continue to do so.  It
+    is not specified whether an iterator should enter the exhausted
+    state when an exception (other than StopIteration) is raised.
+    Note that Python cannot guarantee that user-defined or 3rd party
+    iterators implement this requirement correctly.
+
+
+</pre>
+   <h3>
+    Python API Specification
+   </h3>
+   <pre>
+    The StopIteration exception is made visible as one of the
+    standard exceptions.  It is derived from Exception.
+
+    A new built-in function is defined, iter(), which can be called in
+    two ways:
+
+    - iter(obj) calls PyObject_GetIter(obj).
+
+    - iter(callable, sentinel) returns a special kind of iterator that
+      calls the callable to produce a new value, and compares the
+      return value to the sentinel value.  If the return value equals
+      the sentinel, this signals the end of the iteration and
+      StopIteration is raised rather than returning normal; if the
+      return value does not equal the sentinel, it is returned as the
+      next value from the iterator.  If the callable raises an
+      exception, this is propagated normally; in particular, the
+      function is allowed to raise StopIteration as an alternative way
+      to end the iteration.  (This functionality is available from the
+      C API as PyCallIter_New(callable, sentinel).)
+
+    Iterator objects returned by either form of iter() have a next()
+    method.  This method either returns the next value in the
+    iteration, or raises StopIteration (or a derived exception class)
+    to signal the end of the iteration.  Any other exception should be
+    considered to signify an error and should be propagated normally,
+    not taken to mean the end of the iteration.
+
+    Classes can define how they are iterated over by defining an
+    __iter__() method; this should take no additional arguments and
+    return a valid iterator object.  A class that wants to be an
+    iterator should implement two methods: a next() method that behaves
+    as described above, and an __iter__() method that returns self.
+
+    The two methods correspond to two distinct protocols:
+
+    1. An object can be iterated over with "for" if it implements
+       __iter__() or __getitem__().
+
+    2. An object can function as an iterator if it implements next().
+
+    Container-like objects usually support protocol 1.  Iterators are
+    currently required to support both protocols.  The semantics of
+    iteration come only from protocol 2; protocol 1 is present to make
+    iterators behave like sequences; in particular so that code
+    receiving an iterator can use a for-loop over the iterator.
+
+
+</pre>
+   <h3>
+    Dictionary Iterators
+   </h3>
+   <pre>
+    - Dictionaries implement a sq_contains slot that implements the
+      same test as the has_key() method.  This means that we can write
+
+          if k in dict: ...
+
+      which is equivalent to
+
+          if dict.has_key(k): ...
+
+    - Dictionaries implement a tp_iter slot that returns an efficient
+      iterator that iterates over the keys of the dictionary.  During
+      such an iteration, the dictionary should not be modified, except
+      that setting the value for an existing key is allowed (deletions
+      or additions are not, nor is the update() method).  This means
+      that we can write
+
+          for k in dict: ...
+
+      which is equivalent to, but much faster than
+
+          for k in dict.keys(): ...
+
+      as long as the restriction on modifications to the dictionary
+      (either by the loop or by another thread) are not violated.
+
+    - Add methods to dictionaries that return different kinds of
+      iterators explicitly:
+
+          for key in dict.iterkeys(): ...
+
+          for value in dict.itervalues(): ...
+
+          for key, value in dict.iteritems(): ...
+
+      This means that "for x in dict" is shorthand for "for x in
+      dict.iterkeys()".
+
+    Other mappings, if they support iterators at all, should also
+    iterate over the keys.  However, this should not be taken as an
+    absolute rule; specific applications may have different
+    requirements.
+
+
+</pre>
+   <h3>
+    File Iterators
+   </h3>
+   <pre>
+    The following proposal is useful because it provides us with a
+    good answer to the complaint that the common idiom to iterate over
+    the lines of a file is ugly and slow.
+
+    - Files implement a tp_iter slot that is equivalent to
+      iter(f.readline, "").  This means that we can write
+
+          for line in file:
+              ...
+
+      as a shorthand for
+
+          for line in iter(file.readline, ""):
+              ...
+
+      which is equivalent to, but faster than
+
+          while 1:
+              line = file.readline()
+              if not line:
+                  break
+              ...
+
+    This also shows that some iterators are destructive: they consume
+    all the values and a second iterator cannot easily be created that
+    iterates independently over the same values.  You could open the
+    file for a second time, or seek() to the beginning, but these
+    solutions don't work for all file types, e.g. they don't work when
+    the open file object really represents a pipe or a stream socket.
+
+    Because the file iterator uses an internal buffer, mixing this
+    with other file operations (e.g. file.readline()) doesn't work
+    right.  Also, the following code:
+
+      for line in file:
+          if line == "\n":
+              break
+      for line in file:
+          print line,
+
+    doesn't work as you might expect, because the iterator created by
+    the second for-loop doesn't take the buffer read-ahead by the
+    first for-loop into account.  A correct way to write this is:
+
+      it = iter(file)
+      for line in it:
+          if line == "\n":
+              break
+      for line in it:
+          print line,
+
+    (The rationale for these restrictions are that "for line in file"
+    ought to become the recommended, standard way to iterate over the
+    lines of a file, and this should be as fast as can be.  The
+    iterator version is considerable faster than calling readline(),
+    due to the internal buffer in the iterator.)
+
+
+</pre>
+   <h3>
+    Rationale
+   </h3>
+   <pre>
+    If all the parts of the proposal are included, this addresses many
+    concerns in a consistent and flexible fashion.  Among its chief
+    virtues are the following four -- no, five -- no, six -- points:
+
+    1. It provides an extensible iterator interface.
+
+    2. It allows performance enhancements to list iteration.
+
+    3. It allows big performance enhancements to dictionary iteration.
+
+    4. It allows one to provide an interface for just iteration
+       without pretending to provide random access to elements.
+
+    5. It is backward-compatible with all existing user-defined
+       classes and extension objects that emulate sequences and
+       mappings, even mappings that only implement a subset of
+       {__getitem__, keys, values, items}.
+
+    6. It makes code iterating over non-sequence collections more
+       concise and readable.
+
+
+</pre>
+   <h3>
+    Resolved Issues
+   </h3>
+   <pre>
+    The following topics have been decided by consensus or BDFL
+    pronouncement.
+
+    - Two alternative spellings for next() have been proposed but
+      rejected: __next__(), because it corresponds to a type object
+      slot (tp_iternext); and __call__(), because this is the only
+      operation.
+
+      Arguments against __next__(): while many iterators are used in
+      for loops, it is expected that user code will also call next()
+      directly, so having to write __next__() is ugly; also, a
+      possible extension of the protocol would be to allow for prev(),
+      current() and reset() operations; surely we don't want to use
+      __prev__(), __current__(), __reset__().
+
+      Arguments against __call__() (the original proposal): taken out
+      of context, x() is not very readable, while x.next() is clear;
+      there's a danger that every special-purpose object wants to use
+      __call__() for its most common operation, causing more confusion
+      than clarity.
+
+      (In retrospect, it might have been better to go for __next__()
+      and have a new built-in, next(it), which calls it.__next__().
+      But alas, it's too late; this has been deployed in Python 2.2
+      since December 2001.)
+
+    - Some folks have requested the ability to restart an iterator.
+      This should be dealt with by calling iter() on a sequence
+      repeatedly, not by the iterator protocol itself.  (See also
+      requested extensions below.)
+
+    - It has been questioned whether an exception to signal the end of
+      the iteration isn't too expensive.  Several alternatives for the
+      StopIteration exception have been proposed: a special value End
+      to signal the end, a function end() to test whether the iterator
+      is finished, even reusing the IndexError exception.
+
+      - A special value has the problem that if a sequence ever
+        contains that special value, a loop over that sequence will
+        end prematurely without any warning.  If the experience with
+        null-terminated C strings hasn't taught us the problems this
+        can cause, imagine the trouble a Python introspection tool
+        would have iterating over a list of all built-in names,
+        assuming that the special End value was a built-in name!
+
+      - Calling an end() function would require two calls per
+        iteration.  Two calls is much more expensive than one call
+        plus a test for an exception.  Especially the time-critical
+        for loop can test very cheaply for an exception.
+
+      - Reusing IndexError can cause confusion because it can be a
+        genuine error, which would be masked by ending the loop
+        prematurely.
+
+    - Some have asked for a standard iterator type.  Presumably all
+      iterators would have to be derived from this type.  But this is
+      not the Python way: dictionaries are mappings because they
+      support __getitem__() and a handful other operations, not
+      because they are derived from an abstract mapping type.
+
+    - Regarding "if key in dict": there is no doubt that the
+      dict.has_key(x) interpretation of "x in dict" is by far the
+      most useful interpretation, probably the only useful one.  There
+      has been resistance against this because "x in list" checks
+      whether x is present among the values, while the proposal makes
+      "x in dict" check whether x is present among the keys.  Given
+      that the symmetry between lists and dictionaries is very weak,
+      this argument does not have much weight.
+
+    - The name iter() is an abbreviation.  Alternatives proposed
+      include iterate(), traverse(), but these appear too long.
+      Python has a history of using abbrs for common builtins,
+      e.g. repr(), str(), len().
+
+      Resolution: iter() it is.
+
+    - Using the same name for two different operations (getting an
+      iterator from an object and making an iterator for a function
+      with an sentinel value) is somewhat ugly.  I haven't seen a
+      better name for the second operation though, and since they both
+      return an iterator, it's easy to remember.
+
+      Resolution: the builtin iter() takes an optional argument, which
+      is the sentinel to look for.
+
+    - Once a particular iterator object has raised StopIteration, will
+      it also raise StopIteration on all subsequent next() calls?
+      Some say that it would be useful to require this, others say
+      that it is useful to leave this open to individual iterators.
+      Note that this may require an additional state bit for some
+      iterator implementations (e.g. function-wrapping iterators).
+
+      Resolution: once StopIteration is raised, calling it.next()
+      continues to raise StopIteration.
+
+      Note: this was in fact not implemented in Python 2.2; there are
+      many cases where an iterator's next() method can raise
+      StopIteration on one call but not on the next.  This has been
+      remedied in Python 2.3.
+
+    - It has been proposed that a file object should be its own
+      iterator, with a next() method returning the next line.  This
+      has certain advantages, and makes it even clearer that this
+      iterator is destructive.  The disadvantage is that this would
+      make it even more painful to implement the "sticky
+      StopIteration" feature proposed in the previous bullet.
+
+      Resolution: tentatively rejected (though there are still people
+      arguing for this).
+
+    - Some folks have requested extensions of the iterator protocol,
+      e.g. prev() to get the previous item, current() to get the
+      current item again, finished() to test whether the iterator is
+      finished, and maybe even others, like rewind(), __len__(),
+      position().
+
+      While some of these are useful, many of these cannot easily be
+      implemented for all iterator types without adding arbitrary
+      buffering, and sometimes they can't be implemented at all (or
+      not reasonably).  E.g. anything to do with reversing directions
+      can't be done when iterating over a file or function.  Maybe a
+      separate PEP can be drafted to standardize the names for such
+      operations when the are implementable.
+
+      Resolution: rejected.
+
+    - There has been a long discussion about whether
+
+          for x in dict: ...
+
+      should assign x the successive keys, values, or items of the
+      dictionary.  The symmetry between "if x in y" and "for x in y"
+      suggests that it should iterate over keys.  This symmetry has been
+      observed by many independently and has even been used to "explain"
+      one using the other.  This is because for sequences, "if x in y"
+      iterates over y comparing the iterated values to x.  If we adopt
+      both of the above proposals, this will also hold for
+      dictionaries.
+
+      The argument against making "for x in dict" iterate over the keys
+      comes mostly from a practicality point of view: scans of the
+      standard library show that there are about as many uses of "for x
+      in dict.items()" as there are of "for x in dict.keys()", with the
+      items() version having a small majority.  Presumably many of the
+      loops using keys() use the corresponding value anyway, by writing
+      dict[x], so (the argument goes) by making both the key and value
+      available, we could support the largest number of cases.  While
+      this is true, I (Guido) find the correspondence between "for x in
+      dict" and "if x in dict" too compelling to break, and there's not
+      much overhead in having to write dict[x] to explicitly get the
+      value.
+
+      For fast iteration over items, use "for key, value in
+      dict.iteritems()".  I've timed the difference between
+
+          for key in dict: dict[key]
+
+      and
+
+          for key, value in dict.iteritems(): pass
+
+      and found that the latter is only about 7% faster.
+
+      Resolution: By BDFL pronouncement, "for x in dict" iterates over
+      the keys, and dictionaries have iteritems(), iterkeys(), and
+      itervalues() to return the different flavors of dictionary
+      iterators.
+
+
+</pre>
+   <h3>
+    Mailing Lists
+   </h3>
+   <pre>
+    The iterator protocol has been discussed extensively in a mailing
+    list on SourceForge:
+
+        <a href="http://lists.sourceforge.net/lists/listinfo/python-iterators">http://lists.sourceforge.net/lists/listinfo/python-iterators</a>
+
+    Initially, some of the discussion was carried out at Yahoo;
+    archives are still accessible:
+
+        <a href="http://groups.yahoo.com/group/python-iter">http://groups.yahoo.com/group/python-iter</a>
+
+
+</pre>
+   <h3>
+    Copyright
+   </h3>
+   <pre>
+    This document is in the public domain.
+
+
+
+</pre>
+  </div>
+ </body>
+
+<!-- Mirrored from www.python.org/dev/peps/pep-0234/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 03 Sep 2015 04:34:06 GMT -->
+</html>Source: <a href="https://hg.python.org/peps/file/tip/pep-0234.txt">https://hg.python.org/peps/file/tip/pep-0234.txt</a>
+
+    </article>
+
+
+                </section>
+
+                
+
+
+<aside class="left-sidebar" role="secondary">
+
+    
+
+
+
+
+
+
+    
+
+
+
+
+
+        <div class="twitter-widget sidebar-widget">
+        <a class="twitter-timeline" data-dnt="true" href="https://twitter.com/ThePSF" data-widget-id="434113224703610882">Tweets by @ThePSF</a>
+        <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+    </div>
+
+    <div class="psf-sidebar-widget sidebar-widget">
+        <h3 class="widget-title">The PSF</h3>
+<p>The Python Software Foundation is the organization behind Python. Become a member of the PSF and help advance the software and our mission. </p>
+
+    </div>
+
+</aside>
+
+
+
+                
+                
+
+
+            </div><!-- end .container -->
+        </div><!-- end #content .content-wrapper -->
+
+        <!-- Footer and social media list -->
+        <footer id="site-map" class="main-footer" role="contentinfo">
+            <div class="main-footer-links">
+                <div class="container">
+
+                    
+                    <a id="back-to-top-1" class="jump-link" href="#python-network"><span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> Back to Top</a>
+
+                    
+
+<ul class="sitemap navigation menu do-not-print" role="tree" id="container">
+    
+    <li class="tier-1 element-1">
+        <a href="https://www.python.org/about/" >About</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/apps/" title="">Applications</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/quotes/" title="">Quotes</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/gettingstarted/" title="">Getting Started</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/help/" title="">Help</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-2">
+        <a href="https://www.python.org/downloads/" >Downloads</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/downloads/" title="">All releases</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/downloads/source/" title="">Source code</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/downloads/windows/" title="">Windows</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/downloads/mac-osx/" title="">Mac OS X</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/download/other/" title="">Other Platforms</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://docs.python.org/3/license.html" title="">License</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/download/alternatives" title="">Alternative Implementations</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-3">
+        <a href="https://www.python.org/doc/" >Documentation</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/doc/" title="">Docs</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/doc/av" title="">Audio/Visual Talks</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://wiki.python.org/moin/BeginnersGuide" title="">Beginner&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://docs.python.org/faq/" title="">FAQ</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="http://wiki.python.org/moin/Languages" title="">Non-English Docs</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="../index.html" title="">PEP Index</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://wiki.python.org/moin/PythonBooks" title="">Python Books</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-4">
+        <a href="https://www.python.org/community/" >Community</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/community/diversity/" title="">Diversity</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/community/irc/" title="">IRC</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/community/lists/" title="">Mailing Lists</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/workshops/" title="">Python Conferences</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/community/sigs/" title="">Special Interest Groups</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://wiki.python.org/moin/" title="">Python Wiki</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/community/logos/" title="">Python Logo</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://www.python.org/community/merchandise/" title="">Merchandise</a></li>
+    
+        <li class="tier-2 element-9" role="treeitem"><a href="https://www.python.org/community/awards" title="">Community Awards</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-5">
+        <a href="https://www.python.org/about/success/" title="success-stories">Success Stories</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/success/#arts" title="">Arts</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/success/#business" title="">Business</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/success/#education" title="">Education</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/success/#engineering" title="">Engineering</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/about/success/#government" title="">Government</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://www.python.org/about/success/#scientific" title="">Scientific</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/about/success/#software-development" title="">Software Development</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-6">
+        <a href="https://www.python.org/blogs/" title="News from around the Python world">News</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/blogs/" title="Python Insider Blog Posts">Python News</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://planetpython.org/" title="Planet Python">Community News</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="http://pyfound.blogspot.com/" title="PSF Blog">PSF News</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pycon.blogspot.com/" title="PyCon Blog">PyCon News</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-7">
+        <a href="https://www.python.org/events/" >Events</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/events/python-events/" title="">Python Events</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/events/python-user-group/" title="">User Group Events</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/events/python-events/past/" title="">Python Events Archive</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/events/python-user-group/past/" title="">User Group Events Archive</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://wiki.python.org/moin/PythonEventsCalendar#Submitting_an_Event" title="">Submit an Event</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-8">
+        <a href="https://www.python.org/dev/" >Contributing</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="http://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://bugs.python.org/" title="">Issue Tracker</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://mail.python.org/mailman/listinfo/python-dev" title="">python-dev list</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pythonmentors.com/" title="">Core Mentorship</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+</ul>
+
+
+                    <a id="back-to-top-2" class="jump-link" href="#python-network"><span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> Back to Top</a>
+                    
+
+                </div><!-- end .container -->
+            </div> <!-- end .main-footer-links -->
+
+            <div class="site-base">
+                <div class="container">
+                    
+                    <ul class="footer-links navigation menu do-not-print" role="tree">
+                        <li class="tier-1 element-1"><a href="https://www.python.org/about/help/">Help &amp; <span class="say-no-more">General</span> Contact</a></li>
+                        <li class="tier-1 element-2"><a href="https://www.python.org/community/diversity/">Diversity <span class="say-no-more">Initiatives</span></a></li>
+                        <li class="tier-1 element-3"><a href="https://github.com/python/pythondotorg/issues">Submit Website Bug</a></li>
+                        <!--<li class="tier-1 element-3"><a href="#"><span class="say-no-more">Website</span> Colophon</a></li>-->
+                    </ul>
+
+                    <div class="copyright">
+                        <p><small>
+                            <span class="pre">Copyright &copy;2001-2015.</span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/psf-landing/">Python Software Foundation</a></span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/about/legal/">Legal Statements</a></span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/privacy/">Privacy Policy</a></span>
+                        </small></p>
+                    </div>
+
+                </div><!-- end .container -->
+            </div><!-- end .site-base -->
+
+        </footer>
+
+    </div><!-- end #touchnav-wrapper -->
+
+    
+    <script src="../../../../ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="../../../static/js/libs/jquery-1.8.2.min.js"><\/script>')</script>
+
+    <script src="../../../static/js/libs/masonry.pkgd.min.js"></script>
+
+    <script type="text/javascript" src="../../../static/js/main-min.js" charset="utf-8"></script>
+    
+
+    <!--[if lte IE 7]>
+    <script type="text/javascript" src="/static/js/plugins/IE8-min.js" charset="utf-8"></script>
+    
+    
+    <![endif]-->
+
+    <!--[if lte IE 8]>
+    <script type="text/javascript" src="/static/js/plugins/getComputedStyle-min.js" charset="utf-8"></script>
+    
+    
+    <![endif]-->
+
+    
+
+    
+    
+
+</body>
+</html>

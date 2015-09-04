@@ -1,0 +1,2619 @@
+<!doctype html>
+<!--[if lt IE 7]>   <html class="no-js ie6 lt-ie7 lt-ie8 lt-ie9">   <![endif]-->
+<!--[if IE 7]>      <html class="no-js ie7 lt-ie8 lt-ie9">          <![endif]-->
+<!--[if IE 8]>      <html class="no-js ie8 lt-ie9">                 <![endif]-->
+<!--[if gt IE 8]><!--><html class="no-js" lang="en" dir="ltr">  <!--<![endif]-->
+
+
+<!-- Mirrored from www.python.org/dev/peps/pep-0428/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 03 Sep 2015 04:34:39 GMT -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <link rel="prefetch" href="../../../../ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js">
+
+    <meta name="application-name" content="Python.org">
+    <meta name="msapplication-tooltip" content="The official home of the Python Programming Language">
+    <meta name="apple-mobile-web-app-title" content="Python.org">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="format-detection" content="telephone=no">
+    <meta http-equiv="cleartype" content="on">
+    <meta http-equiv="imagetoolbar" content="false">
+
+    <script src="../../../static/js/libs/modernizr.js"></script>
+
+    <link href="../../../static/stylesheets/style.css" rel="stylesheet" type="text/css" title="default" />
+    <link href="../../../static/stylesheets/mq.css" rel="stylesheet" type="text/css" media="not print, braille, embossed, speech, tty" />
+    
+
+    <!--[if (lte IE 8)&(!IEMobile)]>
+    <link href="/static/stylesheets/no-mq.css" rel="stylesheet" type="text/css" media="screen" />
+    
+    
+    <![endif]-->
+
+    
+    <link rel="icon" type="image/x-icon" href="https://www.python.org/static/favicon.ico">
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="../../../static/apple-touch-icon-144x144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="../../../static/apple-touch-icon-114x114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="../../../static/apple-touch-icon-72x72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="../../../static/apple-touch-icon-precomposed.png">
+    <link rel="apple-touch-icon" href="../../../static/apple-touch-icon-precomposed.png">
+
+    
+    <meta name="msapplication-TileImage" content="/static/metro-icon-144x144-precomposed.png"><!-- white shape -->
+    <meta name="msapplication-TileColor" content="#3673a5"><!-- python blue -->
+    <meta name="msapplication-navbutton-color" content="#3673a5">
+
+    <meta property="og:site_name" content="Python.org">
+    <meta property="og:type" content="website">
+
+    <title>PEP 0428 -- The pathlib module -- object-oriented filesystem paths | Python.org</title>
+    <meta property="og:title" content="Welcome to Python.org">
+
+    
+    <meta name="description" content="The official home of the Python Programming Language">
+    <meta name="og:description" content="The official home of the Python Programming Language">
+    <meta name="keywords" content="Python programming language object oriented web free open source software license documentation download community">
+    <meta property="og:tag" content="Python programming language object oriented web free open source software license documentation download community">
+    <meta property="og:published_time" content="">
+    <meta property="og:modified_time" content="">
+    <meta property="og:author" content="">
+    <meta property="og:section" content=""> 
+    <meta property="og:url" content="">
+    <meta property="og:image" content="">
+    <meta property="og:video" content="">
+
+    <link rel="author" href="https://www.python.org/static/humans.txt">
+
+    
+
+    
+    <script type="application/ld+json">
+     {
+       "@context": "http://schema.org",
+       "@type": "WebSite",
+       "url": "https://www.python.org/",
+       "potentialAction": {
+         "@type": "SearchAction",
+         "target": "https://www.python.org/search/?q={search_term_string}",
+         "query-input": "required name=search_term_string"
+       }
+     }
+    </script>
+
+    
+    <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-39055973-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+    </script>
+    
+</head>
+
+<body class="python pages pep-page">
+
+    <div id="touchnav-wrapper">
+
+        <div id="nojs" class="do-not-print">
+            <p><strong>Notice:</strong> While Javascript is not essential for this website, your interaction with the content will be limited. Please turn Javascript on for the full experience. </p>
+        </div>
+
+        <!--[if lt IE 8]>
+        <div id="oldie-warning" class="do-not-print">
+            <p><strong>Notice:</strong> Your browser is <em>ancient</em> and <a href="http://www.ie6countdown.com/">Microsoft agrees</a>. <a href="http://browsehappy.com/">Upgrade to a different browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to experience a better web.</p>
+        </div>
+        <![endif]-->
+
+        <!-- Sister Site Links -->
+        <div id="top" class="top-bar do-not-print">
+
+            <nav class="meta-navigation container" role="navigation">
+
+                
+                <div class="skip-link screen-reader-text">
+                    <a href="#content" title="Skip to content">Skip to content</a>
+                </div>
+
+                
+                <a id="close-python-network" class="jump-link" href="#python-network" aria-hidden="true">
+                    <span aria-hidden="true" class="icon-arrow-down"><span>&#9660;</span></span> Close
+                </a>
+
+                
+
+<ul class="menu" role="tree">
+    
+    <li class="python-meta ">
+        <a href="https://www.python.org/" title="The Python Programming Language" >Python</a>
+    </li>
+    
+    <li class="psf-meta ">
+        <a href="https://www.python.org/psf-landing/" title="The Python Software Foundation" >PSF</a>
+    </li>
+    
+    <li class="docs-meta ">
+        <a href="https://docs.python.org/" title="Python Documentation" >Docs</a>
+    </li>
+    
+    <li class="pypi-meta ">
+        <a href="https://pypi.python.org/" title="Python Package Index" >PyPI</a>
+    </li>
+    
+    <li class="jobs-meta ">
+        <a href="https://www.python.org/jobs/" title="Python Job Board" >Jobs</a>
+    </li>
+    
+    <li class="shop-meta ">
+        <a href="https://www.python.org/community/" title="Python Community" >Community</a>
+    </li>
+    
+</ul>
+
+
+                <a id="python-network" class="jump-link" href="#top" aria-hidden="true">
+                    <span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> The Python Network
+                </a>
+
+            </nav>
+
+        </div>
+
+        <!-- Header elements -->
+        <header class="main-header" role="banner">
+            <div class="container">
+
+                <h1 class="site-headline">
+                    <a href="https://www.python.org/"><img class="python-logo" src="../../../static/img/python-logo.png" alt="python&trade;"></a>
+                </h1>
+
+                <div class="options-bar do-not-print">
+
+                    
+                    <a id="site-map-link" class="jump-to-menu" href="#site-map"><span class="menu-icon">&equiv;</span> Menu</a><form class="search-the-site" action="https://www.python.org/search/" method="get">
+                        <fieldset title="Search Python.org">
+
+                            <span aria-hidden="true" class="icon-search"></span>
+
+                            <label class="screen-reader-text" for="id-search-field">Search This Site</label>
+                            <input id="id-search-field" name="q" type="search" role="textbox" class="search-field" placeholder="Search" value="" tabindex="1">
+
+                            <button type="submit" name="submit" id="submit" class="search-button" title="Submit this Search" tabindex="3">
+                                GO
+                            </button>
+
+                            
+                            <!--[if IE]><input type="text" style="display: none;" disabled="disabled" size="1" tabindex="4"><![endif]-->
+
+                        </fieldset>
+                    </form><span class="breaker"></span><div class="adjust-font-size" aria-hidden="true">
+                        <ul class="navigation menu" aria-label="Adjust Text Size on Page">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                <a href="#" class="action-trigger"><strong><small>A</small> A</strong></a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a class="text-shrink" title="Make Text Smaller" href="javascript:;">Smaller</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a class="text-grow" title="Make Text Larger" href="javascript:;">Larger</a></li>
+                                    <li class="tier-2 element-3" role="treeitem"><a class="text-reset" title="Reset any font size changes I have made" href="javascript:;">Reset</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div><div class="winkwink-nudgenudge">
+                        <ul class="navigation menu" aria-label="Social Media Navigation">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                <a href="#" class="action-trigger">Socialize</a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a href="http://plus.google.com/+Python"><span aria-hidden="true" class="icon-google-plus"></span>Google+</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a href="http://www.facebook.com/pythonlang?fref=ts"><span aria-hidden="true" class="icon-facebook"></span>Facebook</a></li>
+                                    <li class="tier-2 element-3" role="treeitem"><a href="http://twitter.com/ThePSF"><span aria-hidden="true" class="icon-twitter"></span>Twitter</a></li>
+                                    <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/irc/"><span aria-hidden="true" class="icon-freenode"></span>Chat on IRC</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div><div class="account-signin">
+                        <ul class="navigation menu" aria-label="Social Media Navigation">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                
+                                <a href="https://www.python.org/accounts/login/" title="Sign Up or Sign In to Python.org">Sign In</a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/accounts/signup/">Sign Up / Register</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/accounts/login/">Sign In</a></li>
+                                </ul>
+                                
+                            </li>
+                        </ul>
+                    </div>
+
+                </div><!-- end options-bar -->
+
+                <nav id="mainnav" class="python-navigation main-navigation do-not-print" role="navigation">
+                    
+                        
+<ul class="navigation menu" role="menubar" aria-label="Main Navigation">
+  
+    
+    
+    <li id="about" class="tier-1 element-1  " aria-haspopup="true">
+        <a href="https://www.python.org/about/" title="" class="">About</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/apps/" title="">Applications</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/quotes/" title="">Quotes</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/gettingstarted/" title="">Getting Started</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/help/" title="">Help</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="downloads" class="tier-1 element-2  " aria-haspopup="true">
+        <a href="https://www.python.org/downloads/" title="" class="">Downloads</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/downloads/" title="">All releases</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/downloads/source/" title="">Source code</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/downloads/windows/" title="">Windows</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/downloads/mac-osx/" title="">Mac OS X</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/download/other/" title="">Other Platforms</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://docs.python.org/3/license.html" title="">License</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/download/alternatives" title="">Alternative Implementations</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="documentation" class="tier-1 element-3  " aria-haspopup="true">
+        <a href="https://www.python.org/doc/" title="" class="">Documentation</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/doc/" title="">Docs</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/doc/av" title="">Audio/Visual Talks</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://wiki.python.org/moin/BeginnersGuide" title="">Beginner&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://docs.python.org/faq/" title="">FAQ</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="http://wiki.python.org/moin/Languages" title="">Non-English Docs</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="../index.html" title="">PEP Index</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://wiki.python.org/moin/PythonBooks" title="">Python Books</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="community" class="tier-1 element-4  " aria-haspopup="true">
+        <a href="https://www.python.org/community/" title="" class="">Community</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/community/diversity/" title="">Diversity</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/community/irc/" title="">IRC</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/community/lists/" title="">Mailing Lists</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/workshops/" title="">Python Conferences</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/community/sigs/" title="">Special Interest Groups</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://wiki.python.org/moin/" title="">Python Wiki</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/community/logos/" title="">Python Logo</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://www.python.org/community/merchandise/" title="">Merchandise</a></li>
+    
+        <li class="tier-2 element-9" role="treeitem"><a href="https://www.python.org/community/awards" title="">Community Awards</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="success-stories" class="tier-1 element-5  " aria-haspopup="true">
+        <a href="https://www.python.org/about/success/" title="success-stories" class="">Success Stories</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/success/#arts" title="">Arts</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/success/#business" title="">Business</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/success/#education" title="">Education</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/success/#engineering" title="">Engineering</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/about/success/#government" title="">Government</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://www.python.org/about/success/#scientific" title="">Scientific</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/about/success/#software-development" title="">Software Development</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="news" class="tier-1 element-6  " aria-haspopup="true">
+        <a href="https://www.python.org/blogs/" title="News from around the Python world" class="">News</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/blogs/" title="Python Insider Blog Posts">Python News</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://planetpython.org/" title="Planet Python">Community News</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="http://pyfound.blogspot.com/" title="PSF Blog">PSF News</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pycon.blogspot.com/" title="PyCon Blog">PyCon News</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="events" class="tier-1 element-7  " aria-haspopup="true">
+        <a href="https://www.python.org/events/" title="" class="">Events</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/events/python-events/" title="">Python Events</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/events/python-user-group/" title="">User Group Events</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/events/python-events/past/" title="">Python Events Archive</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/events/python-user-group/past/" title="">User Group Events Archive</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://wiki.python.org/moin/PythonEventsCalendar#Submitting_an_Event" title="">Submit an Event</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    
+  
+</ul>
+
+                    
+                </nav>
+
+                <div class="header-banner "> <!-- for optional "do-not-print" class -->
+                    
+                    
+                </div>
+
+                
+                
+
+             </div><!-- end .container -->
+        </header>
+
+        <div id="content" class="content-wrapper">
+            <!-- Main Content Column -->
+            <div class="container">
+
+                <section class="main-content with-left-sidebar" role="main">
+
+                    
+<ul class="breadcrumbs menu">
+    <li>
+        <a href="https://www.python.org/" title="The Python Programming Language">Python</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>
+        <a href="https://www.python.org/dev/">Python Developer's Guide</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>
+        <a href="../index.html">PEP Index</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>PEP 0428 -- The pathlib module -- object-oriented filesystem paths</li>
+</ul>
+
+
+                    
+<style>
+   .pep-page pre {
+        padding: .5em;
+        background: inherit;
+        border-left: 0px;
+        -webkit-box-shadow: 0 0 0 0;
+        -moz-box-shadow: 0 0 0 0;
+        box-shadow: 0 0 0 0;
+   }
+</style>
+
+    
+    <article class="text">
+        
+
+        <header class="article-header">
+            <h1 class="page-title">PEP 0428 -- The pathlib module -- object-oriented filesystem paths</h1>
+        </header>
+
+        <!--
+This HTML is auto-generated.  DO NOT EDIT THIS FILE!  If you are writing a new
+PEP, see http://www.python.org/dev/peps/pep-0001 for instructions and links
+to templates.  DO NOT USE THIS HTML FILE AS YOUR TEMPLATE!
+-->
+<html>
+ <body>
+  <table class="rfc2822 docutils field-list" frame="void" rules="none">
+   <col class="field-name">
+   </col>
+   <col class="field-body">
+   </col>
+   <tbody valign="top">
+    <tr class="field">
+     <th class="field-name">
+      PEP:
+     </th>
+     <td class="field-body">
+      428
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Title:
+     </th>
+     <td class="field-body">
+      The pathlib module -- object-oriented filesystem paths
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Author:
+     </th>
+     <td class="field-body">
+      Antoine Pitrou &lt;solipsis at pitrou.net&gt;
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Status:
+     </th>
+     <td class="field-body">
+      Final
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Type:
+     </th>
+     <td class="field-body">
+      Standards Track
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Created:
+     </th>
+     <td class="field-body">
+      30-July-2012
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Python-Version:
+     </th>
+     <td class="field-body">
+      3.4
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Post-History:
+     </th>
+     <td class="field-body">
+      <a class="reference external" href="http://mail.python.org/pipermail/python-ideas/2012-October/016338.html">
+       http://mail.python.org/pipermail/python-ideas/2012-October/016338.html
+      </a>
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Resolution:
+     </th>
+     <td class="field-body">
+      <a class="reference external" href="https://mail.python.org/pipermail/python-dev/2013-November/130424.html">
+       https://mail.python.org/pipermail/python-dev/2013-November/130424.html
+      </a>
+     </td>
+    </tr>
+   </tbody>
+  </table>
+  <hr/>
+  <div class="contents topic" id="contents">
+   <p class="topic-title first">
+    Contents
+   </p>
+   <ul class="simple">
+    <li>
+     <a class="reference internal" href="#abstract" id="id23">
+      Abstract
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#related-work" id="id24">
+      Related work
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#implementation" id="id25">
+      Implementation
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#why-an-object-oriented-api" id="id26">
+      Why an object-oriented API
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#proposal" id="id27">
+      Proposal
+     </a>
+     <ul>
+      <li>
+       <a class="reference internal" href="#class-hierarchy" id="id28">
+        Class hierarchy
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#no-confusion-with-builtins" id="id29">
+        No confusion with builtins
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#immutability" id="id30">
+        Immutability
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#sane-behaviour" id="id31">
+        Sane behaviour
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#comparisons" id="id32">
+        Comparisons
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#useful-notations" id="id33">
+        Useful notations
+       </a>
+      </li>
+     </ul>
+    </li>
+    <li>
+     <a class="reference internal" href="#pure-paths-api" id="id34">
+      Pure paths API
+     </a>
+     <ul>
+      <li>
+       <a class="reference internal" href="#definitions" id="id35">
+        Definitions
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#construction" id="id36">
+        Construction
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#representing" id="id37">
+        Representing
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#properties" id="id38">
+        Properties
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#deriving-new-paths" id="id39">
+        Deriving new paths
+       </a>
+       <ul>
+        <li>
+         <a class="reference internal" href="#joining" id="id40">
+          Joining
+         </a>
+        </li>
+        <li>
+         <a class="reference internal" href="#changing-the-path-s-final-component" id="id41">
+          Changing the path's final component
+         </a>
+        </li>
+        <li>
+         <a class="reference internal" href="#making-the-path-relative" id="id42">
+          Making the path relative
+         </a>
+        </li>
+       </ul>
+      </li>
+      <li>
+       <a class="reference internal" href="#sequence-like-access" id="id43">
+        Sequence-like access
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#querying" id="id44">
+        Querying
+       </a>
+      </li>
+     </ul>
+    </li>
+    <li>
+     <a class="reference internal" href="#concrete-paths-api" id="id45">
+      Concrete paths API
+     </a>
+     <ul>
+      <li>
+       <a class="reference internal" href="#constructing" id="id46">
+        Constructing
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#file-metadata" id="id47">
+        File metadata
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#path-resolution" id="id48">
+        Path resolution
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#directory-walking" id="id49">
+        Directory walking
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#file-opening" id="id50">
+        File opening
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#filesystem-modification" id="id51">
+        Filesystem modification
+       </a>
+      </li>
+     </ul>
+    </li>
+    <li>
+     <a class="reference internal" href="#discussion" id="id52">
+      Discussion
+     </a>
+     <ul>
+      <li>
+       <a class="reference internal" href="#division-operator" id="id53">
+        Division operator
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#joinpath" id="id54">
+        joinpath()
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#case-sensitivity" id="id55">
+        Case-sensitivity
+       </a>
+      </li>
+     </ul>
+    </li>
+    <li>
+     <a class="reference internal" href="#id1" id="id56">
+      References
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#copyright" id="id57">
+      Copyright
+     </a>
+    </li>
+   </ul>
+  </div>
+  <div class="section" id="abstract">
+   <h1>
+    <a class="toc-backref" href="#id23">
+     Abstract
+    </a>
+   </h1>
+   <p>
+    This PEP proposes the inclusion of a third-party module,
+    <a class="reference external" href="http://pypi.python.org/pypi/pathlib/">
+     pathlib
+    </a>
+    <a class="footnote-reference" href="#id2" id="id3">
+     [1]
+    </a>
+    , in
+the standard library.  The inclusion is proposed under the provisional
+label, as described in
+    <a class="reference external" href="../pep-0411/index.html">
+     PEP 411
+    </a>
+    .  Therefore, API changes can be done,
+either as part of the PEP process, or after acceptance in the standard
+library (and until the provisional label is removed).
+   </p>
+   <p>
+    The aim of this library is to provide a simple hierarchy of classes to
+handle filesystem paths and the common operations users do over them.
+   </p>
+  </div>
+  <div class="section" id="related-work">
+   <h1>
+    <a class="toc-backref" href="#id24">
+     Related work
+    </a>
+   </h1>
+   <p>
+    An object-oriented API for filesystem paths has already been proposed
+and rejected in
+    <a class="reference external" href="../pep-0355/index.html">
+     PEP 355
+    </a>
+    .  Several third-party implementations of the
+idea of object-oriented filesystem paths exist in the wild:
+   </p>
+   <ul class="simple">
+    <li>
+     The historical
+     <a class="reference external" href="https://github.com/jaraco/path.py">
+      path.py module
+     </a>
+     <a class="footnote-reference" href="#id7" id="id8">
+      [2]
+     </a>
+     by Jason Orendorff, Jason R. Coombs
+and others, which provides a
+     <tt class="docutils literal">
+      str
+     </tt>
+     -subclassing
+     <tt class="docutils literal">
+      Path
+     </tt>
+     class;
+    </li>
+    <li>
+     Twisted's slightly specialized
+     <a class="reference external" href="http://twistedmatrix.com/documents/current/api/twisted.python.filepath.FilePath.html">
+      FilePath class
+     </a>
+     <a class="footnote-reference" href="#id9" id="id10">
+      [3]
+     </a>
+     ;
+    </li>
+    <li>
+     An
+     <a class="reference external" href="http://wiki.python.org/moin/AlternativePathClass">
+      AlternativePathClass proposal
+     </a>
+     <a class="footnote-reference" href="#id11" id="id12">
+      [4]
+     </a>
+     , subclassing
+     <tt class="docutils literal">
+      tuple
+     </tt>
+     rather than
+     <tt class="docutils literal">
+      str
+     </tt>
+     ;
+    </li>
+    <li>
+     <a class="reference external" href="https://bitbucket.org/sluggo/unipath/overview">
+      Unipath
+     </a>
+     <a class="footnote-reference" href="#id13" id="id14">
+      [5]
+     </a>
+     , a variation on the str-subclassing approach with two public
+classes, an
+     <tt class="docutils literal">
+      AbstractPath
+     </tt>
+     class for operations which don't do I/O and a
+     <tt class="docutils literal">
+      Path
+     </tt>
+     class for all common operations.
+    </li>
+   </ul>
+   <p>
+    This proposal attempts to learn from these previous attempts and the
+rejection of
+    <a class="reference external" href="../pep-0355/index.html">
+     PEP 355
+    </a>
+    .
+   </p>
+  </div>
+  <div class="section" id="implementation">
+   <h1>
+    <a class="toc-backref" href="#id25">
+     Implementation
+    </a>
+   </h1>
+   <p>
+    The implementation of this proposal is tracked in the
+    <tt class="docutils literal">
+     pep428
+    </tt>
+    branch
+of pathlib's
+    <a class="reference external" href="https://bitbucket.org/pitrou/pathlib/">
+     Mercurial repository
+    </a>
+    <a class="footnote-reference" href="#id15" id="id16">
+     [6]
+    </a>
+    .
+   </p>
+  </div>
+  <div class="section" id="why-an-object-oriented-api">
+   <h1>
+    <a class="toc-backref" href="#id26">
+     Why an object-oriented API
+    </a>
+   </h1>
+   <p>
+    The rationale to represent filesystem paths using dedicated classes is the
+same as for other kinds of stateless objects, such as dates, times or IP
+addresses.  Python has been slowly moving away from strictly replicating
+the C language's APIs to providing better, more helpful abstractions around
+all kinds of common functionality.  Even if this PEP isn't accepted, it is
+likely that another form of filesystem handling abstraction will be adopted
+one day into the standard library.
+   </p>
+   <p>
+    Indeed, many people will prefer handling dates and times using the high-level
+objects provided by the
+    <tt class="docutils literal">
+     datetime
+    </tt>
+    module, rather than using numeric
+timestamps and the
+    <tt class="docutils literal">
+     time
+    </tt>
+    module API.  Moreover, using a dedicated class
+allows to enable desirable behaviours by default, for example the case
+insensitivity of Windows paths.
+   </p>
+  </div>
+  <div class="section" id="proposal">
+   <h1>
+    <a class="toc-backref" href="#id27">
+     Proposal
+    </a>
+   </h1>
+   <div class="section" id="class-hierarchy">
+    <h2>
+     <a class="toc-backref" href="#id28">
+      Class hierarchy
+     </a>
+    </h2>
+    <p>
+     The
+     <a class="reference external" href="http://pypi.python.org/pypi/pathlib/">
+      pathlib
+     </a>
+     <a class="footnote-reference" href="#id2" id="id4">
+      [1]
+     </a>
+     module implements a simple hierarchy of classes:
+    </p>
+    <pre class="literal-block">
+                +----------+
+                |          |
+       ---------| PurePath |--------
+       |        |          |       |
+       |        +----------+       |
+       |             |             |
+       |             |             |
+       v             |             v
++---------------+    |    +-----------------+
+|               |    |    |                 |
+| PurePosixPath |    |    | PureWindowsPath |
+|               |    |    |                 |
++---------------+    |    +-----------------+
+       |             v             |
+       |          +------+         |
+       |          |      |         |
+       |   -------| Path |------   |
+       |   |      |      |     |   |
+       |   |      +------+     |   |
+       |   |                   |   |
+       |   |                   |   |
+       v   v                   v   v
+  +-----------+           +-------------+
+  |           |           |             |
+  | PosixPath |           | WindowsPath |
+  |           |           |             |
+  +-----------+           +-------------+
+</pre>
+    <p>
+     This hierarchy divides path classes along two dimensions:
+    </p>
+    <ul class="simple">
+     <li>
+      a path class can be either pure or concrete: pure classes support only
+operations that don't need to do any actual I/O, which are most path
+manipulation operations; concrete classes support all the operations
+of pure classes, plus operations that do I/O.
+     </li>
+     <li>
+      a path class is of a given flavour according to the kind of operating
+system paths it represents.
+      <a class="reference external" href="http://pypi.python.org/pypi/pathlib/">
+       pathlib
+      </a>
+      <a class="footnote-reference" href="#id2" id="id5">
+       [1]
+      </a>
+      implements two flavours: Windows
+paths for the filesystem semantics embodied in Windows systems, POSIX
+paths for other systems.
+     </li>
+    </ul>
+    <p>
+     Any pure class can be instantiated on any system: for example, you can
+manipulate
+     <tt class="docutils literal">
+      PurePosixPath
+     </tt>
+     objects under Windows,
+     <tt class="docutils literal">
+      PureWindowsPath
+     </tt>
+     objects under Unix, and so on.  However, concrete classes can only be
+instantiated on a matching system: indeed, it would be error-prone to start
+doing I/O with
+     <tt class="docutils literal">
+      WindowsPath
+     </tt>
+     objects under Unix, or vice-versa.
+    </p>
+    <p>
+     Furthermore, there are two base classes which also act as system-dependent
+factories:
+     <tt class="docutils literal">
+      PurePath
+     </tt>
+     will instantiate either a
+     <tt class="docutils literal">
+      PurePosixPath
+     </tt>
+     or a
+     <tt class="docutils literal">
+      PureWindowsPath
+     </tt>
+     depending on the operating system.  Similarly,
+     <tt class="docutils literal">
+      Path
+     </tt>
+     will instantiate either a
+     <tt class="docutils literal">
+      PosixPath
+     </tt>
+     or a
+     <tt class="docutils literal">
+      WindowsPath
+     </tt>
+     .
+    </p>
+    <p>
+     It is expected that, in most uses, using the
+     <tt class="docutils literal">
+      Path
+     </tt>
+     class is adequate,
+which is why it has the shortest name of all.
+    </p>
+   </div>
+   <div class="section" id="no-confusion-with-builtins">
+    <h2>
+     <a class="toc-backref" href="#id29">
+      No confusion with builtins
+     </a>
+    </h2>
+    <p>
+     In this proposal, the path classes do not derive from a builtin type.  This
+contrasts with some other Path class proposals which were derived from
+     <tt class="docutils literal">
+      str
+     </tt>
+     .  They also do not pretend to implement the sequence protocol:
+if you want a path to act as a sequence, you have to lookup a dedicated
+attribute (the
+     <tt class="docutils literal">
+      parts
+     </tt>
+     attribute).
+    </p>
+    <p>
+     Not behaving like one of the basic builtin types also minimizes the potential
+for confusion if a path is combined by accident with genuine builtin types.
+    </p>
+   </div>
+   <div class="section" id="immutability">
+    <h2>
+     <a class="toc-backref" href="#id30">
+      Immutability
+     </a>
+    </h2>
+    <p>
+     Path objects are immutable, which makes them hashable and also prevents a
+class of programming errors.
+    </p>
+   </div>
+   <div class="section" id="sane-behaviour">
+    <h2>
+     <a class="toc-backref" href="#id31">
+      Sane behaviour
+     </a>
+    </h2>
+    <p>
+     Little of the functionality from os.path is reused.  Many os.path functions
+are tied by backwards compatibility to confusing or plain wrong behaviour
+(for example, the fact that
+     <tt class="docutils literal">
+      os.path.abspath()
+     </tt>
+     simplifies ".." path
+components without resolving symlinks first).
+    </p>
+   </div>
+   <div class="section" id="comparisons">
+    <h2>
+     <a class="toc-backref" href="#id32">
+      Comparisons
+     </a>
+    </h2>
+    <p>
+     Paths of the same flavour are comparable and orderable, whether pure or not:
+    </p>
+    <pre class="literal-block">
+&gt;&gt;&gt; PurePosixPath('a') == PurePosixPath('b')
+False
+&gt;&gt;&gt; PurePosixPath('a') &lt; PurePosixPath('b')
+True
+&gt;&gt;&gt; PurePosixPath('a') == PosixPath('a')
+True
+</pre>
+    <p>
+     Comparing and ordering Windows path objects is case-insensitive:
+    </p>
+    <pre class="literal-block">
+&gt;&gt;&gt; PureWindowsPath('a') == PureWindowsPath('A')
+True
+</pre>
+    <p>
+     Paths of different flavours always compare unequal, and cannot be ordered:
+    </p>
+    <pre class="literal-block">
+&gt;&gt;&gt; PurePosixPath('a') == PureWindowsPath('a')
+False
+&gt;&gt;&gt; PurePosixPath('a') &lt; PureWindowsPath('a')
+Traceback (most recent call last):
+  File "&lt;stdin&gt;", line 1, in &lt;module&gt;
+TypeError: unorderable types: PurePosixPath() &lt; PureWindowsPath()
+</pre>
+    <p>
+     Paths compare unequal to, and are not orderable with instances of builtin
+types (such as
+     <tt class="docutils literal">
+      str
+     </tt>
+     ) and any other types.
+    </p>
+   </div>
+   <div class="section" id="useful-notations">
+    <h2>
+     <a class="toc-backref" href="#id33">
+      Useful notations
+     </a>
+    </h2>
+    <p>
+     The API tries to provide useful notations all the while avoiding magic.
+Some examples:
+    </p>
+    <pre class="literal-block">
+&gt;&gt;&gt; p = Path('/home/antoine/pathlib/setup.py')
+&gt;&gt;&gt; p.name
+'setup.py'
+&gt;&gt;&gt; p.suffix
+'.py'
+&gt;&gt;&gt; p.root
+'/'
+&gt;&gt;&gt; p.parts
+('/', 'home', 'antoine', 'pathlib', 'setup.py')
+&gt;&gt;&gt; p.relative_to('/home/antoine')
+PosixPath('pathlib/setup.py')
+&gt;&gt;&gt; p.exists()
+True
+</pre>
+   </div>
+  </div>
+  <div class="section" id="pure-paths-api">
+   <h1>
+    <a class="toc-backref" href="#id34">
+     Pure paths API
+    </a>
+   </h1>
+   <p>
+    The philosophy of the
+    <tt class="docutils literal">
+     PurePath
+    </tt>
+    API is to provide a consistent array of
+useful path manipulation operations, without exposing a hodge-podge of
+functions like
+    <tt class="docutils literal">
+     os.path
+    </tt>
+    does.
+   </p>
+   <div class="section" id="definitions">
+    <h2>
+     <a class="toc-backref" href="#id35">
+      Definitions
+     </a>
+    </h2>
+    <p>
+     First a couple of conventions:
+    </p>
+    <ul class="simple">
+     <li>
+      All paths can have a drive and a root.  For POSIX paths, the drive is
+always empty.
+     </li>
+     <li>
+      A relative path has neither drive nor root.
+     </li>
+     <li>
+      A POSIX path is absolute if it has a root.  A Windows path is absolute if
+it has both a drive
+      <em>
+       and
+      </em>
+      a root.  A Windows UNC path (e.g.
+      <tt class="docutils literal">
+       \\host\share\myfile.txt
+      </tt>
+      ) always has a drive and a root
+(here,
+      <tt class="docutils literal">
+       \\host\share
+      </tt>
+      and
+      <tt class="docutils literal">
+       \
+      </tt>
+      , respectively).
+     </li>
+     <li>
+      A path which has either a drive
+      <em>
+       or
+      </em>
+      a root is said to be anchored.
+Its anchor is the concatenation of the drive and root.  Under POSIX,
+"anchored" is the same as "absolute".
+     </li>
+    </ul>
+   </div>
+   <div class="section" id="construction">
+    <h2>
+     <a class="toc-backref" href="#id36">
+      Construction
+     </a>
+    </h2>
+    <p>
+     We will present construction and joining together since they expose
+similar semantics.
+    </p>
+    <p>
+     The simplest way to construct a path is to pass it its string representation:
+    </p>
+    <pre class="literal-block">
+&gt;&gt;&gt; PurePath('setup.py')
+PurePosixPath('setup.py')
+</pre>
+    <p>
+     Extraneous path separators and
+     <tt class="docutils literal">
+      "."
+     </tt>
+     components are eliminated:
+    </p>
+    <pre class="literal-block">
+&gt;&gt;&gt; PurePath('a///b/c/./d/')
+PurePosixPath('a/b/c/d')
+</pre>
+    <p>
+     If you pass several arguments, they will be automatically joined:
+    </p>
+    <pre class="literal-block">
+&gt;&gt;&gt; PurePath('docs', 'Makefile')
+PurePosixPath('docs/Makefile')
+</pre>
+    <p>
+     Joining semantics are similar to os.path.join, in that anchored paths ignore
+the information from the previously joined components:
+    </p>
+    <pre class="literal-block">
+&gt;&gt;&gt; PurePath('/etc', '/usr', 'bin')
+PurePosixPath('/usr/bin')
+</pre>
+    <p>
+     However, with Windows paths, the drive is retained as necessary:
+    </p>
+    <pre class="literal-block">
+&gt;&gt;&gt; PureWindowsPath('c:/foo', '/Windows')
+PureWindowsPath('c:/Windows')
+&gt;&gt;&gt; PureWindowsPath('c:/foo', 'd:')
+PureWindowsPath('d:')
+</pre>
+    <p>
+     Also, path separators are normalized to the platform default:
+    </p>
+    <pre class="literal-block">
+&gt;&gt;&gt; PureWindowsPath('a/b') == PureWindowsPath('a\\b')
+True
+</pre>
+    <p>
+     Extraneous path separators and
+     <tt class="docutils literal">
+      "."
+     </tt>
+     components are eliminated, but not
+     <tt class="docutils literal">
+      <span class="pre">
+       ".."
+      </span>
+     </tt>
+     components:
+    </p>
+    <pre class="literal-block">
+&gt;&gt;&gt; PurePosixPath('a//b/./c/')
+PurePosixPath('a/b/c')
+&gt;&gt;&gt; PurePosixPath('a/../b')
+PurePosixPath('a/../b')
+</pre>
+    <p>
+     Multiple leading slashes are treated differently depending on the path
+flavour.  They are always retained on Windows paths (because of the UNC
+notation):
+    </p>
+    <pre class="literal-block">
+&gt;&gt;&gt; PureWindowsPath('//some/path')
+PureWindowsPath('//some/path/')
+</pre>
+    <p>
+     On POSIX, they are collapsed except if there are exactly two leading slashes,
+which is a special case in the POSIX specification on
+     <a class="reference external" href="http://pubs.opengroup.org/onlinepubs/009695399/basedefs/xbd_chap04.html#tag_04_11">
+      pathname resolution
+     </a>
+     <a class="footnote-reference" href="#id17" id="id18">
+      [7]
+     </a>
+     (this is also necessary for Cygwin compatibility):
+    </p>
+    <pre class="literal-block">
+&gt;&gt;&gt; PurePosixPath('///some/path')
+PurePosixPath('/some/path')
+&gt;&gt;&gt; PurePosixPath('//some/path')
+PurePosixPath('//some/path')
+</pre>
+    <p>
+     Calling the constructor without any argument creates a path object pointing
+to the logical "current directory" (without looking up its absolute path,
+which is the job of the
+     <tt class="docutils literal">
+      cwd()
+     </tt>
+     classmethod on concrete paths):
+    </p>
+    <pre class="literal-block">
+&gt;&gt;&gt; PurePosixPath()
+PurePosixPath('.')
+</pre>
+   </div>
+   <div class="section" id="representing">
+    <h2>
+     <a class="toc-backref" href="#id37">
+      Representing
+     </a>
+    </h2>
+    <p>
+     To represent a path (e.g. to pass it to third-party libraries), just call
+     <tt class="docutils literal">
+      str()
+     </tt>
+     on it:
+    </p>
+    <pre class="literal-block">
+&gt;&gt;&gt; p = PurePath('/home/antoine/pathlib/setup.py')
+&gt;&gt;&gt; str(p)
+'/home/antoine/pathlib/setup.py'
+&gt;&gt;&gt; p = PureWindowsPath('c:/windows')
+&gt;&gt;&gt; str(p)
+'c:\\windows'
+</pre>
+    <p>
+     To force the string representation with forward slashes, use the
+     <tt class="docutils literal">
+      as_posix()
+     </tt>
+     method:
+    </p>
+    <pre class="literal-block">
+&gt;&gt;&gt; p.as_posix()
+'c:/windows'
+</pre>
+    <p>
+     To get the bytes representation (which might be useful under Unix systems),
+call
+     <tt class="docutils literal">
+      bytes()
+     </tt>
+     on it, which internally uses
+     <tt class="docutils literal">
+      os.fsencode()
+     </tt>
+     :
+    </p>
+    <pre class="literal-block">
+&gt;&gt;&gt; bytes(p)
+b'/home/antoine/pathlib/setup.py'
+</pre>
+    <p>
+     To represent the path as a
+     <tt class="docutils literal">
+      file:
+     </tt>
+     URI, call the
+     <tt class="docutils literal">
+      as_uri()
+     </tt>
+     method:
+    </p>
+    <pre class="literal-block">
+&gt;&gt;&gt; p = PurePosixPath('/etc/passwd')
+&gt;&gt;&gt; p.as_uri()
+'file:///etc/passwd'
+&gt;&gt;&gt; p = PureWindowsPath('c:/Windows')
+&gt;&gt;&gt; p.as_uri()
+'file:///c:/Windows'
+</pre>
+    <p>
+     The repr() of a path always uses forward slashes, even under Windows, for
+readability and to remind users that forward slashes are ok:
+    </p>
+    <pre class="literal-block">
+&gt;&gt;&gt; p = PureWindowsPath('c:/Windows')
+&gt;&gt;&gt; p
+PureWindowsPath('c:/Windows')
+</pre>
+   </div>
+   <div class="section" id="properties">
+    <h2>
+     <a class="toc-backref" href="#id38">
+      Properties
+     </a>
+    </h2>
+    <p>
+     Several simple properties are provided on every path (each can be empty):
+    </p>
+    <pre class="literal-block">
+&gt;&gt;&gt; p = PureWindowsPath('c:/Downloads/pathlib.tar.gz')
+&gt;&gt;&gt; p.drive
+'c:'
+&gt;&gt;&gt; p.root
+'\\'
+&gt;&gt;&gt; p.anchor
+'c:\\'
+&gt;&gt;&gt; p.name
+'pathlib.tar.gz'
+&gt;&gt;&gt; p.stem
+'pathlib.tar'
+&gt;&gt;&gt; p.suffix
+'.gz'
+&gt;&gt;&gt; p.suffixes
+['.tar', '.gz']
+</pre>
+   </div>
+   <div class="section" id="deriving-new-paths">
+    <h2>
+     <a class="toc-backref" href="#id39">
+      Deriving new paths
+     </a>
+    </h2>
+    <div class="section" id="joining">
+     <h3>
+      <a class="toc-backref" href="#id40">
+       Joining
+      </a>
+     </h3>
+     <p>
+      A path can be joined with another using the
+      <tt class="docutils literal">
+       /
+      </tt>
+      operator:
+     </p>
+     <pre class="literal-block">
+&gt;&gt;&gt; p = PurePosixPath('foo')
+&gt;&gt;&gt; p / 'bar'
+PurePosixPath('foo/bar')
+&gt;&gt;&gt; p / PurePosixPath('bar')
+PurePosixPath('foo/bar')
+&gt;&gt;&gt; 'bar' / p
+PurePosixPath('bar/foo')
+</pre>
+     <p>
+      As with the constructor, multiple path components can be specified, either
+collapsed or separately:
+     </p>
+     <pre class="literal-block">
+&gt;&gt;&gt; p / 'bar/xyzzy'
+PurePosixPath('foo/bar/xyzzy')
+&gt;&gt;&gt; p / 'bar' / 'xyzzy'
+PurePosixPath('foo/bar/xyzzy')
+</pre>
+     <p>
+      A joinpath() method is also provided, with the same behaviour:
+     </p>
+     <pre class="literal-block">
+&gt;&gt;&gt; p.joinpath('Python')
+PurePosixPath('foo/Python')
+</pre>
+    </div>
+    <div class="section" id="changing-the-path-s-final-component">
+     <h3>
+      <a class="toc-backref" href="#id41">
+       Changing the path's final component
+      </a>
+     </h3>
+     <p>
+      The
+      <tt class="docutils literal">
+       with_name()
+      </tt>
+      method returns a new path, with the name changed:
+     </p>
+     <pre class="literal-block">
+&gt;&gt;&gt; p = PureWindowsPath('c:/Downloads/pathlib.tar.gz')
+&gt;&gt;&gt; p.with_name('setup.py')
+PureWindowsPath('c:/Downloads/setup.py')
+</pre>
+     <p>
+      It fails with a
+      <tt class="docutils literal">
+       ValueError
+      </tt>
+      if the path doesn't have an actual name:
+     </p>
+     <pre class="literal-block">
+&gt;&gt;&gt; p = PureWindowsPath('c:/')
+&gt;&gt;&gt; p.with_name('setup.py')
+Traceback (most recent call last):
+  File "&lt;stdin&gt;", line 1, in &lt;module&gt;
+  File "pathlib.py", line 875, in with_name
+    raise ValueError("%r has an empty name" % (self,))
+ValueError: PureWindowsPath('c:/') has an empty name
+&gt;&gt;&gt; p.name
+''
+</pre>
+     <p>
+      The
+      <tt class="docutils literal">
+       with_suffix()
+      </tt>
+      method returns a new path with the suffix changed.
+However, if the path has no suffix, the new suffix is added:
+     </p>
+     <pre class="literal-block">
+&gt;&gt;&gt; p = PureWindowsPath('c:/Downloads/pathlib.tar.gz')
+&gt;&gt;&gt; p.with_suffix('.bz2')
+PureWindowsPath('c:/Downloads/pathlib.tar.bz2')
+&gt;&gt;&gt; p = PureWindowsPath('README')
+&gt;&gt;&gt; p.with_suffix('.bz2')
+PureWindowsPath('README.bz2')
+</pre>
+    </div>
+    <div class="section" id="making-the-path-relative">
+     <h3>
+      <a class="toc-backref" href="#id42">
+       Making the path relative
+      </a>
+     </h3>
+     <p>
+      The
+      <tt class="docutils literal">
+       relative_to()
+      </tt>
+      method computes the relative difference of a path to
+another:
+     </p>
+     <pre class="literal-block">
+&gt;&gt;&gt; PurePosixPath('/usr/bin/python').relative_to('/usr')
+PurePosixPath('bin/python')
+</pre>
+     <p>
+      ValueError is raised if the method cannot return a meaningful value:
+     </p>
+     <pre class="literal-block">
+&gt;&gt;&gt; PurePosixPath('/usr/bin/python').relative_to('/etc')
+Traceback (most recent call last):
+  File "&lt;stdin&gt;", line 1, in &lt;module&gt;
+  File "pathlib.py", line 926, in relative_to
+    .format(str(self), str(formatted)))
+ValueError: '/usr/bin/python' does not start with '/etc'
+</pre>
+    </div>
+   </div>
+   <div class="section" id="sequence-like-access">
+    <h2>
+     <a class="toc-backref" href="#id43">
+      Sequence-like access
+     </a>
+    </h2>
+    <p>
+     The
+     <tt class="docutils literal">
+      parts
+     </tt>
+     property returns a tuple providing read-only sequence access
+to a path's components:
+    </p>
+    <pre class="literal-block">
+&gt;&gt;&gt; p = PurePosixPath('/etc/init.d')
+&gt;&gt;&gt; p.parts
+('/', 'etc', 'init.d')
+</pre>
+    <p>
+     Windows paths handle the drive and the root as a single path component:
+    </p>
+    <pre class="literal-block">
+&gt;&gt;&gt; p = PureWindowsPath('c:/setup.py')
+&gt;&gt;&gt; p.parts
+('c:\\', 'setup.py')
+</pre>
+    <p>
+     (separating them would be wrong, since
+     <tt class="docutils literal">
+      C:
+     </tt>
+     is not the parent of
+     <tt class="docutils literal">
+      <span class="pre">
+       C:\\
+      </span>
+     </tt>
+     ).
+    </p>
+    <p>
+     The
+     <tt class="docutils literal">
+      parent
+     </tt>
+     property returns the logical parent of the path:
+    </p>
+    <pre class="literal-block">
+&gt;&gt;&gt; p = PureWindowsPath('c:/python33/bin/python.exe')
+&gt;&gt;&gt; p.parent
+PureWindowsPath('c:/python33/bin')
+</pre>
+    <p>
+     The
+     <tt class="docutils literal">
+      parents
+     </tt>
+     property returns an immutable sequence of the path's
+logical ancestors:
+    </p>
+    <pre class="literal-block">
+&gt;&gt;&gt; p = PureWindowsPath('c:/python33/bin/python.exe')
+&gt;&gt;&gt; len(p.parents)
+3
+&gt;&gt;&gt; p.parents[0]
+PureWindowsPath('c:/python33/bin')
+&gt;&gt;&gt; p.parents[1]
+PureWindowsPath('c:/python33')
+&gt;&gt;&gt; p.parents[2]
+PureWindowsPath('c:/')
+</pre>
+   </div>
+   <div class="section" id="querying">
+    <h2>
+     <a class="toc-backref" href="#id44">
+      Querying
+     </a>
+    </h2>
+    <p>
+     <tt class="docutils literal">
+      is_relative()
+     </tt>
+     returns True if the path is relative (see definition
+above), False otherwise.
+    </p>
+    <p>
+     <tt class="docutils literal">
+      is_reserved()
+     </tt>
+     returns True if a Windows path is a reserved path such
+as
+     <tt class="docutils literal">
+      CON
+     </tt>
+     or
+     <tt class="docutils literal">
+      NUL
+     </tt>
+     .  It always returns False for POSIX paths.
+    </p>
+    <p>
+     <tt class="docutils literal">
+      match()
+     </tt>
+     matches the path against a glob pattern. It operates on
+individual parts and matches from the right:
+    </p>
+    <blockquote>
+     <pre class="doctest-block">
+&gt;&gt;&gt; p = PurePosixPath('/usr/bin')
+&gt;&gt;&gt; p.match('/usr/b*')
+True
+&gt;&gt;&gt; p.match('usr/b*')
+True
+&gt;&gt;&gt; p.match('b*')
+True
+&gt;&gt;&gt; p.match('/u*')
+False
+</pre>
+    </blockquote>
+    <p>
+     This behaviour respects the following expectations:
+    </p>
+    <ul class="simple">
+     <li>
+      A simple pattern such as "*.py" matches arbitrarily long paths as long
+as the last part matches, e.g. "/usr/foo/bar.py".
+     </li>
+     <li>
+      Longer patterns can be used as well for more complex matching, e.g.
+"/usr/foo/*.py" matches "/usr/foo/bar.py".
+     </li>
+    </ul>
+   </div>
+  </div>
+  <div class="section" id="concrete-paths-api">
+   <h1>
+    <a class="toc-backref" href="#id45">
+     Concrete paths API
+    </a>
+   </h1>
+   <p>
+    In addition to the operations of the pure API, concrete paths provide
+additional methods which actually access the filesystem to query or mutate
+information.
+   </p>
+   <div class="section" id="constructing">
+    <h2>
+     <a class="toc-backref" href="#id46">
+      Constructing
+     </a>
+    </h2>
+    <p>
+     The classmethod
+     <tt class="docutils literal">
+      cwd()
+     </tt>
+     creates a path object pointing to the current
+working directory in absolute form:
+    </p>
+    <pre class="literal-block">
+&gt;&gt;&gt; Path.cwd()
+PosixPath('/home/antoine/pathlib')
+</pre>
+   </div>
+   <div class="section" id="file-metadata">
+    <h2>
+     <a class="toc-backref" href="#id47">
+      File metadata
+     </a>
+    </h2>
+    <p>
+     The
+     <tt class="docutils literal">
+      stat()
+     </tt>
+     returns the file's stat() result; similarly,
+     <tt class="docutils literal">
+      lstat()
+     </tt>
+     returns the file's lstat() result (which is different iff the file is a
+symbolic link):
+    </p>
+    <pre class="literal-block">
+&gt;&gt;&gt; p.stat()
+posix.stat_result(st_mode=33277, st_ino=7483155, st_dev=2053, st_nlink=1, st_uid=500, st_gid=500, st_size=928, st_atime=1343597970, st_mtime=1328287308, st_ctime=1343597964)
+</pre>
+    <p>
+     Higher-level methods help examine the kind of the file:
+    </p>
+    <pre class="literal-block">
+&gt;&gt;&gt; p.exists()
+True
+&gt;&gt;&gt; p.is_file()
+True
+&gt;&gt;&gt; p.is_dir()
+False
+&gt;&gt;&gt; p.is_symlink()
+False
+&gt;&gt;&gt; p.is_socket()
+False
+&gt;&gt;&gt; p.is_fifo()
+False
+&gt;&gt;&gt; p.is_block_device()
+False
+&gt;&gt;&gt; p.is_char_device()
+False
+</pre>
+    <p>
+     The file owner and group names (rather than numeric ids) are queried
+through corresponding methods:
+    </p>
+    <pre class="literal-block">
+&gt;&gt;&gt; p = Path('/etc/shadow')
+&gt;&gt;&gt; p.owner()
+'root'
+&gt;&gt;&gt; p.group()
+'shadow'
+</pre>
+   </div>
+   <div class="section" id="path-resolution">
+    <h2>
+     <a class="toc-backref" href="#id48">
+      Path resolution
+     </a>
+    </h2>
+    <p>
+     The
+     <tt class="docutils literal">
+      resolve()
+     </tt>
+     method makes a path absolute, resolving any symlink on
+the way (like the POSIX realpath() call).  It is the only operation which
+will remove "
+     <tt class="docutils literal">
+      ..
+     </tt>
+     " path components.  On Windows, this method will also
+take care to return the canonical path (with the right casing).
+    </p>
+   </div>
+   <div class="section" id="directory-walking">
+    <h2>
+     <a class="toc-backref" href="#id49">
+      Directory walking
+     </a>
+    </h2>
+    <p>
+     Simple (non-recursive) directory access is done by calling the iterdir()
+method, which returns an iterator over the child paths:
+    </p>
+    <pre class="literal-block">
+&gt;&gt;&gt; p = Path('docs')
+&gt;&gt;&gt; for child in p.iterdir(): child
+...
+PosixPath('docs/conf.py')
+PosixPath('docs/_templates')
+PosixPath('docs/make.bat')
+PosixPath('docs/index.rst')
+PosixPath('docs/_build')
+PosixPath('docs/_static')
+PosixPath('docs/Makefile')
+</pre>
+    <p>
+     This allows simple filtering through list comprehensions:
+    </p>
+    <pre class="literal-block">
+&gt;&gt;&gt; p = Path('.')
+&gt;&gt;&gt; [child for child in p.iterdir() if child.is_dir()]
+[PosixPath('.hg'), PosixPath('docs'), PosixPath('dist'), PosixPath('__pycache__'), PosixPath('build')]
+</pre>
+    <p>
+     Simple and recursive globbing is also provided:
+    </p>
+    <pre class="literal-block">
+&gt;&gt;&gt; for child in p.glob('**/*.py'): child
+...
+PosixPath('test_pathlib.py')
+PosixPath('setup.py')
+PosixPath('pathlib.py')
+PosixPath('docs/conf.py')
+PosixPath('build/lib/pathlib.py')
+</pre>
+   </div>
+   <div class="section" id="file-opening">
+    <h2>
+     <a class="toc-backref" href="#id50">
+      File opening
+     </a>
+    </h2>
+    <p>
+     The
+     <tt class="docutils literal">
+      open()
+     </tt>
+     method provides a file opening API similar to the builtin
+     <tt class="docutils literal">
+      open()
+     </tt>
+     method:
+    </p>
+    <pre class="literal-block">
+&gt;&gt;&gt; p = Path('setup.py')
+&gt;&gt;&gt; with p.open() as f: f.readline()
+...
+'#!/usr/bin/env python3\n'
+</pre>
+   </div>
+   <div class="section" id="filesystem-modification">
+    <h2>
+     <a class="toc-backref" href="#id51">
+      Filesystem modification
+     </a>
+    </h2>
+    <p>
+     Several common filesystem operations are provided as methods:
+     <tt class="docutils literal">
+      touch()
+     </tt>
+     ,
+     <tt class="docutils literal">
+      mkdir()
+     </tt>
+     ,
+     <tt class="docutils literal">
+      rename()
+     </tt>
+     ,
+     <tt class="docutils literal">
+      replace()
+     </tt>
+     ,
+     <tt class="docutils literal">
+      unlink()
+     </tt>
+     ,
+     <tt class="docutils literal">
+      rmdir()
+     </tt>
+     ,
+     <tt class="docutils literal">
+      chmod()
+     </tt>
+     ,
+     <tt class="docutils literal">
+      lchmod()
+     </tt>
+     ,
+     <tt class="docutils literal">
+      symlink_to()
+     </tt>
+     .  More operations could be
+provided, for example some of the functionality of the shutil module.
+    </p>
+    <p>
+     Detailed documentation of the proposed API can be found at the
+     <a class="reference external" href="https://pathlib.readthedocs.org/en/pep428/">
+      pathlib
+docs
+     </a>
+     <a class="footnote-reference" href="#id19" id="id20">
+      [8]
+     </a>
+     .
+    </p>
+   </div>
+  </div>
+  <div class="section" id="discussion">
+   <h1>
+    <a class="toc-backref" href="#id52">
+     Discussion
+    </a>
+   </h1>
+   <div class="section" id="division-operator">
+    <h2>
+     <a class="toc-backref" href="#id53">
+      Division operator
+     </a>
+    </h2>
+    <p>
+     The division operator came out first in a
+     <a class="reference external" href="https://mail.python.org/pipermail/python-ideas/2012-October/016544.html">
+      poll
+     </a>
+     <a class="footnote-reference" href="#id21" id="id22">
+      [9]
+     </a>
+     about the path joining
+operator.  Initial versions of
+     <a class="reference external" href="http://pypi.python.org/pypi/pathlib/">
+      pathlib
+     </a>
+     <a class="footnote-reference" href="#id2" id="id6">
+      [1]
+     </a>
+     used square brackets
+(i.e.
+     <tt class="docutils literal">
+      __getitem__
+     </tt>
+     ) instead.
+    </p>
+   </div>
+   <div class="section" id="joinpath">
+    <h2>
+     <a class="toc-backref" href="#id54">
+      joinpath()
+     </a>
+    </h2>
+    <p>
+     The joinpath() method was initially called join(), but several people
+objected that it could be confused with str.join() which has different
+semantics.  Therefore it was renamed to joinpath().
+    </p>
+   </div>
+   <div class="section" id="case-sensitivity">
+    <h2>
+     <a class="toc-backref" href="#id55">
+      Case-sensitivity
+     </a>
+    </h2>
+    <p>
+     Windows users consider filesystem paths to be case-insensitive and expect
+path objects to observe that characteristic, even though in some rare
+situations some foreign filesystem mounts may be case-sensitive under
+Windows.
+    </p>
+    <p>
+     In the words of one commenter,
+    </p>
+    <blockquote>
+     <p>
+      "If glob("*.py") failed to find SETUP.PY on Windows, that would be a
+usability disaster".
+     </p>
+     <p class="attribution">
+      —Paul Moore in
+      <a class="reference external" href="https://mail.python.org/pipermail/python-dev/2013-April/125254.html">
+       https://mail.python.org/pipermail/python-dev/2013-April/125254.html
+      </a>
+     </p>
+    </blockquote>
+   </div>
+  </div>
+  <div class="section" id="id1">
+   <h1>
+    <a class="toc-backref" href="#id56">
+     References
+    </a>
+   </h1>
+   <table class="docutils footnote" frame="void" id="id2" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       [1]
+      </td>
+      <td>
+       <em>
+        (
+        <a class="fn-backref" href="#id3">
+         1
+        </a>
+        ,
+        <a class="fn-backref" href="#id4">
+         2
+        </a>
+        ,
+        <a class="fn-backref" href="#id5">
+         3
+        </a>
+        ,
+        <a class="fn-backref" href="#id6">
+         4
+        </a>
+        )
+       </em>
+       <a class="reference external" href="http://pypi.python.org/pypi/pathlib/">
+        http://pypi.python.org/pypi/pathlib/
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id7" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id8">
+        [2]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="https://github.com/jaraco/path.py">
+        https://github.com/jaraco/path.py
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id9" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id10">
+        [3]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="http://twistedmatrix.com/documents/current/api/twisted.python.filepath.FilePath.html">
+        http://twistedmatrix.com/documents/current/api/twisted.python.filepath.FilePath.html
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id11" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id12">
+        [4]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="http://wiki.python.org/moin/AlternativePathClass">
+        http://wiki.python.org/moin/AlternativePathClass
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id13" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id14">
+        [5]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="https://bitbucket.org/sluggo/unipath/overview">
+        https://bitbucket.org/sluggo/unipath/overview
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id15" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id16">
+        [6]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="https://bitbucket.org/pitrou/pathlib/">
+        https://bitbucket.org/pitrou/pathlib/
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id17" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id18">
+        [7]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="http://pubs.opengroup.org/onlinepubs/009695399/basedefs/xbd_chap04.html#tag_04_11">
+        http://pubs.opengroup.org/onlinepubs/009695399/basedefs/xbd_chap04.html#tag_04_11
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id19" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id20">
+        [8]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="https://pathlib.readthedocs.org/en/pep428/">
+        https://pathlib.readthedocs.org/en/pep428/
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id21" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id22">
+        [9]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="https://mail.python.org/pipermail/python-ideas/2012-October/016544.html">
+        https://mail.python.org/pipermail/python-ideas/2012-October/016544.html
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+  </div>
+  <div class="section" id="copyright">
+   <h1>
+    <a class="toc-backref" href="#id57">
+     Copyright
+    </a>
+   </h1>
+   <p>
+    This document has been placed into the public domain.
+   </p>
+   <!-- Local Variables:
+mode: indented-text
+indent-tabs-mode: nil
+sentence-end-double-space: t
+fill-column: 70
+coding: utf-8 -->
+  </div>
+ </body>
+
+<!-- Mirrored from www.python.org/dev/peps/pep-0428/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 03 Sep 2015 04:34:40 GMT -->
+</html>Source: <a href="https://hg.python.org/peps/file/tip/pep-0428.txt">https://hg.python.org/peps/file/tip/pep-0428.txt</a>
+
+    </article>
+
+
+                </section>
+
+                
+
+
+<aside class="left-sidebar" role="secondary">
+
+    
+
+
+
+
+
+
+    
+
+
+
+
+
+        <div class="twitter-widget sidebar-widget">
+        <a class="twitter-timeline" data-dnt="true" href="https://twitter.com/ThePSF" data-widget-id="434113224703610882">Tweets by @ThePSF</a>
+        <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+    </div>
+
+    <div class="psf-sidebar-widget sidebar-widget">
+        <h3 class="widget-title">The PSF</h3>
+<p>The Python Software Foundation is the organization behind Python. Become a member of the PSF and help advance the software and our mission. </p>
+
+    </div>
+
+</aside>
+
+
+
+                
+                
+
+
+            </div><!-- end .container -->
+        </div><!-- end #content .content-wrapper -->
+
+        <!-- Footer and social media list -->
+        <footer id="site-map" class="main-footer" role="contentinfo">
+            <div class="main-footer-links">
+                <div class="container">
+
+                    
+                    <a id="back-to-top-1" class="jump-link" href="#python-network"><span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> Back to Top</a>
+
+                    
+
+<ul class="sitemap navigation menu do-not-print" role="tree" id="container">
+    
+    <li class="tier-1 element-1">
+        <a href="https://www.python.org/about/" >About</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/apps/" title="">Applications</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/quotes/" title="">Quotes</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/gettingstarted/" title="">Getting Started</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/help/" title="">Help</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-2">
+        <a href="https://www.python.org/downloads/" >Downloads</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/downloads/" title="">All releases</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/downloads/source/" title="">Source code</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/downloads/windows/" title="">Windows</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/downloads/mac-osx/" title="">Mac OS X</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/download/other/" title="">Other Platforms</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://docs.python.org/3/license.html" title="">License</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/download/alternatives" title="">Alternative Implementations</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-3">
+        <a href="https://www.python.org/doc/" >Documentation</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/doc/" title="">Docs</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/doc/av" title="">Audio/Visual Talks</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://wiki.python.org/moin/BeginnersGuide" title="">Beginner&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://docs.python.org/faq/" title="">FAQ</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="http://wiki.python.org/moin/Languages" title="">Non-English Docs</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="../index.html" title="">PEP Index</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://wiki.python.org/moin/PythonBooks" title="">Python Books</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-4">
+        <a href="https://www.python.org/community/" >Community</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/community/diversity/" title="">Diversity</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/community/irc/" title="">IRC</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/community/lists/" title="">Mailing Lists</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/workshops/" title="">Python Conferences</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/community/sigs/" title="">Special Interest Groups</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://wiki.python.org/moin/" title="">Python Wiki</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/community/logos/" title="">Python Logo</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://www.python.org/community/merchandise/" title="">Merchandise</a></li>
+    
+        <li class="tier-2 element-9" role="treeitem"><a href="https://www.python.org/community/awards" title="">Community Awards</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-5">
+        <a href="https://www.python.org/about/success/" title="success-stories">Success Stories</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/success/#arts" title="">Arts</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/success/#business" title="">Business</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/success/#education" title="">Education</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/success/#engineering" title="">Engineering</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/about/success/#government" title="">Government</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://www.python.org/about/success/#scientific" title="">Scientific</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/about/success/#software-development" title="">Software Development</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-6">
+        <a href="https://www.python.org/blogs/" title="News from around the Python world">News</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/blogs/" title="Python Insider Blog Posts">Python News</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://planetpython.org/" title="Planet Python">Community News</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="http://pyfound.blogspot.com/" title="PSF Blog">PSF News</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pycon.blogspot.com/" title="PyCon Blog">PyCon News</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-7">
+        <a href="https://www.python.org/events/" >Events</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/events/python-events/" title="">Python Events</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/events/python-user-group/" title="">User Group Events</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/events/python-events/past/" title="">Python Events Archive</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/events/python-user-group/past/" title="">User Group Events Archive</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://wiki.python.org/moin/PythonEventsCalendar#Submitting_an_Event" title="">Submit an Event</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-8">
+        <a href="https://www.python.org/dev/" >Contributing</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="http://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://bugs.python.org/" title="">Issue Tracker</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://mail.python.org/mailman/listinfo/python-dev" title="">python-dev list</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pythonmentors.com/" title="">Core Mentorship</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+</ul>
+
+
+                    <a id="back-to-top-2" class="jump-link" href="#python-network"><span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> Back to Top</a>
+                    
+
+                </div><!-- end .container -->
+            </div> <!-- end .main-footer-links -->
+
+            <div class="site-base">
+                <div class="container">
+                    
+                    <ul class="footer-links navigation menu do-not-print" role="tree">
+                        <li class="tier-1 element-1"><a href="https://www.python.org/about/help/">Help &amp; <span class="say-no-more">General</span> Contact</a></li>
+                        <li class="tier-1 element-2"><a href="https://www.python.org/community/diversity/">Diversity <span class="say-no-more">Initiatives</span></a></li>
+                        <li class="tier-1 element-3"><a href="https://github.com/python/pythondotorg/issues">Submit Website Bug</a></li>
+                        <!--<li class="tier-1 element-3"><a href="#"><span class="say-no-more">Website</span> Colophon</a></li>-->
+                    </ul>
+
+                    <div class="copyright">
+                        <p><small>
+                            <span class="pre">Copyright &copy;2001-2015.</span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/psf-landing/">Python Software Foundation</a></span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/about/legal/">Legal Statements</a></span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/privacy/">Privacy Policy</a></span>
+                        </small></p>
+                    </div>
+
+                </div><!-- end .container -->
+            </div><!-- end .site-base -->
+
+        </footer>
+
+    </div><!-- end #touchnav-wrapper -->
+
+    
+    <script src="../../../../ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="../../../static/js/libs/jquery-1.8.2.min.js"><\/script>')</script>
+
+    <script src="../../../static/js/libs/masonry.pkgd.min.js"></script>
+
+    <script type="text/javascript" src="../../../static/js/main-min.js" charset="utf-8"></script>
+    
+
+    <!--[if lte IE 7]>
+    <script type="text/javascript" src="/static/js/plugins/IE8-min.js" charset="utf-8"></script>
+    
+    
+    <![endif]-->
+
+    <!--[if lte IE 8]>
+    <script type="text/javascript" src="/static/js/plugins/getComputedStyle-min.js" charset="utf-8"></script>
+    
+    
+    <![endif]-->
+
+    
+
+    
+    
+
+</body>
+</html>

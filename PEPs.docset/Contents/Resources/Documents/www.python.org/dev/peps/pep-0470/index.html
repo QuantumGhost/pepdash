@@ -1,0 +1,1863 @@
+<!doctype html>
+<!--[if lt IE 7]>   <html class="no-js ie6 lt-ie7 lt-ie8 lt-ie9">   <![endif]-->
+<!--[if IE 7]>      <html class="no-js ie7 lt-ie8 lt-ie9">          <![endif]-->
+<!--[if IE 8]>      <html class="no-js ie8 lt-ie9">                 <![endif]-->
+<!--[if gt IE 8]><!--><html class="no-js" lang="en" dir="ltr">  <!--<![endif]-->
+
+
+<!-- Mirrored from www.python.org/dev/peps/pep-0470/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 03 Sep 2015 04:36:22 GMT -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <link rel="prefetch" href="../../../../ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js">
+
+    <meta name="application-name" content="Python.org">
+    <meta name="msapplication-tooltip" content="The official home of the Python Programming Language">
+    <meta name="apple-mobile-web-app-title" content="Python.org">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="format-detection" content="telephone=no">
+    <meta http-equiv="cleartype" content="on">
+    <meta http-equiv="imagetoolbar" content="false">
+
+    <script src="../../../static/js/libs/modernizr.js"></script>
+
+    <link href="../../../static/stylesheets/style.css" rel="stylesheet" type="text/css" title="default" />
+    <link href="../../../static/stylesheets/mq.css" rel="stylesheet" type="text/css" media="not print, braille, embossed, speech, tty" />
+    
+
+    <!--[if (lte IE 8)&(!IEMobile)]>
+    <link href="/static/stylesheets/no-mq.css" rel="stylesheet" type="text/css" media="screen" />
+    
+    
+    <![endif]-->
+
+    
+    <link rel="icon" type="image/x-icon" href="https://www.python.org/static/favicon.ico">
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="../../../static/apple-touch-icon-144x144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="../../../static/apple-touch-icon-114x114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="../../../static/apple-touch-icon-72x72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="../../../static/apple-touch-icon-precomposed.png">
+    <link rel="apple-touch-icon" href="../../../static/apple-touch-icon-precomposed.png">
+
+    
+    <meta name="msapplication-TileImage" content="/static/metro-icon-144x144-precomposed.png"><!-- white shape -->
+    <meta name="msapplication-TileColor" content="#3673a5"><!-- python blue -->
+    <meta name="msapplication-navbutton-color" content="#3673a5">
+
+    <meta property="og:site_name" content="Python.org">
+    <meta property="og:type" content="website">
+
+    <title>PEP 0470 -- Removing External Hosting Support on PyPI | Python.org</title>
+    <meta property="og:title" content="Welcome to Python.org">
+
+    
+    <meta name="description" content="The official home of the Python Programming Language">
+    <meta name="og:description" content="The official home of the Python Programming Language">
+    <meta name="keywords" content="Python programming language object oriented web free open source software license documentation download community">
+    <meta property="og:tag" content="Python programming language object oriented web free open source software license documentation download community">
+    <meta property="og:published_time" content="">
+    <meta property="og:modified_time" content="">
+    <meta property="og:author" content="">
+    <meta property="og:section" content=""> 
+    <meta property="og:url" content="">
+    <meta property="og:image" content="">
+    <meta property="og:video" content="">
+
+    <link rel="author" href="https://www.python.org/static/humans.txt">
+
+    
+
+    
+    <script type="application/ld+json">
+     {
+       "@context": "http://schema.org",
+       "@type": "WebSite",
+       "url": "https://www.python.org/",
+       "potentialAction": {
+         "@type": "SearchAction",
+         "target": "https://www.python.org/search/?q={search_term_string}",
+         "query-input": "required name=search_term_string"
+       }
+     }
+    </script>
+
+    
+    <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-39055973-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+    </script>
+    
+</head>
+
+<body class="python pages pep-page">
+
+    <div id="touchnav-wrapper">
+
+        <div id="nojs" class="do-not-print">
+            <p><strong>Notice:</strong> While Javascript is not essential for this website, your interaction with the content will be limited. Please turn Javascript on for the full experience. </p>
+        </div>
+
+        <!--[if lt IE 8]>
+        <div id="oldie-warning" class="do-not-print">
+            <p><strong>Notice:</strong> Your browser is <em>ancient</em> and <a href="http://www.ie6countdown.com/">Microsoft agrees</a>. <a href="http://browsehappy.com/">Upgrade to a different browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to experience a better web.</p>
+        </div>
+        <![endif]-->
+
+        <!-- Sister Site Links -->
+        <div id="top" class="top-bar do-not-print">
+
+            <nav class="meta-navigation container" role="navigation">
+
+                
+                <div class="skip-link screen-reader-text">
+                    <a href="#content" title="Skip to content">Skip to content</a>
+                </div>
+
+                
+                <a id="close-python-network" class="jump-link" href="#python-network" aria-hidden="true">
+                    <span aria-hidden="true" class="icon-arrow-down"><span>&#9660;</span></span> Close
+                </a>
+
+                
+
+<ul class="menu" role="tree">
+    
+    <li class="python-meta ">
+        <a href="https://www.python.org/" title="The Python Programming Language" >Python</a>
+    </li>
+    
+    <li class="psf-meta ">
+        <a href="https://www.python.org/psf-landing/" title="The Python Software Foundation" >PSF</a>
+    </li>
+    
+    <li class="docs-meta ">
+        <a href="https://docs.python.org/" title="Python Documentation" >Docs</a>
+    </li>
+    
+    <li class="pypi-meta ">
+        <a href="https://pypi.python.org/" title="Python Package Index" >PyPI</a>
+    </li>
+    
+    <li class="jobs-meta ">
+        <a href="https://www.python.org/jobs/" title="Python Job Board" >Jobs</a>
+    </li>
+    
+    <li class="shop-meta ">
+        <a href="https://www.python.org/community/" title="Python Community" >Community</a>
+    </li>
+    
+</ul>
+
+
+                <a id="python-network" class="jump-link" href="#top" aria-hidden="true">
+                    <span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> The Python Network
+                </a>
+
+            </nav>
+
+        </div>
+
+        <!-- Header elements -->
+        <header class="main-header" role="banner">
+            <div class="container">
+
+                <h1 class="site-headline">
+                    <a href="https://www.python.org/"><img class="python-logo" src="../../../static/img/python-logo.png" alt="python&trade;"></a>
+                </h1>
+
+                <div class="options-bar do-not-print">
+
+                    
+                    <a id="site-map-link" class="jump-to-menu" href="#site-map"><span class="menu-icon">&equiv;</span> Menu</a><form class="search-the-site" action="https://www.python.org/search/" method="get">
+                        <fieldset title="Search Python.org">
+
+                            <span aria-hidden="true" class="icon-search"></span>
+
+                            <label class="screen-reader-text" for="id-search-field">Search This Site</label>
+                            <input id="id-search-field" name="q" type="search" role="textbox" class="search-field" placeholder="Search" value="" tabindex="1">
+
+                            <button type="submit" name="submit" id="submit" class="search-button" title="Submit this Search" tabindex="3">
+                                GO
+                            </button>
+
+                            
+                            <!--[if IE]><input type="text" style="display: none;" disabled="disabled" size="1" tabindex="4"><![endif]-->
+
+                        </fieldset>
+                    </form><span class="breaker"></span><div class="adjust-font-size" aria-hidden="true">
+                        <ul class="navigation menu" aria-label="Adjust Text Size on Page">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                <a href="#" class="action-trigger"><strong><small>A</small> A</strong></a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a class="text-shrink" title="Make Text Smaller" href="javascript:;">Smaller</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a class="text-grow" title="Make Text Larger" href="javascript:;">Larger</a></li>
+                                    <li class="tier-2 element-3" role="treeitem"><a class="text-reset" title="Reset any font size changes I have made" href="javascript:;">Reset</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div><div class="winkwink-nudgenudge">
+                        <ul class="navigation menu" aria-label="Social Media Navigation">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                <a href="#" class="action-trigger">Socialize</a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a href="http://plus.google.com/+Python"><span aria-hidden="true" class="icon-google-plus"></span>Google+</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a href="http://www.facebook.com/pythonlang?fref=ts"><span aria-hidden="true" class="icon-facebook"></span>Facebook</a></li>
+                                    <li class="tier-2 element-3" role="treeitem"><a href="http://twitter.com/ThePSF"><span aria-hidden="true" class="icon-twitter"></span>Twitter</a></li>
+                                    <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/irc/"><span aria-hidden="true" class="icon-freenode"></span>Chat on IRC</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div><div class="account-signin">
+                        <ul class="navigation menu" aria-label="Social Media Navigation">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                
+                                <a href="https://www.python.org/accounts/login/" title="Sign Up or Sign In to Python.org">Sign In</a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/accounts/signup/">Sign Up / Register</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/accounts/login/">Sign In</a></li>
+                                </ul>
+                                
+                            </li>
+                        </ul>
+                    </div>
+
+                </div><!-- end options-bar -->
+
+                <nav id="mainnav" class="python-navigation main-navigation do-not-print" role="navigation">
+                    
+                        
+<ul class="navigation menu" role="menubar" aria-label="Main Navigation">
+  
+    
+    
+    <li id="about" class="tier-1 element-1  " aria-haspopup="true">
+        <a href="https://www.python.org/about/" title="" class="">About</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/apps/" title="">Applications</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/quotes/" title="">Quotes</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/gettingstarted/" title="">Getting Started</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/help/" title="">Help</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="downloads" class="tier-1 element-2  " aria-haspopup="true">
+        <a href="https://www.python.org/downloads/" title="" class="">Downloads</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/downloads/" title="">All releases</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/downloads/source/" title="">Source code</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/downloads/windows/" title="">Windows</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/downloads/mac-osx/" title="">Mac OS X</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/download/other/" title="">Other Platforms</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://docs.python.org/3/license.html" title="">License</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/download/alternatives" title="">Alternative Implementations</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="documentation" class="tier-1 element-3  " aria-haspopup="true">
+        <a href="https://www.python.org/doc/" title="" class="">Documentation</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/doc/" title="">Docs</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/doc/av" title="">Audio/Visual Talks</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://wiki.python.org/moin/BeginnersGuide" title="">Beginner&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://docs.python.org/faq/" title="">FAQ</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="http://wiki.python.org/moin/Languages" title="">Non-English Docs</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="../index.html" title="">PEP Index</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://wiki.python.org/moin/PythonBooks" title="">Python Books</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="community" class="tier-1 element-4  " aria-haspopup="true">
+        <a href="https://www.python.org/community/" title="" class="">Community</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/community/diversity/" title="">Diversity</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/community/irc/" title="">IRC</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/community/lists/" title="">Mailing Lists</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/workshops/" title="">Python Conferences</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/community/sigs/" title="">Special Interest Groups</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://wiki.python.org/moin/" title="">Python Wiki</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/community/logos/" title="">Python Logo</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://www.python.org/community/merchandise/" title="">Merchandise</a></li>
+    
+        <li class="tier-2 element-9" role="treeitem"><a href="https://www.python.org/community/awards" title="">Community Awards</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="success-stories" class="tier-1 element-5  " aria-haspopup="true">
+        <a href="https://www.python.org/about/success/" title="success-stories" class="">Success Stories</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/success/#arts" title="">Arts</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/success/#business" title="">Business</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/success/#education" title="">Education</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/success/#engineering" title="">Engineering</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/about/success/#government" title="">Government</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://www.python.org/about/success/#scientific" title="">Scientific</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/about/success/#software-development" title="">Software Development</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="news" class="tier-1 element-6  " aria-haspopup="true">
+        <a href="https://www.python.org/blogs/" title="News from around the Python world" class="">News</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/blogs/" title="Python Insider Blog Posts">Python News</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://planetpython.org/" title="Planet Python">Community News</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="http://pyfound.blogspot.com/" title="PSF Blog">PSF News</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pycon.blogspot.com/" title="PyCon Blog">PyCon News</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="events" class="tier-1 element-7  " aria-haspopup="true">
+        <a href="https://www.python.org/events/" title="" class="">Events</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/events/python-events/" title="">Python Events</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/events/python-user-group/" title="">User Group Events</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/events/python-events/past/" title="">Python Events Archive</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/events/python-user-group/past/" title="">User Group Events Archive</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://wiki.python.org/moin/PythonEventsCalendar#Submitting_an_Event" title="">Submit an Event</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    
+  
+</ul>
+
+                    
+                </nav>
+
+                <div class="header-banner "> <!-- for optional "do-not-print" class -->
+                    
+                    
+                </div>
+
+                
+                
+
+             </div><!-- end .container -->
+        </header>
+
+        <div id="content" class="content-wrapper">
+            <!-- Main Content Column -->
+            <div class="container">
+
+                <section class="main-content with-left-sidebar" role="main">
+
+                    
+<ul class="breadcrumbs menu">
+    <li>
+        <a href="https://www.python.org/" title="The Python Programming Language">Python</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>
+        <a href="https://www.python.org/dev/">Python Developer's Guide</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>
+        <a href="../index.html">PEP Index</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>PEP 0470 -- Removing External Hosting Support on PyPI</li>
+</ul>
+
+
+                    
+<style>
+   .pep-page pre {
+        padding: .5em;
+        background: inherit;
+        border-left: 0px;
+        -webkit-box-shadow: 0 0 0 0;
+        -moz-box-shadow: 0 0 0 0;
+        box-shadow: 0 0 0 0;
+   }
+</style>
+
+    
+    <article class="text">
+        
+
+        <header class="article-header">
+            <h1 class="page-title">PEP 0470 -- Removing External Hosting Support on PyPI</h1>
+        </header>
+
+        <!--
+This HTML is auto-generated.  DO NOT EDIT THIS FILE!  If you are writing a new
+PEP, see http://www.python.org/dev/peps/pep-0001 for instructions and links
+to templates.  DO NOT USE THIS HTML FILE AS YOUR TEMPLATE!
+-->
+<html>
+ <body>
+  <table class="rfc2822 docutils field-list" frame="void" rules="none">
+   <col class="field-name">
+   </col>
+   <col class="field-body">
+   </col>
+   <tbody valign="top">
+    <tr class="field">
+     <th class="field-name">
+      PEP:
+     </th>
+     <td class="field-body">
+      470
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Title:
+     </th>
+     <td class="field-body">
+      Removing External Hosting Support on PyPI
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Author:
+     </th>
+     <td class="field-body">
+      Donald Stufft &lt;donald at stufft.io&gt;
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      BDFL-Delegate:
+     </th>
+     <td class="field-body">
+      Paul Moore &lt;
+      <a class="reference external" href="mailto:p.f.moore@gmail.com">
+       p.f.moore@gmail.com
+      </a>
+      &gt;
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Discussions-To:
+     </th>
+     <td class="field-body">
+      <a class="reference external" href="mailto:distutils-sig@python.org?subject=PEP%20470">
+       distutils-sig at python.org
+      </a>
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Status:
+     </th>
+     <td class="field-body">
+      Accepted
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Type:
+     </th>
+     <td class="field-body">
+      Process
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Created:
+     </th>
+     <td class="field-body">
+      12-May-2014
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Post-History:
+     </th>
+     <td class="field-body">
+      14-May-2014, 05-Jun-2014, 03-Oct-2014, 13-Oct-2014, 26-Aug-2015
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Replaces:
+     </th>
+     <td class="field-body">
+      <a class="reference external" href="../pep-0438/index.html">
+       438
+      </a>
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Resolution:
+     </th>
+     <td class="field-body">
+      <a class="reference external" href="https://mail.python.org/pipermail/distutils-sig/2015-September/026789.html">
+       https://mail.python.org/pipermail/distutils-sig/2015-September/026789.html
+      </a>
+     </td>
+    </tr>
+   </tbody>
+  </table>
+  <hr/>
+  <div class="contents topic" id="contents">
+   <p class="topic-title first">
+    Contents
+   </p>
+   <ul class="simple">
+    <li>
+     <a class="reference internal" href="#abstract" id="id2">
+      Abstract
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#rationale" id="id3">
+      Rationale
+     </a>
+     <ul>
+      <li>
+       <a class="reference internal" href="#key-user-experience-expectations" id="id4">
+        Key User Experience Expectations
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#why-additional-repositories" id="id5">
+        Why Additional Repositories?
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#why-not-pep-438-or-similar" id="id6">
+        Why Not PEP 438 or Similar?
+       </a>
+      </li>
+     </ul>
+    </li>
+    <li>
+     <a class="reference internal" href="#multiple-repository-index-support" id="id7">
+      Multiple Repository/Index Support
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#deprecation-and-removal-of-link-spidering" id="id8">
+      Deprecation and Removal of Link Spidering
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#summary-of-changes" id="id9">
+      Summary of Changes
+     </a>
+     <ul>
+      <li>
+       <a class="reference internal" href="#repository-side" id="id10">
+        Repository side
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#client-side" id="id11">
+        Client side
+       </a>
+      </li>
+     </ul>
+    </li>
+    <li>
+     <a class="reference internal" href="#impact" id="id12">
+      Impact
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#frequently-asked-questions" id="id13">
+      Frequently Asked Questions
+     </a>
+     <ul>
+      <li>
+       <a class="reference internal" href="#i-can-t-host-my-project-on-pypi-because-of-x-what-should-i-do" id="id14">
+        I can't host my project on PyPI because of &lt;X&gt;, what should I do?
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#my-users-have-a-worse-experience-with-this-pep-than-before-how-do-i-explain-that" id="id15">
+        My users have a worse experience with this PEP than before, how do I explain that?
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#switching-to-a-repository-structure-breaks-my-workflow-or-isn-t-allowed-by-my-host" id="id16">
+        Switching to a repository structure breaks my workflow or isn't allowed by my host?
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#why-don-t-you-provide-x" id="id17">
+        Why don't you provide &lt;X&gt;?
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#why-should-i-register-on-pypi-if-i-m-running-my-own-repository-anyways" id="id18">
+        Why should I register on PyPI if I'm running my own repository anyways?
+       </a>
+      </li>
+     </ul>
+    </li>
+    <li>
+     <a class="reference internal" href="#rejected-proposals" id="id19">
+      Rejected Proposals
+     </a>
+     <ul>
+      <li>
+       <a class="reference internal" href="#allow-easier-discovery-of-externally-hosted-indexes" id="id20">
+        Allow easier discovery of externally hosted indexes
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#keep-the-current-classification-system-but-adjust-the-options" id="id21">
+        Keep the current classification system but adjust the options
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#implement-this-pep-but-do-not-remove-the-existing-links" id="id22">
+        Implement this PEP, but Do Not Remove the Existing Links
+       </a>
+      </li>
+     </ul>
+    </li>
+    <li>
+     <a class="reference internal" href="#copyright" id="id23">
+      Copyright
+     </a>
+    </li>
+   </ul>
+  </div>
+  <div class="section" id="abstract">
+   <h1>
+    <a class="toc-backref" href="#id2">
+     Abstract
+    </a>
+   </h1>
+   <p>
+    This PEP proposes the deprecation and removal of support for hosting files
+externally to PyPI as well as the deprecation and removal of the functionality
+added by
+    <a class="reference external" href="../pep-0438/index.html">
+     PEP 438
+    </a>
+    , particularly rel information to classify different types of
+links and the meta-tag to indicate API version.
+   </p>
+  </div>
+  <div class="section" id="rationale">
+   <h1>
+    <a class="toc-backref" href="#id3">
+     Rationale
+    </a>
+   </h1>
+   <p>
+    Historically PyPI did not have any method of hosting files nor any method of
+automatically retrieving installables, it was instead focused on providing a
+central registry of names, to prevent naming collisions, and as a means of
+discovery for finding projects to use. In the course of time setuptools began
+to scrape these human facing pages, as well as pages linked from those pages,
+looking for things it could automatically download and install. Eventually this
+became the "Simple" API which used a similar URL structure however it
+eliminated any of the extraneous links and information to make the API more
+efficient. Additionally PyPI grew the ability for a project to upload release
+files directly to PyPI enabling PyPI to act as a repository in addition to an
+index.
+   </p>
+   <p>
+    This gives PyPI two equally important roles that it plays in the Python
+ecosystem, that of index to enable easy discovery of Python projects and
+central repository to enable easy hosting, download, and installation of Python
+projects. Due to the history behind PyPI and the very organic growth it has
+experienced the lines between these two roles are blurry, and this blurring has
+caused confusion for the end users of both of these roles and this has in turn
+caused ire between people attempting to use PyPI in different capacities, most
+often when end users want to use PyPI as a repository but the author wants to
+use PyPI solely as an index.
+   </p>
+   <p>
+    This confusion comes down to end users of projects not realizing if a project
+is hosted on PyPI or if it relies on an external service. This often manifests
+itself when the external service is down but PyPI is not. People will see that
+PyPI works, and other projects works, but this one specific one does not. They
+often times do not realize who they need to contact in order to get this fixed
+or what their remediation steps are.
+   </p>
+   <p>
+    <a class="reference external" href="../pep-0438/index.html">
+     PEP 438
+    </a>
+    attempted to solve this issue by allowing projects to explicitly
+declare if they were using the repository features or not, and if they were
+not, it had the installers classify the links it found as either "internal",
+"verifiable external" or "unverifiable external".
+    <a class="reference external" href="../pep-0438/index.html">
+     PEP 438
+    </a>
+    was accepted and
+implemented in pip 1.4 (released on Jul 23, 2013) with the final transition
+implemented in pip 1.5 (released on Jan 2, 2014).
+   </p>
+   <p>
+    <a class="reference external" href="../pep-0438/index.html">
+     PEP 438
+    </a>
+    was successful in bringing about more people to utilize PyPI's
+repository features, an altogether good thing given the global CDN powering
+PyPI providing speed ups for a lot of people, however it did so by introducing
+a new point of confusion and pain for both the end users and the authors.
+   </p>
+   <p>
+    By moving to using explicit multiple repositories we can make the lines between
+these two roles much more explicit and remove the "hidden" surprises caused by
+the current implementation of handling people who do not want to use PyPI as a
+repository.
+   </p>
+   <div class="section" id="key-user-experience-expectations">
+    <h2>
+     <a class="toc-backref" href="#id4">
+      Key User Experience Expectations
+     </a>
+    </h2>
+    <ol class="arabic simple">
+     <li>
+      Easily allow external hosting to "just work" when appropriately configured
+at the system, user or virtual environment level.
+     </li>
+     <li>
+      Eliminate any and all references to the confusing "verifiable external" and
+"unverifiable external" distinction from the user experience (both when
+installing and when releasing packages).
+     </li>
+     <li>
+      The repository aspects of PyPI should become
+      <em>
+       just
+      </em>
+      the default package
+hosting location (i.e. the only one that is treated as opt-out rather than
+opt-in by most client tools in their default configuration). Aside from that
+aspect, hosting on PyPI should not otherwise provide an enhanced user
+experience over hosting your own package repository.
+     </li>
+     <li>
+      Do all of the above while providing default behaviour that is secure against
+most attackers below the nation state adversary level.
+     </li>
+    </ol>
+   </div>
+   <div class="section" id="why-additional-repositories">
+    <h2>
+     <a class="toc-backref" href="#id5">
+      Why Additional Repositories?
+     </a>
+    </h2>
+    <p>
+     The two common installer tools, pip and easy_install/setuptools, both support
+the concept of additional locations to search for files to satisfy the
+installation requirements and have done so for many years. This means that
+there is no need to "phase" in a new flag or concept and the solution to
+installing a project from a repository other than PyPI will function regardless
+of how old (within reason) the end user's installer is. Not only has this
+concept existed in the Python tooling for some time, but it is a concept that
+exists across languages and even extending to the OS level with OS package
+tools almost universally using multiple repository support making it extremely
+likely that someone is already familiar with the concept.
+    </p>
+    <p>
+     Additionally, the multiple repository approach is a concept that is useful
+outside of the narrow scope of allowing projects that wish to be included on
+the index portion of PyPI but do not wish to utilize the repository portion of
+PyPI. This includes places where a company may wish to host a repository that
+contains their internal packages or where a project may wish to have multiple
+"channels" of releases, such as alpha, beta, release candidate, and final
+release. This could also be used for projects wishing to host files which
+cannot be uploaded to PyPI, such as multi-gigabyte data files or, currently at
+least, Linux Wheels.
+    </p>
+   </div>
+   <div class="section" id="why-not-pep-438-or-similar">
+    <h2>
+     Why Not
+     <a class="reference external" href="../pep-0438/index.html">
+      PEP 438
+     </a>
+     or Similar?
+    </h2>
+    <p>
+     While the additional search location support has existed in pip and setuptools
+for quite some time support for
+     <a class="reference external" href="../pep-0438/index.html">
+      PEP 438
+     </a>
+     has only existed in pip since the 1.4
+version, and still has yet to be implemented in setuptools. The design of
+     <a class="reference external" href="../pep-0438/index.html">
+      PEP 438
+     </a>
+     did mean that users still benefited for projects which did not require
+external files even with older installers, however for projects which
+     <em>
+      did
+     </em>
+     require external files, users are still silently being given either potentially
+unreliable or, even worse, unsafe files to download. This system is also unique
+to Python as it arises out of the history of PyPI, this means that it is almost
+certain that this concept will be foreign to most, if not all users, until they
+encounter it while attempting to use the Python toolchain.
+    </p>
+    <p>
+     Additionally, the classification system proposed by
+     <a class="reference external" href="../pep-0438/index.html">
+      PEP 438
+     </a>
+     has, in practice,
+turned out to be extremely confusing to end users, so much so that it is a
+position of this PEP that the situation as it stands is completely untenable.
+The common pattern for a user with this system is to attempt to install a
+project possibly get an error message (or maybe not if the project ever
+uploaded something to PyPI but later switched without removing old files), see
+that the error message suggests
+     <tt class="docutils literal">
+      <span class="pre">
+       --allow-external
+      </span>
+     </tt>
+     , they reissue the command
+adding that flag most likely getting another error message, see that this time
+the error message suggests also adding
+     <tt class="docutils literal">
+      <span class="pre">
+       --allow-unverified
+      </span>
+     </tt>
+     , and again issue
+the command a third time, this time finally getting the thing they wish to
+install.
+    </p>
+    <p>
+     This UX failure exists for several reasons.
+    </p>
+    <ol class="arabic">
+     <li>
+      <p class="first">
+       If pip can locate files at all for a project on the Simple API it will
+simply use that instead of attempting to locate more. This is generally the
+right thing to do as attempting to locate more would erase a large part of
+the benefit of
+       <a class="reference external" href="../pep-0438/index.html">
+        PEP 438
+       </a>
+       . This means that if a project
+       <em>
+        ever
+       </em>
+       uploaded a file
+that matches what the user has requested for install that will be used
+regardless of how old it is.
+      </p>
+     </li>
+     <li>
+      <p class="first">
+       <a class="reference external" href="../pep-0438/index.html">
+        PEP 438
+       </a>
+       makes an implicit assumption that most projects would either upload
+themselves to PyPI or would update themselves to directly linking to release
+files. While a large number of projects did ultimately decide to upload to
+PyPI, some of them did so only because the UX around what
+       <a class="reference external" href="../pep-0438/index.html">
+        PEP 438
+       </a>
+       was so bad
+that they felt forced to do so. More concerning however, is the fact that
+very few projects have opted to directly and safely link to files and
+instead they still simply link to pages which must be scraped in order to
+find the actual files, thus rendering the safe variant
+(
+       <tt class="docutils literal">
+        <span class="pre">
+         --allow-external
+        </span>
+       </tt>
+       ) largely useless.
+      </p>
+     </li>
+     <li>
+      <p class="first">
+       Even if an author wishes to directly link to their files, doing so safely is
+non-obvious. It requires the inclusion of a MD5 hash (for historical
+reasons) in the hash of the URL. If they do not include this then their
+files will be considered "unverified".
+      </p>
+     </li>
+     <li>
+      <p class="first">
+       <a class="reference external" href="../pep-0438/index.html">
+        PEP 438
+       </a>
+       takes a security centric view and disallows any form of a global opt
+in for unverified projects. While this is generally a good thing, it creates
+extremely verbose and repetitive command invocations such as:
+      </p>
+      <pre class="literal-block">
+$ pip install --allow-external myproject --allow-unverified myproject myproject
+$ pip install --allow-all-external --allow-unverified myproject myproject
+</pre>
+     </li>
+    </ol>
+   </div>
+  </div>
+  <div class="section" id="multiple-repository-index-support">
+   <h1>
+    <a class="toc-backref" href="#id7">
+     Multiple Repository/Index Support
+    </a>
+   </h1>
+   <p>
+    Installers SHOULD implement or continue to offer, the ability to point the
+installer at multiple URL locations. The exact mechanisms for a user to
+indicate they wish to use an additional location is left up to each individual
+implementation.
+   </p>
+   <p>
+    Additionally the mechanism discovering an installation candidate when multiple
+repositories are being used is also up to each individual implementation,
+however once configured an implementation should not discourage, warn, or
+otherwise cast a negative light upon the use of a repository simply because it
+is not the default repository.
+   </p>
+   <p>
+    Currently both pip and setuptools implement multiple repository support by
+using the best installation candidate it can find from either repository,
+essentially treating it as if it were one large repository.
+   </p>
+   <p>
+    Installers SHOULD also implement some mechanism for removing or otherwise
+disabling use of the default repository. The exact specifics of how that is
+achieved is up to each individual implementation.
+   </p>
+   <p>
+    Installers SHOULD also implement some mechanism for whitelisting and
+blacklisting which projects a user wishes to install from a particular
+repository. The exact specifics of how that is achieved is up to each
+individual implementation.
+   </p>
+   <p>
+    The
+    <a class="reference external" href="https://packaging.python.org/">
+     Python packaging guide
+    </a>
+    MUST be updated
+with a section detailing the options for setting up their own repository so
+that any project that wishes to not host on PyPI in the future can reference
+that documentation. This should include the suggestion that projects relying on
+hosting their own repositories should document in their project description how
+to install their project.
+   </p>
+  </div>
+  <div class="section" id="deprecation-and-removal-of-link-spidering">
+   <h1>
+    <a class="toc-backref" href="#id8">
+     Deprecation and Removal of Link Spidering
+    </a>
+   </h1>
+   <p>
+    A new hosting mode will be added to PyPI. This hosting mode will be called
+    <tt class="docutils literal">
+     <span class="pre">
+      pypi-only
+     </span>
+    </tt>
+    and will be in addition to the three that
+    <a class="reference external" href="../pep-0438/index.html">
+     PEP 438
+    </a>
+    has already
+given us which are
+    <tt class="docutils literal">
+     <span class="pre">
+      pypi-explicit
+     </span>
+    </tt>
+    ,
+    <tt class="docutils literal">
+     <span class="pre">
+      pypi-scrape
+     </span>
+    </tt>
+    ,
+    <tt class="docutils literal">
+     <span class="pre">
+      pypi-scrape-crawl
+     </span>
+    </tt>
+    .
+This new hosting mode will modify a project's simple api page so that it only
+lists the files which are directly hosted on PyPI and will not link to anything
+else.
+   </p>
+   <p>
+    Upon acceptance of this PEP and the addition of the
+    <tt class="docutils literal">
+     <span class="pre">
+      pypi-only
+     </span>
+    </tt>
+    mode, all new
+projects will be defaulted to the PyPI only mode and they will be locked to
+this mode and unable to change this particular setting.
+   </p>
+   <p>
+    An email will then be sent out to all of the projects which are hosted only on
+PyPI informing them that in one month their project will be automatically
+converted to the
+    <tt class="docutils literal">
+     <span class="pre">
+      pypi-only
+     </span>
+    </tt>
+    mode. A month after these emails have been sent
+any of those projects which were emailed, which still are hosted only on PyPI
+will have their mode set permanently to
+    <tt class="docutils literal">
+     <span class="pre">
+      pypi-only
+     </span>
+    </tt>
+    .
+   </p>
+   <p>
+    At the same time, an email will be sent to projects which rely on hosting
+external to PyPI. This email will warn these projects that externally hosted
+files have been deprecated on PyPI and that in 3 months from the time of that
+email that all external links will be removed from the installer APIs. This
+email
+    <strong>
+     MUST
+    </strong>
+    include instructions for converting their projects to be hosted
+on PyPI and
+    <strong>
+     MUST
+    </strong>
+    include links to a script or package that will enable them
+to enter their PyPI credentials and package name and have it automatically
+download and re-host all of their files on PyPI. This email
+    <strong>
+     MUST
+    </strong>
+    also
+include instructions for setting up their own index page. This email must also
+contain a link to the Terms of Service for PyPI as many users may have signed
+up a long time ago and may not recall what those terms are. Finally this email
+must also contain a list of the links registered with PyPI where we were able
+to detect an installable file was located.
+   </p>
+   <p>
+    Two months after the initial email, another email must be sent to any projects
+still relying on external hosting. This email will include all of the same
+information that the first email contained, except that the removal date will
+be one month away instead of three.
+   </p>
+   <p>
+    Finally a month later all projects will be switched to the
+    <tt class="docutils literal">
+     <span class="pre">
+      pypi-only
+     </span>
+    </tt>
+    mode
+and PyPI will be modified to remove the externally linked files functionality.
+   </p>
+  </div>
+  <div class="section" id="summary-of-changes">
+   <h1>
+    <a class="toc-backref" href="#id9">
+     Summary of Changes
+    </a>
+   </h1>
+   <div class="section" id="repository-side">
+    <h2>
+     <a class="toc-backref" href="#id10">
+      Repository side
+     </a>
+    </h2>
+    <ol class="arabic simple">
+     <li>
+      Deprecate and remove the hosting modes as defined by
+      <a class="reference external" href="../pep-0438/index.html">
+       PEP 438
+      </a>
+      .
+     </li>
+     <li>
+      Restrict simple API to only list the files that are contained within the
+repository.
+     </li>
+    </ol>
+   </div>
+   <div class="section" id="client-side">
+    <h2>
+     <a class="toc-backref" href="#id11">
+      Client side
+     </a>
+    </h2>
+    <ol class="arabic simple">
+     <li>
+      Implement multiple repository support.
+     </li>
+     <li>
+      Implement some mechanism for removing/disabling the default repository.
+     </li>
+     <li>
+      Deprecate / Remove
+      <a class="reference external" href="../pep-0438/index.html">
+       PEP 438
+      </a>
+     </li>
+    </ol>
+   </div>
+  </div>
+  <div class="section" id="impact">
+   <h1>
+    <a class="toc-backref" href="#id12">
+     Impact
+    </a>
+   </h1>
+   <p>
+    To determine impact, we've looked at all projects using a method of searching
+PyPI which is similar to what pip and setuptools use and searched for all
+files available on PyPI, safely linked from PyPI, unsafely linked from PyPI,
+and finally unsafely available outside of PyPI. When the same file was found
+in multiple locations it was deduplicated and only counted it in one location
+based on the following preferences: PyPI &gt; Safely Off PyPI &gt; Unsafely Off PyPI.
+This gives us the broadest possible definition of impact, it means that any
+single file for this project may no longer be visible by default, however that
+file could be years old, or it could be a binary file while there is a sdist
+available on PyPI. This means that the
+    <em>
+     real
+    </em>
+    impact will likely be much
+smaller, but in an attempt not to miscount we take the broadest possible
+definition.
+   </p>
+   <p>
+    At the time of this writing there are 65,232 projects hosted on PyPI and of
+those, 59 of them rely on external files that are safely hosted outside of PyPI
+and 931 of them rely on external files which are unsafely hosted outside of
+PyPI. This shows us that 1.5% of projects will be affected in some way by this
+change while 98.5% will continue to function as they always have. In addition,
+only 5% of the projects affected are using the features provided by
+    <a class="reference external" href="../pep-0438/index.html">
+     PEP 438
+    </a>
+    to
+safely host outside of PyPI while 95% of them are exposing their users to
+Remote Code Execution via a Man In The Middle attack.
+   </p>
+  </div>
+  <div class="section" id="frequently-asked-questions">
+   <h1>
+    <a class="toc-backref" href="#id13">
+     Frequently Asked Questions
+    </a>
+   </h1>
+   <div class="section" id="i-can-t-host-my-project-on-pypi-because-of-x-what-should-i-do">
+    <h2>
+     <a class="toc-backref" href="#id14">
+      I can't host my project on PyPI because of &lt;X&gt;, what should I do?
+     </a>
+    </h2>
+    <p>
+     First you should decide if &lt;X&gt; is something inherent to PyPI, or if PyPI could
+grow a feature to solve &lt;X&gt; for you. If PyPI can add a feature to enable you to
+host your project on PyPI then you should propose that feature. However, if &lt;X&gt;
+is something inherent to PyPI, such as wanting to maintain control over your
+own files, then you should setup your own package repository and instruct your
+users in your project's description to add it to the list of repositories their
+installer of choice will use.
+    </p>
+   </div>
+   <div class="section" id="my-users-have-a-worse-experience-with-this-pep-than-before-how-do-i-explain-that">
+    <h2>
+     <a class="toc-backref" href="#id15">
+      My users have a worse experience with this PEP than before, how do I explain that?
+     </a>
+    </h2>
+    <p>
+     Part of this answer is going to be specific to each individual project, you'll
+need to explain to your users what caused you to decide to host in your own
+repository instead of utilizing one that they already have in their installer's
+default list of repositories. However, part of this answer will also be
+explaining that the previous behavior of transparently including external links
+was both a security hazard (given that in most cases it allowed a MITM to
+execute arbitrary Python code on the end users machine) and a reliability
+concern and that
+     <a class="reference external" href="../pep-0438/index.html">
+      PEP 438
+     </a>
+     attempted to resolve this by making them explicitly
+opt in, but that
+     <a class="reference external" href="../pep-0438/index.html">
+      PEP 438
+     </a>
+     brought along with it a number of serious usability
+issues.
+     <a class="reference external" href="index.html">
+      PEP 470
+     </a>
+     represents a simplification of the model to a model that many
+users will be familar with, which is common amongst Linux distributions.
+    </p>
+   </div>
+   <div class="section" id="switching-to-a-repository-structure-breaks-my-workflow-or-isn-t-allowed-by-my-host">
+    <h2>
+     <a class="toc-backref" href="#id16">
+      Switching to a repository structure breaks my workflow or isn't allowed by my host?
+     </a>
+    </h2>
+    <p>
+     There are a number of cheap or free hosts that would gladly support what is
+required for a repository. In particular you don't actually need to upload your
+files anywhere differently as long as you can generate a host with the correct
+structure that points to where your files are actually located. Many of these
+hosts provide free HTTPS using a shared domain name, and free HTTPS
+certificates can be gotten from
+     <a class="reference external" href="https://www.startssl.com/">
+      StartSSL
+     </a>
+     , or in
+the near future
+     <a class="reference external" href="https://letsencrypt.org/">
+      LetsEncrypt
+     </a>
+     or they may be gotten
+cheap from any number of providers.
+    </p>
+   </div>
+   <div class="section" id="why-don-t-you-provide-x">
+    <h2>
+     <a class="toc-backref" href="#id17">
+      Why don't you provide &lt;X&gt;?
+     </a>
+    </h2>
+    <p>
+     The answer here will depend on what &lt;X&gt; is, however the answers typically are
+one of:
+    </p>
+    <ul class="simple">
+     <li>
+      We hadn't been thought of it and nobody had suggested it before.
+     </li>
+     <li>
+      We don't have sufficient experience with &lt;X&gt; to properly design a solution
+for it and would welcome a domain expert to help us provide it.
+     </li>
+     <li>
+      We're an open source project and nobody has decided to volunteer to design
+and implement &lt;X&gt; yet.
+     </li>
+    </ul>
+    <p>
+     Additional PEPs to propose additional features are always welcome, however they
+would need someone with the time and expertise to accurately design &lt;X&gt;. This
+particular PEP is intended to focus on getting us to a point where the
+capabilities of PyPI are straightforward with an easily understood baseline
+that is similar to existing models such as Linux distribution repositories.
+    </p>
+   </div>
+   <div class="section" id="why-should-i-register-on-pypi-if-i-m-running-my-own-repository-anyways">
+    <h2>
+     <a class="toc-backref" href="#id18">
+      Why should I register on PyPI if I'm running my own repository anyways?
+     </a>
+    </h2>
+    <p>
+     PyPI serves two critical functions for the Python ecosystem. One of those is as
+a central repository for the actual files that get downloaded and installed by
+pip or another package manager and it is this function that this PEP is
+concerned with and that you'd be replacing if you're running your own
+repository. However, it also provides a central registry of who owns what name
+in order to prevent naming collisions, think of it sort of as DNS but for
+Python packages. In addition to making sure that names are handed out in a
+first come, first serve manner it also provides a single place for users to go
+to look search for and discover new projects. So the simple answer is, you
+should still register your project with PyPI to avoid naming collisions and to
+make it so people can still easily discover your project.
+    </p>
+   </div>
+  </div>
+  <div class="section" id="rejected-proposals">
+   <h1>
+    <a class="toc-backref" href="#id19">
+     Rejected Proposals
+    </a>
+   </h1>
+   <div class="section" id="allow-easier-discovery-of-externally-hosted-indexes">
+    <h2>
+     <a class="toc-backref" href="#id20">
+      Allow easier discovery of externally hosted indexes
+     </a>
+    </h2>
+    <p>
+     A previous version of this PEP included a new feature added to both PyPI and
+installers that would allow project authors to enter into PyPI a list of
+URLs that would instruct installers to ignore any files uploaded to PyPI and
+instead return an error telling the end user about these extra URLs that they
+can add to their installer to make the installation work.
+    </p>
+    <p>
+     This feature has  been removed from the scope of the PEP because it proved too
+difficult to develop a solution that avoided UX issues similar to those that
+caused so many problems with the
+     <a class="reference external" href="../pep-0438/index.html">
+      PEP 438
+     </a>
+     solution. If needed, a future PEP
+could revisit this idea.
+    </p>
+   </div>
+   <div class="section" id="keep-the-current-classification-system-but-adjust-the-options">
+    <h2>
+     <a class="toc-backref" href="#id21">
+      Keep the current classification system but adjust the options
+     </a>
+    </h2>
+    <p>
+     This PEP rejects several related proposals which attempt to fix some of the
+usability problems with the current system but while still keeping the general
+gist of
+     <a class="reference external" href="../pep-0438/index.html">
+      PEP 438
+     </a>
+     .
+    </p>
+    <p>
+     This includes:
+    </p>
+    <ul class="simple">
+     <li>
+      Default to allowing safely externally hosted files, but disallow unsafely
+hosted.
+     </li>
+     <li>
+      Default to disallowing safely externally hosted files with only a global flag
+to enable them, but disallow unsafely hosted.
+     </li>
+     <li>
+      Continue on the suggested path of
+      <a class="reference external" href="../pep-0438/index.html">
+       PEP 438
+      </a>
+      and remove the option to unsafely
+host externally but continue to allow the option to safely host externally.
+     </li>
+    </ul>
+    <p>
+     These proposals are rejected because:
+    </p>
+    <ul class="simple">
+     <li>
+      The classification system introduced in
+      <a class="reference external" href="../pep-0438/index.html">
+       PEP 438
+      </a>
+      in an entirely unique concept
+to PyPI which is not generically applicable even in the context of Python
+packaging. Adding additional concepts comes at a cost.
+     </li>
+     <li>
+      The classification system itself is non-obvious to explain and to
+pre-determine what classification of link a project will require entails
+inspecting the project's
+      <tt class="docutils literal">
+       <span class="pre">
+        /simple/&lt;project&gt;/
+       </span>
+      </tt>
+      page, and possibly any URLs
+linked from that page.
+     </li>
+     <li>
+      The ability to host externally while still being linked for automatic
+discovery is mostly a historic relic which causes a fair amount of pain and
+complexity for little reward.
+     </li>
+     <li>
+      The installer's ability to optimize or clean up the user interface is limited
+due to the nature of the implicit link scraping which would need to be done.
+This extends to the
+      <tt class="docutils literal">
+       <span class="pre">
+        --allow-*
+       </span>
+      </tt>
+      options as well as the inability to
+determine if a link is expected to fail or not.
+     </li>
+     <li>
+      The mechanism paints a very broad brush when enabling an option, while
+      <a class="reference external" href="../pep-0438/index.html">
+       PEP 438
+      </a>
+      attempts to limit this with per package options. However a project
+that has existed for an extended period of time may often times have several
+different URLs listed in their simple index. It is not unusual for at least
+one of these to no longer be under control of the project. While an
+unregistered domain will sit there relatively harmless most of the time, pip
+will continue to attempt to install from it on every discovery phase. This
+means that an attacker simply needs to look at projects which rely on unsafe
+external URLs and register expired domains to attack users.
+     </li>
+    </ul>
+   </div>
+   <div class="section" id="implement-this-pep-but-do-not-remove-the-existing-links">
+    <h2>
+     <a class="toc-backref" href="#id22">
+      Implement this PEP, but Do Not Remove the Existing Links
+     </a>
+    </h2>
+    <p>
+     This is essentially the backwards compatible version of this PEP. It attempts
+to allow people using older clients, or clients which do not implement this
+PEP to continue on as if nothing had changed. This proposal is rejected because
+the vast bulk of those scenarios are unsafe uses of the deprecated features. It
+is the opinion of this PEP that silently allowing unsafe actions to take place
+on behalf of end users is simply not an acceptable solution.
+    </p>
+   </div>
+  </div>
+  <div class="section" id="copyright">
+   <h1>
+    <a class="toc-backref" href="#id23">
+     Copyright
+    </a>
+   </h1>
+   <p>
+    This document has been placed in the public domain.
+   </p>
+   <!-- Local Variables:
+mode: indented-text
+indent-tabs-mode: nil
+sentence-end-double-space: t
+fill-column: 70
+coding: utf-8
+End: -->
+  </div>
+ </body>
+
+<!-- Mirrored from www.python.org/dev/peps/pep-0470/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 03 Sep 2015 04:36:28 GMT -->
+</html>Source: <a href="https://hg.python.org/peps/file/tip/pep-0470.txt">https://hg.python.org/peps/file/tip/pep-0470.txt</a>
+
+    </article>
+
+
+                </section>
+
+                
+
+
+<aside class="left-sidebar" role="secondary">
+
+    
+
+
+
+
+
+
+    
+
+
+
+
+
+        <div class="twitter-widget sidebar-widget">
+        <a class="twitter-timeline" data-dnt="true" href="https://twitter.com/ThePSF" data-widget-id="434113224703610882">Tweets by @ThePSF</a>
+        <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+    </div>
+
+    <div class="psf-sidebar-widget sidebar-widget">
+        <h3 class="widget-title">The PSF</h3>
+<p>The Python Software Foundation is the organization behind Python. Become a member of the PSF and help advance the software and our mission. </p>
+
+    </div>
+
+</aside>
+
+
+
+                
+                
+
+
+            </div><!-- end .container -->
+        </div><!-- end #content .content-wrapper -->
+
+        <!-- Footer and social media list -->
+        <footer id="site-map" class="main-footer" role="contentinfo">
+            <div class="main-footer-links">
+                <div class="container">
+
+                    
+                    <a id="back-to-top-1" class="jump-link" href="#python-network"><span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> Back to Top</a>
+
+                    
+
+<ul class="sitemap navigation menu do-not-print" role="tree" id="container">
+    
+    <li class="tier-1 element-1">
+        <a href="https://www.python.org/about/" >About</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/apps/" title="">Applications</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/quotes/" title="">Quotes</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/gettingstarted/" title="">Getting Started</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/help/" title="">Help</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-2">
+        <a href="https://www.python.org/downloads/" >Downloads</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/downloads/" title="">All releases</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/downloads/source/" title="">Source code</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/downloads/windows/" title="">Windows</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/downloads/mac-osx/" title="">Mac OS X</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/download/other/" title="">Other Platforms</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://docs.python.org/3/license.html" title="">License</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/download/alternatives" title="">Alternative Implementations</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-3">
+        <a href="https://www.python.org/doc/" >Documentation</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/doc/" title="">Docs</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/doc/av" title="">Audio/Visual Talks</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://wiki.python.org/moin/BeginnersGuide" title="">Beginner&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://docs.python.org/faq/" title="">FAQ</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="http://wiki.python.org/moin/Languages" title="">Non-English Docs</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="../index.html" title="">PEP Index</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://wiki.python.org/moin/PythonBooks" title="">Python Books</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-4">
+        <a href="https://www.python.org/community/" >Community</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/community/diversity/" title="">Diversity</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/community/irc/" title="">IRC</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/community/lists/" title="">Mailing Lists</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/workshops/" title="">Python Conferences</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/community/sigs/" title="">Special Interest Groups</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://wiki.python.org/moin/" title="">Python Wiki</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/community/logos/" title="">Python Logo</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://www.python.org/community/merchandise/" title="">Merchandise</a></li>
+    
+        <li class="tier-2 element-9" role="treeitem"><a href="https://www.python.org/community/awards" title="">Community Awards</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-5">
+        <a href="https://www.python.org/about/success/" title="success-stories">Success Stories</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/success/#arts" title="">Arts</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/success/#business" title="">Business</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/success/#education" title="">Education</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/success/#engineering" title="">Engineering</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/about/success/#government" title="">Government</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://www.python.org/about/success/#scientific" title="">Scientific</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/about/success/#software-development" title="">Software Development</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-6">
+        <a href="https://www.python.org/blogs/" title="News from around the Python world">News</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/blogs/" title="Python Insider Blog Posts">Python News</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://planetpython.org/" title="Planet Python">Community News</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="http://pyfound.blogspot.com/" title="PSF Blog">PSF News</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pycon.blogspot.com/" title="PyCon Blog">PyCon News</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-7">
+        <a href="https://www.python.org/events/" >Events</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/events/python-events/" title="">Python Events</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/events/python-user-group/" title="">User Group Events</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/events/python-events/past/" title="">Python Events Archive</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/events/python-user-group/past/" title="">User Group Events Archive</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://wiki.python.org/moin/PythonEventsCalendar#Submitting_an_Event" title="">Submit an Event</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-8">
+        <a href="https://www.python.org/dev/" >Contributing</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="http://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://bugs.python.org/" title="">Issue Tracker</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://mail.python.org/mailman/listinfo/python-dev" title="">python-dev list</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pythonmentors.com/" title="">Core Mentorship</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+</ul>
+
+
+                    <a id="back-to-top-2" class="jump-link" href="#python-network"><span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> Back to Top</a>
+                    
+
+                </div><!-- end .container -->
+            </div> <!-- end .main-footer-links -->
+
+            <div class="site-base">
+                <div class="container">
+                    
+                    <ul class="footer-links navigation menu do-not-print" role="tree">
+                        <li class="tier-1 element-1"><a href="https://www.python.org/about/help/">Help &amp; <span class="say-no-more">General</span> Contact</a></li>
+                        <li class="tier-1 element-2"><a href="https://www.python.org/community/diversity/">Diversity <span class="say-no-more">Initiatives</span></a></li>
+                        <li class="tier-1 element-3"><a href="https://github.com/python/pythondotorg/issues">Submit Website Bug</a></li>
+                        <!--<li class="tier-1 element-3"><a href="#"><span class="say-no-more">Website</span> Colophon</a></li>-->
+                    </ul>
+
+                    <div class="copyright">
+                        <p><small>
+                            <span class="pre">Copyright &copy;2001-2015.</span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/psf-landing/">Python Software Foundation</a></span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/about/legal/">Legal Statements</a></span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/privacy/">Privacy Policy</a></span>
+                        </small></p>
+                    </div>
+
+                </div><!-- end .container -->
+            </div><!-- end .site-base -->
+
+        </footer>
+
+    </div><!-- end #touchnav-wrapper -->
+
+    
+    <script src="../../../../ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="../../../static/js/libs/jquery-1.8.2.min.js"><\/script>')</script>
+
+    <script src="../../../static/js/libs/masonry.pkgd.min.js"></script>
+
+    <script type="text/javascript" src="../../../static/js/main-min.js" charset="utf-8"></script>
+    
+
+    <!--[if lte IE 7]>
+    <script type="text/javascript" src="/static/js/plugins/IE8-min.js" charset="utf-8"></script>
+    
+    
+    <![endif]-->
+
+    <!--[if lte IE 8]>
+    <script type="text/javascript" src="/static/js/plugins/getComputedStyle-min.js" charset="utf-8"></script>
+    
+    
+    <![endif]-->
+
+    
+
+    
+    
+
+</body>
+</html>

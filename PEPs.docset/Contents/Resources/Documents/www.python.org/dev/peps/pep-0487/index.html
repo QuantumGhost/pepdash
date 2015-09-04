@@ -1,0 +1,2043 @@
+<!doctype html>
+<!--[if lt IE 7]>   <html class="no-js ie6 lt-ie7 lt-ie8 lt-ie9">   <![endif]-->
+<!--[if IE 7]>      <html class="no-js ie7 lt-ie8 lt-ie9">          <![endif]-->
+<!--[if IE 8]>      <html class="no-js ie8 lt-ie9">                 <![endif]-->
+<!--[if gt IE 8]><!--><html class="no-js" lang="en" dir="ltr">  <!--<![endif]-->
+
+
+<!-- Mirrored from www.python.org/dev/peps/pep-0487/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 03 Sep 2015 04:33:36 GMT -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <link rel="prefetch" href="../../../../ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js">
+
+    <meta name="application-name" content="Python.org">
+    <meta name="msapplication-tooltip" content="The official home of the Python Programming Language">
+    <meta name="apple-mobile-web-app-title" content="Python.org">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="format-detection" content="telephone=no">
+    <meta http-equiv="cleartype" content="on">
+    <meta http-equiv="imagetoolbar" content="false">
+
+    <script src="../../../static/js/libs/modernizr.js"></script>
+
+    <link href="../../../static/stylesheets/style.css" rel="stylesheet" type="text/css" title="default" />
+    <link href="../../../static/stylesheets/mq.css" rel="stylesheet" type="text/css" media="not print, braille, embossed, speech, tty" />
+    
+
+    <!--[if (lte IE 8)&(!IEMobile)]>
+    <link href="/static/stylesheets/no-mq.css" rel="stylesheet" type="text/css" media="screen" />
+    
+    
+    <![endif]-->
+
+    
+    <link rel="icon" type="image/x-icon" href="https://www.python.org/static/favicon.ico">
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="../../../static/apple-touch-icon-144x144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="../../../static/apple-touch-icon-114x114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="../../../static/apple-touch-icon-72x72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="../../../static/apple-touch-icon-precomposed.png">
+    <link rel="apple-touch-icon" href="../../../static/apple-touch-icon-precomposed.png">
+
+    
+    <meta name="msapplication-TileImage" content="/static/metro-icon-144x144-precomposed.png"><!-- white shape -->
+    <meta name="msapplication-TileColor" content="#3673a5"><!-- python blue -->
+    <meta name="msapplication-navbutton-color" content="#3673a5">
+
+    <meta property="og:site_name" content="Python.org">
+    <meta property="og:type" content="website">
+
+    <title>PEP 0487 -- Simpler customisation of class creation | Python.org</title>
+    <meta property="og:title" content="Welcome to Python.org">
+
+    
+    <meta name="description" content="The official home of the Python Programming Language">
+    <meta name="og:description" content="The official home of the Python Programming Language">
+    <meta name="keywords" content="Python programming language object oriented web free open source software license documentation download community">
+    <meta property="og:tag" content="Python programming language object oriented web free open source software license documentation download community">
+    <meta property="og:published_time" content="">
+    <meta property="og:modified_time" content="">
+    <meta property="og:author" content="">
+    <meta property="og:section" content=""> 
+    <meta property="og:url" content="">
+    <meta property="og:image" content="">
+    <meta property="og:video" content="">
+
+    <link rel="author" href="https://www.python.org/static/humans.txt">
+
+    
+
+    
+    <script type="application/ld+json">
+     {
+       "@context": "http://schema.org",
+       "@type": "WebSite",
+       "url": "https://www.python.org/",
+       "potentialAction": {
+         "@type": "SearchAction",
+         "target": "https://www.python.org/search/?q={search_term_string}",
+         "query-input": "required name=search_term_string"
+       }
+     }
+    </script>
+
+    
+    <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-39055973-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+    </script>
+    
+</head>
+
+<body class="python pages pep-page">
+
+    <div id="touchnav-wrapper">
+
+        <div id="nojs" class="do-not-print">
+            <p><strong>Notice:</strong> While Javascript is not essential for this website, your interaction with the content will be limited. Please turn Javascript on for the full experience. </p>
+        </div>
+
+        <!--[if lt IE 8]>
+        <div id="oldie-warning" class="do-not-print">
+            <p><strong>Notice:</strong> Your browser is <em>ancient</em> and <a href="http://www.ie6countdown.com/">Microsoft agrees</a>. <a href="http://browsehappy.com/">Upgrade to a different browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to experience a better web.</p>
+        </div>
+        <![endif]-->
+
+        <!-- Sister Site Links -->
+        <div id="top" class="top-bar do-not-print">
+
+            <nav class="meta-navigation container" role="navigation">
+
+                
+                <div class="skip-link screen-reader-text">
+                    <a href="#content" title="Skip to content">Skip to content</a>
+                </div>
+
+                
+                <a id="close-python-network" class="jump-link" href="#python-network" aria-hidden="true">
+                    <span aria-hidden="true" class="icon-arrow-down"><span>&#9660;</span></span> Close
+                </a>
+
+                
+
+<ul class="menu" role="tree">
+    
+    <li class="python-meta ">
+        <a href="https://www.python.org/" title="The Python Programming Language" >Python</a>
+    </li>
+    
+    <li class="psf-meta ">
+        <a href="https://www.python.org/psf-landing/" title="The Python Software Foundation" >PSF</a>
+    </li>
+    
+    <li class="docs-meta ">
+        <a href="https://docs.python.org/" title="Python Documentation" >Docs</a>
+    </li>
+    
+    <li class="pypi-meta ">
+        <a href="https://pypi.python.org/" title="Python Package Index" >PyPI</a>
+    </li>
+    
+    <li class="jobs-meta ">
+        <a href="https://www.python.org/jobs/" title="Python Job Board" >Jobs</a>
+    </li>
+    
+    <li class="shop-meta ">
+        <a href="https://www.python.org/community/" title="Python Community" >Community</a>
+    </li>
+    
+</ul>
+
+
+                <a id="python-network" class="jump-link" href="#top" aria-hidden="true">
+                    <span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> The Python Network
+                </a>
+
+            </nav>
+
+        </div>
+
+        <!-- Header elements -->
+        <header class="main-header" role="banner">
+            <div class="container">
+
+                <h1 class="site-headline">
+                    <a href="https://www.python.org/"><img class="python-logo" src="../../../static/img/python-logo.png" alt="python&trade;"></a>
+                </h1>
+
+                <div class="options-bar do-not-print">
+
+                    
+                    <a id="site-map-link" class="jump-to-menu" href="#site-map"><span class="menu-icon">&equiv;</span> Menu</a><form class="search-the-site" action="https://www.python.org/search/" method="get">
+                        <fieldset title="Search Python.org">
+
+                            <span aria-hidden="true" class="icon-search"></span>
+
+                            <label class="screen-reader-text" for="id-search-field">Search This Site</label>
+                            <input id="id-search-field" name="q" type="search" role="textbox" class="search-field" placeholder="Search" value="" tabindex="1">
+
+                            <button type="submit" name="submit" id="submit" class="search-button" title="Submit this Search" tabindex="3">
+                                GO
+                            </button>
+
+                            
+                            <!--[if IE]><input type="text" style="display: none;" disabled="disabled" size="1" tabindex="4"><![endif]-->
+
+                        </fieldset>
+                    </form><span class="breaker"></span><div class="adjust-font-size" aria-hidden="true">
+                        <ul class="navigation menu" aria-label="Adjust Text Size on Page">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                <a href="#" class="action-trigger"><strong><small>A</small> A</strong></a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a class="text-shrink" title="Make Text Smaller" href="javascript:;">Smaller</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a class="text-grow" title="Make Text Larger" href="javascript:;">Larger</a></li>
+                                    <li class="tier-2 element-3" role="treeitem"><a class="text-reset" title="Reset any font size changes I have made" href="javascript:;">Reset</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div><div class="winkwink-nudgenudge">
+                        <ul class="navigation menu" aria-label="Social Media Navigation">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                <a href="#" class="action-trigger">Socialize</a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a href="http://plus.google.com/+Python"><span aria-hidden="true" class="icon-google-plus"></span>Google+</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a href="http://www.facebook.com/pythonlang?fref=ts"><span aria-hidden="true" class="icon-facebook"></span>Facebook</a></li>
+                                    <li class="tier-2 element-3" role="treeitem"><a href="http://twitter.com/ThePSF"><span aria-hidden="true" class="icon-twitter"></span>Twitter</a></li>
+                                    <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/irc/"><span aria-hidden="true" class="icon-freenode"></span>Chat on IRC</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div><div class="account-signin">
+                        <ul class="navigation menu" aria-label="Social Media Navigation">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                
+                                <a href="https://www.python.org/accounts/login/" title="Sign Up or Sign In to Python.org">Sign In</a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/accounts/signup/">Sign Up / Register</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/accounts/login/">Sign In</a></li>
+                                </ul>
+                                
+                            </li>
+                        </ul>
+                    </div>
+
+                </div><!-- end options-bar -->
+
+                <nav id="mainnav" class="python-navigation main-navigation do-not-print" role="navigation">
+                    
+                        
+<ul class="navigation menu" role="menubar" aria-label="Main Navigation">
+  
+    
+    
+    <li id="about" class="tier-1 element-1  " aria-haspopup="true">
+        <a href="https://www.python.org/about/" title="" class="">About</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/apps/" title="">Applications</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/quotes/" title="">Quotes</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/gettingstarted/" title="">Getting Started</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/help/" title="">Help</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="downloads" class="tier-1 element-2  " aria-haspopup="true">
+        <a href="https://www.python.org/downloads/" title="" class="">Downloads</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/downloads/" title="">All releases</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/downloads/source/" title="">Source code</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/downloads/windows/" title="">Windows</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/downloads/mac-osx/" title="">Mac OS X</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/download/other/" title="">Other Platforms</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://docs.python.org/3/license.html" title="">License</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/download/alternatives" title="">Alternative Implementations</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="documentation" class="tier-1 element-3  " aria-haspopup="true">
+        <a href="https://www.python.org/doc/" title="" class="">Documentation</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/doc/" title="">Docs</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/doc/av" title="">Audio/Visual Talks</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://wiki.python.org/moin/BeginnersGuide" title="">Beginner&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://docs.python.org/faq/" title="">FAQ</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="http://wiki.python.org/moin/Languages" title="">Non-English Docs</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="../index.html" title="">PEP Index</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://wiki.python.org/moin/PythonBooks" title="">Python Books</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="community" class="tier-1 element-4  " aria-haspopup="true">
+        <a href="https://www.python.org/community/" title="" class="">Community</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/community/diversity/" title="">Diversity</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/community/irc/" title="">IRC</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/community/lists/" title="">Mailing Lists</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/workshops/" title="">Python Conferences</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/community/sigs/" title="">Special Interest Groups</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://wiki.python.org/moin/" title="">Python Wiki</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/community/logos/" title="">Python Logo</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://www.python.org/community/merchandise/" title="">Merchandise</a></li>
+    
+        <li class="tier-2 element-9" role="treeitem"><a href="https://www.python.org/community/awards" title="">Community Awards</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="success-stories" class="tier-1 element-5  " aria-haspopup="true">
+        <a href="https://www.python.org/about/success/" title="success-stories" class="">Success Stories</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/success/#arts" title="">Arts</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/success/#business" title="">Business</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/success/#education" title="">Education</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/success/#engineering" title="">Engineering</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/about/success/#government" title="">Government</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://www.python.org/about/success/#scientific" title="">Scientific</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/about/success/#software-development" title="">Software Development</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="news" class="tier-1 element-6  " aria-haspopup="true">
+        <a href="https://www.python.org/blogs/" title="News from around the Python world" class="">News</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/blogs/" title="Python Insider Blog Posts">Python News</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://planetpython.org/" title="Planet Python">Community News</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="http://pyfound.blogspot.com/" title="PSF Blog">PSF News</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pycon.blogspot.com/" title="PyCon Blog">PyCon News</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="events" class="tier-1 element-7  " aria-haspopup="true">
+        <a href="https://www.python.org/events/" title="" class="">Events</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/events/python-events/" title="">Python Events</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/events/python-user-group/" title="">User Group Events</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/events/python-events/past/" title="">Python Events Archive</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/events/python-user-group/past/" title="">User Group Events Archive</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://wiki.python.org/moin/PythonEventsCalendar#Submitting_an_Event" title="">Submit an Event</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    
+  
+</ul>
+
+                    
+                </nav>
+
+                <div class="header-banner "> <!-- for optional "do-not-print" class -->
+                    
+                    
+                </div>
+
+                
+                
+
+             </div><!-- end .container -->
+        </header>
+
+        <div id="content" class="content-wrapper">
+            <!-- Main Content Column -->
+            <div class="container">
+
+                <section class="main-content with-left-sidebar" role="main">
+
+                    
+<ul class="breadcrumbs menu">
+    <li>
+        <a href="https://www.python.org/" title="The Python Programming Language">Python</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>
+        <a href="https://www.python.org/dev/">Python Developer's Guide</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>
+        <a href="../index.html">PEP Index</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>PEP 0487 -- Simpler customisation of class creation</li>
+</ul>
+
+
+                    
+<style>
+   .pep-page pre {
+        padding: .5em;
+        background: inherit;
+        border-left: 0px;
+        -webkit-box-shadow: 0 0 0 0;
+        -moz-box-shadow: 0 0 0 0;
+        box-shadow: 0 0 0 0;
+   }
+</style>
+
+    
+    <article class="text">
+        
+
+        <header class="article-header">
+            <h1 class="page-title">PEP 0487 -- Simpler customisation of class creation</h1>
+        </header>
+
+        <!--
+This HTML is auto-generated.  DO NOT EDIT THIS FILE!  If you are writing a new
+PEP, see http://www.python.org/dev/peps/pep-0001 for instructions and links
+to templates.  DO NOT USE THIS HTML FILE AS YOUR TEMPLATE!
+-->
+<html>
+ <body>
+  <table class="rfc2822 docutils field-list" frame="void" rules="none">
+   <col class="field-name">
+   </col>
+   <col class="field-body">
+   </col>
+   <tbody valign="top">
+    <tr class="field">
+     <th class="field-name">
+      PEP:
+     </th>
+     <td class="field-body">
+      487
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Title:
+     </th>
+     <td class="field-body">
+      Simpler customisation of class creation
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Author:
+     </th>
+     <td class="field-body">
+      Martin Teichmann &lt;lkb.teichmann at gmail.com&gt;,
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Status:
+     </th>
+     <td class="field-body">
+      Draft
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Type:
+     </th>
+     <td class="field-body">
+      Standards Track
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Created:
+     </th>
+     <td class="field-body">
+      27-Feb-2015
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Python-Version:
+     </th>
+     <td class="field-body">
+      3.5
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Post-History:
+     </th>
+     <td class="field-body">
+      27-Feb-2015
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Replaces:
+     </th>
+     <td class="field-body">
+      <a class="reference external" href="../pep-0422/index.html">
+       422
+      </a>
+     </td>
+    </tr>
+   </tbody>
+  </table>
+  <hr/>
+  <div class="contents topic" id="contents">
+   <p class="topic-title first">
+    Contents
+   </p>
+   <ul class="simple">
+    <li>
+     <a class="reference internal" href="#abstract" id="id9">
+      Abstract
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#connection-to-other-pep" id="id10">
+      Connection to other PEP
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#background" id="id11">
+      Background
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#proposal" id="id12">
+      Proposal
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#key-benefits" id="id13">
+      Key Benefits
+     </a>
+     <ul>
+      <li>
+       <a class="reference internal" href="#easier-use-of-custom-namespaces-for-a-class" id="id14">
+        Easier use of custom namespaces for a class
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#easier-inheritance-of-definition-time-behaviour" id="id15">
+        Easier inheritance of definition time behaviour
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#reduced-chance-of-metaclass-conflicts" id="id16">
+        Reduced chance of metaclass conflicts
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#integrates-cleanly-with-pep-3135" id="id17">
+        Integrates cleanly with PEP 3135
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#replaces-many-use-cases-for-dynamic-setting-of-metaclass" id="id18">
+        Replaces many use cases for dynamic setting of
+        <tt class="docutils literal">
+         __metaclass__
+        </tt>
+       </a>
+      </li>
+     </ul>
+    </li>
+    <li>
+     <a class="reference internal" href="#a-path-of-introduction-into-python" id="id19">
+      A path of introduction into Python
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#new-ways-of-using-classes" id="id20">
+      New Ways of Using Classes
+     </a>
+     <ul>
+      <li>
+       <a class="reference internal" href="#subclass-registration" id="id21">
+        Subclass registration
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#trait-descriptors" id="id22">
+        Trait descriptors
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#order-preserving-classes" id="id23">
+        Order preserving classes
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#prepopulated-namespaces" id="id24">
+        Prepopulated namespaces
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#cloning-a-prototype-class" id="id25">
+        Cloning a prototype class
+       </a>
+      </li>
+     </ul>
+    </li>
+    <li>
+     <a class="reference internal" href="#rejected-design-options" id="id26">
+      Rejected Design Options
+     </a>
+     <ul>
+      <li>
+       <a class="reference internal" href="#calling-the-hook-on-the-class-itself" id="id27">
+        Calling the hook on the class itself
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#other-variants-of-calling-the-hook" id="id28">
+        Other variants of calling the hook
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#requiring-an-explicit-decorator-on-init-subclass" id="id29">
+        Requiring an explicit decorator on
+        <tt class="docutils literal">
+         __init_subclass__
+        </tt>
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#passing-in-the-namespace-directly-rather-than-a-factory-function" id="id30">
+        Passing in the namespace directly rather than a factory function
+       </a>
+      </li>
+     </ul>
+    </li>
+    <li>
+     <a class="reference internal" href="#possible-extensions" id="id31">
+      Possible Extensions
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#references" id="id32">
+      References
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#copyright" id="id33">
+      Copyright
+     </a>
+    </li>
+   </ul>
+  </div>
+  <div class="section" id="abstract">
+   <h1>
+    <a class="toc-backref" href="#id9">
+     Abstract
+    </a>
+   </h1>
+   <p>
+    Currently, customising class creation requires the use of a custom metaclass.
+This custom metaclass then persists for the entire lifecycle of the class,
+creating the potential for spurious metaclass conflicts.
+   </p>
+   <p>
+    This PEP proposes to instead support a wide range of customisation
+scenarios through a new
+    <tt class="docutils literal">
+     namespace
+    </tt>
+    parameter in the class header, and
+a new
+    <tt class="docutils literal">
+     __init_subclass__
+    </tt>
+    hook in the class body.
+   </p>
+   <p>
+    The new mechanism should be easier to understand and use than
+implementing a custom metaclass, and thus should provide a gentler
+introduction to the full power Python's metaclass machinery.
+   </p>
+  </div>
+  <div class="section" id="connection-to-other-pep">
+   <h1>
+    <a class="toc-backref" href="#id10">
+     Connection to other PEP
+    </a>
+   </h1>
+   <p>
+    This is a competing proposal to
+    <a class="reference external" href="../pep-0422/index.html">
+     PEP 422
+    </a>
+    by Nick Coughlan and Daniel Urban.
+It shares both most of the PEP text and proposed code, but has major
+differences in how to achieve its goals.
+   </p>
+  </div>
+  <div class="section" id="background">
+   <h1>
+    <a class="toc-backref" href="#id11">
+     Background
+    </a>
+   </h1>
+   <p>
+    For an already created class
+    <tt class="docutils literal">
+     cls
+    </tt>
+    , the term "metaclass" has a clear
+meaning: it is the value of
+    <tt class="docutils literal">
+     type(cls)
+    </tt>
+    .
+   </p>
+   <p>
+    <em>
+     During
+    </em>
+    class creation, it has another meaning: it is also used to refer to
+the metaclass hint that may be provided as part of the class definition.
+While in many cases these two meanings end up referring to one and the same
+object, there are two situations where that is not the case:
+   </p>
+   <ul class="simple">
+    <li>
+     If the metaclass hint refers to an instance of
+     <tt class="docutils literal">
+      type
+     </tt>
+     , then it is
+considered as a candidate metaclass along with the metaclasses of all of
+the parents of the class being defined. If a more appropriate metaclass is
+found amongst the candidates, then it will be used instead of the one
+given in the metaclass hint.
+    </li>
+    <li>
+     Otherwise, an explicit metaclass hint is assumed to be a factory function
+and is called directly to create the class object. In this case, the final
+metaclass will be determined by the factory function definition. In the
+typical case (where the factory functions just calls
+     <tt class="docutils literal">
+      type
+     </tt>
+     , or, in
+Python 3.3 or later,
+     <tt class="docutils literal">
+      types.new_class
+     </tt>
+     ) the actual metaclass is then
+determined based on the parent classes.
+    </li>
+   </ul>
+   <p>
+    It is notable that only the actual metaclass is inherited - a factory
+function used as a metaclass hook sees only the class currently being
+defined, and is not invoked for any subclasses.
+   </p>
+   <p>
+    In Python 3, the metaclass hint is provided using the
+    <tt class="docutils literal">
+     metaclass=Meta
+    </tt>
+    keyword syntax in the class header. This allows the
+    <tt class="docutils literal">
+     __prepare__
+    </tt>
+    method
+on the metaclass to be used to create the
+    <tt class="docutils literal">
+     locals()
+    </tt>
+    namespace used during
+execution of the class body (for example, specifying the use of
+    <tt class="docutils literal">
+     collections.OrderedDict
+    </tt>
+    instead of a regular
+    <tt class="docutils literal">
+     dict
+    </tt>
+    ).
+   </p>
+   <p>
+    In Python 2, there was no
+    <tt class="docutils literal">
+     __prepare__
+    </tt>
+    method (that API was added for
+Python 3 by
+    <a class="reference external" href="../pep-3115/index.html">
+     PEP 3115
+    </a>
+    ). Instead, a class body could set the
+    <tt class="docutils literal">
+     __metaclass__
+    </tt>
+    attribute, and the class creation process would extract that value from the
+class namespace to use as the metaclass hint. There is
+    <a class="reference external" href="http://mail.python.org/pipermail/python-dev/2012-June/119878.html">
+     published code
+    </a>
+    <a class="footnote-reference" href="#id1" id="id2">
+     [1]
+    </a>
+    that
+makes use of this feature.
+   </p>
+   <p>
+    Another new feature in Python 3 is the zero-argument form of the
+    <tt class="docutils literal">
+     super()
+    </tt>
+    builtin, introduced by
+    <a class="reference external" href="../pep-3135/index.html">
+     PEP 3135
+    </a>
+    . This feature uses an implicit
+    <tt class="docutils literal">
+     __class__
+    </tt>
+    reference to the class being defined to replace the "by name" references
+required in Python 2. Just as code invoked during execution of a Python 2
+metaclass could not call methods that referenced the class by name (as the
+name had not yet been bound in the containing scope), similarly, Python 3
+metaclasses cannot call methods that rely on the implicit
+    <tt class="docutils literal">
+     __class__
+    </tt>
+    reference (as it is not populated until after the metaclass has returned
+control to the class creation machinery).
+   </p>
+   <p>
+    Finally, when a class uses a custom metaclass, it can pose additional
+challenges to the use of multiple inheritance, as a new class cannot
+inherit from parent classes with unrelated metaclasses. This means that
+it is impossible to add a metaclass to an already published class: such
+an addition is a backwards incompatible change due to the risk of metaclass
+conflicts.
+   </p>
+  </div>
+  <div class="section" id="proposal">
+   <h1>
+    <a class="toc-backref" href="#id12">
+     Proposal
+    </a>
+   </h1>
+   <p>
+    This PEP proposes that a new mechanism to customise class creation be
+added to Python 3.5 that meets the following criteria:
+   </p>
+   <ol class="arabic simple">
+    <li>
+     Integrates nicely with class inheritance structures (including mixins and
+multiple inheritance),
+    </li>
+    <li>
+     Integrates nicely with the implicit
+     <tt class="docutils literal">
+      __class__
+     </tt>
+     reference and
+zero-argument
+     <tt class="docutils literal">
+      super()
+     </tt>
+     syntax introduced by
+     <a class="reference external" href="../pep-3135/index.html">
+      PEP 3135
+     </a>
+     ,
+    </li>
+    <li>
+     Can be added to an existing base class without a significant risk of
+introducing backwards compatibility problems, and
+    </li>
+    <li>
+     Restores the ability for class namespaces to have some influence on the
+class creation process (above and beyond populating the namespace itself),
+but potentially without the full flexibility of the Python 2 style
+     <tt class="docutils literal">
+      __metaclass__
+     </tt>
+     hook.
+    </li>
+   </ol>
+   <p>
+    Those goals can be achieved by adding two functionalities:
+   </p>
+   <ol class="arabic simple">
+    <li>
+     A
+     <tt class="docutils literal">
+      __init_subclass__
+     </tt>
+     hook that initializes all subclasses of a
+given class, and
+    </li>
+    <li>
+     A new keyword parameter
+     <tt class="docutils literal">
+      namespace
+     </tt>
+     to the class creation statement,
+that gives an initialization of the namespace.
+    </li>
+   </ol>
+   <p>
+    As an example, the first proposal looks as follows:
+   </p>
+   <pre class="literal-block">
+ class SpamBase:
+     # this is implicitly a @classmethod
+     def __init_subclass__(cls, ns, **kwargs):
+         # This is invoked after a subclass is created, but before
+         # explicit decorators are called.
+         # The usual super() mechanisms are used to correctly support
+         # multiple inheritance.
+# ns is the classes namespace
+         # **kwargs are the keyword arguments to the subclasses'
+         # class creation statement
+         super().__init_subclass__(cls, ns, **kwargs)
+
+ class Spam(SpamBase):
+     pass
+ # the new hook is called on Spam
+</pre>
+   <p>
+    To simplify the cooperative multiple inheritance case,
+    <tt class="docutils literal">
+     object
+    </tt>
+    will gain
+a default implementation of the hook that does nothing:
+   </p>
+   <pre class="literal-block">
+class object:
+    def __init_subclass__(cls, ns):
+        pass
+</pre>
+   <p>
+    Note that this method has no keyword arguments, meaning that all
+methods which are more specialized have to process all keyword
+arguments.
+   </p>
+   <p>
+    This general proposal is not a new idea (it was first suggested for
+inclusion in the language definition
+    <a class="reference external" href="http://mail.python.org/pipermail/python-dev/2001-November/018651.html">
+     more than 10 years ago
+    </a>
+    <a class="footnote-reference" href="#id3" id="id4">
+     [2]
+    </a>
+    , and a
+similar mechanism has long been supported by
+    <a class="reference external" href="http://docs.zope.org/zope_secrets/extensionclass.html">
+     Zope's ExtensionClass
+    </a>
+    <a class="footnote-reference" href="#id5" id="id6">
+     [3]
+    </a>
+    ),
+but the situation has changed sufficiently in recent years that
+the idea is worth reconsidering for inclusion.
+   </p>
+   <p>
+    The second part of the proposal is to have a
+    <tt class="docutils literal">
+     namespace
+    </tt>
+    keyword
+argument to the class declaration statement. If present, its value
+will be called without arguments to initialize a subclasses
+namespace, very much like a metaclass
+    <tt class="docutils literal">
+     __prepare__
+    </tt>
+    method would
+do.
+   </p>
+   <p>
+    In addition, the introduction of the metaclass
+    <tt class="docutils literal">
+     __prepare__
+    </tt>
+    method
+in
+    <a class="reference external" href="../pep-3115/index.html">
+     PEP 3115
+    </a>
+    allows a further enhancement that was not possible in
+Python 2: this PEP also proposes that
+    <tt class="docutils literal">
+     type.__prepare__
+    </tt>
+    be updated
+to accept a factory function as a
+    <tt class="docutils literal">
+     namespace
+    </tt>
+    keyword-only argument.
+If present, the value provided as the
+    <tt class="docutils literal">
+     namespace
+    </tt>
+    argument will be
+called without arguments to create the result of
+    <tt class="docutils literal">
+     type.__prepare__
+    </tt>
+    instead of using a freshly created dictionary instance. For example,
+the following will use an ordered dictionary as the class namespace:
+   </p>
+   <pre class="literal-block">
+class OrderedBase(namespace=collections.OrderedDict):
+     pass
+
+class Ordered(OrderedBase):
+     # cls.__dict__ is still a read-only proxy to the class namespace,
+     # but the underlying storage is an OrderedDict instance
+</pre>
+   <div class="note">
+    <p class="first admonition-title">
+     Note
+    </p>
+    <p>
+     This PEP, along with the existing ability to use  __prepare__ to share a
+single namespace amongst multiple class objects, highlights a possible
+issue with the attribute lookup caching: when the underlying mapping is
+updated by other means, the attribute lookup cache is not invalidated
+correctly (this is a key part of the reason class
+     <tt class="docutils literal">
+      __dict__
+     </tt>
+     attributes
+produce a read-only view of the underlying storage).
+    </p>
+    <p class="last">
+     Since the optimisation provided by that cache is highly desirable,
+the use of a preexisting namespace as the class namespace may need to
+be declared as officially unsupported (since the observed behaviour is
+rather strange when the caches get out of sync).
+    </p>
+   </div>
+  </div>
+  <div class="section" id="key-benefits">
+   <h1>
+    <a class="toc-backref" href="#id13">
+     Key Benefits
+    </a>
+   </h1>
+   <div class="section" id="easier-use-of-custom-namespaces-for-a-class">
+    <h2>
+     <a class="toc-backref" href="#id14">
+      Easier use of custom namespaces for a class
+     </a>
+    </h2>
+    <p>
+     Currently, to use a different type (such as
+     <tt class="docutils literal">
+      collections.OrderedDict
+     </tt>
+     ) for
+a class namespace, or to use a pre-populated namespace, it is necessary to
+write and use a custom metaclass. With this PEP, using a custom namespace
+becomes as simple as specifying an appropriate factory function in the
+class header.
+    </p>
+   </div>
+   <div class="section" id="easier-inheritance-of-definition-time-behaviour">
+    <h2>
+     <a class="toc-backref" href="#id15">
+      Easier inheritance of definition time behaviour
+     </a>
+    </h2>
+    <p>
+     Understanding Python's metaclasses requires a deep understanding of
+the type system and the class construction process. This is legitimately
+seen as challenging, due to the need to keep multiple moving parts (the code,
+the metaclass hint, the actual metaclass, the class object, instances of the
+class object) clearly distinct in your mind. Even when you know the rules,
+it's still easy to make a mistake if you're not being extremely careful.
+    </p>
+    <p>
+     Understanding the proposed implicit class initialization hook only requires
+ordinary method inheritance, which isn't quite as daunting a task. The new
+hook provides a more gradual path towards understanding all of the phases
+involved in the class definition process.
+    </p>
+   </div>
+   <div class="section" id="reduced-chance-of-metaclass-conflicts">
+    <h2>
+     <a class="toc-backref" href="#id16">
+      Reduced chance of metaclass conflicts
+     </a>
+    </h2>
+    <p>
+     One of the big issues that makes library authors reluctant to use metaclasses
+(even when they would be appropriate) is the risk of metaclass conflicts.
+These occur whenever two unrelated metaclasses are used by the desired
+parents of a class definition. This risk also makes it very difficult to
+     <em>
+      add
+     </em>
+     a metaclass to a class that has previously been published without one.
+    </p>
+    <p>
+     By contrast, adding an
+     <tt class="docutils literal">
+      __init_subclass__
+     </tt>
+     method to an existing type poses
+a similar level of risk to adding an
+     <tt class="docutils literal">
+      __init__
+     </tt>
+     method: technically, there
+is a risk of breaking poorly implemented subclasses, but when that occurs,
+it is recognised as a bug in the subclass rather than the library author
+breaching backwards compatibility guarantees.
+    </p>
+   </div>
+   <div class="section" id="integrates-cleanly-with-pep-3135">
+    <h2>
+     <a class="toc-backref" href="#id17">
+      Integrates cleanly with PEP 3135
+     </a>
+    </h2>
+    <p>
+     Given that the method is called on already existing classes, the new
+hook will be able to freely invoke class methods that rely on the
+implicit
+     <tt class="docutils literal">
+      __class__
+     </tt>
+     reference introduced by
+     <a class="reference external" href="../pep-3135/index.html">
+      PEP 3135
+     </a>
+     , including
+methods that use the zero argument form of
+     <tt class="docutils literal">
+      super()
+     </tt>
+     .
+    </p>
+   </div>
+   <div class="section" id="replaces-many-use-cases-for-dynamic-setting-of-metaclass">
+    <h2>
+     <a class="toc-backref" href="#id18">
+      Replaces many use cases for dynamic setting of
+      <tt class="docutils literal">
+       __metaclass__
+      </tt>
+     </a>
+    </h2>
+    <p>
+     For use cases that don't involve completely replacing the defined
+class, Python 2 code that dynamically set
+     <tt class="docutils literal">
+      __metaclass__
+     </tt>
+     can now
+dynamically set
+     <tt class="docutils literal">
+      __init_subclass__
+     </tt>
+     instead. For more advanced use
+cases, introduction of an explicit metaclass (possibly made available
+as a required base class) will still be necessary in order to support
+Python 3.
+    </p>
+   </div>
+  </div>
+  <div class="section" id="a-path-of-introduction-into-python">
+   <h1>
+    <a class="toc-backref" href="#id19">
+     A path of introduction into Python
+    </a>
+   </h1>
+   <p>
+    Most of the benefits of this PEP can already be implemented using
+a simple metaclass. For the
+    <tt class="docutils literal">
+     __init_subclass__
+    </tt>
+    hook this works
+all the way down to python 2.7, while the namespace needs python 3.0
+to work. Such a class has been
+    <a class="reference external" href="https://pypi.python.org/pypi/metaclass">
+     uploaded to PyPI
+    </a>
+    <a class="footnote-reference" href="#id7" id="id8">
+     [4]
+    </a>
+    .
+   </p>
+   <p>
+    The only drawback of such a metaclass are the mentioned problems with
+metaclasses and multiple inheritance. Two classes using such a
+metaclass can only be combined, if they use exactly the same such
+metaclass. This fact calls for the inclusion of such a class into the
+standard library, let's call it
+    <tt class="docutils literal">
+     SubclassMeta
+    </tt>
+    , with a base class
+using it called
+    <tt class="docutils literal">
+     SublassInit
+    </tt>
+    . Once all users use this standard
+library metaclass, classes from different packages can easily be
+combined.
+   </p>
+   <p>
+    But still such classes cannot be easily combined with other classes
+using other metaclasses. Authors of metaclasses should bear that in
+mind and inherit from the standard metaclass if it seems useful
+for users of the metaclass to add more functionality. Ultimately,
+if the need for combining with other metaclasses is strong enough,
+the proposed functionality may be introduced into python's
+    <tt class="docutils literal">
+     type
+    </tt>
+    .
+   </p>
+   <p>
+    Those arguments strongly hint to the following procedure to include
+the proposed functionality into python:
+   </p>
+   <ol class="arabic simple">
+    <li>
+     The metaclass implementing this proposal is put onto PyPI, so that
+it can be used and scrutinized.
+    </li>
+    <li>
+     Once the code is properly mature, it can be added to the python
+standard library. There should be a new module called
+     <tt class="docutils literal">
+      metaclass
+     </tt>
+     which collects tools for metaclass authors, as well
+as a documentation of the best practices of how to write
+metaclasses.
+    </li>
+    <li>
+     If the need of combining this metaclass with other metaclasses is
+strong enough, it may be included into python itself.
+    </li>
+   </ol>
+  </div>
+  <div class="section" id="new-ways-of-using-classes">
+   <h1>
+    <a class="toc-backref" href="#id20">
+     New Ways of Using Classes
+    </a>
+   </h1>
+   <p>
+    This proposal has many usecases like the following. In the examples,
+we still inherit from the
+    <tt class="docutils literal">
+     SubclassInit
+    </tt>
+    base class. This would
+become unnecessary once this PEP is included in Python directly.
+   </p>
+   <div class="section" id="subclass-registration">
+    <h2>
+     <a class="toc-backref" href="#id21">
+      Subclass registration
+     </a>
+    </h2>
+    <p>
+     Especially when writing a plugin system, one likes to register new
+subclasses of a plugin baseclass. This can be done as follows:
+    </p>
+    <pre class="literal-block">
+class PluginBase(SubclassInit):
+    subclasses = []
+
+    def __init_subclass__(cls, ns, **kwargs):
+        super().__init_subclass__(ns, **kwargs)
+        cls.subclasses.append(cls)
+</pre>
+    <p>
+     One should note that this also works nicely as a mixin class.
+    </p>
+   </div>
+   <div class="section" id="trait-descriptors">
+    <h2>
+     <a class="toc-backref" href="#id22">
+      Trait descriptors
+     </a>
+    </h2>
+    <p>
+     There are many designs of python descriptors in the wild which, for
+example, check boundaries of values. Often those "traits" need some support
+of a metaclass to work. This is how this would look like with this
+PEP:
+    </p>
+    <pre class="literal-block">
+ class Trait:
+     def __get__(self, instance, owner):
+         return instance.__dict__[self.key]
+
+     def __set__(self, instance, value):
+         instance.__dict__[self.key] = value
+
+ class Int(Trait):
+     def __set__(self, instance, value):
+         # some boundary check code here
+         super().__set__(instance, value)
+
+ class HasTraits(SubclassInit):
+     def __init_subclass__(cls, ns, **kwargs):
+super().__init_subclass__(ns, **kwargs)
+         for k, v in ns.items():
+             if isinstance(v, Trait):
+                 v.key = k
+</pre>
+    <p>
+     The new
+     <tt class="docutils literal">
+      namespace
+     </tt>
+     keyword in the class header enables a number of
+interesting options for controlling the way a class is initialised,
+including some aspects of the object models of both Javascript and Ruby.
+    </p>
+   </div>
+   <div class="section" id="order-preserving-classes">
+    <h2>
+     <a class="toc-backref" href="#id23">
+      Order preserving classes
+     </a>
+    </h2>
+    <pre class="literal-block">
+class OrderedClassBase(namespace=collections.OrderedDict):
+    pass
+
+class OrderedClass(OrderedClassBase):
+    a = 1
+    b = 2
+    c = 3
+</pre>
+   </div>
+   <div class="section" id="prepopulated-namespaces">
+    <h2>
+     <a class="toc-backref" href="#id24">
+      Prepopulated namespaces
+     </a>
+    </h2>
+    <pre class="literal-block">
+seed_data = dict(a=1, b=2, c=3)
+class PrepopulatedClass(namespace=seed_data.copy):
+    pass
+</pre>
+   </div>
+   <div class="section" id="cloning-a-prototype-class">
+    <h2>
+     <a class="toc-backref" href="#id25">
+      Cloning a prototype class
+     </a>
+    </h2>
+    <pre class="literal-block">
+class NewClass(namespace=Prototype.__dict__.copy):
+    pass
+</pre>
+   </div>
+  </div>
+  <div class="section" id="rejected-design-options">
+   <h1>
+    <a class="toc-backref" href="#id26">
+     Rejected Design Options
+    </a>
+   </h1>
+   <div class="section" id="calling-the-hook-on-the-class-itself">
+    <h2>
+     <a class="toc-backref" href="#id27">
+      Calling the hook on the class itself
+     </a>
+    </h2>
+    <p>
+     Adding an
+     <tt class="docutils literal">
+      __autodecorate__
+     </tt>
+     hook that would be called on the class
+itself was the proposed idea of
+     <a class="reference external" href="../pep-0422/index.html">
+      PEP 422
+     </a>
+     .  Most examples work the same
+way or even better if the hook is called on the subclass. In general,
+it is much easier to explicitly call the hook on the class in which it
+is defined (to opt-in to such a behavior) than to opt-out, meaning
+that one does not want the hook to be called on the class it is
+defined in.
+    </p>
+    <p>
+     This becomes most evident if the class in question is designed as a
+mixin: it is very unlikely that the code of the mixin is to be
+executed for the mixin class itself, as it is not supposed to be a
+complete class on its own.
+    </p>
+    <p>
+     The original proposal also made major changes in the class
+initialization process, rendering it impossible to back-port the
+proposal to older python versions.
+    </p>
+   </div>
+   <div class="section" id="other-variants-of-calling-the-hook">
+    <h2>
+     <a class="toc-backref" href="#id28">
+      Other variants of calling the hook
+     </a>
+    </h2>
+    <p>
+     Other names for the hook were presented, namely
+     <tt class="docutils literal">
+      __decorate__
+     </tt>
+     or
+     <tt class="docutils literal">
+      __autodecorate__
+     </tt>
+     . This proposal opts for
+     <tt class="docutils literal">
+      __init_subclass__
+     </tt>
+     as
+it is very close to the
+     <tt class="docutils literal">
+      __init__
+     </tt>
+     method, just for the subclass,
+while it is not very close to decorators, as it does not return the
+class.
+    </p>
+   </div>
+   <div class="section" id="requiring-an-explicit-decorator-on-init-subclass">
+    <h2>
+     <a class="toc-backref" href="#id29">
+      Requiring an explicit decorator on
+      <tt class="docutils literal">
+       __init_subclass__
+      </tt>
+     </a>
+    </h2>
+    <p>
+     One could require the explicit use of
+     <tt class="docutils literal">
+      @classmethod
+     </tt>
+     on the
+     <tt class="docutils literal">
+      __init_subclass__
+     </tt>
+     decorator. It was made implicit since there's no
+sensible interpretation for leaving it out, and that case would need
+to be detected anyway in order to give a useful error message.
+    </p>
+    <p>
+     This decision was reinforced after noticing that the user experience of
+defining
+     <tt class="docutils literal">
+      __prepare__
+     </tt>
+     and forgetting the
+     <tt class="docutils literal">
+      @classmethod
+     </tt>
+     method
+decorator is singularly incomprehensible (particularly since
+     <a class="reference external" href="../pep-3115/index.html">
+      PEP 3115
+     </a>
+     documents it as an ordinary method, and the current documentation doesn't
+explicitly say anything one way or the other).
+    </p>
+   </div>
+   <div class="section" id="passing-in-the-namespace-directly-rather-than-a-factory-function">
+    <h2>
+     <a class="toc-backref" href="#id30">
+      Passing in the namespace directly rather than a factory function
+     </a>
+    </h2>
+    <p>
+     At one point,
+     <a class="reference external" href="../pep-0422/index.html">
+      PEP 422
+     </a>
+     proposed that the class namespace be passed
+directly as a keyword argument, rather than passing a factory function.
+However, this encourages an unsupported behaviour (that is, passing the
+same namespace to multiple classes, or retaining direct write access
+to a mapping used as a class namespace), so the API was switched to
+the factory function version.
+    </p>
+   </div>
+  </div>
+  <div class="section" id="possible-extensions">
+   <h1>
+    <a class="toc-backref" href="#id31">
+     Possible Extensions
+    </a>
+   </h1>
+   <p>
+    Some extensions to this PEP are imaginable, which are postponed to a
+later pep:
+   </p>
+   <ul class="simple">
+    <li>
+     A
+     <tt class="docutils literal">
+      __new_subclass__
+     </tt>
+     method could be defined which acts like a
+     <tt class="docutils literal">
+      __new__
+     </tt>
+     for classes. This would be very close to
+     <tt class="docutils literal">
+      __autodecorate__
+     </tt>
+     in
+     <a class="reference external" href="../pep-0422/index.html">
+      PEP 422
+     </a>
+     .
+    </li>
+    <li>
+     <tt class="docutils literal">
+      __subclasshook__
+     </tt>
+     could be made a classmethod in a class instead
+of a method in the metaclass.
+    </li>
+   </ul>
+  </div>
+  <div class="section" id="references">
+   <h1>
+    <a class="toc-backref" href="#id32">
+     References
+    </a>
+   </h1>
+   <table class="docutils footnote" frame="void" id="id1" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id2">
+        [1]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="http://mail.python.org/pipermail/python-dev/2012-June/119878.html">
+        http://mail.python.org/pipermail/python-dev/2012-June/119878.html
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id3" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id4">
+        [2]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="http://mail.python.org/pipermail/python-dev/2001-November/018651.html">
+        http://mail.python.org/pipermail/python-dev/2001-November/018651.html
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id5" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id6">
+        [3]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="http://docs.zope.org/zope_secrets/extensionclass.html">
+        http://docs.zope.org/zope_secrets/extensionclass.html
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id7" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id8">
+        [4]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="https://pypi.python.org/pypi/metaclass">
+        https://pypi.python.org/pypi/metaclass
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+  </div>
+  <div class="section" id="copyright">
+   <h1>
+    <a class="toc-backref" href="#id33">
+     Copyright
+    </a>
+   </h1>
+   <p>
+    This document has been placed in the public domain.
+   </p>
+   <!-- Local Variables:
+mode: indented-text
+indent-tabs-mode: nil
+sentence-end-double-space: t
+fill-column: 70
+coding: utf-8
+End: -->
+  </div>
+ </body>
+
+<!-- Mirrored from www.python.org/dev/peps/pep-0487/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 03 Sep 2015 04:33:40 GMT -->
+</html>Source: <a href="https://hg.python.org/peps/file/tip/pep-0487.txt">https://hg.python.org/peps/file/tip/pep-0487.txt</a>
+
+    </article>
+
+
+                </section>
+
+                
+
+
+<aside class="left-sidebar" role="secondary">
+
+    
+
+
+
+
+
+
+    
+
+
+
+
+
+        <div class="twitter-widget sidebar-widget">
+        <a class="twitter-timeline" data-dnt="true" href="https://twitter.com/ThePSF" data-widget-id="434113224703610882">Tweets by @ThePSF</a>
+        <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+    </div>
+
+    <div class="psf-sidebar-widget sidebar-widget">
+        <h3 class="widget-title">The PSF</h3>
+<p>The Python Software Foundation is the organization behind Python. Become a member of the PSF and help advance the software and our mission. </p>
+
+    </div>
+
+</aside>
+
+
+
+                
+                
+
+
+            </div><!-- end .container -->
+        </div><!-- end #content .content-wrapper -->
+
+        <!-- Footer and social media list -->
+        <footer id="site-map" class="main-footer" role="contentinfo">
+            <div class="main-footer-links">
+                <div class="container">
+
+                    
+                    <a id="back-to-top-1" class="jump-link" href="#python-network"><span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> Back to Top</a>
+
+                    
+
+<ul class="sitemap navigation menu do-not-print" role="tree" id="container">
+    
+    <li class="tier-1 element-1">
+        <a href="https://www.python.org/about/" >About</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/apps/" title="">Applications</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/quotes/" title="">Quotes</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/gettingstarted/" title="">Getting Started</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/help/" title="">Help</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-2">
+        <a href="https://www.python.org/downloads/" >Downloads</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/downloads/" title="">All releases</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/downloads/source/" title="">Source code</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/downloads/windows/" title="">Windows</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/downloads/mac-osx/" title="">Mac OS X</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/download/other/" title="">Other Platforms</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://docs.python.org/3/license.html" title="">License</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/download/alternatives" title="">Alternative Implementations</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-3">
+        <a href="https://www.python.org/doc/" >Documentation</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/doc/" title="">Docs</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/doc/av" title="">Audio/Visual Talks</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://wiki.python.org/moin/BeginnersGuide" title="">Beginner&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://docs.python.org/faq/" title="">FAQ</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="http://wiki.python.org/moin/Languages" title="">Non-English Docs</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="../index.html" title="">PEP Index</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://wiki.python.org/moin/PythonBooks" title="">Python Books</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-4">
+        <a href="https://www.python.org/community/" >Community</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/community/diversity/" title="">Diversity</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/community/irc/" title="">IRC</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/community/lists/" title="">Mailing Lists</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/workshops/" title="">Python Conferences</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/community/sigs/" title="">Special Interest Groups</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://wiki.python.org/moin/" title="">Python Wiki</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/community/logos/" title="">Python Logo</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://www.python.org/community/merchandise/" title="">Merchandise</a></li>
+    
+        <li class="tier-2 element-9" role="treeitem"><a href="https://www.python.org/community/awards" title="">Community Awards</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-5">
+        <a href="https://www.python.org/about/success/" title="success-stories">Success Stories</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/success/#arts" title="">Arts</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/success/#business" title="">Business</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/success/#education" title="">Education</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/success/#engineering" title="">Engineering</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/about/success/#government" title="">Government</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://www.python.org/about/success/#scientific" title="">Scientific</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/about/success/#software-development" title="">Software Development</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-6">
+        <a href="https://www.python.org/blogs/" title="News from around the Python world">News</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/blogs/" title="Python Insider Blog Posts">Python News</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://planetpython.org/" title="Planet Python">Community News</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="http://pyfound.blogspot.com/" title="PSF Blog">PSF News</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pycon.blogspot.com/" title="PyCon Blog">PyCon News</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-7">
+        <a href="https://www.python.org/events/" >Events</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/events/python-events/" title="">Python Events</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/events/python-user-group/" title="">User Group Events</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/events/python-events/past/" title="">Python Events Archive</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/events/python-user-group/past/" title="">User Group Events Archive</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://wiki.python.org/moin/PythonEventsCalendar#Submitting_an_Event" title="">Submit an Event</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-8">
+        <a href="https://www.python.org/dev/" >Contributing</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="http://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://bugs.python.org/" title="">Issue Tracker</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://mail.python.org/mailman/listinfo/python-dev" title="">python-dev list</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pythonmentors.com/" title="">Core Mentorship</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+</ul>
+
+
+                    <a id="back-to-top-2" class="jump-link" href="#python-network"><span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> Back to Top</a>
+                    
+
+                </div><!-- end .container -->
+            </div> <!-- end .main-footer-links -->
+
+            <div class="site-base">
+                <div class="container">
+                    
+                    <ul class="footer-links navigation menu do-not-print" role="tree">
+                        <li class="tier-1 element-1"><a href="https://www.python.org/about/help/">Help &amp; <span class="say-no-more">General</span> Contact</a></li>
+                        <li class="tier-1 element-2"><a href="https://www.python.org/community/diversity/">Diversity <span class="say-no-more">Initiatives</span></a></li>
+                        <li class="tier-1 element-3"><a href="https://github.com/python/pythondotorg/issues">Submit Website Bug</a></li>
+                        <!--<li class="tier-1 element-3"><a href="#"><span class="say-no-more">Website</span> Colophon</a></li>-->
+                    </ul>
+
+                    <div class="copyright">
+                        <p><small>
+                            <span class="pre">Copyright &copy;2001-2015.</span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/psf-landing/">Python Software Foundation</a></span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/about/legal/">Legal Statements</a></span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/privacy/">Privacy Policy</a></span>
+                        </small></p>
+                    </div>
+
+                </div><!-- end .container -->
+            </div><!-- end .site-base -->
+
+        </footer>
+
+    </div><!-- end #touchnav-wrapper -->
+
+    
+    <script src="../../../../ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="../../../static/js/libs/jquery-1.8.2.min.js"><\/script>')</script>
+
+    <script src="../../../static/js/libs/masonry.pkgd.min.js"></script>
+
+    <script type="text/javascript" src="../../../static/js/main-min.js" charset="utf-8"></script>
+    
+
+    <!--[if lte IE 7]>
+    <script type="text/javascript" src="/static/js/plugins/IE8-min.js" charset="utf-8"></script>
+    
+    
+    <![endif]-->
+
+    <!--[if lte IE 8]>
+    <script type="text/javascript" src="/static/js/plugins/getComputedStyle-min.js" charset="utf-8"></script>
+    
+    
+    <![endif]-->
+
+    
+
+    
+    
+
+</body>
+</html>

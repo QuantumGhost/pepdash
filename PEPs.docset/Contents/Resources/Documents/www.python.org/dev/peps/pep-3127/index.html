@@ -1,0 +1,1862 @@
+<!doctype html>
+<!--[if lt IE 7]>   <html class="no-js ie6 lt-ie7 lt-ie8 lt-ie9">   <![endif]-->
+<!--[if IE 7]>      <html class="no-js ie7 lt-ie8 lt-ie9">          <![endif]-->
+<!--[if IE 8]>      <html class="no-js ie8 lt-ie9">                 <![endif]-->
+<!--[if gt IE 8]><!--><html class="no-js" lang="en" dir="ltr">  <!--<![endif]-->
+
+
+<!-- Mirrored from www.python.org/dev/peps/pep-3127/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 03 Sep 2015 04:35:24 GMT -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <link rel="prefetch" href="../../../../ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js">
+
+    <meta name="application-name" content="Python.org">
+    <meta name="msapplication-tooltip" content="The official home of the Python Programming Language">
+    <meta name="apple-mobile-web-app-title" content="Python.org">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="format-detection" content="telephone=no">
+    <meta http-equiv="cleartype" content="on">
+    <meta http-equiv="imagetoolbar" content="false">
+
+    <script src="../../../static/js/libs/modernizr.js"></script>
+
+    <link href="../../../static/stylesheets/style.css" rel="stylesheet" type="text/css" title="default" />
+    <link href="../../../static/stylesheets/mq.css" rel="stylesheet" type="text/css" media="not print, braille, embossed, speech, tty" />
+    
+
+    <!--[if (lte IE 8)&(!IEMobile)]>
+    <link href="/static/stylesheets/no-mq.css" rel="stylesheet" type="text/css" media="screen" />
+    
+    
+    <![endif]-->
+
+    
+    <link rel="icon" type="image/x-icon" href="https://www.python.org/static/favicon.ico">
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="../../../static/apple-touch-icon-144x144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="../../../static/apple-touch-icon-114x114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="../../../static/apple-touch-icon-72x72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="../../../static/apple-touch-icon-precomposed.png">
+    <link rel="apple-touch-icon" href="../../../static/apple-touch-icon-precomposed.png">
+
+    
+    <meta name="msapplication-TileImage" content="/static/metro-icon-144x144-precomposed.png"><!-- white shape -->
+    <meta name="msapplication-TileColor" content="#3673a5"><!-- python blue -->
+    <meta name="msapplication-navbutton-color" content="#3673a5">
+
+    <meta property="og:site_name" content="Python.org">
+    <meta property="og:type" content="website">
+
+    <title>PEP 3127 -- Integer Literal Support and Syntax | Python.org</title>
+    <meta property="og:title" content="Welcome to Python.org">
+
+    
+    <meta name="description" content="The official home of the Python Programming Language">
+    <meta name="og:description" content="The official home of the Python Programming Language">
+    <meta name="keywords" content="Python programming language object oriented web free open source software license documentation download community">
+    <meta property="og:tag" content="Python programming language object oriented web free open source software license documentation download community">
+    <meta property="og:published_time" content="">
+    <meta property="og:modified_time" content="">
+    <meta property="og:author" content="">
+    <meta property="og:section" content=""> 
+    <meta property="og:url" content="">
+    <meta property="og:image" content="">
+    <meta property="og:video" content="">
+
+    <link rel="author" href="https://www.python.org/static/humans.txt">
+
+    
+
+    
+    <script type="application/ld+json">
+     {
+       "@context": "http://schema.org",
+       "@type": "WebSite",
+       "url": "https://www.python.org/",
+       "potentialAction": {
+         "@type": "SearchAction",
+         "target": "https://www.python.org/search/?q={search_term_string}",
+         "query-input": "required name=search_term_string"
+       }
+     }
+    </script>
+
+    
+    <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-39055973-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+    </script>
+    
+</head>
+
+<body class="python pages pep-page">
+
+    <div id="touchnav-wrapper">
+
+        <div id="nojs" class="do-not-print">
+            <p><strong>Notice:</strong> While Javascript is not essential for this website, your interaction with the content will be limited. Please turn Javascript on for the full experience. </p>
+        </div>
+
+        <!--[if lt IE 8]>
+        <div id="oldie-warning" class="do-not-print">
+            <p><strong>Notice:</strong> Your browser is <em>ancient</em> and <a href="http://www.ie6countdown.com/">Microsoft agrees</a>. <a href="http://browsehappy.com/">Upgrade to a different browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to experience a better web.</p>
+        </div>
+        <![endif]-->
+
+        <!-- Sister Site Links -->
+        <div id="top" class="top-bar do-not-print">
+
+            <nav class="meta-navigation container" role="navigation">
+
+                
+                <div class="skip-link screen-reader-text">
+                    <a href="#content" title="Skip to content">Skip to content</a>
+                </div>
+
+                
+                <a id="close-python-network" class="jump-link" href="#python-network" aria-hidden="true">
+                    <span aria-hidden="true" class="icon-arrow-down"><span>&#9660;</span></span> Close
+                </a>
+
+                
+
+<ul class="menu" role="tree">
+    
+    <li class="python-meta ">
+        <a href="https://www.python.org/" title="The Python Programming Language" >Python</a>
+    </li>
+    
+    <li class="psf-meta ">
+        <a href="https://www.python.org/psf-landing/" title="The Python Software Foundation" >PSF</a>
+    </li>
+    
+    <li class="docs-meta ">
+        <a href="https://docs.python.org/" title="Python Documentation" >Docs</a>
+    </li>
+    
+    <li class="pypi-meta ">
+        <a href="https://pypi.python.org/" title="Python Package Index" >PyPI</a>
+    </li>
+    
+    <li class="jobs-meta ">
+        <a href="https://www.python.org/jobs/" title="Python Job Board" >Jobs</a>
+    </li>
+    
+    <li class="shop-meta ">
+        <a href="https://www.python.org/community/" title="Python Community" >Community</a>
+    </li>
+    
+</ul>
+
+
+                <a id="python-network" class="jump-link" href="#top" aria-hidden="true">
+                    <span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> The Python Network
+                </a>
+
+            </nav>
+
+        </div>
+
+        <!-- Header elements -->
+        <header class="main-header" role="banner">
+            <div class="container">
+
+                <h1 class="site-headline">
+                    <a href="https://www.python.org/"><img class="python-logo" src="../../../static/img/python-logo.png" alt="python&trade;"></a>
+                </h1>
+
+                <div class="options-bar do-not-print">
+
+                    
+                    <a id="site-map-link" class="jump-to-menu" href="#site-map"><span class="menu-icon">&equiv;</span> Menu</a><form class="search-the-site" action="https://www.python.org/search/" method="get">
+                        <fieldset title="Search Python.org">
+
+                            <span aria-hidden="true" class="icon-search"></span>
+
+                            <label class="screen-reader-text" for="id-search-field">Search This Site</label>
+                            <input id="id-search-field" name="q" type="search" role="textbox" class="search-field" placeholder="Search" value="" tabindex="1">
+
+                            <button type="submit" name="submit" id="submit" class="search-button" title="Submit this Search" tabindex="3">
+                                GO
+                            </button>
+
+                            
+                            <!--[if IE]><input type="text" style="display: none;" disabled="disabled" size="1" tabindex="4"><![endif]-->
+
+                        </fieldset>
+                    </form><span class="breaker"></span><div class="adjust-font-size" aria-hidden="true">
+                        <ul class="navigation menu" aria-label="Adjust Text Size on Page">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                <a href="#" class="action-trigger"><strong><small>A</small> A</strong></a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a class="text-shrink" title="Make Text Smaller" href="javascript:;">Smaller</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a class="text-grow" title="Make Text Larger" href="javascript:;">Larger</a></li>
+                                    <li class="tier-2 element-3" role="treeitem"><a class="text-reset" title="Reset any font size changes I have made" href="javascript:;">Reset</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div><div class="winkwink-nudgenudge">
+                        <ul class="navigation menu" aria-label="Social Media Navigation">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                <a href="#" class="action-trigger">Socialize</a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a href="http://plus.google.com/+Python"><span aria-hidden="true" class="icon-google-plus"></span>Google+</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a href="http://www.facebook.com/pythonlang?fref=ts"><span aria-hidden="true" class="icon-facebook"></span>Facebook</a></li>
+                                    <li class="tier-2 element-3" role="treeitem"><a href="http://twitter.com/ThePSF"><span aria-hidden="true" class="icon-twitter"></span>Twitter</a></li>
+                                    <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/irc/"><span aria-hidden="true" class="icon-freenode"></span>Chat on IRC</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div><div class="account-signin">
+                        <ul class="navigation menu" aria-label="Social Media Navigation">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                
+                                <a href="https://www.python.org/accounts/login/" title="Sign Up or Sign In to Python.org">Sign In</a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/accounts/signup/">Sign Up / Register</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/accounts/login/">Sign In</a></li>
+                                </ul>
+                                
+                            </li>
+                        </ul>
+                    </div>
+
+                </div><!-- end options-bar -->
+
+                <nav id="mainnav" class="python-navigation main-navigation do-not-print" role="navigation">
+                    
+                        
+<ul class="navigation menu" role="menubar" aria-label="Main Navigation">
+  
+    
+    
+    <li id="about" class="tier-1 element-1  " aria-haspopup="true">
+        <a href="https://www.python.org/about/" title="" class="">About</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/apps/" title="">Applications</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/quotes/" title="">Quotes</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/gettingstarted/" title="">Getting Started</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/help/" title="">Help</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="downloads" class="tier-1 element-2  " aria-haspopup="true">
+        <a href="https://www.python.org/downloads/" title="" class="">Downloads</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/downloads/" title="">All releases</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/downloads/source/" title="">Source code</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/downloads/windows/" title="">Windows</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/downloads/mac-osx/" title="">Mac OS X</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/download/other/" title="">Other Platforms</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://docs.python.org/3/license.html" title="">License</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/download/alternatives" title="">Alternative Implementations</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="documentation" class="tier-1 element-3  " aria-haspopup="true">
+        <a href="https://www.python.org/doc/" title="" class="">Documentation</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/doc/" title="">Docs</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/doc/av" title="">Audio/Visual Talks</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://wiki.python.org/moin/BeginnersGuide" title="">Beginner&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://docs.python.org/faq/" title="">FAQ</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="http://wiki.python.org/moin/Languages" title="">Non-English Docs</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="../index.html" title="">PEP Index</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://wiki.python.org/moin/PythonBooks" title="">Python Books</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="community" class="tier-1 element-4  " aria-haspopup="true">
+        <a href="https://www.python.org/community/" title="" class="">Community</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/community/diversity/" title="">Diversity</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/community/irc/" title="">IRC</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/community/lists/" title="">Mailing Lists</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/workshops/" title="">Python Conferences</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/community/sigs/" title="">Special Interest Groups</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://wiki.python.org/moin/" title="">Python Wiki</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/community/logos/" title="">Python Logo</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://www.python.org/community/merchandise/" title="">Merchandise</a></li>
+    
+        <li class="tier-2 element-9" role="treeitem"><a href="https://www.python.org/community/awards" title="">Community Awards</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="success-stories" class="tier-1 element-5  " aria-haspopup="true">
+        <a href="https://www.python.org/about/success/" title="success-stories" class="">Success Stories</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/success/#arts" title="">Arts</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/success/#business" title="">Business</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/success/#education" title="">Education</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/success/#engineering" title="">Engineering</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/about/success/#government" title="">Government</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://www.python.org/about/success/#scientific" title="">Scientific</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/about/success/#software-development" title="">Software Development</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="news" class="tier-1 element-6  " aria-haspopup="true">
+        <a href="https://www.python.org/blogs/" title="News from around the Python world" class="">News</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/blogs/" title="Python Insider Blog Posts">Python News</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://planetpython.org/" title="Planet Python">Community News</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="http://pyfound.blogspot.com/" title="PSF Blog">PSF News</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pycon.blogspot.com/" title="PyCon Blog">PyCon News</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="events" class="tier-1 element-7  " aria-haspopup="true">
+        <a href="https://www.python.org/events/" title="" class="">Events</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/events/python-events/" title="">Python Events</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/events/python-user-group/" title="">User Group Events</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/events/python-events/past/" title="">Python Events Archive</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/events/python-user-group/past/" title="">User Group Events Archive</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://wiki.python.org/moin/PythonEventsCalendar#Submitting_an_Event" title="">Submit an Event</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    
+  
+</ul>
+
+                    
+                </nav>
+
+                <div class="header-banner "> <!-- for optional "do-not-print" class -->
+                    
+                    
+                </div>
+
+                
+                
+
+             </div><!-- end .container -->
+        </header>
+
+        <div id="content" class="content-wrapper">
+            <!-- Main Content Column -->
+            <div class="container">
+
+                <section class="main-content with-left-sidebar" role="main">
+
+                    
+<ul class="breadcrumbs menu">
+    <li>
+        <a href="https://www.python.org/" title="The Python Programming Language">Python</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>
+        <a href="https://www.python.org/dev/">Python Developer's Guide</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>
+        <a href="../index.html">PEP Index</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>PEP 3127 -- Integer Literal Support and Syntax</li>
+</ul>
+
+
+                    
+<style>
+   .pep-page pre {
+        padding: .5em;
+        background: inherit;
+        border-left: 0px;
+        -webkit-box-shadow: 0 0 0 0;
+        -moz-box-shadow: 0 0 0 0;
+        box-shadow: 0 0 0 0;
+   }
+</style>
+
+    
+    <article class="text">
+        
+
+        <header class="article-header">
+            <h1 class="page-title">PEP 3127 -- Integer Literal Support and Syntax</h1>
+        </header>
+
+        <!--
+This HTML is auto-generated.  DO NOT EDIT THIS FILE!  If you are writing a new
+PEP, see http://www.python.org/dev/peps/pep-0001 for instructions and links
+to templates.  DO NOT USE THIS HTML FILE AS YOUR TEMPLATE!
+-->
+<html>
+ <body>
+  <table class="rfc2822 docutils field-list" frame="void" rules="none">
+   <col class="field-name">
+   </col>
+   <col class="field-body">
+   </col>
+   <tbody valign="top">
+    <tr class="field">
+     <th class="field-name">
+      PEP:
+     </th>
+     <td class="field-body">
+      3127
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Title:
+     </th>
+     <td class="field-body">
+      Integer Literal Support and Syntax
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Author:
+     </th>
+     <td class="field-body">
+      Patrick Maupin &lt;pmaupin at gmail.com&gt;
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Discussions-To:
+     </th>
+     <td class="field-body">
+      <a class="reference external" href="mailto:Python-3000@python.org?subject=PEP%203127">
+       Python-3000 at python.org
+      </a>
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Status:
+     </th>
+     <td class="field-body">
+      Final
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Type:
+     </th>
+     <td class="field-body">
+      Standards Track
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Created:
+     </th>
+     <td class="field-body">
+      14-Mar-2007
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Python-Version:
+     </th>
+     <td class="field-body">
+      3.0
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Post-History:
+     </th>
+     <td class="field-body">
+      18-Mar-2007
+     </td>
+    </tr>
+   </tbody>
+  </table>
+  <hr/>
+  <div class="contents topic" id="contents">
+   <p class="topic-title first">
+    Contents
+   </p>
+   <ul class="simple">
+    <li>
+     <a class="reference internal" href="#abstract" id="id11">
+      Abstract
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#motivation" id="id12">
+      Motivation
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#specification" id="id13">
+      Specification
+     </a>
+     <ul>
+      <li>
+       <a class="reference internal" href="#grammar-specification" id="id14">
+        Grammar specification
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#int-specification" id="id15">
+        int() specification
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#long-specification" id="id16">
+        long() specification
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#tokenizer-exception-handling" id="id17">
+        Tokenizer exception handling
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#int-exception-handling" id="id18">
+        int() exception handling
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#oct-function" id="id19">
+        oct() function
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#output-formatting" id="id20">
+        Output formatting
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#transition-from-2-6-to-3-0" id="id21">
+        Transition from 2.6 to 3.0
+       </a>
+      </li>
+     </ul>
+    </li>
+    <li>
+     <a class="reference internal" href="#rationale" id="id22">
+      Rationale
+     </a>
+     <ul>
+      <li>
+       <a class="reference internal" href="#background" id="id23">
+        Background
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#removal-of-old-octal-syntax" id="id24">
+        Removal of old octal syntax
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#supported-radices" id="id25">
+        Supported radices
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#syntax-for-supported-radices" id="id26">
+        Syntax for supported radices
+       </a>
+      </li>
+     </ul>
+    </li>
+    <li>
+     <a class="reference internal" href="#open-issues" id="id27">
+      Open Issues
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#references" id="id28">
+      References
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#copyright" id="id29">
+      Copyright
+     </a>
+    </li>
+   </ul>
+  </div>
+  <div class="section" id="abstract">
+   <h1>
+    <a class="toc-backref" href="#id11">
+     Abstract
+    </a>
+   </h1>
+   <p>
+    This PEP proposes changes to the Python core to rationalize
+the treatment of string literal representations of integers
+in different radices (bases).  These changes are targeted at
+Python 3.0, but the backward-compatible parts of the changes
+should be added to Python 2.6, so that all valid 3.0 integer
+literals will also be valid in 2.6.
+   </p>
+   <p>
+    The proposal is that:
+   </p>
+   <blockquote>
+    <ol class="loweralpha simple">
+     <li>
+      octal literals must now be specified
+with a leading "0o" or "0O" instead of "0";
+     </li>
+     <li>
+      binary literals are now supported via a
+leading "0b" or "0B"; and
+     </li>
+     <li>
+      provision will be made for binary numbers in
+string formatting.
+     </li>
+    </ol>
+   </blockquote>
+  </div>
+  <div class="section" id="motivation">
+   <h1>
+    <a class="toc-backref" href="#id12">
+     Motivation
+    </a>
+   </h1>
+   <p>
+    This PEP was motivated by two different issues:
+   </p>
+   <blockquote>
+    <ul class="simple">
+     <li>
+      The default octal representation of integers is silently confusing
+to people unfamiliar with C-like languages.  It is extremely easy
+to inadvertently create an integer object with the wrong value,
+because '013' means 'decimal 11', not 'decimal 13', to the Python
+language itself, which is not the meaning that most humans would
+assign to this literal.
+     </li>
+     <li>
+      Some Python users have a strong desire for binary support in
+the language.
+     </li>
+    </ul>
+   </blockquote>
+  </div>
+  <div class="section" id="specification">
+   <h1>
+    <a class="toc-backref" href="#id13">
+     Specification
+    </a>
+   </h1>
+   <div class="section" id="grammar-specification">
+    <h2>
+     <a class="toc-backref" href="#id14">
+      Grammar specification
+     </a>
+    </h2>
+    <p>
+     The grammar will be changed.  For Python 2.6, the changed and
+new token definitions will be:
+    </p>
+    <pre class="literal-block">
+integer        ::=     decimalinteger | octinteger | hexinteger |
+                       bininteger | oldoctinteger
+
+octinteger     ::=     "0" ("o" | "O") octdigit+
+
+bininteger     ::=     "0" ("b" | "B") bindigit+
+
+oldoctinteger  ::=     "0" octdigit+
+
+bindigit       ::=     "0" | "1"
+</pre>
+    <p>
+     For Python 3.0, "oldoctinteger" will not be supported, and
+an exception will be raised if a literal has a leading "0" and
+a second character which is a digit.
+    </p>
+    <p>
+     For both versions, this will require changes to PyLong_FromString
+as well as the grammar.
+    </p>
+    <p>
+     The documentation will have to be changed as well:  grammar.txt,
+as well as the integer literal section of the reference manual.
+    </p>
+    <p>
+     <a class="reference external" href="../pep-0306/index.html">
+      PEP 306
+     </a>
+     should be checked for other issues, and that PEP should
+be updated if the procedure described therein is insufficient.
+    </p>
+   </div>
+   <div class="section" id="int-specification">
+    <h2>
+     <a class="toc-backref" href="#id15">
+      int() specification
+     </a>
+    </h2>
+    <p>
+     int(s, 0) will also match the new grammar definition.
+    </p>
+    <p>
+     This should happen automatically with the changes to
+PyLong_FromString required for the grammar change.
+    </p>
+    <p>
+     Also the documentation for int() should be changed to explain
+that int(s) operates identically to int(s, 10), and the word
+"guess" should be removed from the description of int(s, 0).
+    </p>
+   </div>
+   <div class="section" id="long-specification">
+    <h2>
+     <a class="toc-backref" href="#id16">
+      long() specification
+     </a>
+    </h2>
+    <p>
+     For Python 2.6, the long() implementation and documentation
+should be changed to reflect the new grammar.
+    </p>
+   </div>
+   <div class="section" id="tokenizer-exception-handling">
+    <h2>
+     <a class="toc-backref" href="#id17">
+      Tokenizer exception handling
+     </a>
+    </h2>
+    <p>
+     If an invalid token contains a leading "0", the exception
+error message should be more informative than the current
+"SyntaxError: invalid token".  It should explain that decimal
+numbers may not have a leading zero, and that octal numbers
+require an "o" after the leading zero.
+    </p>
+   </div>
+   <div class="section" id="int-exception-handling">
+    <h2>
+     <a class="toc-backref" href="#id18">
+      int() exception handling
+     </a>
+    </h2>
+    <p>
+     The ValueError raised for any call to int() with a string
+should at least explicitly contain the base in the error
+message, e.g.:
+    </p>
+    <pre class="literal-block">
+ValueError: invalid literal for base 8 int(): 09
+</pre>
+   </div>
+   <div class="section" id="oct-function">
+    <h2>
+     <a class="toc-backref" href="#id19">
+      oct() function
+     </a>
+    </h2>
+    <p>
+     oct() should be updated to output '0o' in front of
+the octal digits (for 3.0, and 2.6 compatibility mode).
+    </p>
+   </div>
+   <div class="section" id="output-formatting">
+    <h2>
+     <a class="toc-backref" href="#id20">
+      Output formatting
+     </a>
+    </h2>
+    <p>
+     In 3.0, the string % operator alternate syntax for the 'o'
+option will need to be updated to add '0o' in front,
+instead of '0'.  In 2.6, alternate octal formatting will
+continue to add only '0'.  In neither 2.6 nor 3.0 will
+the % operator support binary output.  This is because
+binary output is already supported by
+     <a class="reference external" href="../pep-3101/index.html">
+      PEP 3101
+     </a>
+     (str.format), which is the prefered string formatting
+method.
+    </p>
+   </div>
+   <div class="section" id="transition-from-2-6-to-3-0">
+    <h2>
+     <a class="toc-backref" href="#id21">
+      Transition from 2.6 to 3.0
+     </a>
+    </h2>
+    <p>
+     The 2to3 translator will have to insert 'o' into any
+octal string literal.
+    </p>
+    <p>
+     The Py3K compatible option to Python 2.6 should cause
+attempts to use oldoctinteger literals to raise an
+exception.
+    </p>
+   </div>
+  </div>
+  <div class="section" id="rationale">
+   <h1>
+    <a class="toc-backref" href="#id22">
+     Rationale
+    </a>
+   </h1>
+   <p>
+    Most of the discussion on these issues occurred on the Python-3000
+mailing list starting 14-Mar-2007, prompted by an observation that
+the average human being would be completely mystified upon finding
+that prepending a "0" to a string of digits changes the meaning of
+that digit string entirely.
+   </p>
+   <p>
+    It was pointed out during this discussion that a similar, but shorter,
+discussion on the subject occurred in January of 2006, prompted by a
+discovery of the same issue.
+   </p>
+   <div class="section" id="background">
+    <h2>
+     <a class="toc-backref" href="#id23">
+      Background
+     </a>
+    </h2>
+    <p>
+     For historical reasons, Python's string representation of integers
+in different bases (radices), for string formatting and token
+literals, borrows heavily from C.
+     <a class="footnote-reference" href="#id6" id="id1">
+      [1]
+     </a>
+     <a class="footnote-reference" href="#id7" id="id2">
+      [2]
+     </a>
+     Usage has shown that
+the historical method of specifying an octal number is confusing,
+and also that it would be nice to have additional support for binary
+literals.
+    </p>
+    <p>
+     Throughout this document, unless otherwise noted, discussions about
+the string representation of integers relate to these features:
+    </p>
+    <blockquote>
+     <ul>
+      <li>
+       <p class="first">
+        Literal integer tokens, as used by normal module compilation,
+by eval(), and by int(token, 0).  (int(token) and int(token, 2-36)
+are not modified by this proposal.)
+       </p>
+       <blockquote>
+        <ul class="simple">
+         <li>
+          Under 2.6, long() is treated the same as int()
+         </li>
+        </ul>
+       </blockquote>
+      </li>
+      <li>
+       <p class="first">
+        Formatting of integers into strings, either via the % string
+operator or the new
+        <a class="reference external" href="../pep-3101/index.html">
+         PEP 3101
+        </a>
+        advanced string formatting method.
+       </p>
+      </li>
+     </ul>
+    </blockquote>
+    <p>
+     It is presumed that:
+    </p>
+    <blockquote>
+     <ul class="simple">
+      <li>
+       All of these features should have an identical set
+of supported radices, for consistency.
+      </li>
+      <li>
+       Python source code syntax and int(mystring, 0) should
+continue to share identical behavior.
+      </li>
+     </ul>
+    </blockquote>
+   </div>
+   <div class="section" id="removal-of-old-octal-syntax">
+    <h2>
+     <a class="toc-backref" href="#id24">
+      Removal of old octal syntax
+     </a>
+    </h2>
+    <p>
+     This PEP proposes that the ability to specify an octal number by
+using a leading zero will be removed from the language in Python 3.0
+(and the Python 3.0 preview mode of 2.6), and that a SyntaxError will
+be raised whenever a leading "0" is immediately followed by another
+digit.
+    </p>
+    <p>
+     During the present discussion, it was almost universally agreed that:
+    </p>
+    <pre class="literal-block">
+eval('010') == 8
+</pre>
+    <p>
+     should no longer be true, because that is confusing to new users.
+It was also proposed that:
+    </p>
+    <pre class="literal-block">
+eval('0010') == 10
+</pre>
+    <p>
+     should become true, but that is much more contentious, because it is so
+inconsistent with usage in other computer languages that mistakes are
+likely to be made.
+    </p>
+    <p>
+     Almost all currently popular computer languages, including C/C++,
+Java, Perl, and JavaScript, treat a sequence of digits with a
+leading zero as an octal number.  Proponents of treating these
+numbers as decimal instead have a very valid point -- as discussed
+in
+     <a class="reference internal" href="#supported-radices">
+      Supported radices
+     </a>
+     , below, the entire non-computer world uses
+decimal numbers almost exclusively.  There is ample anecdotal
+evidence that many people are dismayed and confused if they
+are confronted with non-decimal radices.
+    </p>
+    <p>
+     However, in most situations, most people do not write gratuitous
+zeros in front of their decimal numbers.  The primary exception is
+when an attempt is being made to line up columns of numbers.  But
+since
+     <a class="reference external" href="../pep-0008/index.html">
+      PEP 8
+     </a>
+     specifically discourages the use of spaces to try to
+align Python code, one would suspect the same argument should apply
+to the use of leading zeros for the same purpose.
+    </p>
+    <p>
+     Finally, although the email discussion often focused on whether anybody
+actually
+     <em>
+      uses
+     </em>
+     octal any more, and whether we should cater to those
+old-timers in any case, that is almost entirely besides the point.
+    </p>
+    <p>
+     Assume the rare complete newcomer to computing who
+     <em>
+      does
+     </em>
+     , either
+occasionally or as a matter of habit, use leading zeros for decimal
+numbers.  Python could either:
+    </p>
+    <blockquote>
+     <ol class="loweralpha simple">
+      <li>
+       silently do the wrong thing with his numbers, as it does now;
+      </li>
+      <li>
+       immediately disabuse him of the notion that this is viable syntax
+(and yes, the SyntaxWarning should be more gentle than it
+currently is, but that is a subject for a different PEP); or
+      </li>
+      <li>
+       let him continue to think that computers are happy with
+multi-digit decimal integers which start with "0".
+      </li>
+     </ol>
+    </blockquote>
+    <p>
+     Some people passionately believe that (c) is the correct answer,
+and they would be absolutely right if we could be sure that new
+users will never blossom and grow and start writing AJAX applications.
+    </p>
+    <p>
+     So while a new Python user may (currently) be mystified at the
+delayed discovery that his numbers don't work properly, we can
+fix it by explaining to him immediately that Python doesn't like
+leading zeros (hopefully with a reasonable message!), or we can
+delegate this teaching experience to the JavaScript interpreter
+in the Internet Explorer browser, and let him try to debug his
+issue there.
+    </p>
+   </div>
+   <div class="section" id="supported-radices">
+    <h2>
+     <a class="toc-backref" href="#id25">
+      Supported radices
+     </a>
+    </h2>
+    <p>
+     This PEP proposes that the supported radices for the Python
+language will be 2, 8, 10, and 16.
+    </p>
+    <p>
+     Once it is agreed that the old syntax for octal (radix 8) representation
+of integers must be removed from the language, the next obvious
+question is "Do we actually need a way to specify (and display)
+numbers in octal?"
+    </p>
+    <p>
+     This question is quickly followed by "What radices does the language
+need to support?"  Because computers are so adept at doing what you
+tell them to, a tempting answer in the discussion was "all of them."
+This answer has obviously been given before -- the int() constructor
+will accept an explicit radix with a value between 2 and 36, inclusive,
+with the latter number bearing a suspicious arithmetic similarity to
+the sum of the number of numeric digits and the number of same-case
+letters in the ASCII alphabet.
+    </p>
+    <p>
+     But the best argument for inclusion will have a use-case to back
+it up, so the idea of supporting all radices was quickly rejected,
+and the only radices left with any real support were decimal,
+hexadecimal, octal, and binary.
+    </p>
+    <p>
+     Just because a particular radix has a vocal supporter on the
+mailing list does not mean that it really should be in the
+language, so the rest of this section is a treatise on the
+utility of these particular radices, vs. other possible choices.
+    </p>
+    <p>
+     Humans use other numeric bases constantly.  If I tell you that
+it is 12:30 PM, I have communicated quantitative information
+arguably composed of
+     <em>
+      three
+     </em>
+     separate bases (12, 60, and 2),
+only one of which is in the "agreed" list above.  But the
+     <em>
+      communication
+     </em>
+     of that information used two decimal digits
+each for the base 12 and base 60 information, and, perversely,
+two letters for information which could have fit in a single
+decimal digit.
+    </p>
+    <p>
+     So, in general, humans communicate "normal" (non-computer)
+numerical information either via names (AM, PM, January, ...)
+or via use of decimal notation.  Obviously, names are
+seldom used for large sets of items, so decimal is used for
+everything else.  There are studies which attempt to explain
+why this is so, typically reaching the expected conclusion
+that the Arabic numeral system is well-suited to human
+cognition.
+     <a class="footnote-reference" href="#id8" id="id3">
+      [3]
+     </a>
+    </p>
+    <p>
+     There is even support in the history of the design of
+computers to indicate that decimal notation is the correct
+way for computers to communicate with humans.  One of
+the first modern computers, ENIAC
+     <a class="footnote-reference" href="#id9" id="id4">
+      [4]
+     </a>
+     computed in decimal,
+even though there were already existing computers which
+operated in binary.
+    </p>
+    <p>
+     Decimal computer operation was important enough
+that many computers, including the ubiquitous PC, have
+instructions designed to operate on "binary coded decimal"
+(BCD)
+     <a class="footnote-reference" href="#id10" id="id5">
+      [5]
+     </a>
+     , a representation which devotes 4 bits to each
+decimal digit.  These instructions date from a time when the
+most strenuous calculations ever performed on many numbers
+were the calculations actually required to perform textual
+I/O with them.  It is possible to display BCD without having
+to perform a divide/remainder operation on every displayed
+digit, and this was a huge computational win when most
+hardware didn't have fast divide capability.  Another factor
+contributing to the use of BCD is that, with BCD calculations,
+rounding will happen exactly the same way that a human would
+do it, so BCD is still sometimes used in fields like finance,
+despite the computational and storage superiority of binary.
+    </p>
+    <p>
+     So, if it weren't for the fact that computers themselves
+normally use binary for efficient computation and data
+storage, string representations of integers would probably
+always be in decimal.
+    </p>
+    <p>
+     Unfortunately, computer hardware doesn't think like humans,
+so programmers and hardware engineers must often resort to
+thinking like the computer, which means that it is important
+for Python to have the ability to communicate binary data
+in a form that is understandable to humans.
+    </p>
+    <p>
+     The requirement that the binary data notation must be cognitively
+easy for humans to process means that it should contain an integral
+number of binary digits (bits) per symbol, while otherwise
+conforming quite closely to the standard tried-and-true decimal
+notation (position indicates power, larger magnitude on the left,
+not too many symbols in the alphabet, etc.).
+    </p>
+    <p>
+     The obvious "sweet spot" for this binary data notation is
+thus octal, which packs the largest integral number of bits
+possible into a single symbol chosen from the Arabic numeral
+alphabet.
+    </p>
+    <p>
+     In fact, some computer architectures, such as the PDP8 and the
+8080/Z80, were defined in terms of octal, in the sense of arranging
+the bitfields of instructions in groups of three, and using
+octal representations to describe the instruction set.
+    </p>
+    <p>
+     Even today, octal is important because of bit-packed structures
+which consist of 3 bits per field, such as Unix file permission
+masks.
+    </p>
+    <p>
+     But octal has a drawback when used for larger numbers.  The
+number of bits per symbol, while integral, is not itself
+a power of two.  This limitation (given that the word size
+of most computers these days is a power of two) has resulted
+in hexadecimal, which is more popular than octal despite the
+fact that it requires a 60% larger alphabet than decimal,
+because each symbol contains 4 bits.
+    </p>
+    <p>
+     Some numbers, such as Unix file permission masks, are easily
+decoded by humans when represented in octal, but difficult to
+decode in hexadecimal, while other numbers are much easier for
+humans to handle in hexadecimal.
+    </p>
+    <p>
+     Unfortunately, there are also binary numbers used in computers
+which are not very well communicated in either hexadecimal or
+octal. Thankfully, fewer people have to deal with these on a
+regular basis, but on the other hand, this means that several
+people on the discussion list questioned the wisdom of adding
+a straight binary representation to Python.
+    </p>
+    <p>
+     One example of where these numbers is very useful is in
+reading and writing hardware registers.  Sometimes hardware
+designers will eschew human readability and opt for address
+space efficiency, by packing multiple bit fields into a single
+hardware register at unaligned bit locations, and it is tedious
+and error-prone for a human to reconstruct a 5 bit field which
+consists of the upper 3 bits of one hex digit, and the lower 2
+bits of the next hex digit.
+    </p>
+    <p>
+     Even if the ability of Python to communicate binary information
+to humans is only useful for a small technical subset of the
+population, it is exactly that population subset which contains
+most, if not all, members of the Python core team, so even straight
+binary, the least useful of these notations, has several enthusiastic
+supporters and few, if any, staunch opponents, among the Python community.
+    </p>
+   </div>
+   <div class="section" id="syntax-for-supported-radices">
+    <h2>
+     <a class="toc-backref" href="#id26">
+      Syntax for supported radices
+     </a>
+    </h2>
+    <p>
+     This proposal is to to use a "0o" prefix with either uppercase
+or lowercase "o" for octal, and a "0b" prefix with either
+uppercase or lowercase "b" for binary.
+    </p>
+    <p>
+     There was strong support for not supporting uppercase, but
+this is a separate subject for a different PEP, as 'j' for
+complex numbers, 'e' for exponent, and 'r' for raw string
+(to name a few) already support uppercase.
+    </p>
+    <p>
+     The syntax for delimiting the different radices received a lot of
+attention in the discussion on Python-3000.  There are several
+(sometimes conflicting) requirements and "nice-to-haves" for
+this syntax:
+    </p>
+    <blockquote>
+     <ul class="simple">
+      <li>
+       It should be as compatible with other languages and
+previous versions of Python as is reasonable, both
+for the input syntax and for the output (e.g. string
+% operator) syntax.
+      </li>
+      <li>
+       It should be as obvious to the casual observer as
+possible.
+      </li>
+      <li>
+       It should be easy to visually distinguish integers
+formatted in the different bases.
+      </li>
+     </ul>
+    </blockquote>
+    <p>
+     Proposed syntaxes included things like arbitrary radix prefixes,
+such as 16r100 (256 in hexadecimal), and radix suffixes, similar
+to the 100h assembler-style suffix.  The debate on whether the
+letter "O" could be used for octal was intense -- an uppercase
+"O" looks suspiciously similar to a zero in some fonts.  Suggestions
+were made to use a "c" (the second letter of "oCtal"), or even
+to use a "t" for "ocTal" and an "n" for "biNary" to go along
+with the "x" for "heXadecimal".
+    </p>
+    <p>
+     For the string % operator, "o" was already being used to denote
+octal.  Binary formatting is not being added to the % operator
+because
+     <a class="reference external" href="../pep-3101/index.html">
+      PEP 3101
+     </a>
+     (Advanced String Formatting) already supports
+binary, % formatting will be deprecated in the future.
+    </p>
+    <p>
+     At the end of the day, since uppercase "O" can look like a zero
+and uppercase "B" can look like an 8, it was decided that these
+prefixes should be lowercase only, but, like 'r' for raw string,
+that can be a preference or style-guide issue.
+    </p>
+   </div>
+  </div>
+  <div class="section" id="open-issues">
+   <h1>
+    <a class="toc-backref" href="#id27">
+     Open Issues
+    </a>
+   </h1>
+   <p>
+    It was suggested in the discussion that lowercase should be used
+for all numeric and string special modifiers, such as 'x' for
+hexadecimal, 'r' for raw strings, 'e' for exponentiation, and
+'j' for complex numbers.  This is an issue for a separate PEP.
+   </p>
+   <p>
+    This PEP takes no position on uppercase or lowercase for input,
+just noting that, for consistency, if uppercase is not to be
+removed from input parsing for other letters, it should be
+added for octal and binary, and documenting the changes under
+this assumption, as there is not yet a PEP about the case issue.
+   </p>
+   <p>
+    Output formatting may be a different story -- there is already
+ample precedence for case sensitivity in the output format string,
+and there would need to be a consensus that there is a valid
+use-case for the "alternate form" of the string % operator
+to support uppercase 'B' or 'O' characters for binary or
+octal output.  Currently,
+    <a class="reference external" href="../pep-3101/index.html">
+     PEP 3101
+    </a>
+    does not even support this
+alternate capability, and the hex() function does not allow
+the programmer to specify the case of the 'x' character.
+   </p>
+   <p>
+    There are still some strong feelings that '0123' should be
+allowed as a literal decimal in Python 3.0.  If this is the
+right thing to do, this can easily be covered in an additional
+PEP.  This proposal only takes the first step of making '0123'
+not be a valid octal number, for reasons covered in the rationale.
+   </p>
+   <p>
+    Is there (or should there be) an option for the 2to3 translator
+which only makes the 2.6 compatible changes?  Should this be
+run on 2.6 library code before the 2.6 release?
+   </p>
+   <p>
+    Should a bin() function which matches hex() and oct() be added?
+   </p>
+   <p>
+    Is hex() really that useful once we have advanced string formatting?
+   </p>
+  </div>
+  <div class="section" id="references">
+   <h1>
+    <a class="toc-backref" href="#id28">
+     References
+    </a>
+   </h1>
+   <table class="docutils footnote" frame="void" id="id6" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id1">
+        [1]
+       </a>
+      </td>
+      <td>
+       GNU libc manual printf integer format conversions
+(
+       <a class="reference external" href="http://www.gnu.org/software/libc/manual/html_node/Integer-Conversions.html">
+        http://www.gnu.org/software/libc/manual/html_node/Integer-Conversions.html
+       </a>
+       )
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id7" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id2">
+        [2]
+       </a>
+      </td>
+      <td>
+       Python string formatting operations
+(
+       <a class="reference external" href="http://docs.python.org/library/stdtypes.html#string-formatting-operations">
+        http://docs.python.org/library/stdtypes.html#string-formatting-operations
+       </a>
+       )
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id8" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id3">
+        [3]
+       </a>
+      </td>
+      <td>
+       The Representation of Numbers, Jiajie Zhang and Donald A. Norman
+(
+       <a class="reference external" href="http://acad88.sahs.uth.tmc.edu/research/publications/Number-Representation.pdf">
+        http://acad88.sahs.uth.tmc.edu/research/publications/Number-Representation.pdf
+       </a>
+       )
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id9" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id4">
+        [4]
+       </a>
+      </td>
+      <td>
+       ENIAC page at wikipedia
+(
+       <a class="reference external" href="http://en.wikipedia.org/wiki/ENIAC">
+        http://en.wikipedia.org/wiki/ENIAC
+       </a>
+       )
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id10" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id5">
+        [5]
+       </a>
+      </td>
+      <td>
+       BCD page at wikipedia
+(
+       <a class="reference external" href="http://en.wikipedia.org/wiki/Binary-coded_decimal">
+        http://en.wikipedia.org/wiki/Binary-coded_decimal
+       </a>
+       )
+      </td>
+     </tr>
+    </tbody>
+   </table>
+  </div>
+  <div class="section" id="copyright">
+   <h1>
+    <a class="toc-backref" href="#id29">
+     Copyright
+    </a>
+   </h1>
+   <p>
+    This document has been placed in the public domain.
+   </p>
+   <!-- Local Variables:
+mode: indented-text
+indent-tabs-mode: nil
+sentence-end-double-space: t
+fill-column: 70
+coding: utf-8
+End: -->
+  </div>
+ </body>
+
+<!-- Mirrored from www.python.org/dev/peps/pep-3127/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 03 Sep 2015 04:35:26 GMT -->
+</html>Source: <a href="https://hg.python.org/peps/file/tip/pep-3127.txt">https://hg.python.org/peps/file/tip/pep-3127.txt</a>
+
+    </article>
+
+
+                </section>
+
+                
+
+
+<aside class="left-sidebar" role="secondary">
+
+    
+
+
+
+
+
+
+    
+
+
+
+
+
+        <div class="twitter-widget sidebar-widget">
+        <a class="twitter-timeline" data-dnt="true" href="https://twitter.com/ThePSF" data-widget-id="434113224703610882">Tweets by @ThePSF</a>
+        <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+    </div>
+
+    <div class="psf-sidebar-widget sidebar-widget">
+        <h3 class="widget-title">The PSF</h3>
+<p>The Python Software Foundation is the organization behind Python. Become a member of the PSF and help advance the software and our mission. </p>
+
+    </div>
+
+</aside>
+
+
+
+                
+                
+
+
+            </div><!-- end .container -->
+        </div><!-- end #content .content-wrapper -->
+
+        <!-- Footer and social media list -->
+        <footer id="site-map" class="main-footer" role="contentinfo">
+            <div class="main-footer-links">
+                <div class="container">
+
+                    
+                    <a id="back-to-top-1" class="jump-link" href="#python-network"><span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> Back to Top</a>
+
+                    
+
+<ul class="sitemap navigation menu do-not-print" role="tree" id="container">
+    
+    <li class="tier-1 element-1">
+        <a href="https://www.python.org/about/" >About</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/apps/" title="">Applications</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/quotes/" title="">Quotes</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/gettingstarted/" title="">Getting Started</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/help/" title="">Help</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-2">
+        <a href="https://www.python.org/downloads/" >Downloads</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/downloads/" title="">All releases</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/downloads/source/" title="">Source code</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/downloads/windows/" title="">Windows</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/downloads/mac-osx/" title="">Mac OS X</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/download/other/" title="">Other Platforms</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://docs.python.org/3/license.html" title="">License</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/download/alternatives" title="">Alternative Implementations</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-3">
+        <a href="https://www.python.org/doc/" >Documentation</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/doc/" title="">Docs</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/doc/av" title="">Audio/Visual Talks</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://wiki.python.org/moin/BeginnersGuide" title="">Beginner&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://docs.python.org/faq/" title="">FAQ</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="http://wiki.python.org/moin/Languages" title="">Non-English Docs</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="../index.html" title="">PEP Index</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://wiki.python.org/moin/PythonBooks" title="">Python Books</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-4">
+        <a href="https://www.python.org/community/" >Community</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/community/diversity/" title="">Diversity</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/community/irc/" title="">IRC</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/community/lists/" title="">Mailing Lists</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/workshops/" title="">Python Conferences</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/community/sigs/" title="">Special Interest Groups</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://wiki.python.org/moin/" title="">Python Wiki</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/community/logos/" title="">Python Logo</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://www.python.org/community/merchandise/" title="">Merchandise</a></li>
+    
+        <li class="tier-2 element-9" role="treeitem"><a href="https://www.python.org/community/awards" title="">Community Awards</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-5">
+        <a href="https://www.python.org/about/success/" title="success-stories">Success Stories</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/success/#arts" title="">Arts</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/success/#business" title="">Business</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/success/#education" title="">Education</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/success/#engineering" title="">Engineering</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/about/success/#government" title="">Government</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://www.python.org/about/success/#scientific" title="">Scientific</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/about/success/#software-development" title="">Software Development</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-6">
+        <a href="https://www.python.org/blogs/" title="News from around the Python world">News</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/blogs/" title="Python Insider Blog Posts">Python News</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://planetpython.org/" title="Planet Python">Community News</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="http://pyfound.blogspot.com/" title="PSF Blog">PSF News</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pycon.blogspot.com/" title="PyCon Blog">PyCon News</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-7">
+        <a href="https://www.python.org/events/" >Events</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/events/python-events/" title="">Python Events</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/events/python-user-group/" title="">User Group Events</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/events/python-events/past/" title="">Python Events Archive</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/events/python-user-group/past/" title="">User Group Events Archive</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://wiki.python.org/moin/PythonEventsCalendar#Submitting_an_Event" title="">Submit an Event</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-8">
+        <a href="https://www.python.org/dev/" >Contributing</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="http://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://bugs.python.org/" title="">Issue Tracker</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://mail.python.org/mailman/listinfo/python-dev" title="">python-dev list</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pythonmentors.com/" title="">Core Mentorship</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+</ul>
+
+
+                    <a id="back-to-top-2" class="jump-link" href="#python-network"><span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> Back to Top</a>
+                    
+
+                </div><!-- end .container -->
+            </div> <!-- end .main-footer-links -->
+
+            <div class="site-base">
+                <div class="container">
+                    
+                    <ul class="footer-links navigation menu do-not-print" role="tree">
+                        <li class="tier-1 element-1"><a href="https://www.python.org/about/help/">Help &amp; <span class="say-no-more">General</span> Contact</a></li>
+                        <li class="tier-1 element-2"><a href="https://www.python.org/community/diversity/">Diversity <span class="say-no-more">Initiatives</span></a></li>
+                        <li class="tier-1 element-3"><a href="https://github.com/python/pythondotorg/issues">Submit Website Bug</a></li>
+                        <!--<li class="tier-1 element-3"><a href="#"><span class="say-no-more">Website</span> Colophon</a></li>-->
+                    </ul>
+
+                    <div class="copyright">
+                        <p><small>
+                            <span class="pre">Copyright &copy;2001-2015.</span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/psf-landing/">Python Software Foundation</a></span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/about/legal/">Legal Statements</a></span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/privacy/">Privacy Policy</a></span>
+                        </small></p>
+                    </div>
+
+                </div><!-- end .container -->
+            </div><!-- end .site-base -->
+
+        </footer>
+
+    </div><!-- end #touchnav-wrapper -->
+
+    
+    <script src="../../../../ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="../../../static/js/libs/jquery-1.8.2.min.js"><\/script>')</script>
+
+    <script src="../../../static/js/libs/masonry.pkgd.min.js"></script>
+
+    <script type="text/javascript" src="../../../static/js/main-min.js" charset="utf-8"></script>
+    
+
+    <!--[if lte IE 7]>
+    <script type="text/javascript" src="/static/js/plugins/IE8-min.js" charset="utf-8"></script>
+    
+    
+    <![endif]-->
+
+    <!--[if lte IE 8]>
+    <script type="text/javascript" src="/static/js/plugins/getComputedStyle-min.js" charset="utf-8"></script>
+    
+    
+    <![endif]-->
+
+    
+
+    
+    
+
+</body>
+</html>

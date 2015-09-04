@@ -1,0 +1,2520 @@
+<!doctype html>
+<!--[if lt IE 7]>   <html class="no-js ie6 lt-ie7 lt-ie8 lt-ie9">   <![endif]-->
+<!--[if IE 7]>      <html class="no-js ie7 lt-ie8 lt-ie9">          <![endif]-->
+<!--[if IE 8]>      <html class="no-js ie8 lt-ie9">                 <![endif]-->
+<!--[if gt IE 8]><!--><html class="no-js" lang="en" dir="ltr">  <!--<![endif]-->
+
+
+<!-- Mirrored from www.python.org/dev/peps/pep-0463/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 03 Sep 2015 04:33:28 GMT -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <link rel="prefetch" href="../../../../ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js">
+
+    <meta name="application-name" content="Python.org">
+    <meta name="msapplication-tooltip" content="The official home of the Python Programming Language">
+    <meta name="apple-mobile-web-app-title" content="Python.org">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="format-detection" content="telephone=no">
+    <meta http-equiv="cleartype" content="on">
+    <meta http-equiv="imagetoolbar" content="false">
+
+    <script src="../../../static/js/libs/modernizr.js"></script>
+
+    <link href="../../../static/stylesheets/style.css" rel="stylesheet" type="text/css" title="default" />
+    <link href="../../../static/stylesheets/mq.css" rel="stylesheet" type="text/css" media="not print, braille, embossed, speech, tty" />
+    
+
+    <!--[if (lte IE 8)&(!IEMobile)]>
+    <link href="/static/stylesheets/no-mq.css" rel="stylesheet" type="text/css" media="screen" />
+    
+    
+    <![endif]-->
+
+    
+    <link rel="icon" type="image/x-icon" href="https://www.python.org/static/favicon.ico">
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="../../../static/apple-touch-icon-144x144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="../../../static/apple-touch-icon-114x114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="../../../static/apple-touch-icon-72x72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="../../../static/apple-touch-icon-precomposed.png">
+    <link rel="apple-touch-icon" href="../../../static/apple-touch-icon-precomposed.png">
+
+    
+    <meta name="msapplication-TileImage" content="/static/metro-icon-144x144-precomposed.png"><!-- white shape -->
+    <meta name="msapplication-TileColor" content="#3673a5"><!-- python blue -->
+    <meta name="msapplication-navbutton-color" content="#3673a5">
+
+    <meta property="og:site_name" content="Python.org">
+    <meta property="og:type" content="website">
+
+    <title>PEP 0463 -- Exception-catching expressions | Python.org</title>
+    <meta property="og:title" content="Welcome to Python.org">
+
+    
+    <meta name="description" content="The official home of the Python Programming Language">
+    <meta name="og:description" content="The official home of the Python Programming Language">
+    <meta name="keywords" content="Python programming language object oriented web free open source software license documentation download community">
+    <meta property="og:tag" content="Python programming language object oriented web free open source software license documentation download community">
+    <meta property="og:published_time" content="">
+    <meta property="og:modified_time" content="">
+    <meta property="og:author" content="">
+    <meta property="og:section" content=""> 
+    <meta property="og:url" content="">
+    <meta property="og:image" content="">
+    <meta property="og:video" content="">
+
+    <link rel="author" href="https://www.python.org/static/humans.txt">
+
+    
+
+    
+    <script type="application/ld+json">
+     {
+       "@context": "http://schema.org",
+       "@type": "WebSite",
+       "url": "https://www.python.org/",
+       "potentialAction": {
+         "@type": "SearchAction",
+         "target": "https://www.python.org/search/?q={search_term_string}",
+         "query-input": "required name=search_term_string"
+       }
+     }
+    </script>
+
+    
+    <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-39055973-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+    </script>
+    
+</head>
+
+<body class="python pages pep-page">
+
+    <div id="touchnav-wrapper">
+
+        <div id="nojs" class="do-not-print">
+            <p><strong>Notice:</strong> While Javascript is not essential for this website, your interaction with the content will be limited. Please turn Javascript on for the full experience. </p>
+        </div>
+
+        <!--[if lt IE 8]>
+        <div id="oldie-warning" class="do-not-print">
+            <p><strong>Notice:</strong> Your browser is <em>ancient</em> and <a href="http://www.ie6countdown.com/">Microsoft agrees</a>. <a href="http://browsehappy.com/">Upgrade to a different browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to experience a better web.</p>
+        </div>
+        <![endif]-->
+
+        <!-- Sister Site Links -->
+        <div id="top" class="top-bar do-not-print">
+
+            <nav class="meta-navigation container" role="navigation">
+
+                
+                <div class="skip-link screen-reader-text">
+                    <a href="#content" title="Skip to content">Skip to content</a>
+                </div>
+
+                
+                <a id="close-python-network" class="jump-link" href="#python-network" aria-hidden="true">
+                    <span aria-hidden="true" class="icon-arrow-down"><span>&#9660;</span></span> Close
+                </a>
+
+                
+
+<ul class="menu" role="tree">
+    
+    <li class="python-meta ">
+        <a href="https://www.python.org/" title="The Python Programming Language" >Python</a>
+    </li>
+    
+    <li class="psf-meta ">
+        <a href="https://www.python.org/psf-landing/" title="The Python Software Foundation" >PSF</a>
+    </li>
+    
+    <li class="docs-meta ">
+        <a href="https://docs.python.org/" title="Python Documentation" >Docs</a>
+    </li>
+    
+    <li class="pypi-meta ">
+        <a href="https://pypi.python.org/" title="Python Package Index" >PyPI</a>
+    </li>
+    
+    <li class="jobs-meta ">
+        <a href="https://www.python.org/jobs/" title="Python Job Board" >Jobs</a>
+    </li>
+    
+    <li class="shop-meta ">
+        <a href="https://www.python.org/community/" title="Python Community" >Community</a>
+    </li>
+    
+</ul>
+
+
+                <a id="python-network" class="jump-link" href="#top" aria-hidden="true">
+                    <span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> The Python Network
+                </a>
+
+            </nav>
+
+        </div>
+
+        <!-- Header elements -->
+        <header class="main-header" role="banner">
+            <div class="container">
+
+                <h1 class="site-headline">
+                    <a href="https://www.python.org/"><img class="python-logo" src="../../../static/img/python-logo.png" alt="python&trade;"></a>
+                </h1>
+
+                <div class="options-bar do-not-print">
+
+                    
+                    <a id="site-map-link" class="jump-to-menu" href="#site-map"><span class="menu-icon">&equiv;</span> Menu</a><form class="search-the-site" action="https://www.python.org/search/" method="get">
+                        <fieldset title="Search Python.org">
+
+                            <span aria-hidden="true" class="icon-search"></span>
+
+                            <label class="screen-reader-text" for="id-search-field">Search This Site</label>
+                            <input id="id-search-field" name="q" type="search" role="textbox" class="search-field" placeholder="Search" value="" tabindex="1">
+
+                            <button type="submit" name="submit" id="submit" class="search-button" title="Submit this Search" tabindex="3">
+                                GO
+                            </button>
+
+                            
+                            <!--[if IE]><input type="text" style="display: none;" disabled="disabled" size="1" tabindex="4"><![endif]-->
+
+                        </fieldset>
+                    </form><span class="breaker"></span><div class="adjust-font-size" aria-hidden="true">
+                        <ul class="navigation menu" aria-label="Adjust Text Size on Page">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                <a href="#" class="action-trigger"><strong><small>A</small> A</strong></a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a class="text-shrink" title="Make Text Smaller" href="javascript:;">Smaller</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a class="text-grow" title="Make Text Larger" href="javascript:;">Larger</a></li>
+                                    <li class="tier-2 element-3" role="treeitem"><a class="text-reset" title="Reset any font size changes I have made" href="javascript:;">Reset</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div><div class="winkwink-nudgenudge">
+                        <ul class="navigation menu" aria-label="Social Media Navigation">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                <a href="#" class="action-trigger">Socialize</a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a href="http://plus.google.com/+Python"><span aria-hidden="true" class="icon-google-plus"></span>Google+</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a href="http://www.facebook.com/pythonlang?fref=ts"><span aria-hidden="true" class="icon-facebook"></span>Facebook</a></li>
+                                    <li class="tier-2 element-3" role="treeitem"><a href="http://twitter.com/ThePSF"><span aria-hidden="true" class="icon-twitter"></span>Twitter</a></li>
+                                    <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/irc/"><span aria-hidden="true" class="icon-freenode"></span>Chat on IRC</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div><div class="account-signin">
+                        <ul class="navigation menu" aria-label="Social Media Navigation">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                
+                                <a href="https://www.python.org/accounts/login/" title="Sign Up or Sign In to Python.org">Sign In</a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/accounts/signup/">Sign Up / Register</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/accounts/login/">Sign In</a></li>
+                                </ul>
+                                
+                            </li>
+                        </ul>
+                    </div>
+
+                </div><!-- end options-bar -->
+
+                <nav id="mainnav" class="python-navigation main-navigation do-not-print" role="navigation">
+                    
+                        
+<ul class="navigation menu" role="menubar" aria-label="Main Navigation">
+  
+    
+    
+    <li id="about" class="tier-1 element-1  " aria-haspopup="true">
+        <a href="https://www.python.org/about/" title="" class="">About</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/apps/" title="">Applications</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/quotes/" title="">Quotes</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/gettingstarted/" title="">Getting Started</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/help/" title="">Help</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="downloads" class="tier-1 element-2  " aria-haspopup="true">
+        <a href="https://www.python.org/downloads/" title="" class="">Downloads</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/downloads/" title="">All releases</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/downloads/source/" title="">Source code</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/downloads/windows/" title="">Windows</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/downloads/mac-osx/" title="">Mac OS X</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/download/other/" title="">Other Platforms</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://docs.python.org/3/license.html" title="">License</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/download/alternatives" title="">Alternative Implementations</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="documentation" class="tier-1 element-3  " aria-haspopup="true">
+        <a href="https://www.python.org/doc/" title="" class="">Documentation</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/doc/" title="">Docs</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/doc/av" title="">Audio/Visual Talks</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://wiki.python.org/moin/BeginnersGuide" title="">Beginner&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://docs.python.org/faq/" title="">FAQ</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="http://wiki.python.org/moin/Languages" title="">Non-English Docs</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="../index.html" title="">PEP Index</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://wiki.python.org/moin/PythonBooks" title="">Python Books</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="community" class="tier-1 element-4  " aria-haspopup="true">
+        <a href="https://www.python.org/community/" title="" class="">Community</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/community/diversity/" title="">Diversity</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/community/irc/" title="">IRC</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/community/lists/" title="">Mailing Lists</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/workshops/" title="">Python Conferences</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/community/sigs/" title="">Special Interest Groups</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://wiki.python.org/moin/" title="">Python Wiki</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/community/logos/" title="">Python Logo</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://www.python.org/community/merchandise/" title="">Merchandise</a></li>
+    
+        <li class="tier-2 element-9" role="treeitem"><a href="https://www.python.org/community/awards" title="">Community Awards</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="success-stories" class="tier-1 element-5  " aria-haspopup="true">
+        <a href="https://www.python.org/about/success/" title="success-stories" class="">Success Stories</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/success/#arts" title="">Arts</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/success/#business" title="">Business</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/success/#education" title="">Education</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/success/#engineering" title="">Engineering</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/about/success/#government" title="">Government</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://www.python.org/about/success/#scientific" title="">Scientific</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/about/success/#software-development" title="">Software Development</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="news" class="tier-1 element-6  " aria-haspopup="true">
+        <a href="https://www.python.org/blogs/" title="News from around the Python world" class="">News</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/blogs/" title="Python Insider Blog Posts">Python News</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://planetpython.org/" title="Planet Python">Community News</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="http://pyfound.blogspot.com/" title="PSF Blog">PSF News</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pycon.blogspot.com/" title="PyCon Blog">PyCon News</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="events" class="tier-1 element-7  " aria-haspopup="true">
+        <a href="https://www.python.org/events/" title="" class="">Events</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/events/python-events/" title="">Python Events</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/events/python-user-group/" title="">User Group Events</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/events/python-events/past/" title="">Python Events Archive</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/events/python-user-group/past/" title="">User Group Events Archive</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://wiki.python.org/moin/PythonEventsCalendar#Submitting_an_Event" title="">Submit an Event</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    
+  
+</ul>
+
+                    
+                </nav>
+
+                <div class="header-banner "> <!-- for optional "do-not-print" class -->
+                    
+                    
+                </div>
+
+                
+                
+
+             </div><!-- end .container -->
+        </header>
+
+        <div id="content" class="content-wrapper">
+            <!-- Main Content Column -->
+            <div class="container">
+
+                <section class="main-content with-left-sidebar" role="main">
+
+                    
+<ul class="breadcrumbs menu">
+    <li>
+        <a href="https://www.python.org/" title="The Python Programming Language">Python</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>
+        <a href="https://www.python.org/dev/">Python Developer's Guide</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>
+        <a href="../index.html">PEP Index</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>PEP 0463 -- Exception-catching expressions</li>
+</ul>
+
+
+                    
+<style>
+   .pep-page pre {
+        padding: .5em;
+        background: inherit;
+        border-left: 0px;
+        -webkit-box-shadow: 0 0 0 0;
+        -moz-box-shadow: 0 0 0 0;
+        box-shadow: 0 0 0 0;
+   }
+</style>
+
+    
+    <article class="text">
+        
+
+        <header class="article-header">
+            <h1 class="page-title">PEP 0463 -- Exception-catching expressions</h1>
+        </header>
+
+        <!--
+This HTML is auto-generated.  DO NOT EDIT THIS FILE!  If you are writing a new
+PEP, see http://www.python.org/dev/peps/pep-0001 for instructions and links
+to templates.  DO NOT USE THIS HTML FILE AS YOUR TEMPLATE!
+-->
+<html>
+ <body>
+  <table class="rfc2822 docutils field-list" frame="void" rules="none">
+   <col class="field-name">
+   </col>
+   <col class="field-body">
+   </col>
+   <tbody valign="top">
+    <tr class="field">
+     <th class="field-name">
+      PEP:
+     </th>
+     <td class="field-body">
+      463
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Title:
+     </th>
+     <td class="field-body">
+      Exception-catching expressions
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Author:
+     </th>
+     <td class="field-body">
+      Chris Angelico &lt;rosuav at gmail.com&gt;
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Status:
+     </th>
+     <td class="field-body">
+      Draft
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Type:
+     </th>
+     <td class="field-body">
+      Standards Track
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Created:
+     </th>
+     <td class="field-body">
+      15-Feb-2014
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Python-Version:
+     </th>
+     <td class="field-body">
+      3.5
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Post-History:
+     </th>
+     <td class="field-body">
+      20-Feb-2014, 16-Feb-2014
+     </td>
+    </tr>
+   </tbody>
+  </table>
+  <hr/>
+  <div class="contents topic" id="contents">
+   <p class="topic-title first">
+    Contents
+   </p>
+   <ul class="simple">
+    <li>
+     <a class="reference internal" href="#abstract" id="id44">
+      Abstract
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#motivation" id="id45">
+      Motivation
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#rationale" id="id46">
+      Rationale
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#proposal" id="id47">
+      Proposal
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#alternative-proposals" id="id48">
+      Alternative Proposals
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#example-usage" id="id49">
+      Example usage
+     </a>
+     <ul>
+      <li>
+       <a class="reference internal" href="#narrowing-of-exception-catching-scope" id="id50">
+        Narrowing of exception-catching scope
+       </a>
+      </li>
+     </ul>
+    </li>
+    <li>
+     <a class="reference internal" href="#comparisons-with-other-languages" id="id51">
+      Comparisons with other languages
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#deferred-sub-proposals" id="id52">
+      Deferred sub-proposals
+     </a>
+     <ul>
+      <li>
+       <a class="reference internal" href="#multiple-except-clauses" id="id53">
+        Multiple except clauses
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#capturing-the-exception-object" id="id54">
+        Capturing the exception object
+       </a>
+      </li>
+     </ul>
+    </li>
+    <li>
+     <a class="reference internal" href="#rejected-sub-proposals" id="id55">
+      Rejected sub-proposals
+     </a>
+     <ul>
+      <li>
+       <a class="reference internal" href="#finally-clause" id="id56">
+        finally clause
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#bare-except-having-different-meaning" id="id57">
+        Bare except having different meaning
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#bare-except-clauses" id="id58">
+        Bare except clauses
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#parentheses-around-the-except-clauses" id="id59">
+        Parentheses around the except clauses
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#short-hand-for-except-pass" id="id60">
+        Short-hand for "except: pass"
+       </a>
+      </li>
+     </ul>
+    </li>
+    <li>
+     <a class="reference internal" href="#common-objections" id="id61">
+      Common objections
+     </a>
+     <ul>
+      <li>
+       <a class="reference internal" href="#colons-always-introduce-suites" id="id62">
+        Colons always introduce suites
+       </a>
+      </li>
+     </ul>
+    </li>
+    <li>
+     <a class="reference internal" href="#id15" id="id63">
+      References
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#copyright" id="id64">
+      Copyright
+     </a>
+    </li>
+   </ul>
+  </div>
+  <div class="section" id="abstract">
+   <h1>
+    <a class="toc-backref" href="#id44">
+     Abstract
+    </a>
+   </h1>
+   <p>
+    Just as
+    <a class="reference external" href="../pep-0308/index.html">
+     PEP 308
+    </a>
+    introduced a means of value-based conditions in an
+expression, this system allows exception-based conditions to be used
+as part of an expression.
+   </p>
+  </div>
+  <div class="section" id="motivation">
+   <h1>
+    <a class="toc-backref" href="#id45">
+     Motivation
+    </a>
+   </h1>
+   <p>
+    A number of functions and methods have parameters which will cause
+them to return a specified value instead of raising an exception.  The
+current system is ad-hoc and inconsistent, and requires that each
+function be individually written to have this functionality; not all
+support this.
+   </p>
+   <ul class="simple">
+    <li>
+     dict.get(key, default) - second positional argument in place of
+KeyError
+    </li>
+    <li>
+     next(iter, default) - second positional argument in place of
+StopIteration
+    </li>
+    <li>
+     list.pop() - no way to return a default
+    </li>
+    <li>
+     seq[index] - no way to handle a bounds error
+    </li>
+    <li>
+     min(sequence, default=default) - keyword argument in place of
+ValueError
+    </li>
+    <li>
+     statistics.mean(data) - no way to handle an empty iterator
+    </li>
+   </ul>
+   <p>
+    Had this facility existed early in Python's history, there would have been
+no need to create dict.get() and related methods; the one obvious way to
+handle an absent key would be to respond to the exception.  One method is
+written which signals the absence in one way, and one consistent technique
+is used to respond to the absence.  Instead, we have dict.get(), and as of
+Python 3.4, we also have min(... default=default), and myriad others.  We
+have a LBYL syntax for testing inside an expression, but there is currently
+no EAFP notation; compare the following:
+   </p>
+   <pre class="literal-block">
+# LBYL:
+if key in dic:
+    process(dic[key])
+else:
+    process(None)
+# As an expression:
+process(dic[key] if key in dic else None)
+
+# EAFP:
+try:
+    process(dic[key])
+except KeyError:
+    process(None)
+# As an expression:
+process(dic[key] except KeyError: None)
+</pre>
+   <p>
+    Python generally recommends the EAFP policy, but must then proliferate
+utility functions like dic.get(key,None) to enable this.
+   </p>
+  </div>
+  <div class="section" id="rationale">
+   <h1>
+    <a class="toc-backref" href="#id46">
+     Rationale
+    </a>
+   </h1>
+   <p>
+    The current system requires that a function author predict the need
+for a default, and implement support for it.  If this is not done, a
+full try/except block is needed.
+   </p>
+   <p>
+    Since try/except is a statement, it is impossible to catch exceptions
+in the middle of an expression.  Just as if/else does for conditionals
+and lambda does for function definitions, so does this allow exception
+catching in an expression context.
+   </p>
+   <p>
+    This provides a clean and consistent way for a function to provide a
+default: it simply raises an appropriate exception, and the caller
+catches it.
+   </p>
+   <p>
+    With some situations, an LBYL technique can be used (checking if some
+sequence has enough length before indexing into it, for instance). This is
+not safe in all cases, but as it is often convenient, programmers will be
+tempted to sacrifice the safety of EAFP in favour of the notational brevity
+of LBYL. Additionally, some LBYL techniques (eg involving getattr with
+three arguments) warp the code into looking like literal strings rather
+than attribute lookup, which can impact readability. A convenient EAFP
+notation solves all of this.
+   </p>
+   <p>
+    There's no convenient way to write a helper function to do this; the
+nearest is something ugly using either lambda:
+   </p>
+   <pre class="literal-block">
+def except_(expression, exception_list, default):
+    try:
+        return expression()
+    except exception_list:
+        return default()
+value = except_(lambda: 1/x, ZeroDivisionError, lambda: float("nan"))
+</pre>
+   <p>
+    which is clunky, and unable to handle multiple exception clauses; or
+eval:
+   </p>
+   <pre class="literal-block">
+def except_(expression, exception_list, default):
+    try:
+        return eval(expression, globals_of_caller(), locals_of_caller())
+    except exception_list as exc:
+        l = locals_of_caller().copy()
+        l['exc'] = exc
+        return eval(default, globals_of_caller(), l)
+
+def globals_of_caller():
+    return sys._getframe(2).f_globals
+
+def locals_of_caller():
+    return sys._getframe(2).f_locals
+
+value = except_("""1/x""",ZeroDivisionError,""" "Can't divide by zero" """)
+</pre>
+   <p>
+    which is even clunkier, and relies on implementation-dependent hacks.
+(Writing globals_of_caller() and locals_of_caller() for interpreters
+other than CPython is left as an exercise for the reader.)
+   </p>
+   <p>
+    Raymond Hettinger
+    <a class="reference external" href="https://mail.python.org/pipermail/python-ideas/2014-February/025443.html">
+     expresses
+    </a>
+    <a class="footnote-reference" href="#id16" id="id17">
+     [1]
+    </a>
+    a desire for such a consistent
+API. Something similar has been
+    <a class="reference external" href="https://mail.python.org/pipermail/python-ideas/2013-March/019760.html">
+     requested
+    </a>
+    <a class="footnote-reference" href="#id18" id="id19">
+     [2]
+    </a>
+    <a class="reference external" href="https://mail.python.org/pipermail/python-ideas/2009-August/005441.html">
+     multiple
+    </a>
+    <a class="footnote-reference" href="#id20" id="id21">
+     [3]
+    </a>
+    <a class="reference external" href="https://mail.python.org/pipermail/python-ideas/2008-August/001801.html">
+     times
+    </a>
+    <a class="footnote-reference" href="#id22" id="id23">
+     [4]
+    </a>
+    in the past.
+   </p>
+  </div>
+  <div class="section" id="proposal">
+   <h1>
+    <a class="toc-backref" href="#id47">
+     Proposal
+    </a>
+   </h1>
+   <p>
+    Just as the 'or' operator and the three part 'if-else' expression give
+short circuiting methods of catching a falsy value and replacing it,
+this syntax gives a short-circuiting method of catching an exception
+and replacing it.
+   </p>
+   <p>
+    This currently works:
+   </p>
+   <pre class="literal-block">
+lst = [1, 2, None, 3]
+value = lst[2] or "No value"
+</pre>
+   <p>
+    The proposal adds this:
+   </p>
+   <pre class="literal-block">
+lst = [1, 2]
+value = (lst[2] except IndexError: "No value")
+</pre>
+   <p>
+    Specifically, the syntax proposed is:
+   </p>
+   <pre class="literal-block">
+(expr except exception_list: default)
+</pre>
+   <p>
+    where expr, exception_list, and default are all expressions.  First,
+expr is evaluated.  If no exception is raised, its value is the value
+of the overall expression.  If any exception is raised, exception_list
+is evaluated, and should result in either a type or a tuple, just as
+with the statement form of try/except.  Any matching exception will
+result in the corresponding default expression being evaluated and
+becoming the value of the expression.  As with the statement form of
+try/except, non-matching exceptions will propagate upward.
+   </p>
+   <p>
+    Parentheses are required around the entire expression, unless they
+would be completely redundant, according to the same rules as generator
+expressions follow. This guarantees correct interpretation of nested
+except-expressions, and allows for future expansion of the syntax -
+see below on multiple except clauses.
+   </p>
+   <p>
+    Note that the current proposal does not allow the exception object to
+be captured. Where this is needed, the statement form must be used.
+(See below for discussion and elaboration on this.)
+   </p>
+   <p>
+    This ternary operator would be between lambda and if/else in
+precedence.
+   </p>
+   <p>
+    Consider this example of a two-level cache:
+   </p>
+   <pre class="literal-block">
+for key in sequence:
+    x = (lvl1[key] except KeyError: (lvl2[key] except KeyError: f(key)))
+    # do something with x
+</pre>
+   <p>
+    This cannot be rewritten as:
+   </p>
+   <pre class="literal-block">
+x = lvl1.get(key, lvl2.get(key, f(key)))
+</pre>
+   <p>
+    which, despite being shorter, defeats the purpose of the cache, as it must
+calculate a default value to pass to get(). The .get() version calculates
+backwards; the exception-testing version calculates forwards, as would be
+expected. The nearest useful equivalent would be:
+   </p>
+   <pre class="literal-block">
+x = lvl1.get(key) or lvl2.get(key) or f(key)
+</pre>
+   <p>
+    which depends on the values being nonzero, as well as depending on the cache
+object supporting this functionality.
+   </p>
+  </div>
+  <div class="section" id="alternative-proposals">
+   <h1>
+    <a class="toc-backref" href="#id48">
+     Alternative Proposals
+    </a>
+   </h1>
+   <p>
+    Discussion on python-ideas brought up the following syntax suggestions:
+   </p>
+   <pre class="literal-block">
+value = expr except default if Exception [as e]
+value = expr except default for Exception [as e]
+value = expr except default from Exception [as e]
+value = expr except Exception [as e] return default
+value = expr except (Exception [as e]: default)
+value = expr except Exception [as e] try default
+value = expr except Exception [as e] continue with default
+value = default except Exception [as e] else expr
+value = try expr except Exception [as e]: default
+value = expr except default # Catches anything
+value = expr except(Exception) default # Catches only the named type(s)
+value = default if expr raise Exception
+value = expr or else default if Exception
+value = expr except Exception [as e] -&gt; default
+value = expr except Exception [as e] pass default
+</pre>
+   <p>
+    It has also been suggested that a new keyword be created, rather than
+reusing an existing one.  Such proposals fall into the same structure
+as the last form, but with a different keyword in place of 'pass'.
+Suggestions include 'then', 'when', and 'use'. Also, in the context of
+the "default if expr raise Exception" proposal, it was suggested that a
+new keyword "raises" be used.
+   </p>
+   <p>
+    All forms involving the 'as' capturing clause have been deferred from
+this proposal in the interests of simplicity, but are preserved in the
+table above as an accurate record of suggestions.
+   </p>
+   <p>
+    The four forms most supported by this proposal are, in order:
+   </p>
+   <pre class="literal-block">
+value = (expr except Exception: default)
+value = (expr except Exception -&gt; default)
+value = (expr except Exception pass default)
+value = (expr except Exception then default)
+</pre>
+   <p>
+    All four maintain left-to-right evaluation order: first the base expression,
+then the exception list, and lastly the default.  This is important, as the
+expressions are evaluated lazily.  By comparison, several of the ad-hoc
+alternatives listed above must (by the nature of functions) evaluate their
+default values eagerly.  The preferred form, using the colon, parallels
+try/except by using "except exception_list:", and parallels lambda by having
+"keyword name_list: subexpression"; it also can be read as mapping Exception
+to the default value, dict-style.  Using the arrow introduces a token many
+programmers will not be familiar with, and which currently has no similar
+meaning, but is otherwise quite readable.  The English word "pass" has a
+vaguely similar meaning (consider the common usage "pass by value/reference"
+for function arguments), and "pass" is already a keyword, but as its meaning
+is distinctly unrelated, this may cause confusion.  Using "then" makes sense
+in English, but this introduces a new keyword to the language - albeit one
+not in common use, but a new keyword all the same.
+   </p>
+   <p>
+    Left to right evaluation order is extremely important to readability, as it
+parallels the order most expressions are evaluated.  Alternatives such as:
+   </p>
+   <pre class="literal-block">
+value = (expr except default if Exception)
+</pre>
+   <p>
+    break this, by first evaluating the two ends, and then coming to the middle;
+while this may not seem terrible (as the exception list will usually be a
+constant), it does add to the confusion when multiple clauses meet, either
+with multiple except/if or with the existing if/else, or a combination.
+Using the preferred order, subexpressions will always be evaluated from
+left to right, no matter how the syntax is nested.
+   </p>
+   <p>
+    Keeping the existing notation, but shifting the mandatory parentheses, we
+have the following suggestion:
+   </p>
+   <pre class="literal-block">
+value = expr except (Exception: default)
+value = expr except(Exception: default)
+</pre>
+   <p>
+    This is reminiscent of a function call, or a dict initializer.  The colon
+cannot be confused with introducing a suite, but on the other hand, the new
+syntax guarantees lazy evaluation, which a dict does not.  The potential
+to reduce confusion is considered unjustified by the corresponding potential
+to increase it.
+   </p>
+  </div>
+  <div class="section" id="example-usage">
+   <h1>
+    <a class="toc-backref" href="#id49">
+     Example usage
+    </a>
+   </h1>
+   <p>
+    For each example, an approximately-equivalent statement form is given,
+to show how the expression will be parsed.  These are not always
+strictly equivalent, but will accomplish the same purpose.  It is NOT
+safe for the interpreter to translate one into the other.
+   </p>
+   <p>
+    A number of these examples are taken directly from the Python standard
+library, with file names and line numbers correct as of early Feb 2014.
+Many of these patterns are extremely common.
+   </p>
+   <p>
+    Retrieve an argument, defaulting to None:
+   </p>
+   <pre class="literal-block">
+cond = (args[1] except IndexError: None)
+
+# Lib/pdb.py:803:
+try:
+    cond = args[1]
+except IndexError:
+    cond = None
+</pre>
+   <p>
+    Fetch information from the system if available:
+   </p>
+   <pre class="literal-block">
+pwd = (os.getcwd() except OSError: None)
+
+# Lib/tkinter/filedialog.py:210:
+try:
+    pwd = os.getcwd()
+except OSError:
+    pwd = None
+</pre>
+   <p>
+    Attempt a translation, falling back on the original:
+   </p>
+   <pre class="literal-block">
+e.widget = (self._nametowidget(W) except KeyError: W)
+
+# Lib/tkinter/__init__.py:1222:
+try:
+    e.widget = self._nametowidget(W)
+except KeyError:
+    e.widget = W
+</pre>
+   <p>
+    Read from an iterator, continuing with blank lines once it's
+exhausted:
+   </p>
+   <pre class="literal-block">
+line = (readline() except StopIteration: '')
+
+# Lib/lib2to3/pgen2/tokenize.py:370:
+try:
+    line = readline()
+except StopIteration:
+    line = ''
+</pre>
+   <p>
+    Retrieve platform-specific information (note the DRY improvement);
+this particular example could be taken further, turning a series of
+separate assignments into a single large dict initialization:
+   </p>
+   <pre class="literal-block">
+# sys.abiflags may not be defined on all platforms.
+_CONFIG_VARS['abiflags'] = (sys.abiflags except AttributeError: '')
+
+# Lib/sysconfig.py:529:
+try:
+    _CONFIG_VARS['abiflags'] = sys.abiflags
+except AttributeError:
+    # sys.abiflags may not be defined on all platforms.
+    _CONFIG_VARS['abiflags'] = ''
+</pre>
+   <p>
+    Retrieve an indexed item, defaulting to None (similar to dict.get):
+   </p>
+   <pre class="literal-block">
+def getNamedItem(self, name):
+    return (self._attrs[name] except KeyError: None)
+
+# Lib/xml/dom/minidom.py:573:
+def getNamedItem(self, name):
+    try:
+        return self._attrs[name]
+    except KeyError:
+        return None
+</pre>
+   <p>
+    Translate numbers to names, falling back on the numbers:
+   </p>
+   <pre class="literal-block">
+g = (grp.getgrnam(tarinfo.gname)[2] except KeyError: tarinfo.gid)
+u = (pwd.getpwnam(tarinfo.uname)[2] except KeyError: tarinfo.uid)
+
+# Lib/tarfile.py:2198:
+try:
+    g = grp.getgrnam(tarinfo.gname)[2]
+except KeyError:
+    g = tarinfo.gid
+try:
+    u = pwd.getpwnam(tarinfo.uname)[2]
+except KeyError:
+    u = tarinfo.uid
+</pre>
+   <p>
+    Look up an attribute, falling back on a default:
+   </p>
+   <pre class="literal-block">
+mode = (f.mode except AttributeError: 'rb')
+
+# Lib/aifc.py:882:
+if hasattr(f, 'mode'):
+    mode = f.mode
+else:
+    mode = 'rb'
+
+return (sys._getframe(1) except AttributeError: None)
+# Lib/inspect.py:1350:
+return sys._getframe(1) if hasattr(sys, "_getframe") else None
+</pre>
+   <p>
+    Perform some lengthy calculations in EAFP mode, handling division by
+zero as a sort of sticky NaN:
+   </p>
+   <pre class="literal-block">
+value = (calculate(x) except ZeroDivisionError: float("nan"))
+
+try:
+    value = calculate(x)
+except ZeroDivisionError:
+    value = float("nan")
+</pre>
+   <p>
+    Calculate the mean of a series of numbers, falling back on zero:
+   </p>
+   <pre class="literal-block">
+value = (statistics.mean(lst) except statistics.StatisticsError: 0)
+
+try:
+    value = statistics.mean(lst)
+except statistics.StatisticsError:
+    value = 0
+</pre>
+   <p>
+    Looking up objects in a sparse list of overrides:
+   </p>
+   <pre class="literal-block">
+(overrides[x] or default except IndexError: default).ping()
+
+try:
+    (overrides[x] or default).ping()
+except IndexError:
+    default.ping()
+</pre>
+   <div class="section" id="narrowing-of-exception-catching-scope">
+    <h2>
+     <a class="toc-backref" href="#id50">
+      Narrowing of exception-catching scope
+     </a>
+    </h2>
+    <p>
+     The following examples, taken directly from Python's standard library,
+demonstrate how the scope of the try/except can be conveniently narrowed.
+To do this with the statement form of try/except would require a temporary
+variable, but it's far cleaner as an expression.
+    </p>
+    <p>
+     Lib/ipaddress.py:343:
+    </p>
+    <pre class="literal-block">
+try:
+    ips.append(ip.ip)
+except AttributeError:
+    ips.append(ip.network_address)
+</pre>
+    <p>
+     Becomes:
+    </p>
+    <pre class="literal-block">
+ips.append(ip.ip except AttributeError: ip.network_address)
+</pre>
+    <p>
+     The expression form is nearly equivalent to this:
+    </p>
+    <pre class="literal-block">
+try:
+    _ = ip.ip
+except AttributeError:
+    _ = ip.network_address
+ips.append(_)
+</pre>
+    <p>
+     Lib/tempfile.py:130:
+    </p>
+    <pre class="literal-block">
+try:
+    dirlist.append(_os.getcwd())
+except (AttributeError, OSError):
+    dirlist.append(_os.curdir)
+</pre>
+    <p>
+     Becomes:
+    </p>
+    <pre class="literal-block">
+dirlist.append(_os.getcwd() except (AttributeError, OSError): _os.curdir)
+</pre>
+    <p>
+     Lib/asyncore.py:264:
+    </p>
+    <pre class="literal-block">
+try:
+    status.append('%s:%d' % self.addr)
+except TypeError:
+    status.append(repr(self.addr))
+</pre>
+    <p>
+     Becomes:
+    </p>
+    <pre class="literal-block">
+status.append('%s:%d' % self.addr except TypeError: repr(self.addr))
+</pre>
+    <p>
+     In each case, the narrowed scope of the try/except ensures that an unexpected
+exception (for instance, AttributeError if "append" were misspelled) does not
+get caught by the same handler.  This is sufficiently unlikely to be reason
+to break the call out into a separate line (as per the five line example
+above), but it is a small benefit gained as a side-effect of the conversion.
+    </p>
+   </div>
+  </div>
+  <div class="section" id="comparisons-with-other-languages">
+   <h1>
+    <a class="toc-backref" href="#id51">
+     Comparisons with other languages
+    </a>
+   </h1>
+   <p>
+    (With thanks to Andrew Barnert for compiling this section. Note that the
+examples given here do not reflect the current version of the proposal,
+and need to be edited.)
+   </p>
+   <p>
+    <a class="reference external" href="http://www.skorks.com/2009/09/ruby-exceptions-and-exception-handling/">
+     Ruby's
+    </a>
+    <a class="footnote-reference" href="#id24" id="id25">
+     [5]
+    </a>
+    "begin…rescue…rescue…else…ensure…end" is an expression
+(potentially with statements inside it).  It has the equivalent of an "as"
+clause, and the equivalent of bare except.  And it uses no punctuation or
+keyword between the bare except/exception class/exception class with as
+clause and the value.  (And yes, it's ambiguous unless you understand
+Ruby's statement/expression rules.)
+   </p>
+   <pre class="literal-block">
+x = begin computation() rescue MyException =&gt; e default(e) end;
+x = begin computation() rescue MyException default() end;
+x = begin computation() rescue default() end;
+x = begin computation() rescue MyException default() rescue OtherException other() end;
+</pre>
+   <p>
+    In terms of this PEP:
+   </p>
+   <pre class="literal-block">
+x = computation() except MyException as e default(e)
+x = computation() except MyException default(e)
+x = computation() except default(e)
+x = computation() except MyException default() except OtherException other()
+</pre>
+   <p>
+    <a class="reference external" href="http://erlang.org/doc/reference_manual/expressions.html#id79284">
+     Erlang
+    </a>
+    <a class="footnote-reference" href="#id26" id="id27">
+     [6]
+    </a>
+    has a try expression that looks like this
+   </p>
+   <pre class="literal-block">
+x = try computation() catch MyException:e -&gt; default(e) end;
+x = try computation() catch MyException:e -&gt; default(e); OtherException:e -&gt; other(e) end;
+</pre>
+   <p>
+    The class and "as" name are mandatory, but you can use "_" for either.
+There's also an optional "when" guard on each, and a "throw" clause that
+you can catch, which I won't get into.  To handle multiple exceptions,
+you just separate the clauses with semicolons, which I guess would map
+to commas in Python.  So:
+   </p>
+   <pre class="literal-block">
+x = try computation() except MyException as e -&gt; default(e)
+x = try computation() except MyException as e -&gt; default(e), OtherException as e-&gt;other_default(e)
+</pre>
+   <p>
+    Erlang also has a "catch" expression, which, despite using the same keyword,
+is completely different, and you don't want to know about it.
+   </p>
+   <p>
+    The ML family has two different ways of dealing with this, "handle" and
+"try"; the difference between the two is that "try" pattern-matches the
+exception, which gives you the effect of multiple except clauses and as
+clauses.  In either form, the handler clause is punctuated by "=&gt;" in
+some dialects, "-&gt;" in others.
+   </p>
+   <p>
+    To avoid confusion, I'll write the function calls in Python style.
+   </p>
+   <p>
+    Here's
+    <a class="reference external" href="http://www.cs.cmu.edu/~rwh/introsml/core/exceptions.htm">
+     SML's
+    </a>
+    <a class="footnote-reference" href="#id28" id="id29">
+     [7]
+    </a>
+    "handle"
+   </p>
+   <pre class="literal-block">
+let x = computation() handle MyException =&gt; default();;
+</pre>
+   <p>
+    Here's
+    <a class="reference external" href="http://www2.lib.uchicago.edu/keith/ocaml-class/exceptions.html">
+     OCaml's
+    </a>
+    <a class="footnote-reference" href="#id30" id="id31">
+     [8]
+    </a>
+    "try"
+   </p>
+   <pre class="literal-block">
+let x = try computation() with MyException explanation -&gt; default(explanation);;
+
+let x = try computation() with
+
+    MyException(e) -&gt; default(e)
+  | MyOtherException() -&gt; other_default()
+  | (e) -&gt; fallback(e);;
+</pre>
+   <p>
+    In terms of this PEP, these would be something like:
+   </p>
+   <pre class="literal-block">
+x = computation() except MyException =&gt; default()
+x = try computation() except MyException e -&gt; default()
+x = (try computation()
+     except MyException as e -&gt; default(e)
+     except MyOtherException -&gt; other_default()
+     except BaseException as e -&gt; fallback(e))
+</pre>
+   <p>
+    Many ML-inspired but not-directly-related languages from academia mix things
+up, usually using more keywords and fewer symbols. So, the
+    <a class="reference external" href="http://mozart.github.io/mozart-v1/doc-1.4.0/tutorial/node5.html">
+     Oz
+    </a>
+    <a class="footnote-reference" href="#id32" id="id33">
+     [9]
+    </a>
+    would map
+to Python as
+   </p>
+   <pre class="literal-block">
+x = try computation() catch MyException as e then default(e)
+</pre>
+   <p>
+    Many Lisp-derived languages, like
+    <a class="reference external" href="http://clojure.org/special_forms#Special%20Forms--(try%20expr*%20catch-clause*%20finally-clause?)">
+     Clojure,
+    </a>
+    <a class="footnote-reference" href="#id34" id="id35">
+     [10]
+    </a>
+    implement try/catch as special
+forms (if you don't know what that means, think function-like macros), so you
+write, effectively
+   </p>
+   <pre class="literal-block">
+try(computation(), catch(MyException, explanation, default(explanation)))
+
+try(computation(),
+    catch(MyException, explanation, default(explanation)),
+    catch(MyOtherException, explanation, other_default(explanation)))
+</pre>
+   <p>
+    In Common Lisp, this is done with a slightly clunkier
+    <a class="reference external" href="http://clhs.lisp.se/Body/m_hand_1.htm">
+     "handler-case" macro,
+    </a>
+    <a class="footnote-reference" href="#id36" id="id37">
+     [11]
+    </a>
+    but the basic idea is the same.
+   </p>
+   <p>
+    The Lisp style is, surprisingly, used by some languages that don't have
+macros, like Lua, where
+    <a class="reference external" href="http://www.gammon.com.au/scripts/doc.php?lua=xpcall">
+     xpcall
+    </a>
+    <a class="footnote-reference" href="#id38" id="id39">
+     [12]
+    </a>
+    takes functions. Writing lambdas
+Python-style instead of Lua-style
+   </p>
+   <pre class="literal-block">
+x = xpcall(lambda: expression(), lambda e: default(e))
+</pre>
+   <p>
+    This actually returns (true, expression()) or (false, default(e)), but I think we can ignore that part.
+   </p>
+   <p>
+    Haskell is actually similar to Lua here (except that it's all done
+with monads, of course):
+   </p>
+   <pre class="literal-block">
+x = do catch(lambda: expression(), lambda e: default(e))
+</pre>
+   <p>
+    You can write a pattern matching expression within the function to decide
+what to do with it; catching and re-raising exceptions you don't want is
+cheap enough to be idiomatic.
+   </p>
+   <p>
+    But Haskell infixing makes this nicer:
+   </p>
+   <pre class="literal-block">
+x = do expression() `catch` lambda: default()
+x = do expression() `catch` lambda e: default(e)
+</pre>
+   <p>
+    And that makes the parallel between the lambda colon and the except
+colon in the proposal much more obvious:
+   </p>
+   <pre class="literal-block">
+x = expression() except Exception: default()
+x = expression() except Exception as e: default(e)
+</pre>
+   <p>
+    <a class="reference external" href="http://wiki.tcl.tk/902">
+     Tcl
+    </a>
+    <a class="footnote-reference" href="#id40" id="id41">
+     [13]
+    </a>
+    has the other half of Lua's xpcall; catch is a function which returns
+true if an exception was caught, false otherwise, and you get the value out
+in other ways.  And it's all built around the the implicit quote-and-exec
+that everything in Tcl is based on, making it even harder to describe in
+Python terms than Lisp macros, but something like
+   </p>
+   <pre class="literal-block">
+if {[ catch("computation()") "explanation"]} { default(explanation) }
+</pre>
+   <p>
+    <a class="reference external" href="http://smalltalk.gnu.org/wiki/exceptions">
+     Smalltalk
+    </a>
+    <a class="footnote-reference" href="#id42" id="id43">
+     [14]
+    </a>
+    is also somewhat hard to map to Python. The basic version
+would be
+   </p>
+   <pre class="literal-block">
+x := computation() on:MyException do:default()
+</pre>
+   <p>
+    ... but that's basically Smalltalk's passing-arguments-with-colons
+syntax, not its exception-handling syntax.
+   </p>
+  </div>
+  <div class="section" id="deferred-sub-proposals">
+   <h1>
+    <a class="toc-backref" href="#id52">
+     Deferred sub-proposals
+    </a>
+   </h1>
+   <div class="section" id="multiple-except-clauses">
+    <h2>
+     <a class="toc-backref" href="#id53">
+      Multiple except clauses
+     </a>
+    </h2>
+    <p>
+     An examination of use-cases shows that this is not needed as often as
+it would be with the statement form, and as its syntax is a point on
+which consensus has not been reached, the entire feature is deferred.
+    </p>
+    <p>
+     Multiple 'except' keywords could be used, and they will all catch
+exceptions raised in the original expression (only):
+    </p>
+    <pre class="literal-block">
+# Will catch any of the listed exceptions thrown by expr;
+# any exception thrown by a default expression will propagate.
+value = (expr
+    except Exception1: default1
+    except Exception2: default2
+    # ... except ExceptionN: defaultN
+)
+</pre>
+    <p>
+     Currently, one of the following forms must be used:
+    </p>
+    <pre class="literal-block">
+# Will catch an Exception2 thrown by either expr or default1
+value = (
+    (expr except Exception1: default1)
+    except Exception2: default2
+)
+# Will catch an Exception2 thrown by default1 only
+value = (expr except Exception1:
+    (default1 except Exception2: default2)
+)
+</pre>
+    <p>
+     Listing multiple exception clauses without parentheses is a syntax error
+(see above), and so a future version of Python is free to add this feature
+without breaking any existing code.
+    </p>
+   </div>
+   <div class="section" id="capturing-the-exception-object">
+    <h2>
+     <a class="toc-backref" href="#id54">
+      Capturing the exception object
+     </a>
+    </h2>
+    <p>
+     In a try/except block, the use of 'as' to capture the exception object
+creates a local name binding, and implicitly deletes that binding (to
+avoid creating a reference loop) in a finally clause.  In an expression
+context, this makes little sense, and a proper sub-scope would be
+required to safely capture the exception object - something akin to the
+way a list comprehension is handled.  However, CPython currently
+implements a comprehension's subscope with a nested function call, which
+has consequences in some contexts such as class definitions, and is
+therefore unsuitable for this proposal.  Should there be, in future, a
+way to create a true subscope (which could simplify comprehensions,
+except expressions, with blocks, and possibly more), then this proposal
+could be revived; until then, its loss is not a great one, as the simple
+exception handling that is well suited to the expression notation used
+here is generally concerned only with the type of the exception, and not
+its value - further analysis below.
+    </p>
+    <p>
+     This syntax would, admittedly, allow a convenient way to capture
+exceptions in interactive Python; returned values are captured by "_",
+but exceptions currently are not. This could be spelled:
+    </p>
+    <pre class="literal-block">
+&gt;&gt;&gt; (expr except Exception as e: e)
+</pre>
+    <p>
+     An examination of the Python standard library shows that, while the use
+of 'as' is fairly common (occurring in roughly one except clause in five),
+it is extremely
+     <em>
+      uncommon
+     </em>
+     in the cases which could logically be converted
+into the expression form.  Its few uses can simply be left unchanged.
+Consequently, in the interests of simplicity, the 'as' clause is not
+included in this proposal.  A subsequent Python version can add this without
+breaking any existing code, as 'as' is already a keyword.
+    </p>
+    <p>
+     One example where this could possibly be useful is Lib/imaplib.py:568:
+    </p>
+    <pre class="literal-block">
+try: typ, dat = self._simple_command('LOGOUT')
+except: typ, dat = 'NO', ['%s: %s' % sys.exc_info()[:2]]
+</pre>
+    <p>
+     This could become:
+    </p>
+    <pre class="literal-block">
+typ, dat = (self._simple_command('LOGOUT')
+    except BaseException as e: ('NO', '%s: %s' % (type(e), e)))
+</pre>
+    <p>
+     Or perhaps some other variation. This is hardly the most compelling use-case,
+but an intelligent look at this code could tidy it up significantly.  In the
+absence of further examples showing any need of the exception object, I have
+opted to defer indefinitely the recommendation.
+    </p>
+   </div>
+  </div>
+  <div class="section" id="rejected-sub-proposals">
+   <h1>
+    <a class="toc-backref" href="#id55">
+     Rejected sub-proposals
+    </a>
+   </h1>
+   <div class="section" id="finally-clause">
+    <h2>
+     <a class="toc-backref" href="#id56">
+      finally clause
+     </a>
+    </h2>
+    <p>
+     The statement form try... finally or try... except... finally has no
+logical corresponding expression form.  Therefore the finally keyword
+is not a part of this proposal, in any way.
+    </p>
+   </div>
+   <div class="section" id="bare-except-having-different-meaning">
+    <h2>
+     <a class="toc-backref" href="#id57">
+      Bare except having different meaning
+     </a>
+    </h2>
+    <p>
+     With several of the proposed syntaxes, omitting the exception type name
+would be easy and concise, and would be tempting. For convenience's sake,
+it might be advantageous to have a bare 'except' clause mean something
+more useful than "except BaseException". Proposals included having it
+catch Exception, or some specific set of "common exceptions" (subclasses
+of a new type called ExpressionError), or have it look for a tuple named
+ExpressionError in the current scope, with a built-in default such as
+(ValueError, UnicodeError, AttributeError, EOFError, IOError, OSError,
+LookupError, NameError, ZeroDivisionError). All of these were rejected,
+for several reasons.
+    </p>
+    <ul class="simple">
+     <li>
+      First and foremost, consistency with the statement form of try/except
+would be broken. Just as a list comprehension or ternary if expression
+can be explained by "breaking it out" into its vertical statement form,
+an expression-except should be able to be explained by a relatively
+mechanical translation into a near-equivalent statement. Any form of
+syntax common to both should therefore have the same semantics in each,
+and above all should not have the subtle difference of catching more in
+one than the other, as it will tend to attract unnoticed bugs.
+     </li>
+     <li>
+      Secondly, the set of appropriate exceptions to catch would itself be
+a huge point of contention. It would be impossible to predict exactly
+which exceptions would "make sense" to be caught; why bless some of them
+with convenient syntax and not others?
+     </li>
+     <li>
+      And finally (this partly because the recommendation was that a bare
+except should be actively encouraged, once it was reduced to a "reasonable"
+set of exceptions), any situation where you catch an exception you don't
+expect to catch is an unnecessary bug magnet.
+     </li>
+    </ul>
+    <p>
+     Consequently, the use of a bare 'except' is down to two possibilities:
+either it is syntactically forbidden in the expression form, or it is
+permitted with the exact same semantics as in the statement form (namely,
+that it catch BaseException and be unable to capture it with 'as').
+    </p>
+   </div>
+   <div class="section" id="bare-except-clauses">
+    <h2>
+     <a class="toc-backref" href="#id58">
+      Bare except clauses
+     </a>
+    </h2>
+    <p>
+     <a class="reference external" href="../pep-0008/index.html">
+      PEP 8
+     </a>
+     rightly advises against the use of a bare 'except'. While it is
+syntactically legal in a statement, and for backward compatibility must
+remain so, there is little value in encouraging its use. In an expression
+except clause, "except:" is a SyntaxError; use the equivalent long-hand
+form "except BaseException:" instead. A future version of Python MAY choose
+to reinstate this, which can be done without breaking compatibility.
+    </p>
+   </div>
+   <div class="section" id="parentheses-around-the-except-clauses">
+    <h2>
+     <a class="toc-backref" href="#id59">
+      Parentheses around the except clauses
+     </a>
+    </h2>
+    <p>
+     Should it be legal to parenthesize the except clauses, separately from
+the expression that could raise? Example:
+    </p>
+    <pre class="literal-block">
+value = expr (
+    except Exception1 [as e]: default1
+    except Exception2 [as e]: default2
+    # ... except ExceptionN [as e]: defaultN
+)
+</pre>
+    <p>
+     This is more compelling when one or both of the deferred sub-proposals
+of multiple except clauses and/or exception capturing is included.  In
+their absence, the parentheses would be thus:
+    </p>
+    <pre class="literal-block">
+value = expr except ExceptionType: default
+value = expr (except ExceptionType: default)
+</pre>
+    <p>
+     The advantage is minimal, and the potential to confuse a reader into
+thinking the except clause is separate from the expression, or into thinking
+this is a function call, makes this non-compelling.  The expression can, of
+course, be parenthesized if desired, as can the default:
+    </p>
+    <pre class="literal-block">
+value = (expr) except ExceptionType: (default)
+</pre>
+    <p>
+     As the entire expression is now required to be in parentheses (which had not
+been decided at the time when this was debated), there is less need to
+delineate this section, and in many cases it would be redundant.
+    </p>
+   </div>
+   <div class="section" id="short-hand-for-except-pass">
+    <h2>
+     <a class="toc-backref" href="#id60">
+      Short-hand for "except: pass"
+     </a>
+    </h2>
+    <p>
+     The following was been suggested as a similar
+short-hand, though not technically an expression:
+    </p>
+    <pre class="literal-block">
+statement except Exception: pass
+
+try:
+    statement
+except Exception:
+    pass
+</pre>
+    <p>
+     For instance, a common use-case is attempting the removal of a file:
+    </p>
+    <pre class="literal-block">
+os.unlink(some_file) except OSError: pass
+</pre>
+    <p>
+     There is an equivalent already in Python 3.4, however, in contextlib:
+    </p>
+    <pre class="literal-block">
+from contextlib import suppress
+with suppress(OSError): os.unlink(some_file)
+</pre>
+    <p>
+     As this is already a single line (or two with a break after the colon),
+there is little need of new syntax and a confusion of statement vs
+expression to achieve this.
+    </p>
+   </div>
+  </div>
+  <div class="section" id="common-objections">
+   <h1>
+    <a class="toc-backref" href="#id61">
+     Common objections
+    </a>
+   </h1>
+   <div class="section" id="colons-always-introduce-suites">
+    <h2>
+     <a class="toc-backref" href="#id62">
+      Colons always introduce suites
+     </a>
+    </h2>
+    <p>
+     While it is true that many of Python's syntactic elements use the colon to
+introduce a statement suite (if, while, with, for, etcetera), this is not
+by any means the sole use of the colon. Currently, Python syntax includes
+four cases where a colon introduces a subexpression:
+    </p>
+    <ul class="simple">
+     <li>
+      dict display - { ... key:value ... }
+     </li>
+     <li>
+      slice notation - [start:stop:step]
+     </li>
+     <li>
+      function definition - parameter : annotation
+     </li>
+     <li>
+      lambda - arg list: return value
+     </li>
+    </ul>
+    <p>
+     This proposal simply adds a fifth:
+    </p>
+    <ul class="simple">
+     <li>
+      except-expression - exception list: result
+     </li>
+    </ul>
+    <p>
+     Style guides and
+     <a class="reference external" href="../pep-0008/index.html">
+      PEP 8
+     </a>
+     should recommend not having the colon at the end of
+a wrapped line, which could potentially look like the introduction of a
+suite, but instead advocate wrapping before the exception list, keeping the
+colon clearly between two expressions.
+    </p>
+   </div>
+  </div>
+  <div class="section" id="id15">
+   <h1>
+    <a class="toc-backref" href="#id63">
+     References
+    </a>
+   </h1>
+   <table class="docutils footnote" frame="void" id="id16" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id17">
+        [1]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="https://mail.python.org/pipermail/python-ideas/2014-February/025443.html">
+        https://mail.python.org/pipermail/python-ideas/2014-February/025443.html
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id18" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id19">
+        [2]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="https://mail.python.org/pipermail/python-ideas/2013-March/019760.html">
+        https://mail.python.org/pipermail/python-ideas/2013-March/019760.html
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id20" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id21">
+        [3]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="https://mail.python.org/pipermail/python-ideas/2009-August/005441.html">
+        https://mail.python.org/pipermail/python-ideas/2009-August/005441.html
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id22" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id23">
+        [4]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="https://mail.python.org/pipermail/python-ideas/2008-August/001801.html">
+        https://mail.python.org/pipermail/python-ideas/2008-August/001801.html
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id24" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id25">
+        [5]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="http://www.skorks.com/2009/09/ruby-exceptions-and-exception-handling/">
+        http://www.skorks.com/2009/09/ruby-exceptions-and-exception-handling/
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id26" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id27">
+        [6]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="http://erlang.org/doc/reference_manual/expressions.html#id79284">
+        http://erlang.org/doc/reference_manual/expressions.html#id79284
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id28" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id29">
+        [7]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="http://www.cs.cmu.edu/~rwh/introsml/core/exceptions.htm">
+        http://www.cs.cmu.edu/~rwh/introsml/core/exceptions.htm
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id30" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id31">
+        [8]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="http://www2.lib.uchicago.edu/keith/ocaml-class/exceptions.html">
+        http://www2.lib.uchicago.edu/keith/ocaml-class/exceptions.html
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id32" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id33">
+        [9]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="http://mozart.github.io/mozart-v1/doc-1.4.0/tutorial/node5.html">
+        http://mozart.github.io/mozart-v1/doc-1.4.0/tutorial/node5.html
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id34" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id35">
+        [10]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="http://clojure.org/special_forms#Special%20Forms--(try%20expr*%20catch-clause*%20finally-clause?)">
+        http://clojure.org/special_forms#Special%20Forms--(try%20expr*%20catch-clause*%20finally-clause?)
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id36" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id37">
+        [11]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="http://clhs.lisp.se/Body/m_hand_1.htm">
+        http://clhs.lisp.se/Body/m_hand_1.htm
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id38" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id39">
+        [12]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="http://www.gammon.com.au/scripts/doc.php?lua=xpcall">
+        http://www.gammon.com.au/scripts/doc.php?lua=xpcall
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id40" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id41">
+        [13]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="http://wiki.tcl.tk/902">
+        http://wiki.tcl.tk/902
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id42" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id43">
+        [14]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="http://smalltalk.gnu.org/wiki/exceptions">
+        http://smalltalk.gnu.org/wiki/exceptions
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+  </div>
+  <div class="section" id="copyright">
+   <h1>
+    <a class="toc-backref" href="#id64">
+     Copyright
+    </a>
+   </h1>
+   <p>
+    This document has been placed in the public domain.
+   </p>
+   <!-- Local Variables:
+mode: indented-text
+indent-tabs-mode: nil
+sentence-end-double-space: t
+fill-column: 70
+coding: utf-8
+End: -->
+  </div>
+ </body>
+
+<!-- Mirrored from www.python.org/dev/peps/pep-0463/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 03 Sep 2015 04:33:29 GMT -->
+</html>Source: <a href="https://hg.python.org/peps/file/tip/pep-0463.txt">https://hg.python.org/peps/file/tip/pep-0463.txt</a>
+
+    </article>
+
+
+                </section>
+
+                
+
+
+<aside class="left-sidebar" role="secondary">
+
+    
+
+
+
+
+
+
+    
+
+
+
+
+
+        <div class="twitter-widget sidebar-widget">
+        <a class="twitter-timeline" data-dnt="true" href="https://twitter.com/ThePSF" data-widget-id="434113224703610882">Tweets by @ThePSF</a>
+        <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+    </div>
+
+    <div class="psf-sidebar-widget sidebar-widget">
+        <h3 class="widget-title">The PSF</h3>
+<p>The Python Software Foundation is the organization behind Python. Become a member of the PSF and help advance the software and our mission. </p>
+
+    </div>
+
+</aside>
+
+
+
+                
+                
+
+
+            </div><!-- end .container -->
+        </div><!-- end #content .content-wrapper -->
+
+        <!-- Footer and social media list -->
+        <footer id="site-map" class="main-footer" role="contentinfo">
+            <div class="main-footer-links">
+                <div class="container">
+
+                    
+                    <a id="back-to-top-1" class="jump-link" href="#python-network"><span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> Back to Top</a>
+
+                    
+
+<ul class="sitemap navigation menu do-not-print" role="tree" id="container">
+    
+    <li class="tier-1 element-1">
+        <a href="https://www.python.org/about/" >About</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/apps/" title="">Applications</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/quotes/" title="">Quotes</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/gettingstarted/" title="">Getting Started</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/help/" title="">Help</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-2">
+        <a href="https://www.python.org/downloads/" >Downloads</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/downloads/" title="">All releases</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/downloads/source/" title="">Source code</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/downloads/windows/" title="">Windows</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/downloads/mac-osx/" title="">Mac OS X</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/download/other/" title="">Other Platforms</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://docs.python.org/3/license.html" title="">License</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/download/alternatives" title="">Alternative Implementations</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-3">
+        <a href="https://www.python.org/doc/" >Documentation</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/doc/" title="">Docs</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/doc/av" title="">Audio/Visual Talks</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://wiki.python.org/moin/BeginnersGuide" title="">Beginner&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://docs.python.org/faq/" title="">FAQ</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="http://wiki.python.org/moin/Languages" title="">Non-English Docs</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="../index.html" title="">PEP Index</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://wiki.python.org/moin/PythonBooks" title="">Python Books</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-4">
+        <a href="https://www.python.org/community/" >Community</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/community/diversity/" title="">Diversity</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/community/irc/" title="">IRC</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/community/lists/" title="">Mailing Lists</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/workshops/" title="">Python Conferences</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/community/sigs/" title="">Special Interest Groups</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://wiki.python.org/moin/" title="">Python Wiki</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/community/logos/" title="">Python Logo</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://www.python.org/community/merchandise/" title="">Merchandise</a></li>
+    
+        <li class="tier-2 element-9" role="treeitem"><a href="https://www.python.org/community/awards" title="">Community Awards</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-5">
+        <a href="https://www.python.org/about/success/" title="success-stories">Success Stories</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/success/#arts" title="">Arts</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/success/#business" title="">Business</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/success/#education" title="">Education</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/success/#engineering" title="">Engineering</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/about/success/#government" title="">Government</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://www.python.org/about/success/#scientific" title="">Scientific</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/about/success/#software-development" title="">Software Development</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-6">
+        <a href="https://www.python.org/blogs/" title="News from around the Python world">News</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/blogs/" title="Python Insider Blog Posts">Python News</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://planetpython.org/" title="Planet Python">Community News</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="http://pyfound.blogspot.com/" title="PSF Blog">PSF News</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pycon.blogspot.com/" title="PyCon Blog">PyCon News</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-7">
+        <a href="https://www.python.org/events/" >Events</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/events/python-events/" title="">Python Events</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/events/python-user-group/" title="">User Group Events</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/events/python-events/past/" title="">Python Events Archive</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/events/python-user-group/past/" title="">User Group Events Archive</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://wiki.python.org/moin/PythonEventsCalendar#Submitting_an_Event" title="">Submit an Event</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-8">
+        <a href="https://www.python.org/dev/" >Contributing</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="http://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://bugs.python.org/" title="">Issue Tracker</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://mail.python.org/mailman/listinfo/python-dev" title="">python-dev list</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pythonmentors.com/" title="">Core Mentorship</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+</ul>
+
+
+                    <a id="back-to-top-2" class="jump-link" href="#python-network"><span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> Back to Top</a>
+                    
+
+                </div><!-- end .container -->
+            </div> <!-- end .main-footer-links -->
+
+            <div class="site-base">
+                <div class="container">
+                    
+                    <ul class="footer-links navigation menu do-not-print" role="tree">
+                        <li class="tier-1 element-1"><a href="https://www.python.org/about/help/">Help &amp; <span class="say-no-more">General</span> Contact</a></li>
+                        <li class="tier-1 element-2"><a href="https://www.python.org/community/diversity/">Diversity <span class="say-no-more">Initiatives</span></a></li>
+                        <li class="tier-1 element-3"><a href="https://github.com/python/pythondotorg/issues">Submit Website Bug</a></li>
+                        <!--<li class="tier-1 element-3"><a href="#"><span class="say-no-more">Website</span> Colophon</a></li>-->
+                    </ul>
+
+                    <div class="copyright">
+                        <p><small>
+                            <span class="pre">Copyright &copy;2001-2015.</span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/psf-landing/">Python Software Foundation</a></span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/about/legal/">Legal Statements</a></span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/privacy/">Privacy Policy</a></span>
+                        </small></p>
+                    </div>
+
+                </div><!-- end .container -->
+            </div><!-- end .site-base -->
+
+        </footer>
+
+    </div><!-- end #touchnav-wrapper -->
+
+    
+    <script src="../../../../ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="../../../static/js/libs/jquery-1.8.2.min.js"><\/script>')</script>
+
+    <script src="../../../static/js/libs/masonry.pkgd.min.js"></script>
+
+    <script type="text/javascript" src="../../../static/js/main-min.js" charset="utf-8"></script>
+    
+
+    <!--[if lte IE 7]>
+    <script type="text/javascript" src="/static/js/plugins/IE8-min.js" charset="utf-8"></script>
+    
+    
+    <![endif]-->
+
+    <!--[if lte IE 8]>
+    <script type="text/javascript" src="/static/js/plugins/getComputedStyle-min.js" charset="utf-8"></script>
+    
+    
+    <![endif]-->
+
+    
+
+    
+    
+
+</body>
+</html>

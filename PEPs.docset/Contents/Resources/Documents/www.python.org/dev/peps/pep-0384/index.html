@@ -1,0 +1,1704 @@
+<!doctype html>
+<!--[if lt IE 7]>   <html class="no-js ie6 lt-ie7 lt-ie8 lt-ie9">   <![endif]-->
+<!--[if IE 7]>      <html class="no-js ie7 lt-ie8 lt-ie9">          <![endif]-->
+<!--[if IE 8]>      <html class="no-js ie8 lt-ie9">                 <![endif]-->
+<!--[if gt IE 8]><!--><html class="no-js" lang="en" dir="ltr">  <!--<![endif]-->
+
+
+<!-- Mirrored from www.python.org/dev/peps/pep-0384/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 03 Sep 2015 04:34:26 GMT -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <link rel="prefetch" href="../../../../ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js">
+
+    <meta name="application-name" content="Python.org">
+    <meta name="msapplication-tooltip" content="The official home of the Python Programming Language">
+    <meta name="apple-mobile-web-app-title" content="Python.org">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="format-detection" content="telephone=no">
+    <meta http-equiv="cleartype" content="on">
+    <meta http-equiv="imagetoolbar" content="false">
+
+    <script src="../../../static/js/libs/modernizr.js"></script>
+
+    <link href="../../../static/stylesheets/style.css" rel="stylesheet" type="text/css" title="default" />
+    <link href="../../../static/stylesheets/mq.css" rel="stylesheet" type="text/css" media="not print, braille, embossed, speech, tty" />
+    
+
+    <!--[if (lte IE 8)&(!IEMobile)]>
+    <link href="/static/stylesheets/no-mq.css" rel="stylesheet" type="text/css" media="screen" />
+    
+    
+    <![endif]-->
+
+    
+    <link rel="icon" type="image/x-icon" href="https://www.python.org/static/favicon.ico">
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="../../../static/apple-touch-icon-144x144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="../../../static/apple-touch-icon-114x114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="../../../static/apple-touch-icon-72x72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="../../../static/apple-touch-icon-precomposed.png">
+    <link rel="apple-touch-icon" href="../../../static/apple-touch-icon-precomposed.png">
+
+    
+    <meta name="msapplication-TileImage" content="/static/metro-icon-144x144-precomposed.png"><!-- white shape -->
+    <meta name="msapplication-TileColor" content="#3673a5"><!-- python blue -->
+    <meta name="msapplication-navbutton-color" content="#3673a5">
+
+    <meta property="og:site_name" content="Python.org">
+    <meta property="og:type" content="website">
+
+    <title>PEP 0384 -- Defining a Stable ABI | Python.org</title>
+    <meta property="og:title" content="Welcome to Python.org">
+
+    
+    <meta name="description" content="The official home of the Python Programming Language">
+    <meta name="og:description" content="The official home of the Python Programming Language">
+    <meta name="keywords" content="Python programming language object oriented web free open source software license documentation download community">
+    <meta property="og:tag" content="Python programming language object oriented web free open source software license documentation download community">
+    <meta property="og:published_time" content="">
+    <meta property="og:modified_time" content="">
+    <meta property="og:author" content="">
+    <meta property="og:section" content=""> 
+    <meta property="og:url" content="">
+    <meta property="og:image" content="">
+    <meta property="og:video" content="">
+
+    <link rel="author" href="https://www.python.org/static/humans.txt">
+
+    
+
+    
+    <script type="application/ld+json">
+     {
+       "@context": "http://schema.org",
+       "@type": "WebSite",
+       "url": "https://www.python.org/",
+       "potentialAction": {
+         "@type": "SearchAction",
+         "target": "https://www.python.org/search/?q={search_term_string}",
+         "query-input": "required name=search_term_string"
+       }
+     }
+    </script>
+
+    
+    <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-39055973-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+    </script>
+    
+</head>
+
+<body class="python pages pep-page">
+
+    <div id="touchnav-wrapper">
+
+        <div id="nojs" class="do-not-print">
+            <p><strong>Notice:</strong> While Javascript is not essential for this website, your interaction with the content will be limited. Please turn Javascript on for the full experience. </p>
+        </div>
+
+        <!--[if lt IE 8]>
+        <div id="oldie-warning" class="do-not-print">
+            <p><strong>Notice:</strong> Your browser is <em>ancient</em> and <a href="http://www.ie6countdown.com/">Microsoft agrees</a>. <a href="http://browsehappy.com/">Upgrade to a different browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to experience a better web.</p>
+        </div>
+        <![endif]-->
+
+        <!-- Sister Site Links -->
+        <div id="top" class="top-bar do-not-print">
+
+            <nav class="meta-navigation container" role="navigation">
+
+                
+                <div class="skip-link screen-reader-text">
+                    <a href="#content" title="Skip to content">Skip to content</a>
+                </div>
+
+                
+                <a id="close-python-network" class="jump-link" href="#python-network" aria-hidden="true">
+                    <span aria-hidden="true" class="icon-arrow-down"><span>&#9660;</span></span> Close
+                </a>
+
+                
+
+<ul class="menu" role="tree">
+    
+    <li class="python-meta ">
+        <a href="https://www.python.org/" title="The Python Programming Language" >Python</a>
+    </li>
+    
+    <li class="psf-meta ">
+        <a href="https://www.python.org/psf-landing/" title="The Python Software Foundation" >PSF</a>
+    </li>
+    
+    <li class="docs-meta ">
+        <a href="https://docs.python.org/" title="Python Documentation" >Docs</a>
+    </li>
+    
+    <li class="pypi-meta ">
+        <a href="https://pypi.python.org/" title="Python Package Index" >PyPI</a>
+    </li>
+    
+    <li class="jobs-meta ">
+        <a href="https://www.python.org/jobs/" title="Python Job Board" >Jobs</a>
+    </li>
+    
+    <li class="shop-meta ">
+        <a href="https://www.python.org/community/" title="Python Community" >Community</a>
+    </li>
+    
+</ul>
+
+
+                <a id="python-network" class="jump-link" href="#top" aria-hidden="true">
+                    <span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> The Python Network
+                </a>
+
+            </nav>
+
+        </div>
+
+        <!-- Header elements -->
+        <header class="main-header" role="banner">
+            <div class="container">
+
+                <h1 class="site-headline">
+                    <a href="https://www.python.org/"><img class="python-logo" src="../../../static/img/python-logo.png" alt="python&trade;"></a>
+                </h1>
+
+                <div class="options-bar do-not-print">
+
+                    
+                    <a id="site-map-link" class="jump-to-menu" href="#site-map"><span class="menu-icon">&equiv;</span> Menu</a><form class="search-the-site" action="https://www.python.org/search/" method="get">
+                        <fieldset title="Search Python.org">
+
+                            <span aria-hidden="true" class="icon-search"></span>
+
+                            <label class="screen-reader-text" for="id-search-field">Search This Site</label>
+                            <input id="id-search-field" name="q" type="search" role="textbox" class="search-field" placeholder="Search" value="" tabindex="1">
+
+                            <button type="submit" name="submit" id="submit" class="search-button" title="Submit this Search" tabindex="3">
+                                GO
+                            </button>
+
+                            
+                            <!--[if IE]><input type="text" style="display: none;" disabled="disabled" size="1" tabindex="4"><![endif]-->
+
+                        </fieldset>
+                    </form><span class="breaker"></span><div class="adjust-font-size" aria-hidden="true">
+                        <ul class="navigation menu" aria-label="Adjust Text Size on Page">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                <a href="#" class="action-trigger"><strong><small>A</small> A</strong></a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a class="text-shrink" title="Make Text Smaller" href="javascript:;">Smaller</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a class="text-grow" title="Make Text Larger" href="javascript:;">Larger</a></li>
+                                    <li class="tier-2 element-3" role="treeitem"><a class="text-reset" title="Reset any font size changes I have made" href="javascript:;">Reset</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div><div class="winkwink-nudgenudge">
+                        <ul class="navigation menu" aria-label="Social Media Navigation">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                <a href="#" class="action-trigger">Socialize</a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a href="http://plus.google.com/+Python"><span aria-hidden="true" class="icon-google-plus"></span>Google+</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a href="http://www.facebook.com/pythonlang?fref=ts"><span aria-hidden="true" class="icon-facebook"></span>Facebook</a></li>
+                                    <li class="tier-2 element-3" role="treeitem"><a href="http://twitter.com/ThePSF"><span aria-hidden="true" class="icon-twitter"></span>Twitter</a></li>
+                                    <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/irc/"><span aria-hidden="true" class="icon-freenode"></span>Chat on IRC</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div><div class="account-signin">
+                        <ul class="navigation menu" aria-label="Social Media Navigation">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                
+                                <a href="https://www.python.org/accounts/login/" title="Sign Up or Sign In to Python.org">Sign In</a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/accounts/signup/">Sign Up / Register</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/accounts/login/">Sign In</a></li>
+                                </ul>
+                                
+                            </li>
+                        </ul>
+                    </div>
+
+                </div><!-- end options-bar -->
+
+                <nav id="mainnav" class="python-navigation main-navigation do-not-print" role="navigation">
+                    
+                        
+<ul class="navigation menu" role="menubar" aria-label="Main Navigation">
+  
+    
+    
+    <li id="about" class="tier-1 element-1  " aria-haspopup="true">
+        <a href="https://www.python.org/about/" title="" class="">About</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/apps/" title="">Applications</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/quotes/" title="">Quotes</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/gettingstarted/" title="">Getting Started</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/help/" title="">Help</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="downloads" class="tier-1 element-2  " aria-haspopup="true">
+        <a href="https://www.python.org/downloads/" title="" class="">Downloads</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/downloads/" title="">All releases</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/downloads/source/" title="">Source code</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/downloads/windows/" title="">Windows</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/downloads/mac-osx/" title="">Mac OS X</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/download/other/" title="">Other Platforms</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://docs.python.org/3/license.html" title="">License</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/download/alternatives" title="">Alternative Implementations</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="documentation" class="tier-1 element-3  " aria-haspopup="true">
+        <a href="https://www.python.org/doc/" title="" class="">Documentation</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/doc/" title="">Docs</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/doc/av" title="">Audio/Visual Talks</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://wiki.python.org/moin/BeginnersGuide" title="">Beginner&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://docs.python.org/faq/" title="">FAQ</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="http://wiki.python.org/moin/Languages" title="">Non-English Docs</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="../index.html" title="">PEP Index</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://wiki.python.org/moin/PythonBooks" title="">Python Books</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="community" class="tier-1 element-4  " aria-haspopup="true">
+        <a href="https://www.python.org/community/" title="" class="">Community</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/community/diversity/" title="">Diversity</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/community/irc/" title="">IRC</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/community/lists/" title="">Mailing Lists</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/workshops/" title="">Python Conferences</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/community/sigs/" title="">Special Interest Groups</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://wiki.python.org/moin/" title="">Python Wiki</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/community/logos/" title="">Python Logo</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://www.python.org/community/merchandise/" title="">Merchandise</a></li>
+    
+        <li class="tier-2 element-9" role="treeitem"><a href="https://www.python.org/community/awards" title="">Community Awards</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="success-stories" class="tier-1 element-5  " aria-haspopup="true">
+        <a href="https://www.python.org/about/success/" title="success-stories" class="">Success Stories</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/success/#arts" title="">Arts</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/success/#business" title="">Business</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/success/#education" title="">Education</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/success/#engineering" title="">Engineering</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/about/success/#government" title="">Government</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://www.python.org/about/success/#scientific" title="">Scientific</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/about/success/#software-development" title="">Software Development</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="news" class="tier-1 element-6  " aria-haspopup="true">
+        <a href="https://www.python.org/blogs/" title="News from around the Python world" class="">News</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/blogs/" title="Python Insider Blog Posts">Python News</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://planetpython.org/" title="Planet Python">Community News</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="http://pyfound.blogspot.com/" title="PSF Blog">PSF News</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pycon.blogspot.com/" title="PyCon Blog">PyCon News</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="events" class="tier-1 element-7  " aria-haspopup="true">
+        <a href="https://www.python.org/events/" title="" class="">Events</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/events/python-events/" title="">Python Events</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/events/python-user-group/" title="">User Group Events</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/events/python-events/past/" title="">Python Events Archive</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/events/python-user-group/past/" title="">User Group Events Archive</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://wiki.python.org/moin/PythonEventsCalendar#Submitting_an_Event" title="">Submit an Event</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    
+  
+</ul>
+
+                    
+                </nav>
+
+                <div class="header-banner "> <!-- for optional "do-not-print" class -->
+                    
+                    
+                </div>
+
+                
+                
+
+             </div><!-- end .container -->
+        </header>
+
+        <div id="content" class="content-wrapper">
+            <!-- Main Content Column -->
+            <div class="container">
+
+                <section class="main-content with-left-sidebar" role="main">
+
+                    
+<ul class="breadcrumbs menu">
+    <li>
+        <a href="https://www.python.org/" title="The Python Programming Language">Python</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>
+        <a href="https://www.python.org/dev/">Python Developer's Guide</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>
+        <a href="../index.html">PEP Index</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>PEP 0384 -- Defining a Stable ABI</li>
+</ul>
+
+
+                    
+<style>
+   .pep-page pre {
+        padding: .5em;
+        background: inherit;
+        border-left: 0px;
+        -webkit-box-shadow: 0 0 0 0;
+        -moz-box-shadow: 0 0 0 0;
+        box-shadow: 0 0 0 0;
+   }
+</style>
+
+    
+    <article class="text">
+        
+
+        <header class="article-header">
+            <h1 class="page-title">PEP 0384 -- Defining a Stable ABI</h1>
+        </header>
+
+        <!--
+This HTML is auto-generated.  DO NOT EDIT THIS FILE!  If you are writing a new
+PEP, see http://www.python.org/dev/peps/pep-0001 for instructions and links
+to templates.  DO NOT USE THIS HTML FILE AS YOUR TEMPLATE!
+-->
+<html>
+ <body>
+  <table class="rfc2822 docutils field-list" frame="void" rules="none">
+   <col class="field-name">
+   </col>
+   <col class="field-body">
+   </col>
+   <tbody valign="top">
+    <tr class="field">
+     <th class="field-name">
+      PEP:
+     </th>
+     <td class="field-body">
+      384
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Title:
+     </th>
+     <td class="field-body">
+      Defining a Stable ABI
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Author:
+     </th>
+     <td class="field-body">
+      Martin v. Löwis &lt;martin at v.loewis.de&gt;
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Status:
+     </th>
+     <td class="field-body">
+      Final
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Type:
+     </th>
+     <td class="field-body">
+      Standards Track
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Created:
+     </th>
+     <td class="field-body">
+      17-May-2009
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Python-Version:
+     </th>
+     <td class="field-body">
+      3.2
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Post-History:
+     </th>
+     <td class="field-body">
+     </td>
+    </tr>
+   </tbody>
+  </table>
+  <hr/>
+  <div class="contents topic" id="contents">
+   <p class="topic-title first">
+    Contents
+   </p>
+   <ul class="simple">
+    <li>
+     <a class="reference internal" href="#abstract" id="id8">
+      Abstract
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#rationale" id="id9">
+      Rationale
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#specification" id="id10">
+      Specification
+     </a>
+     <ul>
+      <li>
+       <a class="reference internal" href="#terminology" id="id11">
+        Terminology
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#header-files-and-preprocessor-definitions" id="id12">
+        Header Files and Preprocessor Definitions
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#structures" id="id13">
+        Structures
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#type-objects" id="id14">
+        Type Objects
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#typedefs" id="id15">
+        typedefs
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#functions-and-function-like-macros" id="id16">
+        Functions and function-like Macros
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#excluded-functions" id="id17">
+        Excluded Functions
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#global-variables" id="id18">
+        Global Variables
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#other-macros" id="id19">
+        Other Macros
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#the-buffer-interface" id="id20">
+        The Buffer Interface
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#signature-changes" id="id21">
+        Signature Changes
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#linkage" id="id22">
+        Linkage
+       </a>
+      </li>
+     </ul>
+    </li>
+    <li>
+     <a class="reference internal" href="#implementation-strategy" id="id23">
+      Implementation Strategy
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#references" id="id24">
+      References
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#copyright" id="id25">
+      Copyright
+     </a>
+    </li>
+   </ul>
+  </div>
+  <div class="section" id="abstract">
+   <h1>
+    <a class="toc-backref" href="#id8">
+     Abstract
+    </a>
+   </h1>
+   <p>
+    Currently, each feature release introduces a new name for the
+Python DLL on Windows, and may cause incompatibilities for extension
+modules on Unix. This PEP proposes to define a stable set of API
+functions which are guaranteed to be available for the lifetime
+of Python 3, and which will also remain binary-compatible across
+versions. Extension modules and applications embedding Python
+can work with different feature releases as long as they restrict
+themselves to this stable ABI.
+   </p>
+  </div>
+  <div class="section" id="rationale">
+   <h1>
+    <a class="toc-backref" href="#id9">
+     Rationale
+    </a>
+   </h1>
+   <p>
+    The primary source of ABI incompatibility are changes to the lay-out
+of in-memory structures. For example, the way in which string interning
+works, or the data type used to represent the size of an object, have
+changed during the life of Python 2.x. As a consequence, extension
+modules making direct access to fields of strings, lists, or tuples,
+would break if their code is loaded into a newer version of the
+interpreter without recompilation: offsets of other fields may have
+changed, making the extension modules access the wrong data.
+   </p>
+   <p>
+    In some cases, the incompatibilities only affect internal objects of
+the interpreter, such as frame or code objects. For example, the way
+line numbers are represented has changed in the 2.x lifetime, as has
+the way in which local variables are stored (due to the introduction
+of closures). Even though most applications probably never used these
+objects, changing them had required to change the PYTHON_API_VERSION.
+   </p>
+   <p>
+    On Linux, changes to the ABI are often not much of a problem: the
+system will provide a default Python installation, and many extension
+modules are already provided pre-compiled for that version. If additional
+modules are needed, or additional Python versions, users can typically
+compile them themselves on the system, resulting in modules that use
+the right ABI.
+   </p>
+   <p>
+    On Windows, multiple simultaneous installations of different Python
+versions are common, and extension modules are compiled by their
+authors, not by end users. To reduce the risk of ABI incompatibilities,
+Python currently introduces a new DLL name pythonXY.dll for each
+feature release, whether or not ABI incompatibilities actually exist.
+   </p>
+   <p>
+    With this PEP, it will be possible to reduce the dependency of binary
+extension modules on a specific Python feature release, and applications
+embedding Python can be made work with different releases.
+   </p>
+  </div>
+  <div class="section" id="specification">
+   <h1>
+    <a class="toc-backref" href="#id10">
+     Specification
+    </a>
+   </h1>
+   <p>
+    The ABI specification falls into two parts: an API specification,
+specifying what function (groups) are available for use with the
+ABI, and a linkage specification specifying what libraries to link
+with. The actual ABI (layout of structures in memory, function
+calling conventions) is not specified, but implied by the
+compiler. As a recommendation, a specific ABI is recommended for
+selected platforms.
+   </p>
+   <p>
+    During evolution of Python, new ABI functions will be added.
+Applications using them will then have a requirement on a minimum
+version of Python; this PEP provides no mechanism for such
+applications to fall back when the Python library is too old.
+   </p>
+   <div class="section" id="terminology">
+    <h2>
+     <a class="toc-backref" href="#id11">
+      Terminology
+     </a>
+    </h2>
+    <p>
+     Applications and extension modules that want to use this ABI
+are collectively referred to as "applications" from here on.
+    </p>
+   </div>
+   <div class="section" id="header-files-and-preprocessor-definitions">
+    <h2>
+     <a class="toc-backref" href="#id12">
+      Header Files and Preprocessor Definitions
+     </a>
+    </h2>
+    <p>
+     Applications shall only include the header file Python.h (before
+including any system headers), or, optionally, include pyconfig.h, and
+then Python.h.
+    </p>
+    <p>
+     During the compilation of applications, the preprocessor macro
+Py_LIMITED_API must be defined. Doing so will hide all definitions
+that are not part of the ABI.
+    </p>
+   </div>
+   <div class="section" id="structures">
+    <h2>
+     <a class="toc-backref" href="#id13">
+      Structures
+     </a>
+    </h2>
+    <p>
+     Only the following structures and structure fields are accessible to
+applications:
+    </p>
+    <ul class="simple">
+     <li>
+      PyObject (ob_refcnt, ob_type)
+     </li>
+     <li>
+      PyVarObject (ob_base, ob_size)
+     </li>
+     <li>
+      PyMethodDef (ml_name, ml_meth, ml_flags, ml_doc)
+     </li>
+     <li>
+      PyMemberDef (name, type, offset, flags, doc)
+     </li>
+     <li>
+      PyGetSetDef (name, get, set, doc, closure)
+     </li>
+     <li>
+      PyModuleDefBase (ob_base, m_init, m_index, m_copy)
+     </li>
+     <li>
+      PyModuleDef (m_base, m_name, m_doc, m_size, m_methods, m_traverse,
+m_clear, m_free)
+     </li>
+     <li>
+      PyStructSequence_Field (name, doc)
+     </li>
+     <li>
+      PyStructSequence_Desc (name, doc, fields, sequence)
+     </li>
+     <li>
+      PyType_Slot (see below)
+     </li>
+     <li>
+      PyType_Spec (see below)
+     </li>
+    </ul>
+    <p>
+     The accessor macros to these fields (Py_REFCNT, Py_TYPE, Py_SIZE)
+are also available to applications.
+    </p>
+    <p>
+     The following types are available, but opaque (i.e. incomplete):
+    </p>
+    <ul class="simple">
+     <li>
+      PyThreadState
+     </li>
+     <li>
+      PyInterpreterState
+     </li>
+     <li>
+      struct _frame
+     </li>
+     <li>
+      struct symtable
+     </li>
+     <li>
+      struct _node
+     </li>
+     <li>
+      PyWeakReference
+     </li>
+     <li>
+      PyLongObject
+     </li>
+     <li>
+      PyTypeObject
+     </li>
+    </ul>
+   </div>
+   <div class="section" id="type-objects">
+    <h2>
+     <a class="toc-backref" href="#id14">
+      Type Objects
+     </a>
+    </h2>
+    <p>
+     The structure of type objects is not available to applications;
+declaration of "static" type objects is not possible anymore
+(for applications using this ABI).
+Instead, type objects get created dynamically. To allow an
+easy creation of types (in particular, to be able to fill out
+function pointers easily), the following structures and functions
+are available:
+    </p>
+    <pre class="literal-block">
+typedef struct{
+  int slot;    /* slot id, see below */
+  void *pfunc; /* function pointer */
+} PyType_Slot;
+
+typedef struct{
+  const char* name;
+  const char* doc;
+  int basicsize;
+  int itemsize;
+  int flags;
+  PyType_Slot *slots; /* terminated by slot==0. */
+} PyType_Spec;
+
+PyObject* PyType_FromSpec(PyType_Spec*);
+</pre>
+    <p>
+     To specify a slot, a unique slot id must be provided. New Python
+versions may introduce new slot ids, but slot ids will never be
+recycled. Slots may get deprecated, but continue to be supported
+throughout Python 3.x.
+    </p>
+    <p>
+     The slot ids are named like the field names of the structures that
+hold the pointers in Python 3.1, with an added
+     <tt class="docutils literal">
+      Py_
+     </tt>
+     prefix (i.e.
+Py_tp_dealloc instead of just tp_dealloc):
+    </p>
+    <ul class="simple">
+     <li>
+      tp_dealloc, tp_getattr, tp_setattr, tp_repr,
+tp_hash, tp_call, tp_str, tp_getattro, tp_setattro,
+tp_doc, tp_traverse, tp_clear, tp_richcompare, tp_iter,
+tp_iternext, tp_methods, tp_base, tp_descr_get, tp_descr_set,
+tp_init, tp_alloc, tp_new, tp_is_gc, tp_bases, tp_del
+     </li>
+     <li>
+      nb_add nb_subtract nb_multiply nb_remainder nb_divmod nb_power
+nb_negative nb_positive nb_absolute nb_bool nb_invert nb_lshift
+nb_rshift nb_and nb_xor nb_or nb_int nb_float nb_inplace_add
+nb_inplace_subtract nb_inplace_multiply nb_inplace_remainder
+nb_inplace_power nb_inplace_lshift nb_inplace_rshift nb_inplace_and
+nb_inplace_xor nb_inplace_or nb_floor_divide nb_true_divide
+nb_inplace_floor_divide nb_inplace_true_divide nb_index
+     </li>
+     <li>
+      sq_length sq_concat sq_repeat sq_item sq_ass_item
+sq_contains sq_inplace_concat sq_inplace_repeat
+     </li>
+     <li>
+      mp_length mp_subscript mp_ass_subscript
+     </li>
+    </ul>
+    <p>
+     The following fields cannot be set during type definition:
+- tp_dict tp_mro tp_cache tp_subclasses tp_weaklist tp_print
+- tp_weaklistoffset tp_dictoffset
+    </p>
+   </div>
+   <div class="section" id="typedefs">
+    <h2>
+     <a class="toc-backref" href="#id15">
+      typedefs
+     </a>
+    </h2>
+    <p>
+     In addition to the typedefs for structs listed above, the following
+typedefs are available. Their inclusion in the ABI means that the
+underlying type must not change on a platform (even though it may
+differ across platforms).
+    </p>
+    <ul class="simple">
+     <li>
+      Py_uintptr_t Py_intptr_t Py_ssize_t
+     </li>
+     <li>
+      unaryfunc binaryfunc ternaryfunc inquiry lenfunc ssizeargfunc
+ssizessizeargfunc ssizeobjargproc ssizessizeobjargproc objobjargproc
+objobjproc visitproc traverseproc
+destructor getattrfunc getattrofunc setattrfunc setattrofunc reprfunc
+hashfunc richcmpfunc getiterfunc iternextfunc descrgetfunc
+descrsetfunc initproc newfunc allocfunc
+     </li>
+     <li>
+      PyCFunction PyCFunctionWithKeywords PyNoArgsFunction
+PyCapsule_Destructor
+     </li>
+     <li>
+      getter setter
+     </li>
+     <li>
+      PyOS_sighandler_t
+     </li>
+     <li>
+      PyGILState_STATE
+     </li>
+     <li>
+      Py_UCS4
+     </li>
+    </ul>
+    <p>
+     Most notably, Py_UNICODE is not available as a typedef,
+since the same Python version may use different definitions
+of it on the same platform (depending on whether it uses narrow
+or wide code units). Applications that need to access the contents
+of a Unicode string can convert it to wchar_t.
+    </p>
+   </div>
+   <div class="section" id="functions-and-function-like-macros">
+    <h2>
+     <a class="toc-backref" href="#id16">
+      Functions and function-like Macros
+     </a>
+    </h2>
+    <p>
+     All functions starting with _Py are not available to applications
+(see exceptions below).
+Also, all functions that expect parameter types that are unavailable
+to applications are excluded from the ABI, such as PyAST_FromNode
+(which expects a
+     <tt class="docutils literal">
+      node*
+     </tt>
+     ).
+    </p>
+    <p>
+     All other functions are available, unless excluded below.
+    </p>
+    <p>
+     Function-like macros (in particular, field access macros) remain
+available to applications, but get replaced by function calls
+(unless their definition only refers to features of the ABI, such
+as the various _Check macros)
+    </p>
+    <p>
+     ABI function declarations will not change their parameters or return
+types. If a change to the signature becomes necessary, a new function
+will be introduced. If the new function is source-compatible (e.g. if
+just the return type changes), an alias macro may get added to
+redirect calls to the new function when the applications is
+recompiled.
+    </p>
+    <p>
+     If continued provision of the old function is not possible, it may get
+deprecated, then removed, in accordance with
+     <a class="reference external" href="../pep-0007/index.html">
+      PEP 7
+     </a>
+     , causing
+applications that use that function to break.
+    </p>
+   </div>
+   <div class="section" id="excluded-functions">
+    <h2>
+     <a class="toc-backref" href="#id17">
+      Excluded Functions
+     </a>
+    </h2>
+    <p>
+     Functions declared in the following header files are not part
+of the ABI:
+    </p>
+    <ul class="simple">
+     <li>
+      bytes_methods.h
+     </li>
+     <li>
+      cellobject.h
+     </li>
+     <li>
+      classobject.h
+     </li>
+     <li>
+      code.h
+     </li>
+     <li>
+      compile.h
+     </li>
+     <li>
+      datetime.h
+     </li>
+     <li>
+      dtoa.h
+     </li>
+     <li>
+      frameobject.h
+     </li>
+     <li>
+      funcobject.h
+     </li>
+     <li>
+      genobject.h
+     </li>
+     <li>
+      longintrepr.h
+     </li>
+     <li>
+      parsetok.h
+     </li>
+     <li>
+      pyarena.h
+     </li>
+     <li>
+      pyatomic.h
+     </li>
+     <li>
+      pyctype.h
+     </li>
+     <li>
+      pydebug.h
+     </li>
+     <li>
+      pytime.h
+     </li>
+     <li>
+      symtable.h
+     </li>
+     <li>
+      token.h
+     </li>
+     <li>
+      ucnhash.h
+     </li>
+    </ul>
+    <p>
+     In addition, functions expecting
+     <tt class="docutils literal">
+      FILE*
+     </tt>
+     are not part of
+the ABI, to avoid depending on a specific version of the
+Microsoft C runtime DLL on Windows.
+    </p>
+    <p>
+     Module and type initalizer functions are not available
+(PyByteArray_Init, PyByteArray_Fini, PyBytes_Fini,
+PyCFunction_Fini, PyDict_Fini, PyFloat_ClearFreeList,
+PyFloat_Fini, PyFrame_Fini, PyList_Fini, PyMethod_Fini,
+PyOS_FiniInterrupts, PySet_Fini, PyTuple_Fini).
+    </p>
+    <p>
+     Several functions dealing with interpreter implementation
+details are not available:
+    </p>
+    <ul class="simple">
+     <li>
+      PyInterpreterState_Head, PyInterpreterState_Next,
+PyInterpreterState_ThreadHead, PyThreadState_Next
+     </li>
+     <li>
+      Py_SubversionRevision, Py_SubversionShortBranch
+     </li>
+    </ul>
+    <p>
+     PyStructSequence_InitType is not available, as it requires
+the caller to provide a static type object.
+    </p>
+    <p>
+     Py_FatalError will be moved from pydebug.h into some other
+header file (e.g. pyerrors.h).
+    </p>
+    <p>
+     The exact list of functions being available is given
+in the Windows module definition file for python3.dll
+     <a class="footnote-reference" href="#id5" id="id1">
+      [1]
+     </a>
+     .
+    </p>
+   </div>
+   <div class="section" id="global-variables">
+    <h2>
+     <a class="toc-backref" href="#id18">
+      Global Variables
+     </a>
+    </h2>
+    <p>
+     Global variables representing types and exceptions are available
+to applications. In addition, selected global variables referenced
+in macros (such as Py_True and Py_False) are available.
+    </p>
+    <p>
+     A complete list of global variable definitions is given in the
+python3.def file
+     <a class="footnote-reference" href="#id5" id="id2">
+      [1]
+     </a>
+     ; those declared DATA denote variables.
+    </p>
+   </div>
+   <div class="section" id="other-macros">
+    <h2>
+     <a class="toc-backref" href="#id19">
+      Other Macros
+     </a>
+    </h2>
+    <p>
+     All macros defining symbolic constants are available to applications;
+the numeric values will not change.
+    </p>
+    <p>
+     In addition, the following macros are available:
+    </p>
+    <ul class="simple">
+     <li>
+      Py_BEGIN_ALLOW_THREADS, Py_BLOCK_THREADS, Py_UNBLOCK_THREADS,
+Py_END_ALLOW_THREADS
+     </li>
+    </ul>
+   </div>
+   <div class="section" id="the-buffer-interface">
+    <h2>
+     <a class="toc-backref" href="#id20">
+      The Buffer Interface
+     </a>
+    </h2>
+    <p>
+     The buffer interface (type Py_buffer, type slots bf_getbuffer and
+bf_releasebuffer, etc) has been omitted from the ABI, since the stability
+of the Py_buffer structure is not clear at this time. Inclusion in the
+ABI can be considered in future releases.
+    </p>
+   </div>
+   <div class="section" id="signature-changes">
+    <h2>
+     <a class="toc-backref" href="#id21">
+      Signature Changes
+     </a>
+    </h2>
+    <p>
+     A number of functions currently expect a specific struct, even though
+callers typically have PyObject* available. These have been changed
+to expect PyObject* as the parameter; this will cause warnings in
+applications that currently explicitly cast to the parameter type.
+These functions are PySlice_GetIndices, PySlice_GetIndicesEx,
+PyUnicode_AsWideChar, and PyEval_EvalCode.
+    </p>
+   </div>
+   <div class="section" id="linkage">
+    <h2>
+     <a class="toc-backref" href="#id22">
+      Linkage
+     </a>
+    </h2>
+    <p>
+     On Windows, applications shall link with python3.dll; an import
+library python3.lib will be available. This DLL will redirect all of
+its API functions through /export linker options to the full
+interpreter DLL, i.e. python3y.dll.
+    </p>
+    <p>
+     On Unix systems, the ABI is typically provided by the python
+executable itself. PyModule_Create is changed to pass
+     <tt class="docutils literal">
+      3
+     </tt>
+     as the API
+version if the extension module was compiled with Py_LIMITED_API; the
+version check for the API version will accept either 3 or the current
+PYTHON_API_VERSION as conforming. If Python is compiled as a shared
+library, it is installed as both libpython3.so, and libpython3.y.so;
+applications conforming to this PEP should then link to the former
+(extension modules can continue to link with no libpython shared object,
+but rather rely on runtime linking).
+The ABI version is symbolically available as
+     <tt class="docutils literal">
+      PYTHON_ABI_VERSION
+     </tt>
+     .
+    </p>
+    <p>
+     Also on Unix, the
+     <a class="reference external" href="../pep-3149/index.html">
+      PEP 3149
+     </a>
+     tag abi&lt;PYTHON_ABI_VERSION&gt; is accepted
+in file names of extension modules. No checking is performed that
+files named in this way are actually restricted to the limited API,
+and no support for building such files will be added to distutils
+due to the distutils code freeze.
+    </p>
+   </div>
+  </div>
+  <div class="section" id="implementation-strategy">
+   <h1>
+    <a class="toc-backref" href="#id23">
+     Implementation Strategy
+    </a>
+   </h1>
+   <p>
+    This PEP will be implemented in a branch
+    <a class="footnote-reference" href="#id6" id="id3">
+     [2]
+    </a>
+    , allowing users to check
+whether their modules conform to the ABI. To avoid users having to
+rewrite their type definitions, a script to convert C source code
+containing type definitions will be provided
+    <a class="footnote-reference" href="#id7" id="id4">
+     [3]
+    </a>
+    .
+   </p>
+  </div>
+  <div class="section" id="references">
+   <h1>
+    <a class="toc-backref" href="#id24">
+     References
+    </a>
+   </h1>
+   <table class="docutils footnote" frame="void" id="id5" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       [1]
+      </td>
+      <td>
+       <em>
+        (
+        <a class="fn-backref" href="#id1">
+         1
+        </a>
+        ,
+        <a class="fn-backref" href="#id2">
+         2
+        </a>
+        )
+       </em>
+       "python3 module definition file":
+       <a class="reference external" href="http://svn.python.org/projects/python/branches/pep-0384/PC/python3.def">
+        http://svn.python.org/projects/python/branches/pep-0384/PC/python3.def
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id6" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id3">
+        [2]
+       </a>
+      </td>
+      <td>
+       "
+       <a class="reference external" href="index.html">
+        PEP 384
+       </a>
+       branch":
+       <a class="reference external" href="http://svn.python.org/projects/python/branches/pep-0384/">
+        http://svn.python.org/projects/python/branches/pep-0384/
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id7" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id4">
+        [3]
+       </a>
+      </td>
+      <td>
+       "ABI type conversion script":
+       <a class="reference external" href="http://svn.python.org/projects/python/branches/pep-0384/Tools/scripts/abitype.py">
+        http://svn.python.org/projects/python/branches/pep-0384/Tools/scripts/abitype.py
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+  </div>
+  <div class="section" id="copyright">
+   <h1>
+    <a class="toc-backref" href="#id25">
+     Copyright
+    </a>
+   </h1>
+   <p>
+    This document has been placed in the public domain.
+   </p>
+   <!-- Local Variables:
+mode: indented-text
+indent-tabs-mode: nil
+sentence-end-double-space: t
+fill-column: 70
+coding: utf-8
+End: -->
+  </div>
+ </body>
+
+<!-- Mirrored from www.python.org/dev/peps/pep-0384/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 03 Sep 2015 04:34:27 GMT -->
+</html>Source: <a href="https://hg.python.org/peps/file/tip/pep-0384.txt">https://hg.python.org/peps/file/tip/pep-0384.txt</a>
+
+    </article>
+
+
+                </section>
+
+                
+
+
+<aside class="left-sidebar" role="secondary">
+
+    
+
+
+
+
+
+
+    
+
+
+
+
+
+        <div class="twitter-widget sidebar-widget">
+        <a class="twitter-timeline" data-dnt="true" href="https://twitter.com/ThePSF" data-widget-id="434113224703610882">Tweets by @ThePSF</a>
+        <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+    </div>
+
+    <div class="psf-sidebar-widget sidebar-widget">
+        <h3 class="widget-title">The PSF</h3>
+<p>The Python Software Foundation is the organization behind Python. Become a member of the PSF and help advance the software and our mission. </p>
+
+    </div>
+
+</aside>
+
+
+
+                
+                
+
+
+            </div><!-- end .container -->
+        </div><!-- end #content .content-wrapper -->
+
+        <!-- Footer and social media list -->
+        <footer id="site-map" class="main-footer" role="contentinfo">
+            <div class="main-footer-links">
+                <div class="container">
+
+                    
+                    <a id="back-to-top-1" class="jump-link" href="#python-network"><span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> Back to Top</a>
+
+                    
+
+<ul class="sitemap navigation menu do-not-print" role="tree" id="container">
+    
+    <li class="tier-1 element-1">
+        <a href="https://www.python.org/about/" >About</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/apps/" title="">Applications</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/quotes/" title="">Quotes</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/gettingstarted/" title="">Getting Started</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/help/" title="">Help</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-2">
+        <a href="https://www.python.org/downloads/" >Downloads</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/downloads/" title="">All releases</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/downloads/source/" title="">Source code</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/downloads/windows/" title="">Windows</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/downloads/mac-osx/" title="">Mac OS X</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/download/other/" title="">Other Platforms</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://docs.python.org/3/license.html" title="">License</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/download/alternatives" title="">Alternative Implementations</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-3">
+        <a href="https://www.python.org/doc/" >Documentation</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/doc/" title="">Docs</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/doc/av" title="">Audio/Visual Talks</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://wiki.python.org/moin/BeginnersGuide" title="">Beginner&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://docs.python.org/faq/" title="">FAQ</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="http://wiki.python.org/moin/Languages" title="">Non-English Docs</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="../index.html" title="">PEP Index</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://wiki.python.org/moin/PythonBooks" title="">Python Books</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-4">
+        <a href="https://www.python.org/community/" >Community</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/community/diversity/" title="">Diversity</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/community/irc/" title="">IRC</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/community/lists/" title="">Mailing Lists</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/workshops/" title="">Python Conferences</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/community/sigs/" title="">Special Interest Groups</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://wiki.python.org/moin/" title="">Python Wiki</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/community/logos/" title="">Python Logo</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://www.python.org/community/merchandise/" title="">Merchandise</a></li>
+    
+        <li class="tier-2 element-9" role="treeitem"><a href="https://www.python.org/community/awards" title="">Community Awards</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-5">
+        <a href="https://www.python.org/about/success/" title="success-stories">Success Stories</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/success/#arts" title="">Arts</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/success/#business" title="">Business</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/success/#education" title="">Education</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/success/#engineering" title="">Engineering</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/about/success/#government" title="">Government</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://www.python.org/about/success/#scientific" title="">Scientific</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/about/success/#software-development" title="">Software Development</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-6">
+        <a href="https://www.python.org/blogs/" title="News from around the Python world">News</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/blogs/" title="Python Insider Blog Posts">Python News</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://planetpython.org/" title="Planet Python">Community News</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="http://pyfound.blogspot.com/" title="PSF Blog">PSF News</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pycon.blogspot.com/" title="PyCon Blog">PyCon News</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-7">
+        <a href="https://www.python.org/events/" >Events</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/events/python-events/" title="">Python Events</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/events/python-user-group/" title="">User Group Events</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/events/python-events/past/" title="">Python Events Archive</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/events/python-user-group/past/" title="">User Group Events Archive</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://wiki.python.org/moin/PythonEventsCalendar#Submitting_an_Event" title="">Submit an Event</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-8">
+        <a href="https://www.python.org/dev/" >Contributing</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="http://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://bugs.python.org/" title="">Issue Tracker</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://mail.python.org/mailman/listinfo/python-dev" title="">python-dev list</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pythonmentors.com/" title="">Core Mentorship</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+</ul>
+
+
+                    <a id="back-to-top-2" class="jump-link" href="#python-network"><span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> Back to Top</a>
+                    
+
+                </div><!-- end .container -->
+            </div> <!-- end .main-footer-links -->
+
+            <div class="site-base">
+                <div class="container">
+                    
+                    <ul class="footer-links navigation menu do-not-print" role="tree">
+                        <li class="tier-1 element-1"><a href="https://www.python.org/about/help/">Help &amp; <span class="say-no-more">General</span> Contact</a></li>
+                        <li class="tier-1 element-2"><a href="https://www.python.org/community/diversity/">Diversity <span class="say-no-more">Initiatives</span></a></li>
+                        <li class="tier-1 element-3"><a href="https://github.com/python/pythondotorg/issues">Submit Website Bug</a></li>
+                        <!--<li class="tier-1 element-3"><a href="#"><span class="say-no-more">Website</span> Colophon</a></li>-->
+                    </ul>
+
+                    <div class="copyright">
+                        <p><small>
+                            <span class="pre">Copyright &copy;2001-2015.</span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/psf-landing/">Python Software Foundation</a></span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/about/legal/">Legal Statements</a></span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/privacy/">Privacy Policy</a></span>
+                        </small></p>
+                    </div>
+
+                </div><!-- end .container -->
+            </div><!-- end .site-base -->
+
+        </footer>
+
+    </div><!-- end #touchnav-wrapper -->
+
+    
+    <script src="../../../../ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="../../../static/js/libs/jquery-1.8.2.min.js"><\/script>')</script>
+
+    <script src="../../../static/js/libs/masonry.pkgd.min.js"></script>
+
+    <script type="text/javascript" src="../../../static/js/main-min.js" charset="utf-8"></script>
+    
+
+    <!--[if lte IE 7]>
+    <script type="text/javascript" src="/static/js/plugins/IE8-min.js" charset="utf-8"></script>
+    
+    
+    <![endif]-->
+
+    <!--[if lte IE 8]>
+    <script type="text/javascript" src="/static/js/plugins/getComputedStyle-min.js" charset="utf-8"></script>
+    
+    
+    <![endif]-->
+
+    
+
+    
+    
+
+</body>
+</html>

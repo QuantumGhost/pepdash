@@ -1,0 +1,2834 @@
+<!doctype html>
+<!--[if lt IE 7]>   <html class="no-js ie6 lt-ie7 lt-ie8 lt-ie9">   <![endif]-->
+<!--[if IE 7]>      <html class="no-js ie7 lt-ie8 lt-ie9">          <![endif]-->
+<!--[if IE 8]>      <html class="no-js ie8 lt-ie9">                 <![endif]-->
+<!--[if gt IE 8]><!--><html class="no-js" lang="en" dir="ltr">  <!--<![endif]-->
+
+
+<!-- Mirrored from www.python.org/dev/peps/pep-0445/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 03 Sep 2015 04:34:44 GMT -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <link rel="prefetch" href="../../../../ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js">
+
+    <meta name="application-name" content="Python.org">
+    <meta name="msapplication-tooltip" content="The official home of the Python Programming Language">
+    <meta name="apple-mobile-web-app-title" content="Python.org">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="format-detection" content="telephone=no">
+    <meta http-equiv="cleartype" content="on">
+    <meta http-equiv="imagetoolbar" content="false">
+
+    <script src="../../../static/js/libs/modernizr.js"></script>
+
+    <link href="../../../static/stylesheets/style.css" rel="stylesheet" type="text/css" title="default" />
+    <link href="../../../static/stylesheets/mq.css" rel="stylesheet" type="text/css" media="not print, braille, embossed, speech, tty" />
+    
+
+    <!--[if (lte IE 8)&(!IEMobile)]>
+    <link href="/static/stylesheets/no-mq.css" rel="stylesheet" type="text/css" media="screen" />
+    
+    
+    <![endif]-->
+
+    
+    <link rel="icon" type="image/x-icon" href="https://www.python.org/static/favicon.ico">
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="../../../static/apple-touch-icon-144x144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="../../../static/apple-touch-icon-114x114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="../../../static/apple-touch-icon-72x72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="../../../static/apple-touch-icon-precomposed.png">
+    <link rel="apple-touch-icon" href="../../../static/apple-touch-icon-precomposed.png">
+
+    
+    <meta name="msapplication-TileImage" content="/static/metro-icon-144x144-precomposed.png"><!-- white shape -->
+    <meta name="msapplication-TileColor" content="#3673a5"><!-- python blue -->
+    <meta name="msapplication-navbutton-color" content="#3673a5">
+
+    <meta property="og:site_name" content="Python.org">
+    <meta property="og:type" content="website">
+
+    <title>PEP 0445 -- Add new APIs to customize Python memory allocators | Python.org</title>
+    <meta property="og:title" content="Welcome to Python.org">
+
+    
+    <meta name="description" content="The official home of the Python Programming Language">
+    <meta name="og:description" content="The official home of the Python Programming Language">
+    <meta name="keywords" content="Python programming language object oriented web free open source software license documentation download community">
+    <meta property="og:tag" content="Python programming language object oriented web free open source software license documentation download community">
+    <meta property="og:published_time" content="">
+    <meta property="og:modified_time" content="">
+    <meta property="og:author" content="">
+    <meta property="og:section" content=""> 
+    <meta property="og:url" content="">
+    <meta property="og:image" content="">
+    <meta property="og:video" content="">
+
+    <link rel="author" href="https://www.python.org/static/humans.txt">
+
+    
+
+    
+    <script type="application/ld+json">
+     {
+       "@context": "http://schema.org",
+       "@type": "WebSite",
+       "url": "https://www.python.org/",
+       "potentialAction": {
+         "@type": "SearchAction",
+         "target": "https://www.python.org/search/?q={search_term_string}",
+         "query-input": "required name=search_term_string"
+       }
+     }
+    </script>
+
+    
+    <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-39055973-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+    </script>
+    
+</head>
+
+<body class="python pages pep-page">
+
+    <div id="touchnav-wrapper">
+
+        <div id="nojs" class="do-not-print">
+            <p><strong>Notice:</strong> While Javascript is not essential for this website, your interaction with the content will be limited. Please turn Javascript on for the full experience. </p>
+        </div>
+
+        <!--[if lt IE 8]>
+        <div id="oldie-warning" class="do-not-print">
+            <p><strong>Notice:</strong> Your browser is <em>ancient</em> and <a href="http://www.ie6countdown.com/">Microsoft agrees</a>. <a href="http://browsehappy.com/">Upgrade to a different browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to experience a better web.</p>
+        </div>
+        <![endif]-->
+
+        <!-- Sister Site Links -->
+        <div id="top" class="top-bar do-not-print">
+
+            <nav class="meta-navigation container" role="navigation">
+
+                
+                <div class="skip-link screen-reader-text">
+                    <a href="#content" title="Skip to content">Skip to content</a>
+                </div>
+
+                
+                <a id="close-python-network" class="jump-link" href="#python-network" aria-hidden="true">
+                    <span aria-hidden="true" class="icon-arrow-down"><span>&#9660;</span></span> Close
+                </a>
+
+                
+
+<ul class="menu" role="tree">
+    
+    <li class="python-meta ">
+        <a href="https://www.python.org/" title="The Python Programming Language" >Python</a>
+    </li>
+    
+    <li class="psf-meta ">
+        <a href="https://www.python.org/psf-landing/" title="The Python Software Foundation" >PSF</a>
+    </li>
+    
+    <li class="docs-meta ">
+        <a href="https://docs.python.org/" title="Python Documentation" >Docs</a>
+    </li>
+    
+    <li class="pypi-meta ">
+        <a href="https://pypi.python.org/" title="Python Package Index" >PyPI</a>
+    </li>
+    
+    <li class="jobs-meta ">
+        <a href="https://www.python.org/jobs/" title="Python Job Board" >Jobs</a>
+    </li>
+    
+    <li class="shop-meta ">
+        <a href="https://www.python.org/community/" title="Python Community" >Community</a>
+    </li>
+    
+</ul>
+
+
+                <a id="python-network" class="jump-link" href="#top" aria-hidden="true">
+                    <span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> The Python Network
+                </a>
+
+            </nav>
+
+        </div>
+
+        <!-- Header elements -->
+        <header class="main-header" role="banner">
+            <div class="container">
+
+                <h1 class="site-headline">
+                    <a href="https://www.python.org/"><img class="python-logo" src="../../../static/img/python-logo.png" alt="python&trade;"></a>
+                </h1>
+
+                <div class="options-bar do-not-print">
+
+                    
+                    <a id="site-map-link" class="jump-to-menu" href="#site-map"><span class="menu-icon">&equiv;</span> Menu</a><form class="search-the-site" action="https://www.python.org/search/" method="get">
+                        <fieldset title="Search Python.org">
+
+                            <span aria-hidden="true" class="icon-search"></span>
+
+                            <label class="screen-reader-text" for="id-search-field">Search This Site</label>
+                            <input id="id-search-field" name="q" type="search" role="textbox" class="search-field" placeholder="Search" value="" tabindex="1">
+
+                            <button type="submit" name="submit" id="submit" class="search-button" title="Submit this Search" tabindex="3">
+                                GO
+                            </button>
+
+                            
+                            <!--[if IE]><input type="text" style="display: none;" disabled="disabled" size="1" tabindex="4"><![endif]-->
+
+                        </fieldset>
+                    </form><span class="breaker"></span><div class="adjust-font-size" aria-hidden="true">
+                        <ul class="navigation menu" aria-label="Adjust Text Size on Page">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                <a href="#" class="action-trigger"><strong><small>A</small> A</strong></a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a class="text-shrink" title="Make Text Smaller" href="javascript:;">Smaller</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a class="text-grow" title="Make Text Larger" href="javascript:;">Larger</a></li>
+                                    <li class="tier-2 element-3" role="treeitem"><a class="text-reset" title="Reset any font size changes I have made" href="javascript:;">Reset</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div><div class="winkwink-nudgenudge">
+                        <ul class="navigation menu" aria-label="Social Media Navigation">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                <a href="#" class="action-trigger">Socialize</a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a href="http://plus.google.com/+Python"><span aria-hidden="true" class="icon-google-plus"></span>Google+</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a href="http://www.facebook.com/pythonlang?fref=ts"><span aria-hidden="true" class="icon-facebook"></span>Facebook</a></li>
+                                    <li class="tier-2 element-3" role="treeitem"><a href="http://twitter.com/ThePSF"><span aria-hidden="true" class="icon-twitter"></span>Twitter</a></li>
+                                    <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/irc/"><span aria-hidden="true" class="icon-freenode"></span>Chat on IRC</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div><div class="account-signin">
+                        <ul class="navigation menu" aria-label="Social Media Navigation">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                
+                                <a href="https://www.python.org/accounts/login/" title="Sign Up or Sign In to Python.org">Sign In</a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/accounts/signup/">Sign Up / Register</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/accounts/login/">Sign In</a></li>
+                                </ul>
+                                
+                            </li>
+                        </ul>
+                    </div>
+
+                </div><!-- end options-bar -->
+
+                <nav id="mainnav" class="python-navigation main-navigation do-not-print" role="navigation">
+                    
+                        
+<ul class="navigation menu" role="menubar" aria-label="Main Navigation">
+  
+    
+    
+    <li id="about" class="tier-1 element-1  " aria-haspopup="true">
+        <a href="https://www.python.org/about/" title="" class="">About</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/apps/" title="">Applications</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/quotes/" title="">Quotes</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/gettingstarted/" title="">Getting Started</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/help/" title="">Help</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="downloads" class="tier-1 element-2  " aria-haspopup="true">
+        <a href="https://www.python.org/downloads/" title="" class="">Downloads</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/downloads/" title="">All releases</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/downloads/source/" title="">Source code</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/downloads/windows/" title="">Windows</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/downloads/mac-osx/" title="">Mac OS X</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/download/other/" title="">Other Platforms</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://docs.python.org/3/license.html" title="">License</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/download/alternatives" title="">Alternative Implementations</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="documentation" class="tier-1 element-3  " aria-haspopup="true">
+        <a href="https://www.python.org/doc/" title="" class="">Documentation</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/doc/" title="">Docs</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/doc/av" title="">Audio/Visual Talks</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://wiki.python.org/moin/BeginnersGuide" title="">Beginner&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://docs.python.org/faq/" title="">FAQ</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="http://wiki.python.org/moin/Languages" title="">Non-English Docs</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="../index.html" title="">PEP Index</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://wiki.python.org/moin/PythonBooks" title="">Python Books</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="community" class="tier-1 element-4  " aria-haspopup="true">
+        <a href="https://www.python.org/community/" title="" class="">Community</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/community/diversity/" title="">Diversity</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/community/irc/" title="">IRC</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/community/lists/" title="">Mailing Lists</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/workshops/" title="">Python Conferences</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/community/sigs/" title="">Special Interest Groups</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://wiki.python.org/moin/" title="">Python Wiki</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/community/logos/" title="">Python Logo</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://www.python.org/community/merchandise/" title="">Merchandise</a></li>
+    
+        <li class="tier-2 element-9" role="treeitem"><a href="https://www.python.org/community/awards" title="">Community Awards</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="success-stories" class="tier-1 element-5  " aria-haspopup="true">
+        <a href="https://www.python.org/about/success/" title="success-stories" class="">Success Stories</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/success/#arts" title="">Arts</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/success/#business" title="">Business</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/success/#education" title="">Education</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/success/#engineering" title="">Engineering</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/about/success/#government" title="">Government</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://www.python.org/about/success/#scientific" title="">Scientific</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/about/success/#software-development" title="">Software Development</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="news" class="tier-1 element-6  " aria-haspopup="true">
+        <a href="https://www.python.org/blogs/" title="News from around the Python world" class="">News</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/blogs/" title="Python Insider Blog Posts">Python News</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://planetpython.org/" title="Planet Python">Community News</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="http://pyfound.blogspot.com/" title="PSF Blog">PSF News</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pycon.blogspot.com/" title="PyCon Blog">PyCon News</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="events" class="tier-1 element-7  " aria-haspopup="true">
+        <a href="https://www.python.org/events/" title="" class="">Events</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/events/python-events/" title="">Python Events</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/events/python-user-group/" title="">User Group Events</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/events/python-events/past/" title="">Python Events Archive</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/events/python-user-group/past/" title="">User Group Events Archive</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://wiki.python.org/moin/PythonEventsCalendar#Submitting_an_Event" title="">Submit an Event</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    
+  
+</ul>
+
+                    
+                </nav>
+
+                <div class="header-banner "> <!-- for optional "do-not-print" class -->
+                    
+                    
+                </div>
+
+                
+                
+
+             </div><!-- end .container -->
+        </header>
+
+        <div id="content" class="content-wrapper">
+            <!-- Main Content Column -->
+            <div class="container">
+
+                <section class="main-content with-left-sidebar" role="main">
+
+                    
+<ul class="breadcrumbs menu">
+    <li>
+        <a href="https://www.python.org/" title="The Python Programming Language">Python</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>
+        <a href="https://www.python.org/dev/">Python Developer's Guide</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>
+        <a href="../index.html">PEP Index</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>PEP 0445 -- Add new APIs to customize Python memory allocators</li>
+</ul>
+
+
+                    
+<style>
+   .pep-page pre {
+        padding: .5em;
+        background: inherit;
+        border-left: 0px;
+        -webkit-box-shadow: 0 0 0 0;
+        -moz-box-shadow: 0 0 0 0;
+        box-shadow: 0 0 0 0;
+   }
+</style>
+
+    
+    <article class="text">
+        
+
+        <header class="article-header">
+            <h1 class="page-title">PEP 0445 -- Add new APIs to customize Python memory allocators</h1>
+        </header>
+
+        <!--
+This HTML is auto-generated.  DO NOT EDIT THIS FILE!  If you are writing a new
+PEP, see http://www.python.org/dev/peps/pep-0001 for instructions and links
+to templates.  DO NOT USE THIS HTML FILE AS YOUR TEMPLATE!
+-->
+<html>
+ <body>
+  <table class="rfc2822 docutils field-list" frame="void" rules="none">
+   <col class="field-name">
+   </col>
+   <col class="field-body">
+   </col>
+   <tbody valign="top">
+    <tr class="field">
+     <th class="field-name">
+      PEP:
+     </th>
+     <td class="field-body">
+      445
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Title:
+     </th>
+     <td class="field-body">
+      Add new APIs to customize Python memory allocators
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Author:
+     </th>
+     <td class="field-body">
+      Victor Stinner &lt;victor.stinner at gmail.com&gt;
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      BDFL-Delegate:
+     </th>
+     <td class="field-body">
+      Antoine Pitrou &lt;
+      <a class="reference external" href="mailto:solipsis@pitrou.net">
+       solipsis@pitrou.net
+      </a>
+      &gt;
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Status:
+     </th>
+     <td class="field-body">
+      Final
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Type:
+     </th>
+     <td class="field-body">
+      Standards Track
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Created:
+     </th>
+     <td class="field-body">
+      15-june-2013
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Python-Version:
+     </th>
+     <td class="field-body">
+      3.4
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Resolution:
+     </th>
+     <td class="field-body">
+      <a class="reference external" href="http://mail.python.org/pipermail/python-dev/2013-July/127222.html">
+       http://mail.python.org/pipermail/python-dev/2013-July/127222.html
+      </a>
+     </td>
+    </tr>
+   </tbody>
+  </table>
+  <hr/>
+  <div class="contents topic" id="contents">
+   <p class="topic-title first">
+    Contents
+   </p>
+   <ul class="simple">
+    <li>
+     <a class="reference internal" href="#abstract" id="id2">
+      Abstract
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#rationale" id="id3">
+      Rationale
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#proposal" id="id4">
+      Proposal
+     </a>
+     <ul>
+      <li>
+       <a class="reference internal" href="#new-functions-and-structures" id="id5">
+        New Functions and Structures
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#redesign-debug-checks-on-memory-block-allocators-as-hooks" id="id6">
+        Redesign Debug Checks on Memory Block Allocators as Hooks
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#don-t-call-malloc-directly-anymore" id="id7">
+        Don't call malloc() directly anymore
+       </a>
+      </li>
+     </ul>
+    </li>
+    <li>
+     <a class="reference internal" href="#examples" id="id8">
+      Examples
+     </a>
+     <ul>
+      <li>
+       <a class="reference internal" href="#use-case-1-replace-memory-allocators-keep-pymalloc" id="id9">
+        Use case 1: Replace Memory Allocators, keep pymalloc
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#use-case-2-replace-memory-allocators-override-pymalloc" id="id10">
+        Use case 2: Replace Memory Allocators, override pymalloc
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#use-case-3-setup-hooks-on-memory-block-allocators" id="id11">
+        Use case 3: Setup Hooks On Memory Block Allocators
+       </a>
+      </li>
+     </ul>
+    </li>
+    <li>
+     <a class="reference internal" href="#performances" id="id12">
+      Performances
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#rejected-alternatives" id="id13">
+      Rejected Alternatives
+     </a>
+     <ul>
+      <li>
+       <a class="reference internal" href="#more-specific-functions-to-get-set-memory-allocators" id="id14">
+        More specific functions to get/set memory allocators
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#make-pymem-malloc-reuse-pymem-rawmalloc-by-default" id="id15">
+        Make PyMem_Malloc() reuse PyMem_RawMalloc() by default
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#add-a-new-pydebugmalloc-environment-variable" id="id16">
+        Add a new PYDEBUGMALLOC environment variable
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#use-macros-to-get-customizable-allocators" id="id17">
+        Use macros to get customizable allocators
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#pass-the-c-filename-and-line-number" id="id18">
+        Pass the C filename and line number
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#gil-free-pymem-malloc" id="id19">
+        GIL-free PyMem_Malloc()
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#don-t-add-pymem-rawmalloc" id="id20">
+        Don't add PyMem_RawMalloc()
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#use-existing-debug-tools-to-analyze-memory-use" id="id21">
+        Use existing debug tools to analyze memory use
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#add-a-msize-function" id="id22">
+        Add a msize() function
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#no-context-argument" id="id23">
+        No context argument
+       </a>
+      </li>
+     </ul>
+    </li>
+    <li>
+     <a class="reference internal" href="#external-libraries" id="id24">
+      External Libraries
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#memory-allocators" id="id25">
+      Memory Allocators
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#links" id="id26">
+      Links
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#copyright" id="id27">
+      Copyright
+     </a>
+    </li>
+   </ul>
+  </div>
+  <div class="section" id="abstract">
+   <h1>
+    <a class="toc-backref" href="#id2">
+     Abstract
+    </a>
+   </h1>
+   <p>
+    This PEP proposes new Application Programming Interfaces (API) to customize
+Python memory allocators.  The only implementation required to conform to
+this PEP is CPython, but other implementations may choose to be compatible,
+or to re-use a similar scheme.
+   </p>
+  </div>
+  <div class="section" id="rationale">
+   <h1>
+    <a class="toc-backref" href="#id3">
+     Rationale
+    </a>
+   </h1>
+   <p>
+    Use cases:
+   </p>
+   <ul class="simple">
+    <li>
+     Applications embedding Python which want to isolate Python memory from
+the memory of the application, or want to use a different memory
+allocator optimized for its Python usage
+    </li>
+    <li>
+     Python running on embedded devices with low memory and slow CPU.
+A custom memory allocator can be used for efficiency and/or to get
+access all the memory of the device.
+    </li>
+    <li>
+     Debug tools for memory allocators:
+     <ul>
+      <li>
+       track the memory usage (find memory leaks)
+      </li>
+      <li>
+       get the location of a memory allocation: Python filename and line
+number, and the size of a memory block
+      </li>
+      <li>
+       detect buffer underflow, buffer overflow and misuse of Python
+allocator APIs (see
+       <a class="reference internal" href="#redesign-debug-checks-on-memory-block-allocators-as-hooks">
+        Redesign Debug Checks on Memory Block
+Allocators as Hooks
+       </a>
+       )
+      </li>
+      <li>
+       force memory allocations to fail to test handling of the
+       <tt class="docutils literal">
+        MemoryError
+       </tt>
+       exception
+      </li>
+     </ul>
+    </li>
+   </ul>
+  </div>
+  <div class="section" id="proposal">
+   <h1>
+    <a class="toc-backref" href="#id4">
+     Proposal
+    </a>
+   </h1>
+   <div class="section" id="new-functions-and-structures">
+    <h2>
+     <a class="toc-backref" href="#id5">
+      New Functions and Structures
+     </a>
+    </h2>
+    <ul>
+     <li>
+      <p class="first">
+       Add a new GIL-free (no need to hold the GIL) memory allocator:
+      </p>
+      <ul class="simple">
+       <li>
+        <tt class="docutils literal">
+         void* PyMem_RawMalloc(size_t size)
+        </tt>
+       </li>
+       <li>
+        <tt class="docutils literal">
+         void* PyMem_RawRealloc(void *ptr, size_t new_size)
+        </tt>
+       </li>
+       <li>
+        <tt class="docutils literal">
+         void PyMem_RawFree(void *ptr)
+        </tt>
+       </li>
+       <li>
+        The newly allocated memory will not have been initialized in any
+way.
+       </li>
+       <li>
+        Requesting zero bytes returns a distinct non-
+        <em>
+         NULL
+        </em>
+        pointer if
+possible, as if
+        <tt class="docutils literal">
+         PyMem_Malloc(1)
+        </tt>
+        had been called instead.
+       </li>
+      </ul>
+     </li>
+     <li>
+      <p class="first">
+       Add a new
+       <tt class="docutils literal">
+        PyMemAllocator
+       </tt>
+       structure:
+      </p>
+      <pre class="literal-block">
+typedef struct {
+    /* user context passed as the first argument to the 3 functions */
+    void *ctx;
+
+    /* allocate a memory block */
+    void* (*malloc) (void *ctx, size_t size);
+
+    /* allocate or resize a memory block */
+    void* (*realloc) (void *ctx, void *ptr, size_t new_size);
+
+    /* release a memory block */
+    void (*free) (void *ctx, void *ptr);
+} PyMemAllocator;
+</pre>
+     </li>
+     <li>
+      <p class="first">
+       Add a new
+       <tt class="docutils literal">
+        PyMemAllocatorDomain
+       </tt>
+       enum to choose the Python
+allocator domain. Domains:
+      </p>
+      <ul class="simple">
+       <li>
+        <tt class="docutils literal">
+         PYMEM_DOMAIN_RAW
+        </tt>
+        :
+        <tt class="docutils literal">
+         PyMem_RawMalloc()
+        </tt>
+        ,
+        <tt class="docutils literal">
+         PyMem_RawRealloc()
+        </tt>
+        and
+        <tt class="docutils literal">
+         PyMem_RawFree()
+        </tt>
+       </li>
+       <li>
+        <tt class="docutils literal">
+         PYMEM_DOMAIN_MEM
+        </tt>
+        :
+        <tt class="docutils literal">
+         PyMem_Malloc()
+        </tt>
+        ,
+        <tt class="docutils literal">
+         PyMem_Realloc()
+        </tt>
+        and
+        <tt class="docutils literal">
+         PyMem_Free()
+        </tt>
+       </li>
+       <li>
+        <tt class="docutils literal">
+         PYMEM_DOMAIN_OBJ
+        </tt>
+        :
+        <tt class="docutils literal">
+         PyObject_Malloc()
+        </tt>
+        ,
+        <tt class="docutils literal">
+         PyObject_Realloc()
+        </tt>
+        and
+        <tt class="docutils literal">
+         PyObject_Free()
+        </tt>
+       </li>
+      </ul>
+     </li>
+     <li>
+      <p class="first">
+       Add new functions to get and set memory block allocators:
+      </p>
+      <ul class="simple">
+       <li>
+        <tt class="docutils literal">
+         void PyMem_GetAllocator(PyMemAllocatorDomain domain, PyMemAllocator *allocator)
+        </tt>
+       </li>
+       <li>
+        <tt class="docutils literal">
+         void PyMem_SetAllocator(PyMemAllocatorDomain domain, PyMemAllocator *allocator)
+        </tt>
+       </li>
+       <li>
+        The new allocator must return a distinct non-
+        <em>
+         NULL
+        </em>
+        pointer when
+requesting zero bytes
+       </li>
+       <li>
+        For the
+        <tt class="docutils literal">
+         PYMEM_DOMAIN_RAW
+        </tt>
+        domain, the allocator must be
+thread-safe: the GIL is not held when the allocator is called.
+       </li>
+      </ul>
+     </li>
+     <li>
+      <p class="first">
+       Add a new
+       <tt class="docutils literal">
+        PyObjectArenaAllocator
+       </tt>
+       structure:
+      </p>
+      <pre class="literal-block">
+typedef struct {
+    /* user context passed as the first argument to the 2 functions */
+    void *ctx;
+
+    /* allocate an arena */
+    void* (*alloc) (void *ctx, size_t size);
+
+    /* release an arena */
+    void (*free) (void *ctx, void *ptr, size_t size);
+} PyObjectArenaAllocator;
+</pre>
+     </li>
+     <li>
+      <p class="first">
+       Add new functions to get and set the arena allocator used by
+       <em>
+        pymalloc
+       </em>
+       :
+      </p>
+      <ul class="simple">
+       <li>
+        <tt class="docutils literal">
+         void PyObject_GetArenaAllocator(PyObjectArenaAllocator *allocator)
+        </tt>
+       </li>
+       <li>
+        <tt class="docutils literal">
+         void PyObject_SetArenaAllocator(PyObjectArenaAllocator *allocator)
+        </tt>
+       </li>
+      </ul>
+     </li>
+     <li>
+      <p class="first">
+       Add a new function to reinstall the debug checks on memory allocators when
+a memory allocator is replaced with
+       <tt class="docutils literal">
+        PyMem_SetAllocator()
+       </tt>
+       :
+      </p>
+      <ul class="simple">
+       <li>
+        <tt class="docutils literal">
+         void PyMem_SetupDebugHooks(void)
+        </tt>
+       </li>
+       <li>
+        Install the debug hooks on all memory block allocators. The function can be
+called more than once, hooks are only installed once.
+       </li>
+       <li>
+        The function does nothing is Python is not compiled in debug mode.
+       </li>
+      </ul>
+     </li>
+     <li>
+      <p class="first">
+       Memory block allocators always return
+       <em>
+        NULL
+       </em>
+       if
+       <em>
+        size
+       </em>
+       is greater than
+       <tt class="docutils literal">
+        PY_SSIZE_T_MAX
+       </tt>
+       . The check is done before calling the inner
+function.
+      </p>
+     </li>
+    </ul>
+    <div class="note">
+     <p class="first admonition-title">
+      Note
+     </p>
+     <p class="last">
+      The
+      <em>
+       pymalloc
+      </em>
+      allocator is optimized for objects smaller than 512 bytes
+with a short lifetime. It uses memory mappings with a fixed size of 256
+KB called "arenas".
+     </p>
+    </div>
+    <p>
+     Here is how the allocators are set up by default:
+    </p>
+    <ul class="simple">
+     <li>
+      <tt class="docutils literal">
+       PYMEM_DOMAIN_RAW
+      </tt>
+      ,
+      <tt class="docutils literal">
+       PYMEM_DOMAIN_MEM
+      </tt>
+      :
+      <tt class="docutils literal">
+       malloc()
+      </tt>
+      ,
+      <tt class="docutils literal">
+       realloc()
+      </tt>
+      and
+      <tt class="docutils literal">
+       free()
+      </tt>
+      ; call
+      <tt class="docutils literal">
+       malloc(1)
+      </tt>
+      when requesting zero
+bytes
+     </li>
+     <li>
+      <tt class="docutils literal">
+       PYMEM_DOMAIN_OBJ
+      </tt>
+      :
+      <em>
+       pymalloc
+      </em>
+      allocator which falls back on
+      <tt class="docutils literal">
+       PyMem_Malloc()
+      </tt>
+      for allocations larger than 512 bytes
+     </li>
+     <li>
+      <em>
+       pymalloc
+      </em>
+      arena allocator:
+      <tt class="docutils literal">
+       VirtualAlloc()
+      </tt>
+      and
+      <tt class="docutils literal">
+       VirtualFree()
+      </tt>
+      on
+Windows,
+      <tt class="docutils literal">
+       mmap()
+      </tt>
+      and
+      <tt class="docutils literal">
+       munmap()
+      </tt>
+      when available, or
+      <tt class="docutils literal">
+       malloc()
+      </tt>
+      and
+      <tt class="docutils literal">
+       free()
+      </tt>
+     </li>
+    </ul>
+   </div>
+   <div class="section" id="redesign-debug-checks-on-memory-block-allocators-as-hooks">
+    <h2>
+     <a class="toc-backref" href="#id6">
+      Redesign Debug Checks on Memory Block Allocators as Hooks
+     </a>
+    </h2>
+    <p>
+     Since Python 2.3, Python implements different checks on memory
+allocators in debug mode:
+    </p>
+    <ul class="simple">
+     <li>
+      Newly allocated memory is filled with the byte
+      <tt class="docutils literal">
+       0xCB
+      </tt>
+      , freed memory
+is filled with the byte
+      <tt class="docutils literal">
+       0xDB
+      </tt>
+      .
+     </li>
+     <li>
+      Detect API violations, ex:
+      <tt class="docutils literal">
+       PyObject_Free()
+      </tt>
+      called on a memory
+block allocated by
+      <tt class="docutils literal">
+       PyMem_Malloc()
+      </tt>
+     </li>
+     <li>
+      Detect write before the start of the buffer (buffer underflow)
+     </li>
+     <li>
+      Detect write after the end of the buffer (buffer overflow)
+     </li>
+    </ul>
+    <p>
+     In Python 3.3, the checks are installed by replacing
+     <tt class="docutils literal">
+      PyMem_Malloc()
+     </tt>
+     ,
+     <tt class="docutils literal">
+      PyMem_Realloc()
+     </tt>
+     ,
+     <tt class="docutils literal">
+      PyMem_Free()
+     </tt>
+     ,
+     <tt class="docutils literal">
+      PyObject_Malloc()
+     </tt>
+     ,
+     <tt class="docutils literal">
+      PyObject_Realloc()
+     </tt>
+     and
+     <tt class="docutils literal">
+      PyObject_Free()
+     </tt>
+     using macros. The new
+allocator allocates a larger buffer and writes a pattern to detect buffer
+underflow, buffer overflow and use after free (by filling the buffer with
+the byte
+     <tt class="docutils literal">
+      0xDB
+     </tt>
+     ). It uses the original
+     <tt class="docutils literal">
+      PyObject_Malloc()
+     </tt>
+     function to allocate memory. So
+     <tt class="docutils literal">
+      PyMem_Malloc()
+     </tt>
+     and
+     <tt class="docutils literal">
+      PyMem_Realloc()
+     </tt>
+     indirectly call``PyObject_Malloc()`` and
+     <tt class="docutils literal">
+      PyObject_Realloc()
+     </tt>
+     .
+    </p>
+    <p>
+     This PEP redesigns the debug checks as hooks on the existing allocators
+in debug mode. Examples of call traces without the hooks:
+    </p>
+    <ul class="simple">
+     <li>
+      <tt class="docutils literal">
+       PyMem_RawMalloc()
+      </tt>
+      =&gt;
+      <tt class="docutils literal">
+       _PyMem_RawMalloc()
+      </tt>
+      =&gt;
+      <tt class="docutils literal">
+       malloc()
+      </tt>
+     </li>
+     <li>
+      <tt class="docutils literal">
+       PyMem_Realloc()
+      </tt>
+      =&gt;
+      <tt class="docutils literal">
+       _PyMem_RawRealloc()
+      </tt>
+      =&gt;
+      <tt class="docutils literal">
+       realloc()
+      </tt>
+     </li>
+     <li>
+      <tt class="docutils literal">
+       PyObject_Free()
+      </tt>
+      =&gt;
+      <tt class="docutils literal">
+       _PyObject_Free()
+      </tt>
+     </li>
+    </ul>
+    <p>
+     Call traces when the hooks are installed (debug mode):
+    </p>
+    <ul class="simple">
+     <li>
+      <tt class="docutils literal">
+       PyMem_RawMalloc()
+      </tt>
+      =&gt;
+      <tt class="docutils literal">
+       _PyMem_DebugMalloc()
+      </tt>
+      =&gt;
+      <tt class="docutils literal">
+       _PyMem_RawMalloc()
+      </tt>
+      =&gt;
+      <tt class="docutils literal">
+       malloc()
+      </tt>
+     </li>
+     <li>
+      <tt class="docutils literal">
+       PyMem_Realloc()
+      </tt>
+      =&gt;
+      <tt class="docutils literal">
+       _PyMem_DebugRealloc()
+      </tt>
+      =&gt;
+      <tt class="docutils literal">
+       _PyMem_RawRealloc()
+      </tt>
+      =&gt;
+      <tt class="docutils literal">
+       realloc()
+      </tt>
+     </li>
+     <li>
+      <tt class="docutils literal">
+       PyObject_Free()
+      </tt>
+      =&gt;
+      <tt class="docutils literal">
+       _PyMem_DebugFree()
+      </tt>
+      =&gt;
+      <tt class="docutils literal">
+       _PyObject_Free()
+      </tt>
+     </li>
+    </ul>
+    <p>
+     As a result,
+     <tt class="docutils literal">
+      PyMem_Malloc()
+     </tt>
+     and
+     <tt class="docutils literal">
+      PyMem_Realloc()
+     </tt>
+     now call
+     <tt class="docutils literal">
+      malloc()
+     </tt>
+     and
+     <tt class="docutils literal">
+      realloc()
+     </tt>
+     in both release mode and debug mode,
+instead of calling
+     <tt class="docutils literal">
+      PyObject_Malloc()
+     </tt>
+     and
+     <tt class="docutils literal">
+      PyObject_Realloc()
+     </tt>
+     in
+debug mode.
+    </p>
+    <p>
+     When at least one memory allocator is replaced with
+     <tt class="docutils literal">
+      PyMem_SetAllocator()
+     </tt>
+     , the
+     <tt class="docutils literal">
+      PyMem_SetupDebugHooks()
+     </tt>
+     function must
+be called to reinstall the debug hooks on top on the new allocator.
+    </p>
+   </div>
+   <div class="section" id="don-t-call-malloc-directly-anymore">
+    <h2>
+     <a class="toc-backref" href="#id7">
+      Don't call malloc() directly anymore
+     </a>
+    </h2>
+    <p>
+     <tt class="docutils literal">
+      PyObject_Malloc()
+     </tt>
+     falls back on
+     <tt class="docutils literal">
+      PyMem_Malloc()
+     </tt>
+     instead of
+     <tt class="docutils literal">
+      malloc()
+     </tt>
+     if size is greater or equal than 512 bytes, and
+     <tt class="docutils literal">
+      PyObject_Realloc()
+     </tt>
+     falls back on
+     <tt class="docutils literal">
+      PyMem_Realloc()
+     </tt>
+     instead of
+     <tt class="docutils literal">
+      realloc()
+     </tt>
+    </p>
+    <p>
+     Direct calls to
+     <tt class="docutils literal">
+      malloc()
+     </tt>
+     are replaced with
+     <tt class="docutils literal">
+      PyMem_Malloc()
+     </tt>
+     , or
+     <tt class="docutils literal">
+      PyMem_RawMalloc()
+     </tt>
+     if the GIL is not held.
+    </p>
+    <p>
+     External libraries like zlib or OpenSSL can be configured to allocate memory
+using
+     <tt class="docutils literal">
+      PyMem_Malloc()
+     </tt>
+     or
+     <tt class="docutils literal">
+      PyMem_RawMalloc()
+     </tt>
+     . If the allocator of a
+library can only be replaced globally (rather than on an object-by-object
+basis), it shouldn't be replaced when Python is embedded in an application.
+    </p>
+    <p>
+     For the "track memory usage" use case, it is important to track memory
+allocated in external libraries to have accurate reports, because these
+allocations can be large (e.g. they can raise a
+     <tt class="docutils literal">
+      MemoryError
+     </tt>
+     exception)
+and would otherwise be missed in memory usage reports.
+    </p>
+   </div>
+  </div>
+  <div class="section" id="examples">
+   <h1>
+    <a class="toc-backref" href="#id8">
+     Examples
+    </a>
+   </h1>
+   <div class="section" id="use-case-1-replace-memory-allocators-keep-pymalloc">
+    <h2>
+     <a class="toc-backref" href="#id9">
+      Use case 1: Replace Memory Allocators, keep pymalloc
+     </a>
+    </h2>
+    <p>
+     Dummy example wasting 2 bytes per memory block,
+and 10 bytes per
+     <em>
+      pymalloc
+     </em>
+     arena:
+    </p>
+    <pre class="literal-block">
+#include &lt;stdlib.h&gt;
+
+size_t alloc_padding = 2;
+size_t arena_padding = 10;
+
+void* my_malloc(void *ctx, size_t size)
+{
+    int padding = *(int *)ctx;
+    return malloc(size + padding);
+}
+
+void* my_realloc(void *ctx, void *ptr, size_t new_size)
+{
+    int padding = *(int *)ctx;
+    return realloc(ptr, new_size + padding);
+}
+
+void my_free(void *ctx, void *ptr)
+{
+    free(ptr);
+}
+
+void* my_alloc_arena(void *ctx, size_t size)
+{
+    int padding = *(int *)ctx;
+    return malloc(size + padding);
+}
+
+void my_free_arena(void *ctx, void *ptr, size_t size)
+{
+    free(ptr);
+}
+
+void setup_custom_allocator(void)
+{
+    PyMemAllocator alloc;
+    PyObjectArenaAllocator arena;
+
+    alloc.ctx = &amp;alloc_padding;
+    alloc.malloc = my_malloc;
+    alloc.realloc = my_realloc;
+    alloc.free = my_free;
+
+    PyMem_SetAllocator(PYMEM_DOMAIN_RAW, &amp;alloc);
+    PyMem_SetAllocator(PYMEM_DOMAIN_MEM, &amp;alloc);
+    /* leave PYMEM_DOMAIN_OBJ unchanged, use pymalloc */
+
+    arena.ctx = &amp;arena_padding;
+    arena.alloc = my_alloc_arena;
+    arena.free = my_free_arena;
+    PyObject_SetArenaAllocator(&amp;arena);
+
+    PyMem_SetupDebugHooks();
+}
+</pre>
+   </div>
+   <div class="section" id="use-case-2-replace-memory-allocators-override-pymalloc">
+    <h2>
+     <a class="toc-backref" href="#id10">
+      Use case 2: Replace Memory Allocators, override pymalloc
+     </a>
+    </h2>
+    <p>
+     If you have a dedicated allocator optimized for allocations of objects
+smaller than 512 bytes with a short lifetime, pymalloc can be overriden
+(replace
+     <tt class="docutils literal">
+      PyObject_Malloc()
+     </tt>
+     ).
+    </p>
+    <p>
+     Dummy example wasting 2 bytes per memory block:
+    </p>
+    <pre class="literal-block">
+#include &lt;stdlib.h&gt;
+
+size_t padding = 2;
+
+void* my_malloc(void *ctx, size_t size)
+{
+    int padding = *(int *)ctx;
+    return malloc(size + padding);
+}
+
+void* my_realloc(void *ctx, void *ptr, size_t new_size)
+{
+    int padding = *(int *)ctx;
+    return realloc(ptr, new_size + padding);
+}
+
+void my_free(void *ctx, void *ptr)
+{
+    free(ptr);
+}
+
+void setup_custom_allocator(void)
+{
+    PyMemAllocator alloc;
+    alloc.ctx = &amp;padding;
+    alloc.malloc = my_malloc;
+    alloc.realloc = my_realloc;
+    alloc.free = my_free;
+
+    PyMem_SetAllocator(PYMEM_DOMAIN_RAW, &amp;alloc);
+    PyMem_SetAllocator(PYMEM_DOMAIN_MEM, &amp;alloc);
+    PyMem_SetAllocator(PYMEM_DOMAIN_OBJ, &amp;alloc);
+
+    PyMem_SetupDebugHooks();
+}
+</pre>
+    <p>
+     The
+     <em>
+      pymalloc
+     </em>
+     arena does not need to be replaced, because it is no more
+used by the new allocator.
+    </p>
+   </div>
+   <div class="section" id="use-case-3-setup-hooks-on-memory-block-allocators">
+    <h2>
+     <a class="toc-backref" href="#id11">
+      Use case 3: Setup Hooks On Memory Block Allocators
+     </a>
+    </h2>
+    <p>
+     Example to setup hooks on all memory block allocators:
+    </p>
+    <pre class="literal-block">
+struct {
+    PyMemAllocator raw;
+    PyMemAllocator mem;
+    PyMemAllocator obj;
+    /* ... */
+} hook;
+
+static void* hook_malloc(void *ctx, size_t size)
+{
+    PyMemAllocator *alloc = (PyMemAllocator *)ctx;
+    void *ptr;
+    /* ... */
+    ptr = alloc-&gt;malloc(alloc-&gt;ctx, size);
+    /* ... */
+    return ptr;
+}
+
+static void* hook_realloc(void *ctx, void *ptr, size_t new_size)
+{
+    PyMemAllocator *alloc = (PyMemAllocator *)ctx;
+    void *ptr2;
+    /* ... */
+    ptr2 = alloc-&gt;realloc(alloc-&gt;ctx, ptr, new_size);
+    /* ... */
+    return ptr2;
+}
+
+static void hook_free(void *ctx, void *ptr)
+{
+    PyMemAllocator *alloc = (PyMemAllocator *)ctx;
+    /* ... */
+    alloc-&gt;free(alloc-&gt;ctx, ptr);
+    /* ... */
+}
+
+void setup_hooks(void)
+{
+    PyMemAllocator alloc;
+    static int installed = 0;
+
+    if (installed)
+        return;
+    installed = 1;
+
+    alloc.malloc = hook_malloc;
+    alloc.realloc = hook_realloc;
+    alloc.free = hook_free;
+    PyMem_GetAllocator(PYMEM_DOMAIN_RAW, &amp;hook.raw);
+    PyMem_GetAllocator(PYMEM_DOMAIN_MEM, &amp;hook.mem);
+    PyMem_GetAllocator(PYMEM_DOMAIN_OBJ, &amp;hook.obj);
+
+    alloc.ctx = &amp;hook.raw;
+    PyMem_SetAllocator(PYMEM_DOMAIN_RAW, &amp;alloc);
+
+    alloc.ctx = &amp;hook.mem;
+    PyMem_SetAllocator(PYMEM_DOMAIN_MEM, &amp;alloc);
+
+    alloc.ctx = &amp;hook.obj;
+    PyMem_SetAllocator(PYMEM_DOMAIN_OBJ, &amp;alloc);
+}
+</pre>
+    <div class="note">
+     <p class="first admonition-title">
+      Note
+     </p>
+     <p class="last">
+      <tt class="docutils literal">
+       PyMem_SetupDebugHooks()
+      </tt>
+      does not need to be called because
+memory allocator are not replaced: the debug checks on memory
+block allocators are installed automatically at startup.
+     </p>
+    </div>
+   </div>
+  </div>
+  <div class="section" id="performances">
+   <h1>
+    <a class="toc-backref" href="#id12">
+     Performances
+    </a>
+   </h1>
+   <p>
+    The implementation of this PEP (issue #3329) has no visible overhead on
+the Python benchmark suite.
+   </p>
+   <p>
+    Results of the
+    <a class="reference external" href="http://hg.python.org/benchmarks">
+     Python benchmarks suite
+    </a>
+    (-b 2n3): some tests are 1.04x
+faster, some tests are 1.04 slower. Results of pybench microbenchmark:
+"+0.1%" slower globally (diff between -4.9% and +5.6%).
+   </p>
+   <p>
+    The full output of benchmarks is attached to the issue #3329.
+   </p>
+  </div>
+  <div class="section" id="rejected-alternatives">
+   <h1>
+    <a class="toc-backref" href="#id13">
+     Rejected Alternatives
+    </a>
+   </h1>
+   <div class="section" id="more-specific-functions-to-get-set-memory-allocators">
+    <h2>
+     <a class="toc-backref" href="#id14">
+      More specific functions to get/set memory allocators
+     </a>
+    </h2>
+    <p>
+     It was originally proposed a larger set of C API functions, with one pair
+of functions for each allocator domain:
+    </p>
+    <ul class="simple">
+     <li>
+      <tt class="docutils literal">
+       void PyMem_GetRawAllocator(PyMemAllocator *allocator)
+      </tt>
+     </li>
+     <li>
+      <tt class="docutils literal">
+       void PyMem_GetAllocator(PyMemAllocator *allocator)
+      </tt>
+     </li>
+     <li>
+      <tt class="docutils literal">
+       void PyObject_GetAllocator(PyMemAllocator *allocator)
+      </tt>
+     </li>
+     <li>
+      <tt class="docutils literal">
+       void PyMem_SetRawAllocator(PyMemAllocator *allocator)
+      </tt>
+     </li>
+     <li>
+      <tt class="docutils literal">
+       void PyMem_SetAllocator(PyMemAllocator *allocator)
+      </tt>
+     </li>
+     <li>
+      <tt class="docutils literal">
+       void PyObject_SetAllocator(PyMemAllocator *allocator)
+      </tt>
+     </li>
+    </ul>
+    <p>
+     This alternative was rejected because it is not possible to write
+generic code with more specific functions: code must be duplicated for
+each memory allocator domain.
+    </p>
+   </div>
+   <div class="section" id="make-pymem-malloc-reuse-pymem-rawmalloc-by-default">
+    <h2>
+     <a class="toc-backref" href="#id15">
+      Make PyMem_Malloc() reuse PyMem_RawMalloc() by default
+     </a>
+    </h2>
+    <p>
+     If
+     <tt class="docutils literal">
+      PyMem_Malloc()
+     </tt>
+     called
+     <tt class="docutils literal">
+      PyMem_RawMalloc()
+     </tt>
+     by default,
+calling
+     <tt class="docutils literal">
+      PyMem_SetAllocator(PYMEM_DOMAIN_RAW, alloc)
+     </tt>
+     would also
+patch
+     <tt class="docutils literal">
+      PyMem_Malloc()
+     </tt>
+     indirectly.
+    </p>
+    <p>
+     This alternative was rejected because
+     <tt class="docutils literal">
+      PyMem_SetAllocator()
+     </tt>
+     would
+have a different behaviour depending on the domain. Always having the
+same behaviour is less error-prone.
+    </p>
+   </div>
+   <div class="section" id="add-a-new-pydebugmalloc-environment-variable">
+    <h2>
+     <a class="toc-backref" href="#id16">
+      Add a new PYDEBUGMALLOC environment variable
+     </a>
+    </h2>
+    <p>
+     It was proposed to add a new
+     <tt class="docutils literal">
+      PYDEBUGMALLOC
+     </tt>
+     environment variable to
+enable debug checks on memory block allocators. It would have had the same
+effect as calling the
+     <tt class="docutils literal">
+      PyMem_SetupDebugHooks()
+     </tt>
+     , without the need
+to write any C code.  Another advantage is to allow to enable debug checks
+even in release mode: debug checks would always be compiled in, but only
+enabled when the environment variable is present and non-empty.
+    </p>
+    <p>
+     This alternative was rejected because a new environment variable would
+make Python initialization even more complex.
+     <a class="reference external" href="../pep-0432/index.html">
+      PEP 432
+     </a>
+     tries to simplify the
+CPython startup sequence.
+    </p>
+   </div>
+   <div class="section" id="use-macros-to-get-customizable-allocators">
+    <h2>
+     <a class="toc-backref" href="#id17">
+      Use macros to get customizable allocators
+     </a>
+    </h2>
+    <p>
+     To have no overhead in the default configuration, customizable
+allocators would be an optional feature enabled by a configuration
+option or by macros.
+    </p>
+    <p>
+     This alternative was rejected because the use of macros implies having
+to recompile extensions modules to use the new allocator and allocator
+hooks. Not having to recompile Python nor extension modules makes debug
+hooks easier to use in practice.
+    </p>
+   </div>
+   <div class="section" id="pass-the-c-filename-and-line-number">
+    <h2>
+     <a class="toc-backref" href="#id18">
+      Pass the C filename and line number
+     </a>
+    </h2>
+    <p>
+     Define allocator functions as macros using
+     <tt class="docutils literal">
+      __FILE__
+     </tt>
+     and
+     <tt class="docutils literal">
+      __LINE__
+     </tt>
+     to get the C filename and line number of a memory allocation.
+    </p>
+    <p>
+     Example of
+     <tt class="docutils literal">
+      PyMem_Malloc
+     </tt>
+     macro with the modified
+     <tt class="docutils literal">
+      PyMemAllocator
+     </tt>
+     structure:
+    </p>
+    <pre class="literal-block">
+typedef struct {
+    /* user context passed as the first argument
+       to the 3 functions */
+    void *ctx;
+
+    /* allocate a memory block */
+    void* (*malloc) (void *ctx, const char *filename, int lineno,
+                     size_t size);
+
+    /* allocate or resize a memory block */
+    void* (*realloc) (void *ctx, const char *filename, int lineno,
+                      void *ptr, size_t new_size);
+
+    /* release a memory block */
+    void (*free) (void *ctx, const char *filename, int lineno,
+                  void *ptr);
+} PyMemAllocator;
+
+void* _PyMem_MallocTrace(const char *filename, int lineno,
+                         size_t size);
+
+/* the function is still needed for the Python stable ABI */
+void* PyMem_Malloc(size_t size);
+
+#define PyMem_Malloc(size) \
+        _PyMem_MallocTrace(__FILE__, __LINE__, size)
+</pre>
+    <p>
+     The GC allocator functions would also have to be patched. For example,
+     <tt class="docutils literal">
+      _PyObject_GC_Malloc()
+     </tt>
+     is used in many C functions and so objects of
+different types would have the same allocation location.
+    </p>
+    <p>
+     This alternative was rejected because passing a filename and a line
+number to each allocator makes the API more complex: pass 3 new
+arguments (ctx, filename, lineno) to each allocator function, instead of
+just a context argument (ctx). Having to also modify GC allocator
+functions adds too much complexity for a little gain.
+    </p>
+   </div>
+   <div class="section" id="gil-free-pymem-malloc">
+    <h2>
+     <a class="toc-backref" href="#id19">
+      GIL-free PyMem_Malloc()
+     </a>
+    </h2>
+    <p>
+     In Python 3.3, when Python is compiled in debug mode,
+     <tt class="docutils literal">
+      PyMem_Malloc()
+     </tt>
+     indirectly calls
+     <tt class="docutils literal">
+      PyObject_Malloc()
+     </tt>
+     which requires the GIL to be
+held (it isn't thread-safe).  That's why
+     <tt class="docutils literal">
+      PyMem_Malloc()
+     </tt>
+     must be called
+with the GIL held.
+    </p>
+    <p>
+     This PEP changes
+     <tt class="docutils literal">
+      PyMem_Malloc()
+     </tt>
+     : it now always calls
+     <tt class="docutils literal">
+      malloc()
+     </tt>
+     rather than
+     <tt class="docutils literal">
+      PyObject_Malloc()
+     </tt>
+     .  The "GIL must be held" restriction
+could therefore be removed from
+     <tt class="docutils literal">
+      PyMem_Malloc()
+     </tt>
+     .
+    </p>
+    <p>
+     This alternative was rejected because allowing to call
+     <tt class="docutils literal">
+      PyMem_Malloc()
+     </tt>
+     without holding the GIL can break applications
+which setup their own allocators or allocator hooks.  Holding the GIL is
+convenient to develop a custom allocator: no need to care about other
+threads.  It is also convenient for a debug allocator hook: Python
+objects can be safely inspected, and the C API may be used for reporting.
+    </p>
+    <p>
+     Moreover, calling
+     <tt class="docutils literal">
+      PyGILState_Ensure()
+     </tt>
+     in a memory allocator has
+unexpected behaviour, especially at Python startup and when creating of a
+new Python thread state.  It is better to free custom allocators of
+the responsibility of acquiring the GIL.
+    </p>
+   </div>
+   <div class="section" id="don-t-add-pymem-rawmalloc">
+    <h2>
+     <a class="toc-backref" href="#id20">
+      Don't add PyMem_RawMalloc()
+     </a>
+    </h2>
+    <p>
+     Replace
+     <tt class="docutils literal">
+      malloc()
+     </tt>
+     with
+     <tt class="docutils literal">
+      PyMem_Malloc()
+     </tt>
+     , but only if the GIL is
+held.  Otherwise, keep
+     <tt class="docutils literal">
+      malloc()
+     </tt>
+     unchanged.
+    </p>
+    <p>
+     The
+     <tt class="docutils literal">
+      PyMem_Malloc()
+     </tt>
+     is used without the GIL held in some Python
+functions.  For example, the
+     <tt class="docutils literal">
+      main()
+     </tt>
+     and
+     <tt class="docutils literal">
+      Py_Main()
+     </tt>
+     functions of
+Python call
+     <tt class="docutils literal">
+      PyMem_Malloc()
+     </tt>
+     whereas the GIL do not exist yet. In this
+case,
+     <tt class="docutils literal">
+      PyMem_Malloc()
+     </tt>
+     would be replaced with
+     <tt class="docutils literal">
+      malloc()
+     </tt>
+     (or
+     <tt class="docutils literal">
+      PyMem_RawMalloc()
+     </tt>
+     ).
+    </p>
+    <p>
+     This alternative was rejected because
+     <tt class="docutils literal">
+      PyMem_RawMalloc()
+     </tt>
+     is required
+for accurate reports of the memory usage. When a debug hook is used to
+track the memory usage, the memory allocated by direct calls to
+     <tt class="docutils literal">
+      malloc()
+     </tt>
+     cannot be tracked.
+     <tt class="docutils literal">
+      PyMem_RawMalloc()
+     </tt>
+     can be hooked and
+so all the memory allocated by Python can be tracked, including
+memory allocated without holding the GIL.
+    </p>
+   </div>
+   <div class="section" id="use-existing-debug-tools-to-analyze-memory-use">
+    <h2>
+     <a class="toc-backref" href="#id21">
+      Use existing debug tools to analyze memory use
+     </a>
+    </h2>
+    <p>
+     There are many existing debug tools to analyze memory use. Some
+examples:
+     <a class="reference external" href="http://valgrind.org/">
+      Valgrind
+     </a>
+     ,
+     <a class="reference external" href="http://ibm.com/software/awdtools/purify/">
+      Purify
+     </a>
+     ,
+     <a class="reference external" href="http://code.google.com/p/address-sanitizer/">
+      Clang AddressSanitizer
+     </a>
+     ,
+     <a class="reference external" href="http://www.nongnu.org/failmalloc/">
+      failmalloc
+     </a>
+     , etc.
+    </p>
+    <p>
+     The problem is to retrieve the Python object related to a memory pointer
+to read its type and/or its content. Another issue is to retrieve the
+source of the memory allocation: the C backtrace is usually useless
+(same reasoning than macros using
+     <tt class="docutils literal">
+      __FILE__
+     </tt>
+     and
+     <tt class="docutils literal">
+      __LINE__
+     </tt>
+     , see
+     <a class="reference internal" href="#pass-the-c-filename-and-line-number">
+      Pass the C filename and line number
+     </a>
+     ), the Python filename and line
+number (or even the Python traceback) is more useful.
+    </p>
+    <p>
+     This alternative was rejected because classic tools are unable to
+introspect Python internals to collect such information. Being able to
+setup a hook on allocators called with the GIL held allows to collect a
+lot of useful data from Python internals.
+    </p>
+   </div>
+   <div class="section" id="add-a-msize-function">
+    <h2>
+     <a class="toc-backref" href="#id22">
+      Add a msize() function
+     </a>
+    </h2>
+    <p>
+     Add another function to
+     <tt class="docutils literal">
+      PyMemAllocator
+     </tt>
+     and
+     <tt class="docutils literal">
+      PyObjectArenaAllocator
+     </tt>
+     structures:
+    </p>
+    <pre class="literal-block">
+size_t msize(void *ptr);
+</pre>
+    <p>
+     This function returns the size of a memory block or a memory mapping.
+Return (size_t)-1 if the function is not implemented or if the pointer
+is unknown (ex: NULL pointer).
+    </p>
+    <p>
+     On Windows, this function can be implemented using
+     <tt class="docutils literal">
+      _msize()
+     </tt>
+     and
+     <tt class="docutils literal">
+      VirtualQuery()
+     </tt>
+     .
+    </p>
+    <p>
+     The function can be used to implement a hook tracking the memory usage.
+The
+     <tt class="docutils literal">
+      free()
+     </tt>
+     method of an allocator only gets the address of a memory
+block, whereas the size of the memory block is required to update the
+memory usage.
+    </p>
+    <p>
+     The additional
+     <tt class="docutils literal">
+      msize()
+     </tt>
+     function was rejected because only few
+platforms implement it. For example, Linux with the GNU libc does not
+provide a function to get the size of a memory block.
+     <tt class="docutils literal">
+      msize()
+     </tt>
+     is not
+currently used in the Python source code. The function would only be
+used to track memory use, and make the API more complex. A debug hook
+can implement the function internally, there is no need to add it to
+     <tt class="docutils literal">
+      PyMemAllocator
+     </tt>
+     and
+     <tt class="docutils literal">
+      PyObjectArenaAllocator
+     </tt>
+     structures.
+    </p>
+   </div>
+   <div class="section" id="no-context-argument">
+    <h2>
+     <a class="toc-backref" href="#id23">
+      No context argument
+     </a>
+    </h2>
+    <p>
+     Simplify the signature of allocator functions, remove the context
+argument:
+    </p>
+    <ul class="simple">
+     <li>
+      <tt class="docutils literal">
+       void* malloc(size_t size)
+      </tt>
+     </li>
+     <li>
+      <tt class="docutils literal">
+       void* realloc(void *ptr, size_t new_size)
+      </tt>
+     </li>
+     <li>
+      <tt class="docutils literal">
+       void free(void *ptr)
+      </tt>
+     </li>
+    </ul>
+    <p>
+     It is likely for an allocator hook to be reused for
+     <tt class="docutils literal">
+      PyMem_SetAllocator()
+     </tt>
+     and
+     <tt class="docutils literal">
+      PyObject_SetAllocator()
+     </tt>
+     , or even
+     <tt class="docutils literal">
+      PyMem_SetRawAllocator()
+     </tt>
+     , but the hook must call a different function
+depending on the allocator. The context is a convenient way to reuse the
+same custom allocator or hook for different Python allocators.
+    </p>
+    <p>
+     In C++, the context can be used to pass
+     <em>
+      this
+     </em>
+     .
+    </p>
+   </div>
+  </div>
+  <div class="section" id="external-libraries">
+   <h1>
+    <a class="toc-backref" href="#id24">
+     External Libraries
+    </a>
+   </h1>
+   <p>
+    Examples of API used to customize memory allocators.
+   </p>
+   <p>
+    Libraries used by Python:
+   </p>
+   <ul class="simple">
+    <li>
+     OpenSSL:
+     <a class="reference external" href="http://git.openssl.org/gitweb/?p=openssl.git;a=blob;f=crypto/mem.c;h=f7984fa958eb1edd6c61f6667f3f2b29753be662;hb=HEAD#l124">
+      CRYPTO_set_mem_functions()
+     </a>
+     to set memory management functions globally
+    </li>
+    <li>
+     expat:
+     <a class="reference external" href="http://hg.python.org/cpython/file/cc27d50bd91a/Modules/expat/xmlparse.c#l724">
+      parserCreate()
+     </a>
+     has a per-instance memory handler
+    </li>
+    <li>
+     zlib:
+     <a class="reference external" href="http://www.zlib.net/manual.html#Usage">
+      zlib 1.2.8 Manual
+     </a>
+     ,
+pass an opaque pointer
+    </li>
+    <li>
+     bz2:
+     <a class="reference external" href="http://www.bzip.org/1.0.5/bzip2-manual-1.0.5.html">
+      bzip2 and libbzip2, version 1.0.5
+     </a>
+     ,
+pass an opaque pointer
+    </li>
+    <li>
+     lzma:
+     <a class="reference external" href="http://www.asawicki.info/news_1368_lzma_sdk_-_how_to_use.html">
+      LZMA SDK - How to Use
+     </a>
+     ,
+pass an opaque pointer
+    </li>
+    <li>
+     lipmpdec: no opaque pointer (classic malloc API)
+    </li>
+   </ul>
+   <p>
+    Other libraries:
+   </p>
+   <ul class="simple">
+    <li>
+     glib:
+     <a class="reference external" href="http://developer.gnome.org/glib/unstable/glib-Memory-Allocation.html#g-mem-set-vtable">
+      g_mem_set_vtable()
+     </a>
+    </li>
+    <li>
+     libxml2:
+     <a class="reference external" href="http://xmlsoft.org/html/libxml-xmlmemory.html">
+      xmlGcMemSetup()
+     </a>
+     ,
+global
+    </li>
+    <li>
+     Oracle's OCI:
+     <a class="reference external" href="http://docs.oracle.com/cd/B10501_01/appdev.920/a96584/oci15re4.htm">
+      Oracle Call Interface Programmer's Guide,
+Release 2 (9.2)
+     </a>
+     ,
+pass an opaque pointer
+    </li>
+   </ul>
+   <p>
+    The new
+    <em>
+     ctx
+    </em>
+    parameter of this PEP was inspired by the API of zlib and
+Oracle's OCI libraries.
+   </p>
+   <p>
+    See also the
+    <a class="reference external" href="http://www.gnu.org/software/libc/manual/html_node/Hooks-for-Malloc.html">
+     GNU libc: Memory Allocation Hooks
+    </a>
+    which uses a different approach to hook memory allocators.
+   </p>
+  </div>
+  <div class="section" id="memory-allocators">
+   <h1>
+    <a class="toc-backref" href="#id25">
+     Memory Allocators
+    </a>
+   </h1>
+   <p>
+    The C standard library provides the well known
+    <tt class="docutils literal">
+     malloc()
+    </tt>
+    function.
+Its implementation depends on the platform and of the C library. The GNU
+C library uses a modified ptmalloc2, based on "Doug Lea's Malloc"
+(dlmalloc). FreeBSD uses
+    <a class="reference external" href="http://www.canonware.com/jemalloc/">
+     jemalloc
+    </a>
+    . Google provides
+    <em>
+     tcmalloc
+    </em>
+    which
+is part of
+    <a class="reference external" href="http://code.google.com/p/gperftools/">
+     gperftools
+    </a>
+    .
+   </p>
+   <p>
+    <tt class="docutils literal">
+     malloc()
+    </tt>
+    uses two kinds of memory: heap and memory mappings. Memory
+mappings are usually used for large allocations (ex: larger than 256
+KB), whereas the heap is used for small allocations.
+   </p>
+   <p>
+    On UNIX, the heap is handled by
+    <tt class="docutils literal">
+     brk()
+    </tt>
+    and
+    <tt class="docutils literal">
+     sbrk()
+    </tt>
+    system calls,
+and it is contiguous.  On Windows, the heap is handled by
+    <tt class="docutils literal">
+     HeapAlloc()
+    </tt>
+    and can be discontiguous. Memory mappings are handled by
+    <tt class="docutils literal">
+     mmap()
+    </tt>
+    on UNIX and
+    <tt class="docutils literal">
+     VirtualAlloc()
+    </tt>
+    on Windows, they can be
+discontiguous.
+   </p>
+   <p>
+    Releasing a memory mapping gives back immediatly the memory to the
+system. On UNIX, the heap memory is only given back to the system if the
+released block is located at the end of the heap. Otherwise, the memory
+will only be given back to the system when all the memory located after
+the released memory is also released.
+   </p>
+   <p>
+    To allocate memory on the heap, an allocator tries to reuse free space.
+If there is no contiguous space big enough, the heap must be enlarged,
+even if there is more free space than required size.  This issue is
+called the "memory fragmentation": the memory usage seen by the system
+is higher than real usage. On Windows,
+    <tt class="docutils literal">
+     HeapAlloc()
+    </tt>
+    creates
+a new memory mapping with
+    <tt class="docutils literal">
+     VirtualAlloc()
+    </tt>
+    if there is not enough free
+contiguous memory.
+   </p>
+   <p>
+    CPython has a
+    <em>
+     pymalloc
+    </em>
+    allocator for allocations smaller than 512
+bytes. This allocator is optimized for small objects with a short
+lifetime. It uses memory mappings called "arenas" with a fixed size of
+256 KB.
+   </p>
+   <p>
+    Other allocators:
+   </p>
+   <ul class="simple">
+    <li>
+     Windows provides a
+     <a class="reference external" href="http://msdn.microsoft.com/en-us/library/windows/desktop/aa366750(v=vs.85).aspx">
+      Low-fragmentation Heap
+     </a>
+     .
+    </li>
+    <li>
+     The Linux kernel uses
+     <a class="reference external" href="http://en.wikipedia.org/wiki/Slab_allocation">
+      slab allocation
+     </a>
+     .
+    </li>
+    <li>
+     The glib library has a
+     <a class="reference external" href="https://developer.gnome.org/glib/unstable/glib-Memory-Slices.html">
+      Memory Slice API
+     </a>
+     :
+efficient way to allocate groups of equal-sized chunks of memory
+    </li>
+   </ul>
+   <p>
+    This PEP allows to choose exactly which memory allocator is used for your
+application depending on its usage of the memory (number of allocations,
+size of allocations, lifetime of objects, etc.).
+   </p>
+  </div>
+  <div class="section" id="links">
+   <h1>
+    <a class="toc-backref" href="#id26">
+     Links
+    </a>
+   </h1>
+   <p>
+    CPython issues related to memory allocation:
+   </p>
+   <ul class="simple">
+    <li>
+     <a class="reference external" href="http://bugs.python.org/issue3329">
+      Issue #3329: Add new APIs to customize memory allocators
+     </a>
+    </li>
+    <li>
+     <a class="reference external" href="http://bugs.python.org/issue13483">
+      Issue #13483: Use VirtualAlloc to allocate memory arenas
+     </a>
+    </li>
+    <li>
+     <a class="reference external" href="http://bugs.python.org/issue16742">
+      Issue #16742: PyOS_Readline drops GIL and calls PyOS_StdioReadline,
+which isn't thread safe
+     </a>
+    </li>
+    <li>
+     <a class="reference external" href="http://bugs.python.org/issue18203">
+      Issue #18203: Replace calls to malloc() with PyMem_Malloc() or
+PyMem_RawMalloc()
+     </a>
+    </li>
+    <li>
+     <a class="reference external" href="http://bugs.python.org/issue18227">
+      Issue #18227: Use Python memory allocators in external libraries like
+zlib or OpenSSL
+     </a>
+    </li>
+   </ul>
+   <p>
+    Projects analyzing the memory usage of Python applications:
+   </p>
+   <ul class="simple">
+    <li>
+     <a class="reference external" href="https://pypi.python.org/pypi/pytracemalloc">
+      pytracemalloc
+     </a>
+    </li>
+    <li>
+     <a class="reference external" href="https://pypi.python.org/pypi/meliae">
+      Meliae: Python Memory Usage Analyzer
+     </a>
+    </li>
+    <li>
+     <a class="reference external" href="http://guppy-pe.sourceforge.net/">
+      Guppy-PE: umbrella package combining Heapy and GSL
+     </a>
+    </li>
+    <li>
+     <a class="reference external" href="http://pysizer.8325.org/">
+      PySizer (developed for Python 2.4)
+     </a>
+    </li>
+   </ul>
+  </div>
+  <div class="section" id="copyright">
+   <h1>
+    <a class="toc-backref" href="#id27">
+     Copyright
+    </a>
+   </h1>
+   <p>
+    This document has been placed into the public domain.
+   </p>
+  </div>
+ </body>
+
+<!-- Mirrored from www.python.org/dev/peps/pep-0445/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 03 Sep 2015 04:34:44 GMT -->
+</html>Source: <a href="https://hg.python.org/peps/file/tip/pep-0445.txt">https://hg.python.org/peps/file/tip/pep-0445.txt</a>
+
+    </article>
+
+
+                </section>
+
+                
+
+
+<aside class="left-sidebar" role="secondary">
+
+    
+
+
+
+
+
+
+    
+
+
+
+
+
+        <div class="twitter-widget sidebar-widget">
+        <a class="twitter-timeline" data-dnt="true" href="https://twitter.com/ThePSF" data-widget-id="434113224703610882">Tweets by @ThePSF</a>
+        <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+    </div>
+
+    <div class="psf-sidebar-widget sidebar-widget">
+        <h3 class="widget-title">The PSF</h3>
+<p>The Python Software Foundation is the organization behind Python. Become a member of the PSF and help advance the software and our mission. </p>
+
+    </div>
+
+</aside>
+
+
+
+                
+                
+
+
+            </div><!-- end .container -->
+        </div><!-- end #content .content-wrapper -->
+
+        <!-- Footer and social media list -->
+        <footer id="site-map" class="main-footer" role="contentinfo">
+            <div class="main-footer-links">
+                <div class="container">
+
+                    
+                    <a id="back-to-top-1" class="jump-link" href="#python-network"><span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> Back to Top</a>
+
+                    
+
+<ul class="sitemap navigation menu do-not-print" role="tree" id="container">
+    
+    <li class="tier-1 element-1">
+        <a href="https://www.python.org/about/" >About</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/apps/" title="">Applications</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/quotes/" title="">Quotes</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/gettingstarted/" title="">Getting Started</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/help/" title="">Help</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-2">
+        <a href="https://www.python.org/downloads/" >Downloads</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/downloads/" title="">All releases</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/downloads/source/" title="">Source code</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/downloads/windows/" title="">Windows</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/downloads/mac-osx/" title="">Mac OS X</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/download/other/" title="">Other Platforms</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://docs.python.org/3/license.html" title="">License</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/download/alternatives" title="">Alternative Implementations</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-3">
+        <a href="https://www.python.org/doc/" >Documentation</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/doc/" title="">Docs</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/doc/av" title="">Audio/Visual Talks</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://wiki.python.org/moin/BeginnersGuide" title="">Beginner&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://docs.python.org/faq/" title="">FAQ</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="http://wiki.python.org/moin/Languages" title="">Non-English Docs</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="../index.html" title="">PEP Index</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://wiki.python.org/moin/PythonBooks" title="">Python Books</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-4">
+        <a href="https://www.python.org/community/" >Community</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/community/diversity/" title="">Diversity</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/community/irc/" title="">IRC</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/community/lists/" title="">Mailing Lists</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/workshops/" title="">Python Conferences</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/community/sigs/" title="">Special Interest Groups</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://wiki.python.org/moin/" title="">Python Wiki</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/community/logos/" title="">Python Logo</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://www.python.org/community/merchandise/" title="">Merchandise</a></li>
+    
+        <li class="tier-2 element-9" role="treeitem"><a href="https://www.python.org/community/awards" title="">Community Awards</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-5">
+        <a href="https://www.python.org/about/success/" title="success-stories">Success Stories</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/success/#arts" title="">Arts</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/success/#business" title="">Business</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/success/#education" title="">Education</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/success/#engineering" title="">Engineering</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/about/success/#government" title="">Government</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://www.python.org/about/success/#scientific" title="">Scientific</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/about/success/#software-development" title="">Software Development</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-6">
+        <a href="https://www.python.org/blogs/" title="News from around the Python world">News</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/blogs/" title="Python Insider Blog Posts">Python News</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://planetpython.org/" title="Planet Python">Community News</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="http://pyfound.blogspot.com/" title="PSF Blog">PSF News</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pycon.blogspot.com/" title="PyCon Blog">PyCon News</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-7">
+        <a href="https://www.python.org/events/" >Events</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/events/python-events/" title="">Python Events</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/events/python-user-group/" title="">User Group Events</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/events/python-events/past/" title="">Python Events Archive</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/events/python-user-group/past/" title="">User Group Events Archive</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://wiki.python.org/moin/PythonEventsCalendar#Submitting_an_Event" title="">Submit an Event</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-8">
+        <a href="https://www.python.org/dev/" >Contributing</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="http://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://bugs.python.org/" title="">Issue Tracker</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://mail.python.org/mailman/listinfo/python-dev" title="">python-dev list</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pythonmentors.com/" title="">Core Mentorship</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+</ul>
+
+
+                    <a id="back-to-top-2" class="jump-link" href="#python-network"><span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> Back to Top</a>
+                    
+
+                </div><!-- end .container -->
+            </div> <!-- end .main-footer-links -->
+
+            <div class="site-base">
+                <div class="container">
+                    
+                    <ul class="footer-links navigation menu do-not-print" role="tree">
+                        <li class="tier-1 element-1"><a href="https://www.python.org/about/help/">Help &amp; <span class="say-no-more">General</span> Contact</a></li>
+                        <li class="tier-1 element-2"><a href="https://www.python.org/community/diversity/">Diversity <span class="say-no-more">Initiatives</span></a></li>
+                        <li class="tier-1 element-3"><a href="https://github.com/python/pythondotorg/issues">Submit Website Bug</a></li>
+                        <!--<li class="tier-1 element-3"><a href="#"><span class="say-no-more">Website</span> Colophon</a></li>-->
+                    </ul>
+
+                    <div class="copyright">
+                        <p><small>
+                            <span class="pre">Copyright &copy;2001-2015.</span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/psf-landing/">Python Software Foundation</a></span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/about/legal/">Legal Statements</a></span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/privacy/">Privacy Policy</a></span>
+                        </small></p>
+                    </div>
+
+                </div><!-- end .container -->
+            </div><!-- end .site-base -->
+
+        </footer>
+
+    </div><!-- end #touchnav-wrapper -->
+
+    
+    <script src="../../../../ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="../../../static/js/libs/jquery-1.8.2.min.js"><\/script>')</script>
+
+    <script src="../../../static/js/libs/masonry.pkgd.min.js"></script>
+
+    <script type="text/javascript" src="../../../static/js/main-min.js" charset="utf-8"></script>
+    
+
+    <!--[if lte IE 7]>
+    <script type="text/javascript" src="/static/js/plugins/IE8-min.js" charset="utf-8"></script>
+    
+    
+    <![endif]-->
+
+    <!--[if lte IE 8]>
+    <script type="text/javascript" src="/static/js/plugins/getComputedStyle-min.js" charset="utf-8"></script>
+    
+    
+    <![endif]-->
+
+    
+
+    
+    
+
+</body>
+</html>

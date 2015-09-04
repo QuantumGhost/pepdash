@@ -1,0 +1,3126 @@
+<!doctype html>
+<!--[if lt IE 7]>   <html class="no-js ie6 lt-ie7 lt-ie8 lt-ie9">   <![endif]-->
+<!--[if IE 7]>      <html class="no-js ie7 lt-ie8 lt-ie9">          <![endif]-->
+<!--[if IE 8]>      <html class="no-js ie8 lt-ie9">                 <![endif]-->
+<!--[if gt IE 8]><!--><html class="no-js" lang="en" dir="ltr">  <!--<![endif]-->
+
+
+<!-- Mirrored from www.python.org/dev/peps/pep-3143/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 03 Sep 2015 04:37:04 GMT -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <link rel="prefetch" href="../../../../ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js">
+
+    <meta name="application-name" content="Python.org">
+    <meta name="msapplication-tooltip" content="The official home of the Python Programming Language">
+    <meta name="apple-mobile-web-app-title" content="Python.org">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="format-detection" content="telephone=no">
+    <meta http-equiv="cleartype" content="on">
+    <meta http-equiv="imagetoolbar" content="false">
+
+    <script src="../../../static/js/libs/modernizr.js"></script>
+
+    <link href="../../../static/stylesheets/style.css" rel="stylesheet" type="text/css" title="default" />
+    <link href="../../../static/stylesheets/mq.css" rel="stylesheet" type="text/css" media="not print, braille, embossed, speech, tty" />
+    
+
+    <!--[if (lte IE 8)&(!IEMobile)]>
+    <link href="/static/stylesheets/no-mq.css" rel="stylesheet" type="text/css" media="screen" />
+    
+    
+    <![endif]-->
+
+    
+    <link rel="icon" type="image/x-icon" href="https://www.python.org/static/favicon.ico">
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="../../../static/apple-touch-icon-144x144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="../../../static/apple-touch-icon-114x114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="../../../static/apple-touch-icon-72x72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="../../../static/apple-touch-icon-precomposed.png">
+    <link rel="apple-touch-icon" href="../../../static/apple-touch-icon-precomposed.png">
+
+    
+    <meta name="msapplication-TileImage" content="/static/metro-icon-144x144-precomposed.png"><!-- white shape -->
+    <meta name="msapplication-TileColor" content="#3673a5"><!-- python blue -->
+    <meta name="msapplication-navbutton-color" content="#3673a5">
+
+    <meta property="og:site_name" content="Python.org">
+    <meta property="og:type" content="website">
+
+    <title>PEP 3143 -- Standard daemon process library | Python.org</title>
+    <meta property="og:title" content="Welcome to Python.org">
+
+    
+    <meta name="description" content="The official home of the Python Programming Language">
+    <meta name="og:description" content="The official home of the Python Programming Language">
+    <meta name="keywords" content="Python programming language object oriented web free open source software license documentation download community">
+    <meta property="og:tag" content="Python programming language object oriented web free open source software license documentation download community">
+    <meta property="og:published_time" content="">
+    <meta property="og:modified_time" content="">
+    <meta property="og:author" content="">
+    <meta property="og:section" content=""> 
+    <meta property="og:url" content="">
+    <meta property="og:image" content="">
+    <meta property="og:video" content="">
+
+    <link rel="author" href="https://www.python.org/static/humans.txt">
+
+    
+
+    
+    <script type="application/ld+json">
+     {
+       "@context": "http://schema.org",
+       "@type": "WebSite",
+       "url": "https://www.python.org/",
+       "potentialAction": {
+         "@type": "SearchAction",
+         "target": "https://www.python.org/search/?q={search_term_string}",
+         "query-input": "required name=search_term_string"
+       }
+     }
+    </script>
+
+    
+    <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-39055973-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+    </script>
+    
+</head>
+
+<body class="python pages pep-page">
+
+    <div id="touchnav-wrapper">
+
+        <div id="nojs" class="do-not-print">
+            <p><strong>Notice:</strong> While Javascript is not essential for this website, your interaction with the content will be limited. Please turn Javascript on for the full experience. </p>
+        </div>
+
+        <!--[if lt IE 8]>
+        <div id="oldie-warning" class="do-not-print">
+            <p><strong>Notice:</strong> Your browser is <em>ancient</em> and <a href="http://www.ie6countdown.com/">Microsoft agrees</a>. <a href="http://browsehappy.com/">Upgrade to a different browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to experience a better web.</p>
+        </div>
+        <![endif]-->
+
+        <!-- Sister Site Links -->
+        <div id="top" class="top-bar do-not-print">
+
+            <nav class="meta-navigation container" role="navigation">
+
+                
+                <div class="skip-link screen-reader-text">
+                    <a href="#content" title="Skip to content">Skip to content</a>
+                </div>
+
+                
+                <a id="close-python-network" class="jump-link" href="#python-network" aria-hidden="true">
+                    <span aria-hidden="true" class="icon-arrow-down"><span>&#9660;</span></span> Close
+                </a>
+
+                
+
+<ul class="menu" role="tree">
+    
+    <li class="python-meta ">
+        <a href="https://www.python.org/" title="The Python Programming Language" >Python</a>
+    </li>
+    
+    <li class="psf-meta ">
+        <a href="https://www.python.org/psf-landing/" title="The Python Software Foundation" >PSF</a>
+    </li>
+    
+    <li class="docs-meta ">
+        <a href="https://docs.python.org/" title="Python Documentation" >Docs</a>
+    </li>
+    
+    <li class="pypi-meta ">
+        <a href="https://pypi.python.org/" title="Python Package Index" >PyPI</a>
+    </li>
+    
+    <li class="jobs-meta ">
+        <a href="https://www.python.org/jobs/" title="Python Job Board" >Jobs</a>
+    </li>
+    
+    <li class="shop-meta ">
+        <a href="https://www.python.org/community/" title="Python Community" >Community</a>
+    </li>
+    
+</ul>
+
+
+                <a id="python-network" class="jump-link" href="#top" aria-hidden="true">
+                    <span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> The Python Network
+                </a>
+
+            </nav>
+
+        </div>
+
+        <!-- Header elements -->
+        <header class="main-header" role="banner">
+            <div class="container">
+
+                <h1 class="site-headline">
+                    <a href="https://www.python.org/"><img class="python-logo" src="../../../static/img/python-logo.png" alt="python&trade;"></a>
+                </h1>
+
+                <div class="options-bar do-not-print">
+
+                    
+                    <a id="site-map-link" class="jump-to-menu" href="#site-map"><span class="menu-icon">&equiv;</span> Menu</a><form class="search-the-site" action="https://www.python.org/search/" method="get">
+                        <fieldset title="Search Python.org">
+
+                            <span aria-hidden="true" class="icon-search"></span>
+
+                            <label class="screen-reader-text" for="id-search-field">Search This Site</label>
+                            <input id="id-search-field" name="q" type="search" role="textbox" class="search-field" placeholder="Search" value="" tabindex="1">
+
+                            <button type="submit" name="submit" id="submit" class="search-button" title="Submit this Search" tabindex="3">
+                                GO
+                            </button>
+
+                            
+                            <!--[if IE]><input type="text" style="display: none;" disabled="disabled" size="1" tabindex="4"><![endif]-->
+
+                        </fieldset>
+                    </form><span class="breaker"></span><div class="adjust-font-size" aria-hidden="true">
+                        <ul class="navigation menu" aria-label="Adjust Text Size on Page">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                <a href="#" class="action-trigger"><strong><small>A</small> A</strong></a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a class="text-shrink" title="Make Text Smaller" href="javascript:;">Smaller</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a class="text-grow" title="Make Text Larger" href="javascript:;">Larger</a></li>
+                                    <li class="tier-2 element-3" role="treeitem"><a class="text-reset" title="Reset any font size changes I have made" href="javascript:;">Reset</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div><div class="winkwink-nudgenudge">
+                        <ul class="navigation menu" aria-label="Social Media Navigation">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                <a href="#" class="action-trigger">Socialize</a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a href="http://plus.google.com/+Python"><span aria-hidden="true" class="icon-google-plus"></span>Google+</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a href="http://www.facebook.com/pythonlang?fref=ts"><span aria-hidden="true" class="icon-facebook"></span>Facebook</a></li>
+                                    <li class="tier-2 element-3" role="treeitem"><a href="http://twitter.com/ThePSF"><span aria-hidden="true" class="icon-twitter"></span>Twitter</a></li>
+                                    <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/irc/"><span aria-hidden="true" class="icon-freenode"></span>Chat on IRC</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div><div class="account-signin">
+                        <ul class="navigation menu" aria-label="Social Media Navigation">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                
+                                <a href="https://www.python.org/accounts/login/" title="Sign Up or Sign In to Python.org">Sign In</a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/accounts/signup/">Sign Up / Register</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/accounts/login/">Sign In</a></li>
+                                </ul>
+                                
+                            </li>
+                        </ul>
+                    </div>
+
+                </div><!-- end options-bar -->
+
+                <nav id="mainnav" class="python-navigation main-navigation do-not-print" role="navigation">
+                    
+                        
+<ul class="navigation menu" role="menubar" aria-label="Main Navigation">
+  
+    
+    
+    <li id="about" class="tier-1 element-1  " aria-haspopup="true">
+        <a href="https://www.python.org/about/" title="" class="">About</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/apps/" title="">Applications</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/quotes/" title="">Quotes</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/gettingstarted/" title="">Getting Started</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/help/" title="">Help</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="downloads" class="tier-1 element-2  " aria-haspopup="true">
+        <a href="https://www.python.org/downloads/" title="" class="">Downloads</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/downloads/" title="">All releases</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/downloads/source/" title="">Source code</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/downloads/windows/" title="">Windows</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/downloads/mac-osx/" title="">Mac OS X</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/download/other/" title="">Other Platforms</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://docs.python.org/3/license.html" title="">License</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/download/alternatives" title="">Alternative Implementations</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="documentation" class="tier-1 element-3  " aria-haspopup="true">
+        <a href="https://www.python.org/doc/" title="" class="">Documentation</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/doc/" title="">Docs</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/doc/av" title="">Audio/Visual Talks</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://wiki.python.org/moin/BeginnersGuide" title="">Beginner&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://docs.python.org/faq/" title="">FAQ</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="http://wiki.python.org/moin/Languages" title="">Non-English Docs</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="../index.html" title="">PEP Index</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://wiki.python.org/moin/PythonBooks" title="">Python Books</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="community" class="tier-1 element-4  " aria-haspopup="true">
+        <a href="https://www.python.org/community/" title="" class="">Community</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/community/diversity/" title="">Diversity</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/community/irc/" title="">IRC</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/community/lists/" title="">Mailing Lists</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/workshops/" title="">Python Conferences</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/community/sigs/" title="">Special Interest Groups</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://wiki.python.org/moin/" title="">Python Wiki</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/community/logos/" title="">Python Logo</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://www.python.org/community/merchandise/" title="">Merchandise</a></li>
+    
+        <li class="tier-2 element-9" role="treeitem"><a href="https://www.python.org/community/awards" title="">Community Awards</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="success-stories" class="tier-1 element-5  " aria-haspopup="true">
+        <a href="https://www.python.org/about/success/" title="success-stories" class="">Success Stories</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/success/#arts" title="">Arts</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/success/#business" title="">Business</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/success/#education" title="">Education</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/success/#engineering" title="">Engineering</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/about/success/#government" title="">Government</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://www.python.org/about/success/#scientific" title="">Scientific</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/about/success/#software-development" title="">Software Development</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="news" class="tier-1 element-6  " aria-haspopup="true">
+        <a href="https://www.python.org/blogs/" title="News from around the Python world" class="">News</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/blogs/" title="Python Insider Blog Posts">Python News</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://planetpython.org/" title="Planet Python">Community News</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="http://pyfound.blogspot.com/" title="PSF Blog">PSF News</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pycon.blogspot.com/" title="PyCon Blog">PyCon News</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="events" class="tier-1 element-7  " aria-haspopup="true">
+        <a href="https://www.python.org/events/" title="" class="">Events</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/events/python-events/" title="">Python Events</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/events/python-user-group/" title="">User Group Events</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/events/python-events/past/" title="">Python Events Archive</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/events/python-user-group/past/" title="">User Group Events Archive</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://wiki.python.org/moin/PythonEventsCalendar#Submitting_an_Event" title="">Submit an Event</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    
+  
+</ul>
+
+                    
+                </nav>
+
+                <div class="header-banner "> <!-- for optional "do-not-print" class -->
+                    
+                    
+                </div>
+
+                
+                
+
+             </div><!-- end .container -->
+        </header>
+
+        <div id="content" class="content-wrapper">
+            <!-- Main Content Column -->
+            <div class="container">
+
+                <section class="main-content with-left-sidebar" role="main">
+
+                    
+<ul class="breadcrumbs menu">
+    <li>
+        <a href="https://www.python.org/" title="The Python Programming Language">Python</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>
+        <a href="https://www.python.org/dev/">Python Developer's Guide</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>
+        <a href="../index.html">PEP Index</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>PEP 3143 -- Standard daemon process library</li>
+</ul>
+
+
+                    
+<style>
+   .pep-page pre {
+        padding: .5em;
+        background: inherit;
+        border-left: 0px;
+        -webkit-box-shadow: 0 0 0 0;
+        -moz-box-shadow: 0 0 0 0;
+        box-shadow: 0 0 0 0;
+   }
+</style>
+
+    
+    <article class="text">
+        
+
+        <header class="article-header">
+            <h1 class="page-title">PEP 3143 -- Standard daemon process library</h1>
+        </header>
+
+        <!--
+This HTML is auto-generated.  DO NOT EDIT THIS FILE!  If you are writing a new
+PEP, see http://www.python.org/dev/peps/pep-0001 for instructions and links
+to templates.  DO NOT USE THIS HTML FILE AS YOUR TEMPLATE!
+-->
+<html>
+ <body>
+  <table class="rfc2822 docutils field-list" frame="void" rules="none">
+   <col class="field-name">
+   </col>
+   <col class="field-body">
+   </col>
+   <tbody valign="top">
+    <tr class="field">
+     <th class="field-name">
+      PEP:
+     </th>
+     <td class="field-body">
+      3143
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Title:
+     </th>
+     <td class="field-body">
+      Standard daemon process library
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Author:
+     </th>
+     <td class="field-body">
+      Ben Finney &lt;ben+python at benfinney.id.au&gt;
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Status:
+     </th>
+     <td class="field-body">
+      Deferred
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Type:
+     </th>
+     <td class="field-body">
+      Standards Track
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Created:
+     </th>
+     <td class="field-body">
+      2009-01-26
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Python-Version:
+     </th>
+     <td class="field-body">
+      3.x
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Post-History:
+     </th>
+     <td class="field-body">
+     </td>
+    </tr>
+   </tbody>
+  </table>
+  <hr/>
+  <div class="contents topic" id="id20">
+   <p class="topic-title first">
+    Contents
+   </p>
+   <ul class="simple">
+    <li>
+     <a class="reference internal" href="#abstract" id="id35">
+      Abstract
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#pep-deferral" id="id36">
+      PEP Deferral
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#specification" id="id37">
+      Specification
+     </a>
+     <ul>
+      <li>
+       <a class="reference internal" href="#example-usage" id="id38">
+        Example usage
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#interface" id="id39">
+        Interface
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#daemoncontext-objects" id="id40">
+        <tt class="docutils literal">
+         DaemonContext
+        </tt>
+        objects
+       </a>
+      </li>
+     </ul>
+    </li>
+    <li>
+     <a class="reference internal" href="#motivation" id="id41">
+      Motivation
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#rationale" id="id42">
+      Rationale
+     </a>
+     <ul>
+      <li>
+       <a class="reference internal" href="#correct-daemon-behaviour" id="id43">
+        Correct daemon behaviour
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#a-daemon-is-not-a-service" id="id44">
+        A daemon is not a service
+       </a>
+      </li>
+     </ul>
+    </li>
+    <li>
+     <a class="reference internal" href="#reference-implementation" id="id45">
+      Reference Implementation
+     </a>
+     <ul>
+      <li>
+       <a class="reference internal" href="#other-daemon-implementations" id="id46">
+        Other daemon implementations
+       </a>
+      </li>
+     </ul>
+    </li>
+    <li>
+     <a class="reference internal" href="#references" id="id47">
+      References
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#copyright" id="id48">
+      Copyright
+     </a>
+    </li>
+   </ul>
+  </div>
+  <div class="section" id="abstract">
+   <h1>
+    <a class="toc-backref" href="#id35">
+     Abstract
+    </a>
+   </h1>
+   <p>
+    Writing a program to become a well-behaved Unix daemon is somewhat
+complex and tricky to get right, yet the steps are largely similar for
+any daemon regardless of what else the program may need to do.
+   </p>
+   <p>
+    This PEP introduces a package to the Python standard library that
+provides a simple interface to the task of becoming a daemon process.
+   </p>
+   <div class="contents topic" id="contents">
+    <p class="topic-title first">
+     Contents
+    </p>
+    <ul class="simple">
+     <li>
+      <a class="reference internal" href="#abstract" id="id21">
+       Abstract
+      </a>
+     </li>
+     <li>
+      <a class="reference internal" href="#pep-deferral" id="id22">
+       PEP Deferral
+      </a>
+     </li>
+     <li>
+      <a class="reference internal" href="#specification" id="id23">
+       Specification
+      </a>
+      <ul>
+       <li>
+        <a class="reference internal" href="#example-usage" id="id24">
+         Example usage
+        </a>
+       </li>
+       <li>
+        <a class="reference internal" href="#interface" id="id25">
+         Interface
+        </a>
+       </li>
+       <li>
+        <a class="reference internal" href="#daemoncontext-objects" id="id26">
+         <tt class="docutils literal">
+          DaemonContext
+         </tt>
+         objects
+        </a>
+       </li>
+      </ul>
+     </li>
+     <li>
+      <a class="reference internal" href="#motivation" id="id27">
+       Motivation
+      </a>
+     </li>
+     <li>
+      <a class="reference internal" href="#rationale" id="id28">
+       Rationale
+      </a>
+      <ul>
+       <li>
+        <a class="reference internal" href="#correct-daemon-behaviour" id="id29">
+         Correct daemon behaviour
+        </a>
+       </li>
+       <li>
+        <a class="reference internal" href="#a-daemon-is-not-a-service" id="id30">
+         A daemon is not a service
+        </a>
+       </li>
+      </ul>
+     </li>
+     <li>
+      <a class="reference internal" href="#reference-implementation" id="id31">
+       Reference Implementation
+      </a>
+      <ul>
+       <li>
+        <a class="reference internal" href="#other-daemon-implementations" id="id32">
+         Other daemon implementations
+        </a>
+       </li>
+      </ul>
+     </li>
+     <li>
+      <a class="reference internal" href="#references" id="id33">
+       References
+      </a>
+     </li>
+     <li>
+      <a class="reference internal" href="#copyright" id="id34">
+       Copyright
+      </a>
+     </li>
+    </ul>
+   </div>
+   <!-- Table of Contents:
+Abstract
+Specification
+  Example usage
+  Interface
+  ``DaemonContext`` objects
+Motivation
+Rationale
+  Correct daemon behaviour
+  A daemon is not a service
+Reference Implementation
+  Other daemon implementations
+References
+Copyright -->
+  </div>
+  <div class="section" id="pep-deferral">
+   <h1>
+    <a class="toc-backref" href="#id36">
+     PEP Deferral
+    </a>
+   </h1>
+   <p>
+    Further exploration of the concepts covered in this PEP has been deferred
+for lack of a current champion interested in promoting the goals of the PEP
+and collecting and incorporating feedback, and with sufficient available
+time to do so effectively.
+   </p>
+  </div>
+  <div class="section" id="specification">
+   <h1>
+    <a class="toc-backref" href="#id37">
+     Specification
+    </a>
+   </h1>
+   <div class="section" id="example-usage">
+    <h2>
+     <a class="toc-backref" href="#id38">
+      Example usage
+     </a>
+    </h2>
+    <p>
+     Simple example of direct
+     <cite>
+      DaemonContext
+     </cite>
+     usage:
+    </p>
+    <pre class="literal-block">
+import daemon
+
+from spam import do_main_program
+
+with daemon.DaemonContext():
+    do_main_program()
+</pre>
+    <p>
+     More complex example usage:
+    </p>
+    <pre class="literal-block">
+import os
+import grp
+import signal
+import daemon
+import lockfile
+
+from spam import (
+    initial_program_setup,
+    do_main_program,
+    program_cleanup,
+    reload_program_config,
+    )
+
+context = daemon.DaemonContext(
+    working_directory='/var/lib/foo',
+    umask=0o002,
+    pidfile=lockfile.FileLock('/var/run/spam.pid'),
+    )
+
+context.signal_map = {
+    signal.SIGTERM: program_cleanup,
+    signal.SIGHUP: 'terminate',
+    signal.SIGUSR1: reload_program_config,
+    }
+
+mail_gid = grp.getgrnam('mail').gr_gid
+context.gid = mail_gid
+
+important_file = open('spam.data', 'w')
+interesting_file = open('eggs.data', 'w')
+context.files_preserve = [important_file, interesting_file]
+
+initial_program_setup()
+
+with context:
+    do_main_program()
+</pre>
+   </div>
+   <div class="section" id="interface">
+    <h2>
+     <a class="toc-backref" href="#id39">
+      Interface
+     </a>
+    </h2>
+    <p>
+     A new package,
+     <cite>
+      daemon
+     </cite>
+     , is added to the standard library.
+    </p>
+    <p>
+     A class,
+     <cite>
+      DaemonContext
+     </cite>
+     , is defined to represent the settings and
+process context for the program running as a daemon process.
+    </p>
+   </div>
+   <div class="section" id="daemoncontext-objects">
+    <h2>
+     <a class="toc-backref" href="#id40">
+      <tt class="docutils literal">
+       DaemonContext
+      </tt>
+      objects
+     </a>
+    </h2>
+    <p>
+     A
+     <cite>
+      DaemonContext
+     </cite>
+     instance represents the behaviour settings and
+process context for the program when it becomes a daemon. The
+behaviour and environment is customised by setting options on the
+instance, before calling the
+     <cite>
+      open
+     </cite>
+     method.
+    </p>
+    <p>
+     Each option can be passed as a keyword argument to the
+     <cite>
+      DaemonContext
+     </cite>
+     constructor, or subsequently altered by assigning to an attribute on
+the instance at any time prior to calling
+     <cite>
+      open
+     </cite>
+     . That is, for
+options named
+     <cite>
+      wibble
+     </cite>
+     and
+     <cite>
+      wubble
+     </cite>
+     , the following invocation:
+    </p>
+    <pre class="literal-block">
+foo = daemon.DaemonContext(wibble=bar, wubble=baz)
+foo.open()
+</pre>
+    <p>
+     is equivalent to:
+    </p>
+    <pre class="literal-block">
+foo = daemon.DaemonContext()
+foo.wibble = bar
+foo.wubble = baz
+foo.open()
+</pre>
+    <p>
+     The following options are defined.
+    </p>
+    <dl class="docutils">
+     <dt>
+      <cite>
+       files_preserve
+      </cite>
+     </dt>
+     <dd>
+      <table class="first docutils field-list" frame="void" rules="none">
+       <col class="field-name">
+       </col>
+       <col class="field-body">
+       </col>
+       <tbody valign="top">
+        <tr class="field">
+         <th class="field-name">
+          Default:
+         </th>
+         <td class="field-body">
+          <tt class="docutils literal">
+           None
+          </tt>
+         </td>
+        </tr>
+       </tbody>
+      </table>
+      <p>
+       List of files that should
+       <em>
+        not
+       </em>
+       be closed when starting the
+daemon. If
+       <tt class="docutils literal">
+        None
+       </tt>
+       , all open file descriptors will be closed.
+      </p>
+      <p class="last">
+       Elements of the list are file descriptors (as returned by a file
+object's
+       <cite>
+        fileno()
+       </cite>
+       method) or Python
+       <cite>
+        file
+       </cite>
+       objects. Each
+specifies a file that is not to be closed during daemon start.
+      </p>
+     </dd>
+     <dt>
+      <cite>
+       chroot_directory
+      </cite>
+     </dt>
+     <dd>
+      <table class="first docutils field-list" frame="void" rules="none">
+       <col class="field-name">
+       </col>
+       <col class="field-body">
+       </col>
+       <tbody valign="top">
+        <tr class="field">
+         <th class="field-name">
+          Default:
+         </th>
+         <td class="field-body">
+          <tt class="docutils literal">
+           None
+          </tt>
+         </td>
+        </tr>
+       </tbody>
+      </table>
+      <p class="last">
+       Full path to a directory to set as the effective root directory of
+the process. If
+       <tt class="docutils literal">
+        None
+       </tt>
+       , specifies that the root directory is not
+to be changed.
+      </p>
+     </dd>
+     <dt>
+      <cite>
+       working_directory
+      </cite>
+     </dt>
+     <dd>
+      <table class="first docutils field-list" frame="void" rules="none">
+       <col class="field-name">
+       </col>
+       <col class="field-body">
+       </col>
+       <tbody valign="top">
+        <tr class="field">
+         <th class="field-name">
+          Default:
+         </th>
+         <td class="field-body">
+          <tt class="docutils literal">
+           '/'
+          </tt>
+         </td>
+        </tr>
+       </tbody>
+      </table>
+      <p>
+       Full path of the working directory to which the process should
+change on daemon start.
+      </p>
+      <p class="last">
+       Since a filesystem cannot be unmounted if a process has its
+current working directory on that filesystem, this should either
+be left at default or set to a directory that is a sensible “home
+directory” for the daemon while it is running.
+      </p>
+     </dd>
+     <dt>
+      <cite>
+       umask
+      </cite>
+     </dt>
+     <dd>
+      <table class="first docutils field-list" frame="void" rules="none">
+       <col class="field-name">
+       </col>
+       <col class="field-body">
+       </col>
+       <tbody valign="top">
+        <tr class="field">
+         <th class="field-name">
+          Default:
+         </th>
+         <td class="field-body">
+          <tt class="docutils literal">
+           0
+          </tt>
+         </td>
+        </tr>
+       </tbody>
+      </table>
+      <p>
+       File access creation mask (“umask”) to set for the process on
+daemon start.
+      </p>
+      <p class="last">
+       Since a process inherits its umask from its parent process,
+starting the daemon will reset the umask to this value so that
+files are created by the daemon with access modes as it expects.
+      </p>
+     </dd>
+     <dt>
+      <cite>
+       pidfile
+      </cite>
+     </dt>
+     <dd>
+      <table class="first docutils field-list" frame="void" rules="none">
+       <col class="field-name">
+       </col>
+       <col class="field-body">
+       </col>
+       <tbody valign="top">
+        <tr class="field">
+         <th class="field-name">
+          Default:
+         </th>
+         <td class="field-body">
+          <tt class="docutils literal">
+           None
+          </tt>
+         </td>
+        </tr>
+       </tbody>
+      </table>
+      <p class="last">
+       Context manager for a PID lock file. When the daemon context opens
+and closes, it enters and exits the
+       <cite>
+        pidfile
+       </cite>
+       context manager.
+      </p>
+     </dd>
+     <dt>
+      <cite>
+       detach_process
+      </cite>
+     </dt>
+     <dd>
+      <table class="first docutils field-list" frame="void" rules="none">
+       <col class="field-name">
+       </col>
+       <col class="field-body">
+       </col>
+       <tbody valign="top">
+        <tr class="field">
+         <th class="field-name">
+          Default:
+         </th>
+         <td class="field-body">
+          <tt class="docutils literal">
+           None
+          </tt>
+         </td>
+        </tr>
+       </tbody>
+      </table>
+      <p>
+       If
+       <tt class="docutils literal">
+        True
+       </tt>
+       , detach the process context when opening the daemon
+context; if
+       <tt class="docutils literal">
+        False
+       </tt>
+       , do not detach.
+      </p>
+      <p class="last">
+       If unspecified (
+       <tt class="docutils literal">
+        None
+       </tt>
+       ) during initialisation of the instance,
+this will be set to
+       <tt class="docutils literal">
+        True
+       </tt>
+       by default, and
+       <tt class="docutils literal">
+        False
+       </tt>
+       only if
+detaching the process is determined to be redundant; for example,
+in the case when the process was started by
+       <cite>
+        init
+       </cite>
+       , by
+       <cite>
+        initd
+       </cite>
+       , or
+by
+       <cite>
+        inetd
+       </cite>
+       .
+      </p>
+     </dd>
+     <dt>
+      <cite>
+       signal_map
+      </cite>
+     </dt>
+     <dd>
+      <table class="first docutils field-list" frame="void" rules="none">
+       <col class="field-name">
+       </col>
+       <col class="field-body">
+       </col>
+       <tbody valign="top">
+        <tr class="field">
+         <th class="field-name">
+          Default:
+         </th>
+         <td class="field-body">
+          system-dependent
+         </td>
+        </tr>
+       </tbody>
+      </table>
+      <p>
+       Mapping from operating system signals to callback actions.
+      </p>
+      <p>
+       The mapping is used when the daemon context opens, and determines
+the action for each signal's signal handler:
+      </p>
+      <ul class="simple">
+       <li>
+        A value of
+        <tt class="docutils literal">
+         None
+        </tt>
+        will ignore the signal (by setting the
+signal action to
+        <tt class="docutils literal">
+         signal.SIG_IGN
+        </tt>
+        ).
+       </li>
+       <li>
+        A string value will be used as the name of an attribute on the
+        <tt class="docutils literal">
+         DaemonContext
+        </tt>
+        instance. The attribute's value will be used
+as the action for the signal handler.
+       </li>
+       <li>
+        Any other value will be used as the action for the signal
+handler.
+       </li>
+      </ul>
+      <p>
+       The default value depends on which signals are defined on the
+running system. Each item from the list below whose signal is
+actually defined in the
+       <tt class="docutils literal">
+        signal
+       </tt>
+       module will appear in the
+default map:
+      </p>
+      <ul class="simple">
+       <li>
+        <tt class="docutils literal">
+         signal.SIGTTIN
+        </tt>
+        :
+        <tt class="docutils literal">
+         None
+        </tt>
+       </li>
+       <li>
+        <tt class="docutils literal">
+         signal.SIGTTOU
+        </tt>
+        :
+        <tt class="docutils literal">
+         None
+        </tt>
+       </li>
+       <li>
+        <tt class="docutils literal">
+         signal.SIGTSTP
+        </tt>
+        :
+        <tt class="docutils literal">
+         None
+        </tt>
+       </li>
+       <li>
+        <tt class="docutils literal">
+         signal.SIGTERM
+        </tt>
+        :
+        <tt class="docutils literal">
+         'terminate'
+        </tt>
+       </li>
+      </ul>
+      <p class="last">
+       Depending on how the program will interact with its child
+processes, it may need to specify a signal map that includes the
+       <tt class="docutils literal">
+        signal.SIGCHLD
+       </tt>
+       signal (received when a child process exits).
+See the specific operating system's documentation for more detail
+on how to determine what circumstances dictate the need for signal
+handlers.
+      </p>
+     </dd>
+     <dt>
+      <cite>
+       uid
+      </cite>
+     </dt>
+     <dd>
+      <table class="first last docutils field-list" frame="void" rules="none">
+       <col class="field-name">
+       </col>
+       <col class="field-body">
+       </col>
+       <tbody valign="top">
+        <tr class="field">
+         <th class="field-name">
+          Default:
+         </th>
+         <td class="field-body">
+          <tt class="docutils literal">
+           os.getuid()
+          </tt>
+         </td>
+        </tr>
+       </tbody>
+      </table>
+     </dd>
+     <dt>
+      <cite>
+       gid
+      </cite>
+     </dt>
+     <dd>
+      <table class="first docutils field-list" frame="void" rules="none">
+       <col class="field-name">
+       </col>
+       <col class="field-body">
+       </col>
+       <tbody valign="top">
+        <tr class="field">
+         <th class="field-name">
+          Default:
+         </th>
+         <td class="field-body">
+          <tt class="docutils literal">
+           os.getgid()
+          </tt>
+         </td>
+        </tr>
+       </tbody>
+      </table>
+      <p>
+       The user ID (“UID”) value and group ID (“GID”) value to switch
+the process to on daemon start.
+      </p>
+      <p class="last">
+       The default values, the real UID and GID of the process, will
+relinquish any effective privilege elevation inherited by the
+process.
+      </p>
+     </dd>
+     <dt>
+      <cite>
+       prevent_core
+      </cite>
+     </dt>
+     <dd>
+      <table class="first docutils field-list" frame="void" rules="none">
+       <col class="field-name">
+       </col>
+       <col class="field-body">
+       </col>
+       <tbody valign="top">
+        <tr class="field">
+         <th class="field-name">
+          Default:
+         </th>
+         <td class="field-body">
+          <tt class="docutils literal">
+           True
+          </tt>
+         </td>
+        </tr>
+       </tbody>
+      </table>
+      <p class="last">
+       If true, prevents the generation of core files, in order to avoid
+leaking sensitive information from daemons run as
+       <cite>
+        root
+       </cite>
+       .
+      </p>
+     </dd>
+     <dt>
+      <cite>
+       stdin
+      </cite>
+     </dt>
+     <dd>
+      <table class="first last docutils field-list" frame="void" rules="none">
+       <col class="field-name">
+       </col>
+       <col class="field-body">
+       </col>
+       <tbody valign="top">
+        <tr class="field">
+         <th class="field-name">
+          Default:
+         </th>
+         <td class="field-body">
+          <tt class="docutils literal">
+           None
+          </tt>
+         </td>
+        </tr>
+       </tbody>
+      </table>
+     </dd>
+     <dt>
+      <cite>
+       stdout
+      </cite>
+     </dt>
+     <dd>
+      <table class="first last docutils field-list" frame="void" rules="none">
+       <col class="field-name">
+       </col>
+       <col class="field-body">
+       </col>
+       <tbody valign="top">
+        <tr class="field">
+         <th class="field-name">
+          Default:
+         </th>
+         <td class="field-body">
+          <tt class="docutils literal">
+           None
+          </tt>
+         </td>
+        </tr>
+       </tbody>
+      </table>
+     </dd>
+     <dt>
+      <cite>
+       stderr
+      </cite>
+     </dt>
+     <dd>
+      <table class="first docutils field-list" frame="void" rules="none">
+       <col class="field-name">
+       </col>
+       <col class="field-body">
+       </col>
+       <tbody valign="top">
+        <tr class="field">
+         <th class="field-name">
+          Default:
+         </th>
+         <td class="field-body">
+          <tt class="docutils literal">
+           None
+          </tt>
+         </td>
+        </tr>
+       </tbody>
+      </table>
+      <p>
+       Each of
+       <cite>
+        stdin
+       </cite>
+       ,
+       <cite>
+        stdout
+       </cite>
+       , and
+       <cite>
+        stderr
+       </cite>
+       is a file-like object
+which will be used as the new file for the standard I/O stream
+       <cite>
+        sys.stdin
+       </cite>
+       ,
+       <cite>
+        sys.stdout
+       </cite>
+       , and
+       <cite>
+        sys.stderr
+       </cite>
+       respectively. The file
+should therefore be open, with a minimum of mode 'r' in the case
+of
+       <cite>
+        stdin
+       </cite>
+       , and mode 'w+' in the case of
+       <cite>
+        stdout
+       </cite>
+       and
+       <cite>
+        stderr
+       </cite>
+       .
+      </p>
+      <p>
+       If the object has a
+       <cite>
+        fileno()
+       </cite>
+       method that returns a file
+descriptor, the corresponding file will be excluded from being
+closed during daemon start (that is, it will be treated as though
+it were listed in
+       <cite>
+        files_preserve
+       </cite>
+       ).
+      </p>
+      <p class="last">
+       If
+       <tt class="docutils literal">
+        None
+       </tt>
+       , the corresponding system stream is re-bound to the
+file named by
+       <cite>
+        os.devnull
+       </cite>
+       .
+      </p>
+     </dd>
+    </dl>
+    <p>
+     The following methods are defined.
+    </p>
+    <dl class="docutils">
+     <dt>
+      <cite>
+       open()
+      </cite>
+     </dt>
+     <dd>
+      <table class="first docutils field-list" frame="void" rules="none">
+       <col class="field-name">
+       </col>
+       <col class="field-body">
+       </col>
+       <tbody valign="top">
+        <tr class="field">
+         <th class="field-name">
+          Return:
+         </th>
+         <td class="field-body">
+          <tt class="docutils literal">
+           None
+          </tt>
+         </td>
+        </tr>
+       </tbody>
+      </table>
+      <p>
+       Open the daemon context, turning the current program into a daemon
+process. This performs the following steps:
+      </p>
+      <ul>
+       <li>
+        <p class="first">
+         If this instance's
+         <cite>
+          is_open
+         </cite>
+         property is true, return
+immediately. This makes it safe to call
+         <cite>
+          open
+         </cite>
+         multiple times on
+an instance.
+        </p>
+       </li>
+       <li>
+        <p class="first">
+         If the
+         <cite>
+          prevent_core
+         </cite>
+         attribute is true, set the resource limits
+for the process to prevent any core dump from the process.
+        </p>
+       </li>
+       <li>
+        <p class="first">
+         If the
+         <cite>
+          chroot_directory
+         </cite>
+         attribute is not
+         <tt class="docutils literal">
+          None
+         </tt>
+         , set the
+effective root directory of the process to that directory (via
+         <cite>
+          os.chroot
+         </cite>
+         ).
+        </p>
+        <p>
+         This allows running the daemon process inside a “chroot gaol”
+as a means of limiting the system's exposure to rogue behaviour
+by the process. Note that the specified directory needs to
+already be set up for this purpose.
+        </p>
+       </li>
+       <li>
+        <p class="first">
+         Set the process UID and GID to the
+         <cite>
+          uid
+         </cite>
+         and
+         <cite>
+          gid
+         </cite>
+         attribute
+values.
+        </p>
+       </li>
+       <li>
+        <p class="first">
+         Close all open file descriptors. This excludes those listed in
+the
+         <cite>
+          files_preserve
+         </cite>
+         attribute, and those that correspond to the
+         <cite>
+          stdin
+         </cite>
+         ,
+         <cite>
+          stdout
+         </cite>
+         , or
+         <cite>
+          stderr
+         </cite>
+         attributes.
+        </p>
+       </li>
+       <li>
+        <p class="first">
+         Change current working directory to the path specified by the
+         <cite>
+          working_directory
+         </cite>
+         attribute.
+        </p>
+       </li>
+       <li>
+        <p class="first">
+         Reset the file access creation mask to the value specified by
+the
+         <cite>
+          umask
+         </cite>
+         attribute.
+        </p>
+       </li>
+       <li>
+        <p class="first">
+         If the
+         <cite>
+          detach_process
+         </cite>
+         option is true, detach the current
+process into its own process group, and disassociate from any
+controlling terminal.
+        </p>
+       </li>
+       <li>
+        <p class="first">
+         Set signal handlers as specified by the
+         <cite>
+          signal_map
+         </cite>
+         attribute.
+        </p>
+       </li>
+       <li>
+        <p class="first">
+         If any of the attributes
+         <cite>
+          stdin
+         </cite>
+         ,
+         <cite>
+          stdout
+         </cite>
+         ,
+         <cite>
+          stderr
+         </cite>
+         are not
+         <tt class="docutils literal">
+          None
+         </tt>
+         , bind the system streams
+         <cite>
+          sys.stdin
+         </cite>
+         ,
+         <cite>
+          sys.stdout
+         </cite>
+         ,
+and/or
+         <cite>
+          sys.stderr
+         </cite>
+         to the files represented by the
+corresponding attributes. Where the attribute has a file
+descriptor, the descriptor is duplicated (instead of re-binding
+the name).
+        </p>
+       </li>
+       <li>
+        <p class="first">
+         If the
+         <cite>
+          pidfile
+         </cite>
+         attribute is not
+         <tt class="docutils literal">
+          None
+         </tt>
+         , enter its context
+manager.
+        </p>
+       </li>
+       <li>
+        <p class="first">
+         Mark this instance as open (for the purpose of future
+         <cite>
+          open
+         </cite>
+         and
+         <cite>
+          close
+         </cite>
+         calls).
+        </p>
+       </li>
+       <li>
+        <p class="first">
+         Register the
+         <cite>
+          close
+         </cite>
+         method to be called during Python's exit
+processing.
+        </p>
+       </li>
+      </ul>
+      <p class="last">
+       When the function returns, the running program is a daemon
+process.
+      </p>
+     </dd>
+     <dt>
+      <cite>
+       close()
+      </cite>
+     </dt>
+     <dd>
+      <table class="first docutils field-list" frame="void" rules="none">
+       <col class="field-name">
+       </col>
+       <col class="field-body">
+       </col>
+       <tbody valign="top">
+        <tr class="field">
+         <th class="field-name">
+          Return:
+         </th>
+         <td class="field-body">
+          <tt class="docutils literal">
+           None
+          </tt>
+         </td>
+        </tr>
+       </tbody>
+      </table>
+      <p>
+       Close the daemon context. This performs the following steps:
+      </p>
+      <ul class="last simple">
+       <li>
+        If this instance's
+        <cite>
+         is_open
+        </cite>
+        property is false, return
+immediately. This makes it safe to call
+        <cite>
+         close
+        </cite>
+        multiple times
+on an instance.
+       </li>
+       <li>
+        If the
+        <cite>
+         pidfile
+        </cite>
+        attribute is not
+        <tt class="docutils literal">
+         None
+        </tt>
+        , exit its context
+manager.
+       </li>
+       <li>
+        Mark this instance as closed (for the purpose of future
+        <cite>
+         open
+        </cite>
+        and
+        <cite>
+         close
+        </cite>
+        calls).
+       </li>
+      </ul>
+     </dd>
+     <dt>
+      <cite>
+       is_open
+      </cite>
+     </dt>
+     <dd>
+      <table class="first docutils field-list" frame="void" rules="none">
+       <col class="field-name">
+       </col>
+       <col class="field-body">
+       </col>
+       <tbody valign="top">
+        <tr class="field">
+         <th class="field-name">
+          Return:
+         </th>
+         <td class="field-body">
+          <tt class="docutils literal">
+           True
+          </tt>
+          if the instance is open,
+          <tt class="docutils literal">
+           False
+          </tt>
+          otherwise.
+         </td>
+        </tr>
+       </tbody>
+      </table>
+      <p class="last">
+       This property exposes the state indicating whether the instance is
+currently open. It is
+       <tt class="docutils literal">
+        True
+       </tt>
+       if the instance's
+       <cite>
+        open
+       </cite>
+       method has
+been called and the
+       <cite>
+        close
+       </cite>
+       method has not subsequently been
+called.
+      </p>
+     </dd>
+     <dt>
+      <cite>
+       terminate(signal_number, stack_frame)
+      </cite>
+     </dt>
+     <dd>
+      <table class="first docutils field-list" frame="void" rules="none">
+       <col class="field-name">
+       </col>
+       <col class="field-body">
+       </col>
+       <tbody valign="top">
+        <tr class="field">
+         <th class="field-name">
+          Return:
+         </th>
+         <td class="field-body">
+          <tt class="docutils literal">
+           None
+          </tt>
+         </td>
+        </tr>
+       </tbody>
+      </table>
+      <p>
+       Signal handler for the
+       <tt class="docutils literal">
+        signal.SIGTERM
+       </tt>
+       signal. Performs the
+following step:
+      </p>
+      <ul class="last simple">
+       <li>
+        Raise a
+        <tt class="docutils literal">
+         SystemExit
+        </tt>
+        exception explaining the signal.
+       </li>
+      </ul>
+     </dd>
+    </dl>
+    <p>
+     The class also implements the context manager protocol via
+     <tt class="docutils literal">
+      __enter__
+     </tt>
+     and
+     <tt class="docutils literal">
+      __exit__
+     </tt>
+     methods.
+    </p>
+    <dl class="docutils">
+     <dt>
+      <cite>
+       __enter__()
+      </cite>
+     </dt>
+     <dd>
+      <table class="first docutils field-list" frame="void" rules="none">
+       <col class="field-name">
+       </col>
+       <col class="field-body">
+       </col>
+       <tbody valign="top">
+        <tr class="field">
+         <th class="field-name">
+          Return:
+         </th>
+         <td class="field-body">
+          The
+          <tt class="docutils literal">
+           DaemonContext
+          </tt>
+          instance
+         </td>
+        </tr>
+       </tbody>
+      </table>
+      <p class="last">
+       Call the instance's
+       <cite>
+        open()
+       </cite>
+       method, then return the instance.
+      </p>
+     </dd>
+     <dt>
+      <cite>
+       __exit__(exc_type, exc_value, exc_traceback)
+      </cite>
+     </dt>
+     <dd>
+      <table class="first docutils field-list" frame="void" rules="none">
+       <col class="field-name">
+       </col>
+       <col class="field-body">
+       </col>
+       <tbody valign="top">
+        <tr class="field">
+         <th class="field-name">
+          Return:
+         </th>
+         <td class="field-body">
+          <tt class="docutils literal">
+           True
+          </tt>
+          or
+          <tt class="docutils literal">
+           False
+          </tt>
+          as defined by the context manager
+protocol
+         </td>
+        </tr>
+       </tbody>
+      </table>
+      <p class="last">
+       Call the instance's
+       <cite>
+        close()
+       </cite>
+       method, then return
+       <tt class="docutils literal">
+        True
+       </tt>
+       if the
+exception was handled or
+       <tt class="docutils literal">
+        False
+       </tt>
+       if it was not.
+      </p>
+     </dd>
+    </dl>
+   </div>
+  </div>
+  <div class="section" id="motivation">
+   <h1>
+    <a class="toc-backref" href="#id41">
+     Motivation
+    </a>
+   </h1>
+   <p>
+    The majority of programs written to be Unix daemons either implement
+behaviour very similar to that in the
+    <a class="reference internal" href="#specification">
+     specification
+    </a>
+    , or are
+poorly-behaved daemons by the
+    <a class="reference internal" href="#correct-daemon-behaviour">
+     correct daemon behaviour
+    </a>
+    .
+   </p>
+   <p>
+    Since these steps should be much the same in most implementations but
+are very particular and easy to omit or implement incorrectly, they
+are a prime target for a standard well-tested implementation in the
+standard library.
+   </p>
+  </div>
+  <div class="section" id="rationale">
+   <h1>
+    <a class="toc-backref" href="#id42">
+     Rationale
+    </a>
+   </h1>
+   <div class="section" id="correct-daemon-behaviour">
+    <h2>
+     <a class="toc-backref" href="#id43">
+      Correct daemon behaviour
+     </a>
+    </h2>
+    <p>
+     According to Stevens in
+     <a class="citation-reference" href="#stevens" id="id1">
+      [stevens]
+     </a>
+     §2.6, a program should perform the
+following steps to become a Unix daemon process.
+    </p>
+    <ul class="simple">
+     <li>
+      Close all open file descriptors.
+     </li>
+     <li>
+      Change current working directory.
+     </li>
+     <li>
+      Reset the file access creation mask.
+     </li>
+     <li>
+      Run in the background.
+     </li>
+     <li>
+      Disassociate from process group.
+     </li>
+     <li>
+      Ignore terminal I/O signals.
+     </li>
+     <li>
+      Disassociate from control terminal.
+     </li>
+     <li>
+      Don't reacquire a control terminal.
+     </li>
+     <li>
+      Correctly handle the following circumstances:
+      <ul>
+       <li>
+        Started by System V
+        <cite>
+         init
+        </cite>
+        process.
+       </li>
+       <li>
+        Daemon termination by
+        <tt class="docutils literal">
+         SIGTERM
+        </tt>
+        signal.
+       </li>
+       <li>
+        Children generate
+        <tt class="docutils literal">
+         SIGCLD
+        </tt>
+        signal.
+       </li>
+      </ul>
+     </li>
+    </ul>
+    <p>
+     The
+     <cite>
+      daemon
+     </cite>
+     tool
+     <a class="citation-reference" href="#slack-daemon" id="id2">
+      [slack-daemon]
+     </a>
+     lists (in its summary of features)
+behaviour that should be performed when turning a program into a
+well-behaved Unix daemon process. It differs from this PEP's intent in
+that it invokes a
+     <em>
+      separate
+     </em>
+     program as a daemon process. The
+following features are appropriate for a daemon that starts itself
+once the program is already running:
+    </p>
+    <ul class="simple">
+     <li>
+      Sets up the correct process context for a daemon.
+     </li>
+     <li>
+      Behaves sensibly when started by
+      <cite>
+       initd(8)
+      </cite>
+      or
+      <cite>
+       inetd(8)
+      </cite>
+      .
+     </li>
+     <li>
+      Revokes any suid or sgid privileges to reduce security risks in case
+daemon is incorrectly installed with special privileges.
+     </li>
+     <li>
+      Prevents the generation of core files to prevent leaking sensitive
+information from daemons run as root (optional).
+     </li>
+     <li>
+      Names the daemon by creating and locking a PID file to guarantee
+that only one daemon with the given name can execute at any given
+time (optional).
+     </li>
+     <li>
+      Sets the user and group under which to run the daemon (optional,
+root only).
+     </li>
+     <li>
+      Creates a chroot gaol (optional, root only).
+     </li>
+     <li>
+      Captures the daemon's stdout and stderr and directs them to syslog
+(optional).
+     </li>
+    </ul>
+   </div>
+   <div class="section" id="a-daemon-is-not-a-service">
+    <h2>
+     <a class="toc-backref" href="#id44">
+      A daemon is not a service
+     </a>
+    </h2>
+    <p>
+     This PEP addresses only Unix-style daemons, for which the above
+correct behaviour is relevant, as opposed to comparable behaviours on
+other operating systems.
+    </p>
+    <p>
+     There is a related concept in many systems, called a “service”. A
+service differs from the model in this PEP, in that rather than having
+the
+     <em>
+      current
+     </em>
+     program continue to run as a daemon process, a service
+starts an
+     <em>
+      additional
+     </em>
+     process to run in the background, and the
+current process communicates with that additional process via some
+defined channels.
+    </p>
+    <p>
+     The Unix-style daemon model in this PEP can be used, among other
+things, to implement the background-process part of a service; but
+this PEP does not address the other aspects of setting up and managing
+a service.
+    </p>
+   </div>
+  </div>
+  <div class="section" id="reference-implementation">
+   <h1>
+    <a class="toc-backref" href="#id45">
+     Reference Implementation
+    </a>
+   </h1>
+   <p>
+    The
+    <cite>
+     python-daemon
+    </cite>
+    package
+    <a class="citation-reference" href="#python-daemon" id="id3">
+     [python-daemon]
+    </a>
+    .
+   </p>
+   <div class="section" id="other-daemon-implementations">
+    <h2>
+     <a class="toc-backref" href="#id46">
+      Other daemon implementations
+     </a>
+    </h2>
+    <p>
+     Prior to this PEP, several existing third-party Python libraries or
+tools implemented some of this PEP's
+     <a class="reference internal" href="#correct-daemon-behaviour">
+      correct daemon behaviour
+     </a>
+     .
+    </p>
+    <p>
+     The
+     <a class="reference internal" href="#reference-implementation">
+      reference implementation
+     </a>
+     is a fairly direct successor from the
+following implementations:
+    </p>
+    <ul class="simple">
+     <li>
+      Many good ideas were contributed by the community to Python cookbook
+recipes #66012
+      <a class="citation-reference" href="#cookbook-66012" id="id4">
+       [cookbook-66012]
+      </a>
+      and #278731
+      <a class="citation-reference" href="#cookbook-278731" id="id5">
+       [cookbook-278731]
+      </a>
+      .
+     </li>
+     <li>
+      The
+      <cite>
+       bda.daemon
+      </cite>
+      library
+      <a class="citation-reference" href="#bda-daemon" id="id6">
+       [bda.daemon]
+      </a>
+      is an implementation of
+      <a class="citation-reference" href="#cookbook-66012" id="id7">
+       [cookbook-66012]
+      </a>
+      . It is the predecessor of
+      <a class="citation-reference" href="#python-daemon" id="id8">
+       [python-daemon]
+      </a>
+      .
+     </li>
+    </ul>
+    <p>
+     Other Python daemon implementations that differ from this PEP:
+    </p>
+    <ul class="simple">
+     <li>
+      The
+      <cite>
+       zdaemon
+      </cite>
+      tool
+      <a class="citation-reference" href="#zdaemon" id="id9">
+       [zdaemon]
+      </a>
+      was written for the Zope project. Like
+      <a class="citation-reference" href="#slack-daemon" id="id10">
+       [slack-daemon]
+      </a>
+      , it differs from this specification because it is
+used to run another program as a daemon process.
+     </li>
+     <li>
+      The Python library
+      <cite>
+       daemon
+      </cite>
+      <a class="citation-reference" href="#clapper-daemon" id="id11">
+       [clapper-daemon]
+      </a>
+      is (according to its
+homepage) no longer maintained. As of version 1.0.1, it implements
+the basic steps from
+      <a class="citation-reference" href="#stevens" id="id12">
+       [stevens]
+      </a>
+      .
+     </li>
+     <li>
+      The
+      <cite>
+       daemonize
+      </cite>
+      library
+      <a class="citation-reference" href="#seutter-daemonize" id="id13">
+       [seutter-daemonize]
+      </a>
+      also implements the
+basic steps from
+      <a class="citation-reference" href="#stevens" id="id14">
+       [stevens]
+      </a>
+      .
+     </li>
+     <li>
+      Ray Burr's
+      <cite>
+       daemon.py
+      </cite>
+      module
+      <a class="citation-reference" href="#burr-daemon" id="id15">
+       [burr-daemon]
+      </a>
+      provides the
+      <a class="citation-reference" href="#stevens" id="id16">
+       [stevens]
+      </a>
+      procedure as well as PID file handling and redirection of output to
+syslog.
+     </li>
+     <li>
+      Twisted
+      <a class="citation-reference" href="#twisted" id="id17">
+       [twisted]
+      </a>
+      includes, perhaps unsurprisingly, an
+implementation of a process daemonisation API that is integrated
+with the rest of the Twisted framework; it differs significantly
+from the API in this PEP.
+     </li>
+     <li>
+      The Python
+      <cite>
+       initd
+      </cite>
+      library
+      <a class="citation-reference" href="#dagitses-initd" id="id18">
+       [dagitses-initd]
+      </a>
+      , which uses
+      <a class="citation-reference" href="#clapper-daemon" id="id19">
+       [clapper-daemon]
+      </a>
+      , implements an equivalent of Unix
+      <cite>
+       initd(8)
+      </cite>
+      for
+controlling a daemon process.
+     </li>
+    </ul>
+   </div>
+  </div>
+  <div class="section" id="references">
+   <h1>
+    <a class="toc-backref" href="#id47">
+     References
+    </a>
+   </h1>
+   <table class="docutils citation" frame="void" id="stevens" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       [stevens]
+      </td>
+      <td>
+       <em>
+        (
+        <a class="fn-backref" href="#id1">
+         1
+        </a>
+        ,
+        <a class="fn-backref" href="#id12">
+         2
+        </a>
+        ,
+        <a class="fn-backref" href="#id14">
+         3
+        </a>
+        ,
+        <a class="fn-backref" href="#id16">
+         4
+        </a>
+        )
+       </em>
+       <cite>
+        Unix Network Programming
+       </cite>
+       , W. Richard Stevens, 1994 Prentice
+Hall.
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils citation" frame="void" id="slack-daemon" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       [slack-daemon]
+      </td>
+      <td>
+       <em>
+        (
+        <a class="fn-backref" href="#id2">
+         1
+        </a>
+        ,
+        <a class="fn-backref" href="#id10">
+         2
+        </a>
+        )
+       </em>
+       The (non-Python) “libslack” implementation of a
+       <cite>
+        daemon
+       </cite>
+       tool
+       <a class="reference external" href="http://www.libslack.org/daemon/">
+        http://www.libslack.org/daemon/
+       </a>
+       by “raf” &lt;
+       <a class="reference external" href="mailto:raf@raf.org">
+        raf@raf.org
+       </a>
+       &gt;.
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils citation" frame="void" id="python-daemon" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       [python-daemon]
+      </td>
+      <td>
+       <em>
+        (
+        <a class="fn-backref" href="#id3">
+         1
+        </a>
+        ,
+        <a class="fn-backref" href="#id8">
+         2
+        </a>
+        )
+       </em>
+       The
+       <cite>
+        python-daemon
+       </cite>
+       library
+       <a class="reference external" href="http://pypi.python.org/pypi/python-daemon/">
+        http://pypi.python.org/pypi/python-daemon/
+       </a>
+       by Ben Finney et
+al.
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils citation" frame="void" id="cookbook-66012" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       [cookbook-66012]
+      </td>
+      <td>
+       <em>
+        (
+        <a class="fn-backref" href="#id4">
+         1
+        </a>
+        ,
+        <a class="fn-backref" href="#id7">
+         2
+        </a>
+        )
+       </em>
+       Python Cookbook recipe 66012, “Fork a daemon process on Unix”
+       <a class="reference external" href="http://code.activestate.com/recipes/66012/">
+        http://code.activestate.com/recipes/66012/
+       </a>
+       .
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils citation" frame="void" id="cookbook-278731" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id5">
+        [cookbook-278731]
+       </a>
+      </td>
+      <td>
+       Python Cookbook recipe 278731, “Creating a daemon the Python way”
+       <a class="reference external" href="http://code.activestate.com/recipes/278731/">
+        http://code.activestate.com/recipes/278731/
+       </a>
+       .
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils citation" frame="void" id="bda-daemon" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id6">
+        [bda.daemon]
+       </a>
+      </td>
+      <td>
+       The
+       <cite>
+        bda.daemon
+       </cite>
+       library
+       <a class="reference external" href="http://pypi.python.org/pypi/bda.daemon/">
+        http://pypi.python.org/pypi/bda.daemon/
+       </a>
+       by Robert
+Niederreiter et al.
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils citation" frame="void" id="zdaemon" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id9">
+        [zdaemon]
+       </a>
+      </td>
+      <td>
+       The
+       <cite>
+        zdaemon
+       </cite>
+       tool
+       <a class="reference external" href="http://pypi.python.org/pypi/zdaemon/">
+        http://pypi.python.org/pypi/zdaemon/
+       </a>
+       by
+Guido van Rossum et al.
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils citation" frame="void" id="clapper-daemon" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       [clapper-daemon]
+      </td>
+      <td>
+       <em>
+        (
+        <a class="fn-backref" href="#id11">
+         1
+        </a>
+        ,
+        <a class="fn-backref" href="#id19">
+         2
+        </a>
+        )
+       </em>
+       The
+       <cite>
+        daemon
+       </cite>
+       library
+       <a class="reference external" href="http://pypi.python.org/pypi/daemon/">
+        http://pypi.python.org/pypi/daemon/
+       </a>
+       by
+Brian Clapper.
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils citation" frame="void" id="seutter-daemonize" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id13">
+        [seutter-daemonize]
+       </a>
+      </td>
+      <td>
+       The
+       <cite>
+        daemonize
+       </cite>
+       library
+       <a class="reference external" href="http://daemonize.sourceforge.net/">
+        http://daemonize.sourceforge.net/
+       </a>
+       by
+Jerry Seutter.
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils citation" frame="void" id="burr-daemon" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id15">
+        [burr-daemon]
+       </a>
+      </td>
+      <td>
+       The
+       <cite>
+        daemon.py
+       </cite>
+       module
+       <a class="reference external" href="http://www.nightmare.com/~ryb/code/daemon.py">
+        http://www.nightmare.com/~ryb/code/daemon.py
+       </a>
+       by Ray Burr.
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils citation" frame="void" id="twisted" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id17">
+        [twisted]
+       </a>
+      </td>
+      <td>
+       The
+       <cite>
+        Twisted
+       </cite>
+       application framework
+       <a class="reference external" href="http://pypi.python.org/pypi/Twisted/">
+        http://pypi.python.org/pypi/Twisted/
+       </a>
+       by Glyph Lefkowitz et
+al.
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils citation" frame="void" id="dagitses-initd" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id18">
+        [dagitses-initd]
+       </a>
+      </td>
+      <td>
+       The Python
+       <cite>
+        initd
+       </cite>
+       library
+       <a class="reference external" href="http://pypi.python.org/pypi/initd/">
+        http://pypi.python.org/pypi/initd/
+       </a>
+       by Michael Andreas Dagitses.
+      </td>
+     </tr>
+    </tbody>
+   </table>
+  </div>
+  <div class="section" id="copyright">
+   <h1>
+    <a class="toc-backref" href="#id48">
+     Copyright
+    </a>
+   </h1>
+   <p>
+    This work is hereby placed in the public domain. To the extent that
+placing a work in the public domain is not legally possible, the
+copyright holder hereby grants to all recipients of this work all
+rights and freedoms that would otherwise be restricted by copyright.
+   </p>
+   <!-- Local variables:
+mode: rst
+coding: utf-8
+End:
+vim: filetype=rst fileencoding=utf-8 : -->
+  </div>
+ </body>
+
+<!-- Mirrored from www.python.org/dev/peps/pep-3143/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 03 Sep 2015 04:37:04 GMT -->
+</html>Source: <a href="https://hg.python.org/peps/file/tip/pep-3143.txt">https://hg.python.org/peps/file/tip/pep-3143.txt</a>
+
+    </article>
+
+
+                </section>
+
+                
+
+
+<aside class="left-sidebar" role="secondary">
+
+    
+
+
+
+
+
+
+    
+
+
+
+
+
+        <div class="twitter-widget sidebar-widget">
+        <a class="twitter-timeline" data-dnt="true" href="https://twitter.com/ThePSF" data-widget-id="434113224703610882">Tweets by @ThePSF</a>
+        <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+    </div>
+
+    <div class="psf-sidebar-widget sidebar-widget">
+        <h3 class="widget-title">The PSF</h3>
+<p>The Python Software Foundation is the organization behind Python. Become a member of the PSF and help advance the software and our mission. </p>
+
+    </div>
+
+</aside>
+
+
+
+                
+                
+
+
+            </div><!-- end .container -->
+        </div><!-- end #content .content-wrapper -->
+
+        <!-- Footer and social media list -->
+        <footer id="site-map" class="main-footer" role="contentinfo">
+            <div class="main-footer-links">
+                <div class="container">
+
+                    
+                    <a id="back-to-top-1" class="jump-link" href="#python-network"><span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> Back to Top</a>
+
+                    
+
+<ul class="sitemap navigation menu do-not-print" role="tree" id="container">
+    
+    <li class="tier-1 element-1">
+        <a href="https://www.python.org/about/" >About</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/apps/" title="">Applications</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/quotes/" title="">Quotes</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/gettingstarted/" title="">Getting Started</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/help/" title="">Help</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-2">
+        <a href="https://www.python.org/downloads/" >Downloads</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/downloads/" title="">All releases</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/downloads/source/" title="">Source code</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/downloads/windows/" title="">Windows</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/downloads/mac-osx/" title="">Mac OS X</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/download/other/" title="">Other Platforms</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://docs.python.org/3/license.html" title="">License</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/download/alternatives" title="">Alternative Implementations</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-3">
+        <a href="https://www.python.org/doc/" >Documentation</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/doc/" title="">Docs</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/doc/av" title="">Audio/Visual Talks</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://wiki.python.org/moin/BeginnersGuide" title="">Beginner&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://docs.python.org/faq/" title="">FAQ</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="http://wiki.python.org/moin/Languages" title="">Non-English Docs</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="../index.html" title="">PEP Index</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://wiki.python.org/moin/PythonBooks" title="">Python Books</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-4">
+        <a href="https://www.python.org/community/" >Community</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/community/diversity/" title="">Diversity</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/community/irc/" title="">IRC</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/community/lists/" title="">Mailing Lists</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/workshops/" title="">Python Conferences</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/community/sigs/" title="">Special Interest Groups</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://wiki.python.org/moin/" title="">Python Wiki</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/community/logos/" title="">Python Logo</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://www.python.org/community/merchandise/" title="">Merchandise</a></li>
+    
+        <li class="tier-2 element-9" role="treeitem"><a href="https://www.python.org/community/awards" title="">Community Awards</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-5">
+        <a href="https://www.python.org/about/success/" title="success-stories">Success Stories</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/success/#arts" title="">Arts</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/success/#business" title="">Business</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/success/#education" title="">Education</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/success/#engineering" title="">Engineering</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/about/success/#government" title="">Government</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://www.python.org/about/success/#scientific" title="">Scientific</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/about/success/#software-development" title="">Software Development</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-6">
+        <a href="https://www.python.org/blogs/" title="News from around the Python world">News</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/blogs/" title="Python Insider Blog Posts">Python News</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://planetpython.org/" title="Planet Python">Community News</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="http://pyfound.blogspot.com/" title="PSF Blog">PSF News</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pycon.blogspot.com/" title="PyCon Blog">PyCon News</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-7">
+        <a href="https://www.python.org/events/" >Events</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/events/python-events/" title="">Python Events</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/events/python-user-group/" title="">User Group Events</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/events/python-events/past/" title="">Python Events Archive</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/events/python-user-group/past/" title="">User Group Events Archive</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://wiki.python.org/moin/PythonEventsCalendar#Submitting_an_Event" title="">Submit an Event</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-8">
+        <a href="https://www.python.org/dev/" >Contributing</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="http://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://bugs.python.org/" title="">Issue Tracker</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://mail.python.org/mailman/listinfo/python-dev" title="">python-dev list</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pythonmentors.com/" title="">Core Mentorship</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+</ul>
+
+
+                    <a id="back-to-top-2" class="jump-link" href="#python-network"><span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> Back to Top</a>
+                    
+
+                </div><!-- end .container -->
+            </div> <!-- end .main-footer-links -->
+
+            <div class="site-base">
+                <div class="container">
+                    
+                    <ul class="footer-links navigation menu do-not-print" role="tree">
+                        <li class="tier-1 element-1"><a href="https://www.python.org/about/help/">Help &amp; <span class="say-no-more">General</span> Contact</a></li>
+                        <li class="tier-1 element-2"><a href="https://www.python.org/community/diversity/">Diversity <span class="say-no-more">Initiatives</span></a></li>
+                        <li class="tier-1 element-3"><a href="https://github.com/python/pythondotorg/issues">Submit Website Bug</a></li>
+                        <!--<li class="tier-1 element-3"><a href="#"><span class="say-no-more">Website</span> Colophon</a></li>-->
+                    </ul>
+
+                    <div class="copyright">
+                        <p><small>
+                            <span class="pre">Copyright &copy;2001-2015.</span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/psf-landing/">Python Software Foundation</a></span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/about/legal/">Legal Statements</a></span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/privacy/">Privacy Policy</a></span>
+                        </small></p>
+                    </div>
+
+                </div><!-- end .container -->
+            </div><!-- end .site-base -->
+
+        </footer>
+
+    </div><!-- end #touchnav-wrapper -->
+
+    
+    <script src="../../../../ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="../../../static/js/libs/jquery-1.8.2.min.js"><\/script>')</script>
+
+    <script src="../../../static/js/libs/masonry.pkgd.min.js"></script>
+
+    <script type="text/javascript" src="../../../static/js/main-min.js" charset="utf-8"></script>
+    
+
+    <!--[if lte IE 7]>
+    <script type="text/javascript" src="/static/js/plugins/IE8-min.js" charset="utf-8"></script>
+    
+    
+    <![endif]-->
+
+    <!--[if lte IE 8]>
+    <script type="text/javascript" src="/static/js/plugins/getComputedStyle-min.js" charset="utf-8"></script>
+    
+    
+    <![endif]-->
+
+    
+
+    
+    
+
+</body>
+</html>

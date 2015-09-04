@@ -1,0 +1,1552 @@
+<!doctype html>
+<!--[if lt IE 7]>   <html class="no-js ie6 lt-ie7 lt-ie8 lt-ie9">   <![endif]-->
+<!--[if IE 7]>      <html class="no-js ie7 lt-ie8 lt-ie9">          <![endif]-->
+<!--[if IE 8]>      <html class="no-js ie8 lt-ie9">                 <![endif]-->
+<!--[if gt IE 8]><!--><html class="no-js" lang="en" dir="ltr">  <!--<![endif]-->
+
+
+<!-- Mirrored from www.python.org/dev/peps/pep-0390/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 03 Sep 2015 04:37:52 GMT -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <link rel="prefetch" href="../../../../ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js">
+
+    <meta name="application-name" content="Python.org">
+    <meta name="msapplication-tooltip" content="The official home of the Python Programming Language">
+    <meta name="apple-mobile-web-app-title" content="Python.org">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="format-detection" content="telephone=no">
+    <meta http-equiv="cleartype" content="on">
+    <meta http-equiv="imagetoolbar" content="false">
+
+    <script src="../../../static/js/libs/modernizr.js"></script>
+
+    <link href="../../../static/stylesheets/style.css" rel="stylesheet" type="text/css" title="default" />
+    <link href="../../../static/stylesheets/mq.css" rel="stylesheet" type="text/css" media="not print, braille, embossed, speech, tty" />
+    
+
+    <!--[if (lte IE 8)&(!IEMobile)]>
+    <link href="/static/stylesheets/no-mq.css" rel="stylesheet" type="text/css" media="screen" />
+    
+    
+    <![endif]-->
+
+    
+    <link rel="icon" type="image/x-icon" href="https://www.python.org/static/favicon.ico">
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="../../../static/apple-touch-icon-144x144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="../../../static/apple-touch-icon-114x114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="../../../static/apple-touch-icon-72x72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="../../../static/apple-touch-icon-precomposed.png">
+    <link rel="apple-touch-icon" href="../../../static/apple-touch-icon-precomposed.png">
+
+    
+    <meta name="msapplication-TileImage" content="/static/metro-icon-144x144-precomposed.png"><!-- white shape -->
+    <meta name="msapplication-TileColor" content="#3673a5"><!-- python blue -->
+    <meta name="msapplication-navbutton-color" content="#3673a5">
+
+    <meta property="og:site_name" content="Python.org">
+    <meta property="og:type" content="website">
+
+    <title>PEP 0390 -- Static metadata for Distutils | Python.org</title>
+    <meta property="og:title" content="Welcome to Python.org">
+
+    
+    <meta name="description" content="The official home of the Python Programming Language">
+    <meta name="og:description" content="The official home of the Python Programming Language">
+    <meta name="keywords" content="Python programming language object oriented web free open source software license documentation download community">
+    <meta property="og:tag" content="Python programming language object oriented web free open source software license documentation download community">
+    <meta property="og:published_time" content="">
+    <meta property="og:modified_time" content="">
+    <meta property="og:author" content="">
+    <meta property="og:section" content=""> 
+    <meta property="og:url" content="">
+    <meta property="og:image" content="">
+    <meta property="og:video" content="">
+
+    <link rel="author" href="https://www.python.org/static/humans.txt">
+
+    
+
+    
+    <script type="application/ld+json">
+     {
+       "@context": "http://schema.org",
+       "@type": "WebSite",
+       "url": "https://www.python.org/",
+       "potentialAction": {
+         "@type": "SearchAction",
+         "target": "https://www.python.org/search/?q={search_term_string}",
+         "query-input": "required name=search_term_string"
+       }
+     }
+    </script>
+
+    
+    <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-39055973-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+    </script>
+    
+</head>
+
+<body class="python pages pep-page">
+
+    <div id="touchnav-wrapper">
+
+        <div id="nojs" class="do-not-print">
+            <p><strong>Notice:</strong> While Javascript is not essential for this website, your interaction with the content will be limited. Please turn Javascript on for the full experience. </p>
+        </div>
+
+        <!--[if lt IE 8]>
+        <div id="oldie-warning" class="do-not-print">
+            <p><strong>Notice:</strong> Your browser is <em>ancient</em> and <a href="http://www.ie6countdown.com/">Microsoft agrees</a>. <a href="http://browsehappy.com/">Upgrade to a different browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to experience a better web.</p>
+        </div>
+        <![endif]-->
+
+        <!-- Sister Site Links -->
+        <div id="top" class="top-bar do-not-print">
+
+            <nav class="meta-navigation container" role="navigation">
+
+                
+                <div class="skip-link screen-reader-text">
+                    <a href="#content" title="Skip to content">Skip to content</a>
+                </div>
+
+                
+                <a id="close-python-network" class="jump-link" href="#python-network" aria-hidden="true">
+                    <span aria-hidden="true" class="icon-arrow-down"><span>&#9660;</span></span> Close
+                </a>
+
+                
+
+<ul class="menu" role="tree">
+    
+    <li class="python-meta ">
+        <a href="https://www.python.org/" title="The Python Programming Language" >Python</a>
+    </li>
+    
+    <li class="psf-meta ">
+        <a href="https://www.python.org/psf-landing/" title="The Python Software Foundation" >PSF</a>
+    </li>
+    
+    <li class="docs-meta ">
+        <a href="https://docs.python.org/" title="Python Documentation" >Docs</a>
+    </li>
+    
+    <li class="pypi-meta ">
+        <a href="https://pypi.python.org/" title="Python Package Index" >PyPI</a>
+    </li>
+    
+    <li class="jobs-meta ">
+        <a href="https://www.python.org/jobs/" title="Python Job Board" >Jobs</a>
+    </li>
+    
+    <li class="shop-meta ">
+        <a href="https://www.python.org/community/" title="Python Community" >Community</a>
+    </li>
+    
+</ul>
+
+
+                <a id="python-network" class="jump-link" href="#top" aria-hidden="true">
+                    <span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> The Python Network
+                </a>
+
+            </nav>
+
+        </div>
+
+        <!-- Header elements -->
+        <header class="main-header" role="banner">
+            <div class="container">
+
+                <h1 class="site-headline">
+                    <a href="https://www.python.org/"><img class="python-logo" src="../../../static/img/python-logo.png" alt="python&trade;"></a>
+                </h1>
+
+                <div class="options-bar do-not-print">
+
+                    
+                    <a id="site-map-link" class="jump-to-menu" href="#site-map"><span class="menu-icon">&equiv;</span> Menu</a><form class="search-the-site" action="https://www.python.org/search/" method="get">
+                        <fieldset title="Search Python.org">
+
+                            <span aria-hidden="true" class="icon-search"></span>
+
+                            <label class="screen-reader-text" for="id-search-field">Search This Site</label>
+                            <input id="id-search-field" name="q" type="search" role="textbox" class="search-field" placeholder="Search" value="" tabindex="1">
+
+                            <button type="submit" name="submit" id="submit" class="search-button" title="Submit this Search" tabindex="3">
+                                GO
+                            </button>
+
+                            
+                            <!--[if IE]><input type="text" style="display: none;" disabled="disabled" size="1" tabindex="4"><![endif]-->
+
+                        </fieldset>
+                    </form><span class="breaker"></span><div class="adjust-font-size" aria-hidden="true">
+                        <ul class="navigation menu" aria-label="Adjust Text Size on Page">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                <a href="#" class="action-trigger"><strong><small>A</small> A</strong></a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a class="text-shrink" title="Make Text Smaller" href="javascript:;">Smaller</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a class="text-grow" title="Make Text Larger" href="javascript:;">Larger</a></li>
+                                    <li class="tier-2 element-3" role="treeitem"><a class="text-reset" title="Reset any font size changes I have made" href="javascript:;">Reset</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div><div class="winkwink-nudgenudge">
+                        <ul class="navigation menu" aria-label="Social Media Navigation">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                <a href="#" class="action-trigger">Socialize</a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a href="http://plus.google.com/+Python"><span aria-hidden="true" class="icon-google-plus"></span>Google+</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a href="http://www.facebook.com/pythonlang?fref=ts"><span aria-hidden="true" class="icon-facebook"></span>Facebook</a></li>
+                                    <li class="tier-2 element-3" role="treeitem"><a href="http://twitter.com/ThePSF"><span aria-hidden="true" class="icon-twitter"></span>Twitter</a></li>
+                                    <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/irc/"><span aria-hidden="true" class="icon-freenode"></span>Chat on IRC</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div><div class="account-signin">
+                        <ul class="navigation menu" aria-label="Social Media Navigation">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                
+                                <a href="https://www.python.org/accounts/login/" title="Sign Up or Sign In to Python.org">Sign In</a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/accounts/signup/">Sign Up / Register</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/accounts/login/">Sign In</a></li>
+                                </ul>
+                                
+                            </li>
+                        </ul>
+                    </div>
+
+                </div><!-- end options-bar -->
+
+                <nav id="mainnav" class="python-navigation main-navigation do-not-print" role="navigation">
+                    
+                        
+<ul class="navigation menu" role="menubar" aria-label="Main Navigation">
+  
+    
+    
+    <li id="about" class="tier-1 element-1  " aria-haspopup="true">
+        <a href="https://www.python.org/about/" title="" class="">About</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/apps/" title="">Applications</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/quotes/" title="">Quotes</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/gettingstarted/" title="">Getting Started</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/help/" title="">Help</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="downloads" class="tier-1 element-2  " aria-haspopup="true">
+        <a href="https://www.python.org/downloads/" title="" class="">Downloads</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/downloads/" title="">All releases</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/downloads/source/" title="">Source code</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/downloads/windows/" title="">Windows</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/downloads/mac-osx/" title="">Mac OS X</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/download/other/" title="">Other Platforms</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://docs.python.org/3/license.html" title="">License</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/download/alternatives" title="">Alternative Implementations</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="documentation" class="tier-1 element-3  " aria-haspopup="true">
+        <a href="https://www.python.org/doc/" title="" class="">Documentation</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/doc/" title="">Docs</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/doc/av" title="">Audio/Visual Talks</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://wiki.python.org/moin/BeginnersGuide" title="">Beginner&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://docs.python.org/faq/" title="">FAQ</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="http://wiki.python.org/moin/Languages" title="">Non-English Docs</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="../index.html" title="">PEP Index</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://wiki.python.org/moin/PythonBooks" title="">Python Books</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="community" class="tier-1 element-4  " aria-haspopup="true">
+        <a href="https://www.python.org/community/" title="" class="">Community</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/community/diversity/" title="">Diversity</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/community/irc/" title="">IRC</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/community/lists/" title="">Mailing Lists</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/workshops/" title="">Python Conferences</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/community/sigs/" title="">Special Interest Groups</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://wiki.python.org/moin/" title="">Python Wiki</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/community/logos/" title="">Python Logo</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://www.python.org/community/merchandise/" title="">Merchandise</a></li>
+    
+        <li class="tier-2 element-9" role="treeitem"><a href="https://www.python.org/community/awards" title="">Community Awards</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="success-stories" class="tier-1 element-5  " aria-haspopup="true">
+        <a href="https://www.python.org/about/success/" title="success-stories" class="">Success Stories</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/success/#arts" title="">Arts</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/success/#business" title="">Business</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/success/#education" title="">Education</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/success/#engineering" title="">Engineering</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/about/success/#government" title="">Government</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://www.python.org/about/success/#scientific" title="">Scientific</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/about/success/#software-development" title="">Software Development</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="news" class="tier-1 element-6  " aria-haspopup="true">
+        <a href="https://www.python.org/blogs/" title="News from around the Python world" class="">News</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/blogs/" title="Python Insider Blog Posts">Python News</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://planetpython.org/" title="Planet Python">Community News</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="http://pyfound.blogspot.com/" title="PSF Blog">PSF News</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pycon.blogspot.com/" title="PyCon Blog">PyCon News</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="events" class="tier-1 element-7  " aria-haspopup="true">
+        <a href="https://www.python.org/events/" title="" class="">Events</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/events/python-events/" title="">Python Events</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/events/python-user-group/" title="">User Group Events</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/events/python-events/past/" title="">Python Events Archive</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/events/python-user-group/past/" title="">User Group Events Archive</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://wiki.python.org/moin/PythonEventsCalendar#Submitting_an_Event" title="">Submit an Event</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    
+  
+</ul>
+
+                    
+                </nav>
+
+                <div class="header-banner "> <!-- for optional "do-not-print" class -->
+                    
+                    
+                </div>
+
+                
+                
+
+             </div><!-- end .container -->
+        </header>
+
+        <div id="content" class="content-wrapper">
+            <!-- Main Content Column -->
+            <div class="container">
+
+                <section class="main-content with-left-sidebar" role="main">
+
+                    
+<ul class="breadcrumbs menu">
+    <li>
+        <a href="https://www.python.org/" title="The Python Programming Language">Python</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>
+        <a href="https://www.python.org/dev/">Python Developer's Guide</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>
+        <a href="../index.html">PEP Index</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>PEP 0390 -- Static metadata for Distutils</li>
+</ul>
+
+
+                    
+<style>
+   .pep-page pre {
+        padding: .5em;
+        background: inherit;
+        border-left: 0px;
+        -webkit-box-shadow: 0 0 0 0;
+        -moz-box-shadow: 0 0 0 0;
+        box-shadow: 0 0 0 0;
+   }
+</style>
+
+    
+    <article class="text">
+        
+
+        <header class="article-header">
+            <h1 class="page-title">PEP 0390 -- Static metadata for Distutils</h1>
+        </header>
+
+        <!--
+This HTML is auto-generated.  DO NOT EDIT THIS FILE!  If you are writing a new
+PEP, see http://www.python.org/dev/peps/pep-0001 for instructions and links
+to templates.  DO NOT USE THIS HTML FILE AS YOUR TEMPLATE!
+-->
+<html>
+ <body>
+  <table class="rfc2822 docutils field-list" frame="void" rules="none">
+   <col class="field-name">
+   </col>
+   <col class="field-body">
+   </col>
+   <tbody valign="top">
+    <tr class="field">
+     <th class="field-name">
+      PEP:
+     </th>
+     <td class="field-body">
+      390
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Title:
+     </th>
+     <td class="field-body">
+      Static metadata for Distutils
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Author:
+     </th>
+     <td class="field-body">
+      Tarek Ziadé &lt;tarek at ziade.org&gt;
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      BDFL-Delegate:
+     </th>
+     <td class="field-body">
+      Nick Coghlan
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Discussions-To:
+     </th>
+     <td class="field-body">
+      &lt;
+      <a class="reference external" href="mailto:distutils-sig@python.org?subject=PEP%20390">
+       distutils-sig at python.org
+      </a>
+      &gt;
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Status:
+     </th>
+     <td class="field-body">
+      Rejected
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Type:
+     </th>
+     <td class="field-body">
+      Standards Track
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Created:
+     </th>
+     <td class="field-body">
+      10-October-2009
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Python-Version:
+     </th>
+     <td class="field-body">
+      2.7 and 3.2
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Post-History:
+     </th>
+     <td class="field-body">
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Resolution:
+     </th>
+     <td class="field-body">
+      <a class="reference external" href="http://mail.python.org/pipermail/distutils-sig/2013-April/020597.html">
+       http://mail.python.org/pipermail/distutils-sig/2013-April/020597.html
+      </a>
+     </td>
+    </tr>
+   </tbody>
+  </table>
+  <hr/>
+  <div class="contents topic" id="contents">
+   <p class="topic-title first">
+    Contents
+   </p>
+   <ul class="simple">
+    <li>
+     <a class="reference internal" href="#abstract" id="id2">
+      Abstract
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#rejection-notice" id="id3">
+      Rejection Notice
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#rationale" id="id4">
+      Rationale
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#adding-a-metadata-section-in-setup-cfg" id="id5">
+      Adding a
+      <tt class="docutils literal">
+       metadata
+      </tt>
+      section in
+      <tt class="docutils literal">
+       setup.cfg
+      </tt>
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#multi-lines-values" id="id6">
+      Multi-lines values
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#context-dependant-sections" id="id7">
+      Context-dependant sections
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#impact-on-pkg-info-generation-and-pep-314" id="id8">
+      Impact on PKG-INFO generation and PEP 314
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#compatiblity" id="id9">
+      Compatiblity
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#limitations" id="id10">
+      Limitations
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#acknowledgments" id="id11">
+      Acknowledgments
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#copyright" id="id12">
+      Copyright
+     </a>
+    </li>
+   </ul>
+  </div>
+  <div class="section" id="abstract">
+   <h1>
+    <a class="toc-backref" href="#id2">
+     Abstract
+    </a>
+   </h1>
+   <p>
+    This PEP describes a new section and a new format for the
+    <tt class="docutils literal">
+     setup.cfg
+    </tt>
+    file,
+that allows describing the Metadata of a package without using
+    <tt class="docutils literal">
+     setup.py
+    </tt>
+    .
+   </p>
+  </div>
+  <div class="section" id="rejection-notice">
+   <h1>
+    <a class="toc-backref" href="#id3">
+     Rejection Notice
+    </a>
+   </h1>
+   <p>
+    As distutils2 is no longer going to be incorporated into the standard
+library, this PEP was rejected by Nick Coghlan in late April, 2013.
+   </p>
+   <p>
+    A replacement PEP based on
+    <a class="reference external" href="../pep-0426/index.html">
+     PEP 426
+    </a>
+    (metadata 2.0) will be created that
+defines the minimum amount of information needed to generate an sdist
+archive given a source tarball or VCS checkout.
+   </p>
+  </div>
+  <div class="section" id="rationale">
+   <h1>
+    <a class="toc-backref" href="#id4">
+     Rationale
+    </a>
+   </h1>
+   <p>
+    Today, if you want to list all the Metadata of a distribution (see
+    <a class="reference external" href="../pep-0314/index.html">
+     PEP 314
+    </a>
+    )
+that is not installed, you need to use the
+    <tt class="docutils literal">
+     setup.py
+    </tt>
+    command line interface.
+   </p>
+   <p>
+    So, basically, you download it, and run:
+   </p>
+   <pre class="literal-block">
+$ python setup.py --name
+Distribute
+
+$ python setup.py --version
+0.6.4
+</pre>
+   <p>
+    Where
+    <tt class="docutils literal">
+     name
+    </tt>
+    and
+    <tt class="docutils literal">
+     version
+    </tt>
+    are metadata fields. This is working fine but
+as soon as the developers add more code in
+    <tt class="docutils literal">
+     setup.py
+    </tt>
+    , this feature might
+break or in worst cases might do unwanted things on the target system.
+   </p>
+   <p>
+    Moreover, when an OS packager wants to get the metadata of a distribution
+he is re-packaging, he might encounter some problems to understand
+the
+    <tt class="docutils literal">
+     setup.py
+    </tt>
+    file he's working with.
+   </p>
+   <p>
+    So the rationale of this PEP is to provide a way to declare the metadata
+in a static configuration file alongside
+    <tt class="docutils literal">
+     setup.py
+    </tt>
+    that doesn't require
+any third party code to run.
+   </p>
+  </div>
+  <div class="section" id="adding-a-metadata-section-in-setup-cfg">
+   <h1>
+    <a class="toc-backref" href="#id5">
+     Adding a
+     <tt class="docutils literal">
+      metadata
+     </tt>
+     section in
+     <tt class="docutils literal">
+      setup.cfg
+     </tt>
+    </a>
+   </h1>
+   <p>
+    The first thing we want to introduce is a
+    <tt class="docutils literal">
+     [metadata]
+    </tt>
+    section, in the
+    <tt class="docutils literal">
+     setup.cfg
+    </tt>
+    file, that may contain any field from the Metadata:
+   </p>
+   <pre class="literal-block">
+[metadata]
+name = Distribute
+version = 0.6.4
+</pre>
+   <p>
+    The
+    <tt class="docutils literal">
+     setup.cfg
+    </tt>
+    file is used to avoid adding yet another configuration
+file to work with in Distutils.
+   </p>
+   <p>
+    This file is already read by Distutils when a command is executed, and
+if the
+    <tt class="docutils literal">
+     metadata
+    </tt>
+    section is found, it will be used to fill the metadata
+fields. If an option that corresponds to a Metadata field is given to
+    <tt class="docutils literal">
+     setup()
+    </tt>
+    , it will override the value that was possibly present in
+    <tt class="docutils literal">
+     setup.cfg
+    </tt>
+    .
+   </p>
+   <p>
+    Notice that
+    <tt class="docutils literal">
+     setup.py
+    </tt>
+    is still used and can be required to define some
+options that are not part of the Metadata fields. For instance, the
+    <tt class="docutils literal">
+     sdist
+    </tt>
+    command can use options like
+    <tt class="docutils literal">
+     packages
+    </tt>
+    or
+    <tt class="docutils literal">
+     scripts
+    </tt>
+    .
+   </p>
+  </div>
+  <div class="section" id="multi-lines-values">
+   <h1>
+    <a class="toc-backref" href="#id6">
+     Multi-lines values
+    </a>
+   </h1>
+   <p>
+    Some Metadata fields can have multiple values. To keep
+    <tt class="docutils literal">
+     setup.cfg
+    </tt>
+    compatible
+with
+    <tt class="docutils literal">
+     ConfigParser
+    </tt>
+    and the
+    <a class="reference external" href="http://www.faqs.org/rfcs/rfc822.html">
+     RFC 822
+    </a>
+    <tt class="docutils literal">
+     LONG HEADER FIELDS
+    </tt>
+    (see section 3.1.1),
+these are expressed with
+    <tt class="docutils literal">
+     ,
+    </tt>
+    -separated values:
+   </p>
+   <pre class="literal-block">
+requires = pywin32, bar &gt; 1.0, foo
+</pre>
+   <p>
+    When this variable is read, the values are parsed and transformed into a list:
+    <tt class="docutils literal">
+     ['pywin32', 'bar &gt; 1.0', 'foo']
+    </tt>
+    .
+   </p>
+  </div>
+  <div class="section" id="context-dependant-sections">
+   <h1>
+    <a class="toc-backref" href="#id7">
+     Context-dependant sections
+    </a>
+   </h1>
+   <p>
+    The
+    <tt class="docutils literal">
+     metadata
+    </tt>
+    section will also be able to use context-dependant sections.
+   </p>
+   <p>
+    A context-dependant section is a section with a condition about the execution
+environment. Here's some examples:
+   </p>
+   <pre class="literal-block">
+[metadata]
+name = Distribute
+version = 0.6.4
+
+[metadata:sys_platform == 'win32']
+requires = pywin32, bar &gt; 1.0
+obsoletes = pywin31
+
+[metadata:os_machine == 'i386']
+requires = foo
+
+[metadata:python_version == '2.4' or python_version == '2.5']
+requires = bar
+
+[metadata:'linux' in sys_platform]
+requires = baz
+</pre>
+   <p>
+    Every
+    <tt class="docutils literal">
+     [metadata:condition]
+    </tt>
+    section will be used only if the condition
+is met when the file is read. The background motivation for these
+context-dependant sections is to be able to define requirements that varies
+depending on the platform the distribution might be installed on.
+(see
+    <a class="reference external" href="../pep-0314/index.html">
+     PEP 314
+    </a>
+    ).
+   </p>
+   <p>
+    The micro-language behind this is the simplest possible: it compares only
+strings, with the
+    <tt class="docutils literal">
+     ==
+    </tt>
+    and
+    <tt class="docutils literal">
+     in
+    </tt>
+    operators (and their opposites), and
+with the ability to combine expressions. It makes it also easy to understand
+to non-pythoneers.
+   </p>
+   <p>
+    The pseudo-grammar is
+   </p>
+   <pre class="literal-block">
+EXPR [in|==|!=|not in] EXPR [or|and] ...
+</pre>
+   <p>
+    where
+    <tt class="docutils literal">
+     EXPR
+    </tt>
+    belongs to any of those:
+   </p>
+   <ul class="simple">
+    <li>
+     python_version = '%s.%s' % (sys.version_info[0], sys.version_info[1])
+    </li>
+    <li>
+     os_name = os.name
+    </li>
+    <li>
+     sys_platform = sys.platform
+    </li>
+    <li>
+     platform_version = platform.version()
+    </li>
+    <li>
+     platform_machine = platform.machine()
+    </li>
+    <li>
+     a free string, like
+     <tt class="docutils literal">
+      2.4
+     </tt>
+     , or
+     <tt class="docutils literal">
+      win32
+     </tt>
+    </li>
+   </ul>
+   <p>
+    Notice that
+    <tt class="docutils literal">
+     in
+    </tt>
+    is restricted to strings, meaning that it is not possible
+to use other sequences like tuples or lists on the right side.
+   </p>
+   <p>
+    Distutils will provide a function that is able to generate the metadata
+of a distribution, given a
+    <tt class="docutils literal">
+     setup.cfg
+    </tt>
+    file, for the execution environment:
+   </p>
+   <pre class="literal-block">
+&gt;&gt;&gt; from distutils.util import local_metadata
+&gt;&gt;&gt; local_metadata('setup.cfg')
+&lt;DistributionMetadata instance&gt;
+</pre>
+   <p>
+    This means that a vanilla Python will be able to read the metadata of a
+package without running any third party code.
+   </p>
+   <p>
+    Notice that this feature is not restricted to the
+    <tt class="docutils literal">
+     metadata
+    </tt>
+    namespace.
+Consequently, any other section can be extended with such context-dependant
+sections.
+   </p>
+  </div>
+  <div class="section" id="impact-on-pkg-info-generation-and-pep-314">
+   <h1>
+    Impact on PKG-INFO generation and
+    <a class="reference external" href="../pep-0314/index.html">
+     PEP 314
+    </a>
+   </h1>
+   <p>
+    When
+    <tt class="docutils literal">
+     <span class="pre">
+      PKG-INFO
+     </span>
+    </tt>
+    is generated by Distutils, every field that relies on a
+condition will have that condition written at the end of the line, after a
+    <cite>
+     ;
+    </cite>
+    separator:
+   </p>
+   <pre class="literal-block">
+Metadata-Version: 1.2
+Name: distribute
+Version: 0.6.4
+...
+Requires: pywin32, bar &gt; 1.0; sys_platform == 'win32'
+Requires: foo; os_machine == 'i386'
+Requires: bar; python_version == '2.4' or python_version == '2.5'
+Requires: baz; 'linux' in sys_platform
+Obsoletes = pywin31; sys_platform == 'win32'
+...
+Classifier: Development Status :: 5 - Production/Stable
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: Python Software Foundation License
+</pre>
+   <p>
+    Notice that this file can be opened with the
+    <tt class="docutils literal">
+     DistributionMetadata
+    </tt>
+    class.
+This class will be able to use the micro-language using the execution
+environment.
+   </p>
+   <p>
+    Let's run in on a
+    <tt class="docutils literal">
+     Python 2.5 i386 Linux
+    </tt>
+    :
+   </p>
+   <pre class="literal-block">
+&gt;&gt;&gt; from distutils.dist import DistributionMetadata
+&gt;&gt;&gt; metadata = DistributionMetadata('PKG_INFO')
+&gt;&gt;&gt; metadata.get_requires()
+['foo', 'bar', 'baz']
+</pre>
+   <p>
+    The execution environment can be overriden in case we want to get the meyadata
+for another environment:
+   </p>
+   <pre class="literal-block">
+&gt;&gt;&gt; env = {'python_version': '2.4',
+...        'os_name': 'nt',
+...        'sys_platform': 'win32',
+...        'platform_version': 'MVCC++ 6.0'
+...        'platform_machine': 'i386'}
+...
+&gt;&gt;&gt; metadata = DistributionMetadata('PKG_INFO', environment=env)
+&gt;&gt;&gt; metadata.get_requires()
+['bar &gt; 1.0', 'foo', 'bar']
+</pre>
+   <p>
+    <a class="reference external" href="../pep-0314/index.html">
+     PEP 314
+    </a>
+    is changed accordingly, meaning that each field will be able to
+have that extra condition marker.
+   </p>
+  </div>
+  <div class="section" id="compatiblity">
+   <h1>
+    <a class="toc-backref" href="#id9">
+     Compatiblity
+    </a>
+   </h1>
+   <p>
+    This change is is based on a new metadata
+    <tt class="docutils literal">
+     1.2
+    </tt>
+    format meaning that
+Distutils will be able to distinguish old PKG-INFO files from new ones.
+   </p>
+   <p>
+    The
+    <tt class="docutils literal">
+     setup.cfg
+    </tt>
+    file change will stay
+    <tt class="docutils literal">
+     ConfigParser
+    </tt>
+    -compatible and
+will not break existing
+    <tt class="docutils literal">
+     setup.cfg
+    </tt>
+    files.
+   </p>
+  </div>
+  <div class="section" id="limitations">
+   <h1>
+    <a class="toc-backref" href="#id10">
+     Limitations
+    </a>
+   </h1>
+   <p>
+    We are not providing
+    <tt class="docutils literal">
+     &lt;
+    </tt>
+    and
+    <tt class="docutils literal">
+     &gt;
+    </tt>
+    operators at this time, and
+    <tt class="docutils literal">
+     python_version
+    </tt>
+    is a regular string. This implies using
+    <tt class="docutils literal">
+     or
+    </tt>
+    operators
+when a section needs to be restricted to a couple of Python versions.
+Although, if
+    <a class="reference external" href="../pep-0386/index.html">
+     PEP 386
+    </a>
+    is accepted,
+    <tt class="docutils literal">
+     python_version
+    </tt>
+    could be changed
+internally into something comparable with strings, and
+    <tt class="docutils literal">
+     &lt;
+    </tt>
+    and
+    <tt class="docutils literal">
+     &gt;
+    </tt>
+    operators introduced.
+   </p>
+   <p>
+    Last, if a distribution is unable to set all metadata fields in
+    <tt class="docutils literal">
+     setup.cfg
+    </tt>
+    ,
+that's fine, the fields will be set to
+    <tt class="docutils literal">
+     UNKNOWN
+    </tt>
+    when
+    <tt class="docutils literal">
+     local_metadata
+    </tt>
+    is
+called. Getting
+    <tt class="docutils literal">
+     UNKNOWN
+    </tt>
+    values will mean that it might be necessary to
+run the
+    <tt class="docutils literal">
+     setup.py
+    </tt>
+    command line interface to get the whole set of metadata.
+   </p>
+  </div>
+  <div class="section" id="acknowledgments">
+   <h1>
+    <a class="toc-backref" href="#id11">
+     Acknowledgments
+    </a>
+   </h1>
+   <p>
+    The Distutils-SIG.
+   </p>
+  </div>
+  <div class="section" id="copyright">
+   <h1>
+    <a class="toc-backref" href="#id12">
+     Copyright
+    </a>
+   </h1>
+   <p>
+    This document has been placed in the public domain.
+   </p>
+   <!-- Local Variables:
+mode: indented-text
+indent-tabs-mode: nil
+sentence-end-double-space: t
+fill-column: 70
+coding: utf-8
+End: -->
+  </div>
+ </body>
+
+<!-- Mirrored from www.python.org/dev/peps/pep-0390/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 03 Sep 2015 04:37:53 GMT -->
+</html>Source: <a href="https://hg.python.org/peps/file/tip/pep-0390.txt">https://hg.python.org/peps/file/tip/pep-0390.txt</a>
+
+    </article>
+
+
+                </section>
+
+                
+
+
+<aside class="left-sidebar" role="secondary">
+
+    
+
+
+
+
+
+
+    
+
+
+
+
+
+        <div class="twitter-widget sidebar-widget">
+        <a class="twitter-timeline" data-dnt="true" href="https://twitter.com/ThePSF" data-widget-id="434113224703610882">Tweets by @ThePSF</a>
+        <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+    </div>
+
+    <div class="psf-sidebar-widget sidebar-widget">
+        <h3 class="widget-title">The PSF</h3>
+<p>The Python Software Foundation is the organization behind Python. Become a member of the PSF and help advance the software and our mission. </p>
+
+    </div>
+
+</aside>
+
+
+
+                
+                
+
+
+            </div><!-- end .container -->
+        </div><!-- end #content .content-wrapper -->
+
+        <!-- Footer and social media list -->
+        <footer id="site-map" class="main-footer" role="contentinfo">
+            <div class="main-footer-links">
+                <div class="container">
+
+                    
+                    <a id="back-to-top-1" class="jump-link" href="#python-network"><span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> Back to Top</a>
+
+                    
+
+<ul class="sitemap navigation menu do-not-print" role="tree" id="container">
+    
+    <li class="tier-1 element-1">
+        <a href="https://www.python.org/about/" >About</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/apps/" title="">Applications</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/quotes/" title="">Quotes</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/gettingstarted/" title="">Getting Started</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/help/" title="">Help</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-2">
+        <a href="https://www.python.org/downloads/" >Downloads</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/downloads/" title="">All releases</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/downloads/source/" title="">Source code</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/downloads/windows/" title="">Windows</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/downloads/mac-osx/" title="">Mac OS X</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/download/other/" title="">Other Platforms</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://docs.python.org/3/license.html" title="">License</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/download/alternatives" title="">Alternative Implementations</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-3">
+        <a href="https://www.python.org/doc/" >Documentation</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/doc/" title="">Docs</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/doc/av" title="">Audio/Visual Talks</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://wiki.python.org/moin/BeginnersGuide" title="">Beginner&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://docs.python.org/faq/" title="">FAQ</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="http://wiki.python.org/moin/Languages" title="">Non-English Docs</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="../index.html" title="">PEP Index</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://wiki.python.org/moin/PythonBooks" title="">Python Books</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-4">
+        <a href="https://www.python.org/community/" >Community</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/community/diversity/" title="">Diversity</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/community/irc/" title="">IRC</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/community/lists/" title="">Mailing Lists</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/workshops/" title="">Python Conferences</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/community/sigs/" title="">Special Interest Groups</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://wiki.python.org/moin/" title="">Python Wiki</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/community/logos/" title="">Python Logo</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://www.python.org/community/merchandise/" title="">Merchandise</a></li>
+    
+        <li class="tier-2 element-9" role="treeitem"><a href="https://www.python.org/community/awards" title="">Community Awards</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-5">
+        <a href="https://www.python.org/about/success/" title="success-stories">Success Stories</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/success/#arts" title="">Arts</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/success/#business" title="">Business</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/success/#education" title="">Education</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/success/#engineering" title="">Engineering</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/about/success/#government" title="">Government</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://www.python.org/about/success/#scientific" title="">Scientific</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/about/success/#software-development" title="">Software Development</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-6">
+        <a href="https://www.python.org/blogs/" title="News from around the Python world">News</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/blogs/" title="Python Insider Blog Posts">Python News</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://planetpython.org/" title="Planet Python">Community News</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="http://pyfound.blogspot.com/" title="PSF Blog">PSF News</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pycon.blogspot.com/" title="PyCon Blog">PyCon News</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-7">
+        <a href="https://www.python.org/events/" >Events</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/events/python-events/" title="">Python Events</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/events/python-user-group/" title="">User Group Events</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/events/python-events/past/" title="">Python Events Archive</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/events/python-user-group/past/" title="">User Group Events Archive</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://wiki.python.org/moin/PythonEventsCalendar#Submitting_an_Event" title="">Submit an Event</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-8">
+        <a href="https://www.python.org/dev/" >Contributing</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="http://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://bugs.python.org/" title="">Issue Tracker</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://mail.python.org/mailman/listinfo/python-dev" title="">python-dev list</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pythonmentors.com/" title="">Core Mentorship</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+</ul>
+
+
+                    <a id="back-to-top-2" class="jump-link" href="#python-network"><span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> Back to Top</a>
+                    
+
+                </div><!-- end .container -->
+            </div> <!-- end .main-footer-links -->
+
+            <div class="site-base">
+                <div class="container">
+                    
+                    <ul class="footer-links navigation menu do-not-print" role="tree">
+                        <li class="tier-1 element-1"><a href="https://www.python.org/about/help/">Help &amp; <span class="say-no-more">General</span> Contact</a></li>
+                        <li class="tier-1 element-2"><a href="https://www.python.org/community/diversity/">Diversity <span class="say-no-more">Initiatives</span></a></li>
+                        <li class="tier-1 element-3"><a href="https://github.com/python/pythondotorg/issues">Submit Website Bug</a></li>
+                        <!--<li class="tier-1 element-3"><a href="#"><span class="say-no-more">Website</span> Colophon</a></li>-->
+                    </ul>
+
+                    <div class="copyright">
+                        <p><small>
+                            <span class="pre">Copyright &copy;2001-2015.</span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/psf-landing/">Python Software Foundation</a></span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/about/legal/">Legal Statements</a></span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/privacy/">Privacy Policy</a></span>
+                        </small></p>
+                    </div>
+
+                </div><!-- end .container -->
+            </div><!-- end .site-base -->
+
+        </footer>
+
+    </div><!-- end #touchnav-wrapper -->
+
+    
+    <script src="../../../../ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="../../../static/js/libs/jquery-1.8.2.min.js"><\/script>')</script>
+
+    <script src="../../../static/js/libs/masonry.pkgd.min.js"></script>
+
+    <script type="text/javascript" src="../../../static/js/main-min.js" charset="utf-8"></script>
+    
+
+    <!--[if lte IE 7]>
+    <script type="text/javascript" src="/static/js/plugins/IE8-min.js" charset="utf-8"></script>
+    
+    
+    <![endif]-->
+
+    <!--[if lte IE 8]>
+    <script type="text/javascript" src="/static/js/plugins/getComputedStyle-min.js" charset="utf-8"></script>
+    
+    
+    <![endif]-->
+
+    
+
+    
+    
+
+</body>
+</html>

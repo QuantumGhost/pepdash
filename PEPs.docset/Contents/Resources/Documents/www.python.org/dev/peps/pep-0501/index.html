@@ -1,0 +1,2355 @@
+<!doctype html>
+<!--[if lt IE 7]>   <html class="no-js ie6 lt-ie7 lt-ie8 lt-ie9">   <![endif]-->
+<!--[if IE 7]>      <html class="no-js ie7 lt-ie8 lt-ie9">          <![endif]-->
+<!--[if IE 8]>      <html class="no-js ie8 lt-ie9">                 <![endif]-->
+<!--[if gt IE 8]><!--><html class="no-js" lang="en" dir="ltr">  <!--<![endif]-->
+
+
+<!-- Mirrored from www.python.org/dev/peps/pep-0501/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 03 Sep 2015 04:33:56 GMT -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <link rel="prefetch" href="../../../../ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js">
+
+    <meta name="application-name" content="Python.org">
+    <meta name="msapplication-tooltip" content="The official home of the Python Programming Language">
+    <meta name="apple-mobile-web-app-title" content="Python.org">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="format-detection" content="telephone=no">
+    <meta http-equiv="cleartype" content="on">
+    <meta http-equiv="imagetoolbar" content="false">
+
+    <script src="../../../static/js/libs/modernizr.js"></script>
+
+    <link href="../../../static/stylesheets/style.css" rel="stylesheet" type="text/css" title="default" />
+    <link href="../../../static/stylesheets/mq.css" rel="stylesheet" type="text/css" media="not print, braille, embossed, speech, tty" />
+    
+
+    <!--[if (lte IE 8)&(!IEMobile)]>
+    <link href="/static/stylesheets/no-mq.css" rel="stylesheet" type="text/css" media="screen" />
+    
+    
+    <![endif]-->
+
+    
+    <link rel="icon" type="image/x-icon" href="https://www.python.org/static/favicon.ico">
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="../../../static/apple-touch-icon-144x144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="../../../static/apple-touch-icon-114x114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="../../../static/apple-touch-icon-72x72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="../../../static/apple-touch-icon-precomposed.png">
+    <link rel="apple-touch-icon" href="../../../static/apple-touch-icon-precomposed.png">
+
+    
+    <meta name="msapplication-TileImage" content="/static/metro-icon-144x144-precomposed.png"><!-- white shape -->
+    <meta name="msapplication-TileColor" content="#3673a5"><!-- python blue -->
+    <meta name="msapplication-navbutton-color" content="#3673a5">
+
+    <meta property="og:site_name" content="Python.org">
+    <meta property="og:type" content="website">
+
+    <title>PEP 0501 -- General purpose string interpolation | Python.org</title>
+    <meta property="og:title" content="Welcome to Python.org">
+
+    
+    <meta name="description" content="The official home of the Python Programming Language">
+    <meta name="og:description" content="The official home of the Python Programming Language">
+    <meta name="keywords" content="Python programming language object oriented web free open source software license documentation download community">
+    <meta property="og:tag" content="Python programming language object oriented web free open source software license documentation download community">
+    <meta property="og:published_time" content="">
+    <meta property="og:modified_time" content="">
+    <meta property="og:author" content="">
+    <meta property="og:section" content=""> 
+    <meta property="og:url" content="">
+    <meta property="og:image" content="">
+    <meta property="og:video" content="">
+
+    <link rel="author" href="https://www.python.org/static/humans.txt">
+
+    
+
+    
+    <script type="application/ld+json">
+     {
+       "@context": "http://schema.org",
+       "@type": "WebSite",
+       "url": "https://www.python.org/",
+       "potentialAction": {
+         "@type": "SearchAction",
+         "target": "https://www.python.org/search/?q={search_term_string}",
+         "query-input": "required name=search_term_string"
+       }
+     }
+    </script>
+
+    
+    <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-39055973-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+    </script>
+    
+</head>
+
+<body class="python pages pep-page">
+
+    <div id="touchnav-wrapper">
+
+        <div id="nojs" class="do-not-print">
+            <p><strong>Notice:</strong> While Javascript is not essential for this website, your interaction with the content will be limited. Please turn Javascript on for the full experience. </p>
+        </div>
+
+        <!--[if lt IE 8]>
+        <div id="oldie-warning" class="do-not-print">
+            <p><strong>Notice:</strong> Your browser is <em>ancient</em> and <a href="http://www.ie6countdown.com/">Microsoft agrees</a>. <a href="http://browsehappy.com/">Upgrade to a different browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to experience a better web.</p>
+        </div>
+        <![endif]-->
+
+        <!-- Sister Site Links -->
+        <div id="top" class="top-bar do-not-print">
+
+            <nav class="meta-navigation container" role="navigation">
+
+                
+                <div class="skip-link screen-reader-text">
+                    <a href="#content" title="Skip to content">Skip to content</a>
+                </div>
+
+                
+                <a id="close-python-network" class="jump-link" href="#python-network" aria-hidden="true">
+                    <span aria-hidden="true" class="icon-arrow-down"><span>&#9660;</span></span> Close
+                </a>
+
+                
+
+<ul class="menu" role="tree">
+    
+    <li class="python-meta ">
+        <a href="https://www.python.org/" title="The Python Programming Language" >Python</a>
+    </li>
+    
+    <li class="psf-meta ">
+        <a href="https://www.python.org/psf-landing/" title="The Python Software Foundation" >PSF</a>
+    </li>
+    
+    <li class="docs-meta ">
+        <a href="https://docs.python.org/" title="Python Documentation" >Docs</a>
+    </li>
+    
+    <li class="pypi-meta ">
+        <a href="https://pypi.python.org/" title="Python Package Index" >PyPI</a>
+    </li>
+    
+    <li class="jobs-meta ">
+        <a href="https://www.python.org/jobs/" title="Python Job Board" >Jobs</a>
+    </li>
+    
+    <li class="shop-meta ">
+        <a href="https://www.python.org/community/" title="Python Community" >Community</a>
+    </li>
+    
+</ul>
+
+
+                <a id="python-network" class="jump-link" href="#top" aria-hidden="true">
+                    <span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> The Python Network
+                </a>
+
+            </nav>
+
+        </div>
+
+        <!-- Header elements -->
+        <header class="main-header" role="banner">
+            <div class="container">
+
+                <h1 class="site-headline">
+                    <a href="https://www.python.org/"><img class="python-logo" src="../../../static/img/python-logo.png" alt="python&trade;"></a>
+                </h1>
+
+                <div class="options-bar do-not-print">
+
+                    
+                    <a id="site-map-link" class="jump-to-menu" href="#site-map"><span class="menu-icon">&equiv;</span> Menu</a><form class="search-the-site" action="https://www.python.org/search/" method="get">
+                        <fieldset title="Search Python.org">
+
+                            <span aria-hidden="true" class="icon-search"></span>
+
+                            <label class="screen-reader-text" for="id-search-field">Search This Site</label>
+                            <input id="id-search-field" name="q" type="search" role="textbox" class="search-field" placeholder="Search" value="" tabindex="1">
+
+                            <button type="submit" name="submit" id="submit" class="search-button" title="Submit this Search" tabindex="3">
+                                GO
+                            </button>
+
+                            
+                            <!--[if IE]><input type="text" style="display: none;" disabled="disabled" size="1" tabindex="4"><![endif]-->
+
+                        </fieldset>
+                    </form><span class="breaker"></span><div class="adjust-font-size" aria-hidden="true">
+                        <ul class="navigation menu" aria-label="Adjust Text Size on Page">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                <a href="#" class="action-trigger"><strong><small>A</small> A</strong></a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a class="text-shrink" title="Make Text Smaller" href="javascript:;">Smaller</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a class="text-grow" title="Make Text Larger" href="javascript:;">Larger</a></li>
+                                    <li class="tier-2 element-3" role="treeitem"><a class="text-reset" title="Reset any font size changes I have made" href="javascript:;">Reset</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div><div class="winkwink-nudgenudge">
+                        <ul class="navigation menu" aria-label="Social Media Navigation">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                <a href="#" class="action-trigger">Socialize</a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a href="http://plus.google.com/+Python"><span aria-hidden="true" class="icon-google-plus"></span>Google+</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a href="http://www.facebook.com/pythonlang?fref=ts"><span aria-hidden="true" class="icon-facebook"></span>Facebook</a></li>
+                                    <li class="tier-2 element-3" role="treeitem"><a href="http://twitter.com/ThePSF"><span aria-hidden="true" class="icon-twitter"></span>Twitter</a></li>
+                                    <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/irc/"><span aria-hidden="true" class="icon-freenode"></span>Chat on IRC</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div><div class="account-signin">
+                        <ul class="navigation menu" aria-label="Social Media Navigation">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                
+                                <a href="https://www.python.org/accounts/login/" title="Sign Up or Sign In to Python.org">Sign In</a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/accounts/signup/">Sign Up / Register</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/accounts/login/">Sign In</a></li>
+                                </ul>
+                                
+                            </li>
+                        </ul>
+                    </div>
+
+                </div><!-- end options-bar -->
+
+                <nav id="mainnav" class="python-navigation main-navigation do-not-print" role="navigation">
+                    
+                        
+<ul class="navigation menu" role="menubar" aria-label="Main Navigation">
+  
+    
+    
+    <li id="about" class="tier-1 element-1  " aria-haspopup="true">
+        <a href="https://www.python.org/about/" title="" class="">About</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/apps/" title="">Applications</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/quotes/" title="">Quotes</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/gettingstarted/" title="">Getting Started</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/help/" title="">Help</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="downloads" class="tier-1 element-2  " aria-haspopup="true">
+        <a href="https://www.python.org/downloads/" title="" class="">Downloads</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/downloads/" title="">All releases</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/downloads/source/" title="">Source code</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/downloads/windows/" title="">Windows</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/downloads/mac-osx/" title="">Mac OS X</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/download/other/" title="">Other Platforms</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://docs.python.org/3/license.html" title="">License</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/download/alternatives" title="">Alternative Implementations</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="documentation" class="tier-1 element-3  " aria-haspopup="true">
+        <a href="https://www.python.org/doc/" title="" class="">Documentation</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/doc/" title="">Docs</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/doc/av" title="">Audio/Visual Talks</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://wiki.python.org/moin/BeginnersGuide" title="">Beginner&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://docs.python.org/faq/" title="">FAQ</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="http://wiki.python.org/moin/Languages" title="">Non-English Docs</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="../index.html" title="">PEP Index</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://wiki.python.org/moin/PythonBooks" title="">Python Books</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="community" class="tier-1 element-4  " aria-haspopup="true">
+        <a href="https://www.python.org/community/" title="" class="">Community</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/community/diversity/" title="">Diversity</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/community/irc/" title="">IRC</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/community/lists/" title="">Mailing Lists</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/workshops/" title="">Python Conferences</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/community/sigs/" title="">Special Interest Groups</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://wiki.python.org/moin/" title="">Python Wiki</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/community/logos/" title="">Python Logo</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://www.python.org/community/merchandise/" title="">Merchandise</a></li>
+    
+        <li class="tier-2 element-9" role="treeitem"><a href="https://www.python.org/community/awards" title="">Community Awards</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="success-stories" class="tier-1 element-5  " aria-haspopup="true">
+        <a href="https://www.python.org/about/success/" title="success-stories" class="">Success Stories</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/success/#arts" title="">Arts</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/success/#business" title="">Business</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/success/#education" title="">Education</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/success/#engineering" title="">Engineering</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/about/success/#government" title="">Government</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://www.python.org/about/success/#scientific" title="">Scientific</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/about/success/#software-development" title="">Software Development</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="news" class="tier-1 element-6  " aria-haspopup="true">
+        <a href="https://www.python.org/blogs/" title="News from around the Python world" class="">News</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/blogs/" title="Python Insider Blog Posts">Python News</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://planetpython.org/" title="Planet Python">Community News</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="http://pyfound.blogspot.com/" title="PSF Blog">PSF News</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pycon.blogspot.com/" title="PyCon Blog">PyCon News</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="events" class="tier-1 element-7  " aria-haspopup="true">
+        <a href="https://www.python.org/events/" title="" class="">Events</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/events/python-events/" title="">Python Events</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/events/python-user-group/" title="">User Group Events</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/events/python-events/past/" title="">Python Events Archive</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/events/python-user-group/past/" title="">User Group Events Archive</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://wiki.python.org/moin/PythonEventsCalendar#Submitting_an_Event" title="">Submit an Event</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    
+  
+</ul>
+
+                    
+                </nav>
+
+                <div class="header-banner "> <!-- for optional "do-not-print" class -->
+                    
+                    
+                </div>
+
+                
+                
+
+             </div><!-- end .container -->
+        </header>
+
+        <div id="content" class="content-wrapper">
+            <!-- Main Content Column -->
+            <div class="container">
+
+                <section class="main-content with-left-sidebar" role="main">
+
+                    
+<ul class="breadcrumbs menu">
+    <li>
+        <a href="https://www.python.org/" title="The Python Programming Language">Python</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>
+        <a href="https://www.python.org/dev/">Python Developer's Guide</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>
+        <a href="../index.html">PEP Index</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>PEP 0501 -- General purpose string interpolation</li>
+</ul>
+
+
+                    
+<style>
+   .pep-page pre {
+        padding: .5em;
+        background: inherit;
+        border-left: 0px;
+        -webkit-box-shadow: 0 0 0 0;
+        -moz-box-shadow: 0 0 0 0;
+        box-shadow: 0 0 0 0;
+   }
+</style>
+
+    
+    <article class="text">
+        
+
+        <header class="article-header">
+            <h1 class="page-title">PEP 0501 -- General purpose string interpolation</h1>
+        </header>
+
+        <!--
+This HTML is auto-generated.  DO NOT EDIT THIS FILE!  If you are writing a new
+PEP, see http://www.python.org/dev/peps/pep-0001 for instructions and links
+to templates.  DO NOT USE THIS HTML FILE AS YOUR TEMPLATE!
+-->
+<html>
+ <body>
+  <table class="rfc2822 docutils field-list" frame="void" rules="none">
+   <col class="field-name">
+   </col>
+   <col class="field-body">
+   </col>
+   <tbody valign="top">
+    <tr class="field">
+     <th class="field-name">
+      PEP:
+     </th>
+     <td class="field-body">
+      501
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Title:
+     </th>
+     <td class="field-body">
+      General purpose string interpolation
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Author:
+     </th>
+     <td class="field-body">
+      Nick Coghlan &lt;ncoghlan at gmail.com&gt;
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Status:
+     </th>
+     <td class="field-body">
+      Draft
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Type:
+     </th>
+     <td class="field-body">
+      Standards Track
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Requires:
+     </th>
+     <td class="field-body">
+      <a class="reference external" href="../pep-0498/index.html">
+       498
+      </a>
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Created:
+     </th>
+     <td class="field-body">
+      08-Aug-2015
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Python-Version:
+     </th>
+     <td class="field-body">
+      3.6
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Post-History:
+     </th>
+     <td class="field-body">
+      08-Aug-2015, 23-Aug-2015, 30-Aug-2015
+     </td>
+    </tr>
+   </tbody>
+  </table>
+  <hr/>
+  <div class="contents topic" id="contents">
+   <p class="topic-title first">
+    Contents
+   </p>
+   <ul class="simple">
+    <li>
+     <a class="reference internal" href="#abstract" id="id11">
+      Abstract
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#summary-of-differences-from-pep-498" id="id12">
+      Summary of differences from PEP 498
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#proposal" id="id13">
+      Proposal
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#rationale" id="id14">
+      Rationale
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#specification" id="id15">
+      Specification
+     </a>
+     <ul>
+      <li>
+       <a class="reference internal" href="#conversion-specifiers" id="id16">
+        Conversion specifiers
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#writing-custom-renderers" id="id17">
+        Writing custom renderers
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#expression-evaluation" id="id18">
+        Expression evaluation
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#handling-code-injection-attacks" id="id19">
+        Handling code injection attacks
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#format-specifiers" id="id20">
+        Format specifiers
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#error-handling" id="id21">
+        Error handling
+       </a>
+      </li>
+     </ul>
+    </li>
+    <li>
+     <a class="reference internal" href="#possible-integration-with-the-logging-module" id="id22">
+      Possible integration with the logging module
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#discussion" id="id23">
+      Discussion
+     </a>
+     <ul>
+      <li>
+       <a class="reference internal" href="#deferring-support-for-binary-interpolation" id="id24">
+        Deferring support for binary interpolation
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#interoperability-with-str-only-interfaces" id="id25">
+        Interoperability with str-only interfaces
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#preserving-the-raw-template-string" id="id26">
+        Preserving the raw template string
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#creating-a-rich-object-rather-than-a-global-name-lookup" id="id27">
+        Creating a rich object rather than a global name lookup
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#building-atop-pep-498-rather-than-competing-with-it" id="id28">
+        Building atop PEP 498, rather than competing with it
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#deferring-consideration-of-possible-use-in-i18n-use-cases" id="id29">
+        Deferring consideration of possible use in i18n use cases
+       </a>
+      </li>
+     </ul>
+    </li>
+    <li>
+     <a class="reference internal" href="#acknowledgements" id="id30">
+      Acknowledgements
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#references" id="id31">
+      References
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#copyright" id="id32">
+      Copyright
+     </a>
+    </li>
+   </ul>
+  </div>
+  <div class="section" id="abstract">
+   <h1>
+    <a class="toc-backref" href="#id11">
+     Abstract
+    </a>
+   </h1>
+   <p>
+    <a class="reference external" href="../pep-0498/index.html">
+     PEP 498
+    </a>
+    proposes new syntactic support for string interpolation that is
+transparent to the compiler, allow name references from the interpolation
+operation full access to containing namespaces (as with any other expression),
+rather than being limited to explicit name references. These are referred
+to in the PEP as "f-strings" (a mnemonic for "formatted strings").
+   </p>
+   <p>
+    However, it only offers this capability for string formatting, making it likely
+we will see code like the following:
+   </p>
+   <pre class="literal-block">
+os.system(f"echo {message_from_user}")
+</pre>
+   <p>
+    This kind of code is superficially elegant, but poses a significant problem
+if the interpolated value
+    <tt class="docutils literal">
+     message_from_user
+    </tt>
+    is in fact provided by an
+untrusted user: it's an opening for a form of code injection attack, where
+the supplied user data has not been properly escaped before being passed to
+the
+    <tt class="docutils literal">
+     os.system
+    </tt>
+    call.
+   </p>
+   <p>
+    To address that problem (and a number of other concerns), this PEP proposes
+the complementary introduction of "i-strings" (a mnemonic for "interpolation
+template strings"), where
+    <tt class="docutils literal">
+     f"Message with {data}"
+    </tt>
+    would produce the same
+result as
+    <tt class="docutils literal">
+     format(i"Message with
+     <span class="pre">
+      {data}")
+     </span>
+    </tt>
+    .
+   </p>
+   <p>
+    Some possible examples of the proposed syntax:
+   </p>
+   <pre class="literal-block">
+mycommand = sh(i"cat {filename}")
+myquery = sql(i"SELECT {column} FROM {table};")
+myresponse = html(i"&lt;html&gt;&lt;body&gt;{response.body}&lt;/body&gt;&lt;/html&gt;")
+logging.debug(i"Message with {detailed} {debugging} {info}")
+</pre>
+  </div>
+  <div class="section" id="summary-of-differences-from-pep-498">
+   <h1>
+    Summary of differences from
+    <a class="reference external" href="../pep-0498/index.html">
+     PEP 498
+    </a>
+   </h1>
+   <p>
+    The key additions this proposal makes relative to
+    <a class="reference external" href="../pep-0498/index.html">
+     PEP 498
+    </a>
+    :
+   </p>
+   <ul class="simple">
+    <li>
+     the "i" (interpolation template) prefix indicates delayed rendering, but
+otherwise uses the same syntax and semantics as formatted strings
+    </li>
+    <li>
+     interpolation templates are available at runtime as a new kind of object
+(
+     <tt class="docutils literal">
+      types.InterpolationTemplate
+     </tt>
+     )
+    </li>
+    <li>
+     the default rendering used by formatted strings is invoked on an
+interpolation template object by calling
+     <tt class="docutils literal">
+      format(template)
+     </tt>
+     rather than
+implicitly
+    </li>
+    <li>
+     while  f-string
+     <tt class="docutils literal">
+      f"Message {here}"
+     </tt>
+     would be
+     <em>
+      semantically
+     </em>
+     equivalent to
+     <tt class="docutils literal">
+      format(i"Message
+      <span class="pre">
+       {here}")
+      </span>
+     </tt>
+     , it is expected that the explicit syntax would
+avoid the runtime overhead of using the delayed rendering machinery
+    </li>
+   </ul>
+   <p>
+    NOTE: This proposal spells out a draft API for
+    <tt class="docutils literal">
+     types.InterpolationTemplate
+    </tt>
+    .
+The precise details of the structures and methods exposed by this type would
+be informed by the reference implementation of
+    <a class="reference external" href="../pep-0498/index.html">
+     PEP 498
+    </a>
+    , so it makes sense to
+gain experience with that as an internal API before locking down a public API
+(if this extension proposal is accepted).
+   </p>
+  </div>
+  <div class="section" id="proposal">
+   <h1>
+    <a class="toc-backref" href="#id13">
+     Proposal
+    </a>
+   </h1>
+   <p>
+    This PEP proposes the introduction of a new string prefix that declares the
+string to be an interpolation template rather than an ordinary string:
+   </p>
+   <pre class="literal-block">
+template = i"Substitute {names} and {expressions()} at runtime"
+</pre>
+   <p>
+    This would be effectively interpreted as:
+   </p>
+   <pre class="literal-block">
+_raw_template = "Substitute {names} and {expressions()} at runtime"
+_parsed_template = (
+    ("Substitute ", "names"),
+    (" and ", "expressions()"),
+    (" at runtime", None),
+)
+_field_values = (names, expressions())
+_format_specifiers = (f"", f"")
+template = types.InterpolationTemplate(_raw_template,
+                                       _parsed_template,
+                                       _field_values,
+                                       _format_specifiers)
+</pre>
+   <p>
+    The
+    <tt class="docutils literal">
+     __format__
+    </tt>
+    method on
+    <tt class="docutils literal">
+     types.InterpolationTemplate
+    </tt>
+    would then
+implement the following
+    <tt class="docutils literal">
+     str.format
+    </tt>
+    inspired semantics:
+   </p>
+   <pre class="literal-block">
+&gt;&gt;&gt; import datetime
+&gt;&gt;&gt; name = 'Jane'
+&gt;&gt;&gt; age = 50
+&gt;&gt;&gt; anniversary = datetime.date(1991, 10, 12)
+&gt;&gt;&gt; format(i'My name is {name}, my age next year is {age+1}, my anniversary is {anniversary:%A, %B %d, %Y}.')
+'My name is Jane, my age next year is 51, my anniversary is Saturday, October 12, 1991.'
+&gt;&gt;&gt; format(i'She said her name is {repr(name)}.')
+"She said her name is 'Jane'."
+</pre>
+   <p>
+    As with formatted strings, the interpolation template prefix can be combined with single-quoted, double-quoted and triple quoted strings, including raw strings.
+It does not support combination with bytes literals.
+   </p>
+   <p>
+    Similarly, this PEP does not propose to remove or deprecate any of the existing
+string formatting mechanisms, as those will remain valuable when formatting
+strings that are not present directly in the source code of the application.
+   </p>
+  </div>
+  <div class="section" id="rationale">
+   <h1>
+    <a class="toc-backref" href="#id14">
+     Rationale
+    </a>
+   </h1>
+   <p>
+    <a class="reference external" href="../pep-0498/index.html">
+     PEP 498
+    </a>
+    makes interpolating values into strings with full access to Python's
+lexical namespace semantics simpler, but it does so at the cost of creating a
+situation where interpolating values into sensitive targets like SQL queries,
+shell commands and HTML templates will enjoy a much cleaner syntax when handled
+without regard for code injection attacks than when they are handled correctly.
+   </p>
+   <p>
+    This PEP proposes to provide the option of delaying the actual rendering
+of an interpolation template to its
+    <tt class="docutils literal">
+     __format__
+    </tt>
+    method, allowing the use of
+other template renderers by passing the template around as a first class object.
+   </p>
+   <p>
+    While very different in the technical details, the
+    <tt class="docutils literal">
+     types.InterpolationTemplate
+    </tt>
+    interface proposed in this PEP is
+conceptually quite similar to the
+    <tt class="docutils literal">
+     FormattableString
+    </tt>
+    type underlying the
+    <a class="reference external" href="https://msdn.microsoft.com/en-us/library/dn961160.aspx">
+     native interpolation
+    </a>
+    support introduced in C# 6.0.
+   </p>
+  </div>
+  <div class="section" id="specification">
+   <h1>
+    <a class="toc-backref" href="#id15">
+     Specification
+    </a>
+   </h1>
+   <p>
+    This PEP proposes the introduction of
+    <tt class="docutils literal">
+     i
+    </tt>
+    as a new string prefix that
+results in the creation of an instance of a new type,
+    <tt class="docutils literal">
+     types.InterpolationTemplate
+    </tt>
+    .
+   </p>
+   <p>
+    Interpolation template literals are Unicode strings (bytes literals are not
+permitted), and string literal concatenation operates as normal, with the
+entire combined literal forming the interpolation template.
+   </p>
+   <p>
+    The template string is parsed into literals, expressions and format specifiers
+as described for f-strings in
+    <a class="reference external" href="../pep-0498/index.html">
+     PEP 498
+    </a>
+    . Conversion specifiers are handled
+by the compiler, and appear as part of the field text in interpolation
+templates.
+   </p>
+   <p>
+    However, rather than being rendered directly into a formatted strings, these
+components are instead organised into an instance of a new type with the
+following semantics:
+   </p>
+   <pre class="literal-block">
+class InterpolationTemplate:
+    __slots__ = ("raw_template", "parsed_template",
+                 "field_values", "format_specifiers")
+
+    def __new__(cls, raw_template, parsed_template,
+                     field_values, format_specifiers):
+        self = super().__new__(cls)
+        self.raw_template = raw_template
+        self.parsed_template = parsed_template
+        self.field_values = field_values
+        self.format_specifiers = format_specifiers
+        return self
+
+    def __repr__(self):
+        return (f"&lt;{type(self).__qualname__} {repr(self._raw_template)} "
+                f"at {id(self):#x}&gt;")
+
+    def __format__(self, format_specifier):
+        # When formatted, render to a string, and use string formatting
+        return format(self.render(), format_specifier)
+
+    def render(self, *, render_template=''.join,
+                        render_field=format):
+        # See definition of the template rendering semantics below
+</pre>
+   <p>
+    The result of an interpolation template expression is an instance of this
+type, rather than an already rendered string - rendering only takes
+place when the instance's
+    <tt class="docutils literal">
+     render
+    </tt>
+    method is called (either directly, or
+indirectly via
+    <tt class="docutils literal">
+     __format__
+    </tt>
+    ).
+   </p>
+   <p>
+    The compiler will pass the following details to the interpolation template for
+later use:
+   </p>
+   <ul class="simple">
+    <li>
+     a string containing the raw template as written in the source code
+    </li>
+    <li>
+     a parsed template tuple that allows the renderer to render the
+template without needing to reparse the raw string template for substitution
+fields
+    </li>
+    <li>
+     a tuple containing the evaluated field values, in field substitution order
+    </li>
+    <li>
+     a tuple containing the field format specifiers, in field substitution order
+    </li>
+   </ul>
+   <p>
+    This structure is designed to take full advantage of compile time constant
+folding by ensuring the parsed template is always constant, even when the
+field values and format specifiers include variable substitution expressions.
+   </p>
+   <p>
+    The raw template is just the interpolation template as a string. By default,
+it is used to provide an human readable representation for the interpolation
+template.
+   </p>
+   <p>
+    The parsed template consists of a tuple of 2-tuples, with each 2-tuple
+containing the following fields:
+   </p>
+   <ul class="simple">
+    <li>
+     <tt class="docutils literal">
+      leading_text
+     </tt>
+     :  a leading string literal. This will be the empty string if
+the current field is at the start of the string, or immediately follows the
+preceding field.
+    </li>
+    <li>
+     <tt class="docutils literal">
+      field_expr
+     </tt>
+     : the text of the expression element in the substitution field.
+This will be None for a final trailing text segment.
+    </li>
+   </ul>
+   <p>
+    The tuple of evaluated field values holds the
+    <em>
+     results
+    </em>
+    of evaluating the
+substitution expressions in the scope where the interpolation template appears.
+   </p>
+   <p>
+    The tuple of field specifiers holds the
+    <em>
+     results
+    </em>
+    of evaluating the field
+specifiers as f-strings in the scope where the interpolation template appears.
+   </p>
+   <p>
+    The
+    <tt class="docutils literal">
+     InterpolationTemplate.render
+    </tt>
+    implementation then defines the rendering
+process in terms of the following renderers:
+   </p>
+   <ul class="simple">
+    <li>
+     an overall
+     <tt class="docutils literal">
+      render_template
+     </tt>
+     operation that defines how the sequence of
+literal template sections and rendered fields are composed into a fully
+rendered result. The default template renderer is string concatenation
+using
+     <tt class="docutils literal">
+      <span class="pre">
+       ''.join
+      </span>
+     </tt>
+     .
+    </li>
+    <li>
+     a per field
+     <tt class="docutils literal">
+      render_field
+     </tt>
+     operation that receives the field value and
+format specifier for substitution fields within the template. The default
+field renderer is the
+     <tt class="docutils literal">
+      format
+     </tt>
+     builtin.
+    </li>
+   </ul>
+   <p>
+    Given an appropriate parsed template representation and internal methods of
+iterating over it, the semantics of template rendering would then be equivalent
+to the following:
+   </p>
+   <pre class="literal-block">
+def render(self, *, render_template=''.join,
+                    render_field=format):
+    iter_fields = enumerate(self.parsed_template)
+    values = self.field_values
+    specifiers = self.format_specifiers
+    template_parts = []
+    for field_pos, (leading_text, field_expr) in iter_fields:
+        template_parts.append(leading_text)
+        if field_expr is not None:
+            value = values[field_pos]
+            specifier = specifiers[field_pos]
+            rendered_field = render_field(value, specifier)
+            template_parts.append(rendered_field)
+    return render_template(template_parts)
+</pre>
+   <div class="section" id="conversion-specifiers">
+    <h2>
+     <a class="toc-backref" href="#id16">
+      Conversion specifiers
+     </a>
+    </h2>
+    <p>
+     NOTE:
+    </p>
+    <blockquote>
+     Appropriate handling of conversion specifiers is currently an open question.
+Exposing them more directly to custom renderers would increase the
+complexity of the
+     <tt class="docutils literal">
+      InterpolationTemplate
+     </tt>
+     definition without providing an
+increase in expressiveness (since they're redundant with calling the builtins
+directly). At the same time, they
+     <em>
+      are
+     </em>
+     made available as arbitary strings
+when writing custom
+     <tt class="docutils literal">
+      string.Formatter
+     </tt>
+     implementations, so it may be
+desirable to offer similar levels of flexibility of interpretation in
+interpolation templates.
+    </blockquote>
+    <p>
+     The
+     <tt class="docutils literal">
+      !a
+     </tt>
+     ,
+     <tt class="docutils literal">
+      !r
+     </tt>
+     and
+     <tt class="docutils literal">
+      !s
+     </tt>
+     conversion specifiers supported by
+     <tt class="docutils literal">
+      str.format
+     </tt>
+     and hence
+     <a class="reference external" href="../pep-0498/index.html">
+      PEP 498
+     </a>
+     are handled in interpolation templates as follows:
+    </p>
+    <ul class="simple">
+     <li>
+      they're included unmodified in the raw template to ensure no information is
+lost
+     </li>
+     <li>
+      they're
+      <em>
+       replaced
+      </em>
+      in the parsed template with the corresponding builtin
+calls, in order to ensure that
+      <tt class="docutils literal">
+       field_expr
+      </tt>
+      always contains a valid
+Python expression
+     </li>
+     <li>
+      the corresponding field value placed in the field values tuple is
+converted appropriately
+      <em>
+       before
+      </em>
+      being passed to the interpolation
+template
+     </li>
+    </ul>
+    <p>
+     This means that, for most purposes, the difference between the use of
+conversion specifiers and calling the corresponding builtins in the
+original interpolation template will be transparent to custom renderers. The
+difference will only be apparent if reparsing the raw template, or attempting
+to reconstruct the original template from the parsed template.
+    </p>
+   </div>
+   <div class="section" id="writing-custom-renderers">
+    <h2>
+     <a class="toc-backref" href="#id17">
+      Writing custom renderers
+     </a>
+    </h2>
+    <p>
+     Writing a custom renderer doesn't requiring any special syntax. Instead,
+custom renderers are ordinary callables that process an interpolation
+template directly either by calling the
+     <tt class="docutils literal">
+      render()
+     </tt>
+     method with alternate
+     <tt class="docutils literal">
+      render_template
+     </tt>
+     or
+     <tt class="docutils literal">
+      render_field
+     </tt>
+     implementations, or by accessing the
+template's data attributes directly.
+    </p>
+    <p>
+     For example, the following function would render a template using objects'
+     <tt class="docutils literal">
+      repr
+     </tt>
+     implementations rather than their native formatting support:
+    </p>
+    <pre class="literal-block">
+def reprformat(template):
+    def render_field(value, specifier):
+        return format(repr(value), specifier)
+    return template.render(render_field=render_field)
+</pre>
+    <p>
+     When writing custom renderers, note that the return type of the overall
+rendering operation is determined by the return type of the passed in
+     <tt class="docutils literal">
+      render_template
+     </tt>
+     callable. While this is expected to be a string in most
+cases, producing non-string objects
+     <em>
+      is
+     </em>
+     permitted. For example, a custom
+template renderer could involve an
+     <tt class="docutils literal">
+      sqlalchemy.sql.text
+     </tt>
+     call that produces
+an
+     <a class="reference external" href="http://docs.sqlalchemy.org/en/rel_1_0/core/tutorial.html#using-textual-sql">
+      SQL Alchemy query object
+     </a>
+     .
+    </p>
+    <p>
+     Non-strings may also be returned from
+     <tt class="docutils literal">
+      render_field
+     </tt>
+     , as long as it is paired
+with a
+     <tt class="docutils literal">
+      render_template
+     </tt>
+     implementation that expects that behaviour.
+    </p>
+   </div>
+   <div class="section" id="expression-evaluation">
+    <h2>
+     <a class="toc-backref" href="#id18">
+      Expression evaluation
+     </a>
+    </h2>
+    <p>
+     As with f-strings, the subexpressions that are extracted from the interpolation
+template are evaluated in the context where the interpolation template
+appears. This means the expression has full access to local, nonlocal and global variables. Any valid Python expression can be used inside
+     <tt class="docutils literal">
+      {}
+     </tt>
+     , including
+function and method calls.
+    </p>
+    <p>
+     Because the substitution expressions are evaluated where the string appears in
+the source code, there are no additional security concerns related to the
+contents of the expression itself, as you could have also just written the
+same expression and used runtime field parsing:
+    </p>
+    <pre class="literal-block">
+&gt;&gt;&gt; bar=10
+&gt;&gt;&gt; def foo(data):
+...   return data + 20
+...
+&gt;&gt;&gt; str(i'input={bar}, output={foo(bar)}')
+'input=10, output=30'
+</pre>
+    <p>
+     Is essentially equivalent to:
+    </p>
+    <pre class="literal-block">
+&gt;&gt;&gt; 'input={}, output={}'.format(bar, foo(bar))
+'input=10, output=30'
+</pre>
+   </div>
+   <div class="section" id="handling-code-injection-attacks">
+    <h2>
+     <a class="toc-backref" href="#id19">
+      Handling code injection attacks
+     </a>
+    </h2>
+    <p>
+     The
+     <a class="reference external" href="../pep-0498/index.html">
+      PEP 498
+     </a>
+     formatted string syntax makes it potentially attractive to write
+code like the following:
+    </p>
+    <pre class="literal-block">
+runquery(f"SELECT {column} FROM {table};")
+runcommand(f"cat {filename}")
+return_response(f"&lt;html&gt;&lt;body&gt;{response.body}&lt;/body&gt;&lt;/html&gt;")
+</pre>
+    <p>
+     These all represent potential vectors for code injection attacks, if any of the
+variables being interpolated happen to come from an untrusted source. The
+specific proposal in this PEP is designed to make it straightforward to write
+use case specific renderers that take care of quoting interpolated values
+appropriately for the relevant security context:
+    </p>
+    <pre class="literal-block">
+runquery(sql(i"SELECT {column} FROM {table};"))
+runcommand(sh(i"cat {filename}"))
+return_response(html(i"&lt;html&gt;&lt;body&gt;{response.body}&lt;/body&gt;&lt;/html&gt;"))
+</pre>
+    <p>
+     This PEP does not cover adding such renderers to the standard library
+immediately, but rather proposes to ensure that they can be readily provided by
+third party libraries, and potentially incorporated into the standard library
+at a later date.
+    </p>
+    <p>
+     For example, a renderer that aimed to offer a POSIX shell style experience for
+accessing external programs, without the significant risks posed by running
+     <tt class="docutils literal">
+      os.system
+     </tt>
+     or enabling the system shell when using the
+     <tt class="docutils literal">
+      subprocess
+     </tt>
+     module
+APIs, might provide an interface for running external programs similar to that
+offered by the
+     <a class="reference external" href="http://julia.readthedocs.org/en/latest/manual/running-external-programs/">
+      Julia programming language
+     </a>
+     ,
+only with the backtick based
+     <tt class="docutils literal">
+      \`cat $filename\`
+     </tt>
+     syntax replaced by
+     <tt class="docutils literal">
+      i"cat {filename}"
+     </tt>
+     style interpolation templates.
+    </p>
+   </div>
+   <div class="section" id="format-specifiers">
+    <h2>
+     <a class="toc-backref" href="#id20">
+      Format specifiers
+     </a>
+    </h2>
+    <p>
+     Aside from separating them out from the substitution expression during parsing,
+format specifiers are otherwise treated as opaque strings by the interpolation
+template parser - assigning semantics to those (or, alternatively,
+prohibiting their use) is handled at runtime by the field renderer.
+    </p>
+   </div>
+   <div class="section" id="error-handling">
+    <h2>
+     <a class="toc-backref" href="#id21">
+      Error handling
+     </a>
+    </h2>
+    <p>
+     Either compile time or run time errors can occur when processing interpolation
+expressions. Compile time errors are limited to those errors that can be
+detected when parsing a template string into its component tuples. These
+errors all raise SyntaxError.
+    </p>
+    <p>
+     Unmatched braces:
+    </p>
+    <pre class="literal-block">
+&gt;&gt;&gt; i'x={x'
+  File "&lt;stdin&gt;", line 1
+SyntaxError: missing '}' in interpolation expression
+</pre>
+    <p>
+     Invalid expressions:
+    </p>
+    <pre class="literal-block">
+&gt;&gt;&gt; i'x={!x}'
+  File "&lt;fstring&gt;", line 1
+    !x
+    ^
+SyntaxError: invalid syntax
+</pre>
+    <p>
+     Run time errors occur when evaluating the expressions inside a
+template string before creating the interpolation template object. See
+     <a class="reference external" href="../pep-0498/index.html">
+      PEP 498
+     </a>
+     for some examples.
+    </p>
+    <p>
+     Different renderers may also impose additional runtime
+constraints on acceptable interpolated expressions and other formatting
+details, which will be reported as runtime exceptions.
+    </p>
+   </div>
+  </div>
+  <div class="section" id="possible-integration-with-the-logging-module">
+   <h1>
+    <a class="toc-backref" href="#id22">
+     Possible integration with the logging module
+    </a>
+   </h1>
+   <p>
+    One of the challenges with the logging module has been that we have previously
+been unable to devise a reasonable migration strategy away from the use of
+printf-style formatting. The runtime parsing and interpolation overhead for
+logging messages also poses a problem for extensive logging of runtime events
+for monitoring purposes.
+   </p>
+   <p>
+    While beyond the scope of this initial PEP, interpolation template support
+could potentially be added to the logging module's event reporting APIs,
+permitting relevant details to be captured using forms like:
+   </p>
+   <pre class="literal-block">
+logging.debug(i"Event: {event}; Details: {data}")
+logging.critical(i"Error: {error}; Details: {data}")
+</pre>
+   <p>
+    Rather than the current mod-formatting style:
+   </p>
+   <pre class="literal-block">
+logging.debug("Event: %s; Details: %s", event, data)
+logging.critical("Error: %s; Details: %s", event, data)
+</pre>
+   <p>
+    As the interpolation template is passed in as an ordinary argument, other
+keyword arguments would also remain available:
+   </p>
+   <pre class="literal-block">
+logging.critical(i"Error: {error}; Details: {data}", exc_info=True)
+</pre>
+   <p>
+    As part of any such integration, a recommended approach would need to be
+defined for "lazy evaluation" of interpolated fields, as the
+    <tt class="docutils literal">
+     logging
+    </tt>
+    module's existing delayed interpolation support provides access to
+    <a class="reference external" href="https://docs.python.org/3/library/logging.html#logrecord-attributes">
+     various attributes
+    </a>
+    of the event
+    <tt class="docutils literal">
+     LogRecord
+    </tt>
+    instance.
+   </p>
+   <p>
+    For example, since interpolation expressions are arbitrary Python expressions,
+string literals could be used to indicate cases where evaluation itself is
+being deferred, not just rendering:
+   </p>
+   <pre class="literal-block">
+logging.debug(i"Logger: {'record.name'}; Event: {event}; Details: {data}")
+</pre>
+   <p>
+    This could be further extended with idioms like using inline tuples to indicate
+deferred function calls to be made only if the log message is actually
+going to be rendered at current logging levels:
+   </p>
+   <pre class="literal-block">
+logging.debug(i"Event: {event}; Details: {expensive_call, raw_data}")
+</pre>
+   <p>
+    This kind of approach would be possible as having access to the actual
+    <em>
+     text
+    </em>
+    of the field expression would allow the logging renderer to distinguish
+between inline tuples that appear in the field expression itself, and tuples
+that happen to be passed in as data values in a normal field.
+   </p>
+  </div>
+  <div class="section" id="discussion">
+   <h1>
+    <a class="toc-backref" href="#id23">
+     Discussion
+    </a>
+   </h1>
+   <p>
+    Refer to
+    <a class="reference external" href="../pep-0498/index.html">
+     PEP 498
+    </a>
+    for additional discussion, as several of the points there
+also apply to this PEP.
+   </p>
+   <div class="section" id="deferring-support-for-binary-interpolation">
+    <h2>
+     <a class="toc-backref" href="#id24">
+      Deferring support for binary interpolation
+     </a>
+    </h2>
+    <p>
+     Supporting binary interpolation with this syntax would be relatively
+straightforward (the elements in the parsed fields tuple would just be
+byte strings rather than text strings, and the default renderer would be
+markedly less useful), but poses a signficant likelihood of producing
+confusing type errors when a text renderer was presented with
+binary input.
+    </p>
+    <p>
+     Since the proposed syntax is useful without binary interpolation support, and
+such support can be readily added later, further consideration of binary
+interpolation is considered out of scope for the current PEP.
+    </p>
+   </div>
+   <div class="section" id="interoperability-with-str-only-interfaces">
+    <h2>
+     <a class="toc-backref" href="#id25">
+      Interoperability with str-only interfaces
+     </a>
+    </h2>
+    <p>
+     For interoperability with interfaces that only accept strings, interpolation
+templates can still be prerendered with
+     <tt class="docutils literal">
+      format
+     </tt>
+     , rather than delegating the
+rendering to the called function.
+    </p>
+    <p>
+     This reflects the key difference from
+     <a class="reference external" href="../pep-0498/index.html">
+      PEP 498
+     </a>
+     , which
+     <em>
+      always
+     </em>
+     eagerly applies
+the default rendering, without any way to delegate the choice of renderer to
+another section of the code.
+    </p>
+   </div>
+   <div class="section" id="preserving-the-raw-template-string">
+    <h2>
+     <a class="toc-backref" href="#id26">
+      Preserving the raw template string
+     </a>
+    </h2>
+    <p>
+     Earlier versions of this PEP failed to make the raw template string available
+on the interpolation template. Retaining it makes it possible to provide a more
+attractive template representation, as well as providing the ability to
+precisely reconstruct the original string, including both the expression text
+and the details of any eagerly rendered substitution fields in format specifiers.
+    </p>
+   </div>
+   <div class="section" id="creating-a-rich-object-rather-than-a-global-name-lookup">
+    <h2>
+     <a class="toc-backref" href="#id27">
+      Creating a rich object rather than a global name lookup
+     </a>
+    </h2>
+    <p>
+     Earlier versions of this PEP used an
+     <tt class="docutils literal">
+      __interpolate__
+     </tt>
+     builtin, rather than
+a creating a new kind of object for later consumption by interpolation
+functions. Creating a rich descriptive object with a useful default renderer
+made it much easier to support customisation of the semantics of interpolation.
+    </p>
+   </div>
+   <div class="section" id="building-atop-pep-498-rather-than-competing-with-it">
+    <h2>
+     Building atop
+     <a class="reference external" href="../pep-0498/index.html">
+      PEP 498
+     </a>
+     , rather than competing with it
+    </h2>
+    <p>
+     Earlier versions of this PEP attempted to serve as a complete substitute for
+     <a class="reference external" href="../pep-0498/index.html">
+      PEP 498
+     </a>
+     , rather than building a more flexible delayed rendering capability on
+top of
+     <a class="reference external" href="../pep-0498/index.html">
+      PEP 498
+     </a>
+     's eager rendering.
+    </p>
+    <p>
+     Assuming the presence of f-strings as a supporting capability simplified a
+number of aspects of the proposal in this PEP (such as how to handle substitution
+fields in format specifiers)
+    </p>
+   </div>
+   <div class="section" id="deferring-consideration-of-possible-use-in-i18n-use-cases">
+    <h2>
+     <a class="toc-backref" href="#id29">
+      Deferring consideration of possible use in i18n use cases
+     </a>
+    </h2>
+    <p>
+     The initial motivating use case for this PEP was providing a cleaner syntax
+for i18n translation, as that requires access to the original unmodified
+template. As such, it focused on compatibility with the subsitution syntax used
+in Python's
+     <tt class="docutils literal">
+      string.Template
+     </tt>
+     formatting and Mozilla's l20n project.
+    </p>
+    <p>
+     However, subsequent discussion revealed there are significant additional
+considerations to be taken into account in the i18n use case, which don't
+impact the simpler cases of handling interpolation into security sensitive
+contexts (like HTML, system shells, and database queries), or producing
+application debugging messages in the preferred language of the development
+team (rather than the native language of end users).
+    </p>
+    <p>
+     Due to the original design of the
+     <tt class="docutils literal">
+      str.format
+     </tt>
+     substitution syntax in
+     <a class="reference external" href="../pep-3101/index.html">
+      PEP
+3101
+     </a>
+     being inspired by C#'s string formatting syntax, the specific field
+substitution syntax used in
+     <a class="reference external" href="../pep-0498/index.html">
+      PEP 498
+     </a>
+     is consistent not only with Python's own
+     <tt class="docutils literal">
+      str.format
+     </tt>
+     syntax, but also with string formatting in C#, including the
+native "$-string" interpolation syntax introduced in C# 6.0 (released in July
+2015).  The related
+     <tt class="docutils literal">
+      IFormattable
+     </tt>
+     interface in C# forms the basis of a
+     <a class="reference external" href="https://msdn.microsoft.com/en-us/library/system.iformattable.aspx">
+      number of elements
+     </a>
+     of C#'s internationalization and localization
+support.
+    </p>
+    <p>
+     This means that while this particular substitution syntax may not
+currently be widely used for translation of
+     <em>
+      Python
+     </em>
+     applications (losing out
+to traditional %-formatting and the designed-specifically-for-i18n
+     <tt class="docutils literal">
+      string.Template
+     </tt>
+     formatting), it
+     <em>
+      is
+     </em>
+     a popular translation format in the
+wider software development ecosystem (since it is already the preferred
+format for translating C# applications).
+    </p>
+   </div>
+  </div>
+  <div class="section" id="acknowledgements">
+   <h1>
+    <a class="toc-backref" href="#id30">
+     Acknowledgements
+    </a>
+   </h1>
+   <ul class="simple">
+    <li>
+     Eric V. Smith for creating
+     <a class="reference external" href="../pep-0498/index.html">
+      PEP 498
+     </a>
+     and demonstrating the feasibility of
+arbitrary expression substitution in string interpolation
+    </li>
+    <li>
+     Barry Warsaw, Armin Ronacher, and Mike Miller for their contributions to
+exploring the feasibility of using this model of delayed rendering in i18n
+use cases (even though the ultimate conclusion was that it was a poor fit,
+at least for current approaches to i18n in Python)
+    </li>
+   </ul>
+  </div>
+  <div class="section" id="references">
+   <h1>
+    <a class="toc-backref" href="#id31">
+     References
+    </a>
+   </h1>
+   <table class="docutils footnote" frame="void" id="id1" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       [1]
+      </td>
+      <td>
+       %-formatting
+(
+       <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#printf-style-string-formatting">
+        https://docs.python.org/3/library/stdtypes.html#printf-style-string-formatting
+       </a>
+       )
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id2" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       [2]
+      </td>
+      <td>
+       str.format
+(
+       <a class="reference external" href="https://docs.python.org/3/library/string.html#formatstrings">
+        https://docs.python.org/3/library/string.html#formatstrings
+       </a>
+       )
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id3" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       [3]
+      </td>
+      <td>
+       string.Template documentation
+(
+       <a class="reference external" href="https://docs.python.org/3/library/string.html#template-strings">
+        https://docs.python.org/3/library/string.html#template-strings
+       </a>
+       )
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id4" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       [4]
+      </td>
+      <td>
+       <a class="reference external" href="../pep-0215/index.html">
+        PEP 215
+       </a>
+       : String Interpolation
+(
+       <a class="reference external" href="../pep-0215/index.html">
+        https://www.python.org/dev/peps/pep-0215/
+       </a>
+       )
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id5" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       [5]
+      </td>
+      <td>
+       <a class="reference external" href="../pep-0292/index.html">
+        PEP 292
+       </a>
+       : Simpler String Substitutions
+(
+       <a class="reference external" href="../pep-0292/index.html">
+        https://www.python.org/dev/peps/pep-0292/
+       </a>
+       )
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id6" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       [6]
+      </td>
+      <td>
+       <a class="reference external" href="../pep-3101/index.html">
+        PEP 3101
+       </a>
+       : Advanced String Formatting
+(
+       <a class="reference external" href="../pep-3101/index.html">
+        https://www.python.org/dev/peps/pep-3101/
+       </a>
+       )
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id7" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       [7]
+      </td>
+      <td>
+       <a class="reference external" href="../pep-0498/index.html">
+        PEP 498
+       </a>
+       : Literal string formatting
+(
+       <a class="reference external" href="../pep-0498/index.html">
+        https://www.python.org/dev/peps/pep-0498/
+       </a>
+       )
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id8" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       [8]
+      </td>
+      <td>
+       FormattableString and C# native string interpolation
+(
+       <a class="reference external" href="https://msdn.microsoft.com/en-us/library/dn961160.aspx">
+        https://msdn.microsoft.com/en-us/library/dn961160.aspx
+       </a>
+       )
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id9" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       [9]
+      </td>
+      <td>
+       IFormattable interface in C# (see remarks for globalization notes)
+(
+       <a class="reference external" href="https://msdn.microsoft.com/en-us/library/system.iformattable.aspx">
+        https://msdn.microsoft.com/en-us/library/system.iformattable.aspx
+       </a>
+       )
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id10" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       [10]
+      </td>
+      <td>
+       Running external commands in Julia
+(
+       <a class="reference external" href="http://julia.readthedocs.org/en/latest/manual/running-external-programs/">
+        http://julia.readthedocs.org/en/latest/manual/running-external-programs/
+       </a>
+       )
+      </td>
+     </tr>
+    </tbody>
+   </table>
+  </div>
+  <div class="section" id="copyright">
+   <h1>
+    <a class="toc-backref" href="#id32">
+     Copyright
+    </a>
+   </h1>
+   <p>
+    This document has been placed in the public domain.
+   </p>
+   <!-- Local Variables:
+mode: indented-text
+indent-tabs-mode: nil
+sentence-end-double-space: t
+fill-column: 70
+coding: utf-8
+End: -->
+  </div>
+ </body>
+
+<!-- Mirrored from www.python.org/dev/peps/pep-0501/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 03 Sep 2015 04:34:02 GMT -->
+</html>Source: <a href="https://hg.python.org/peps/file/tip/pep-0501.txt">https://hg.python.org/peps/file/tip/pep-0501.txt</a>
+
+    </article>
+
+
+                </section>
+
+                
+
+
+<aside class="left-sidebar" role="secondary">
+
+    
+
+
+
+
+
+
+    
+
+
+
+
+
+        <div class="twitter-widget sidebar-widget">
+        <a class="twitter-timeline" data-dnt="true" href="https://twitter.com/ThePSF" data-widget-id="434113224703610882">Tweets by @ThePSF</a>
+        <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+    </div>
+
+    <div class="psf-sidebar-widget sidebar-widget">
+        <h3 class="widget-title">The PSF</h3>
+<p>The Python Software Foundation is the organization behind Python. Become a member of the PSF and help advance the software and our mission. </p>
+
+    </div>
+
+</aside>
+
+
+
+                
+                
+
+
+            </div><!-- end .container -->
+        </div><!-- end #content .content-wrapper -->
+
+        <!-- Footer and social media list -->
+        <footer id="site-map" class="main-footer" role="contentinfo">
+            <div class="main-footer-links">
+                <div class="container">
+
+                    
+                    <a id="back-to-top-1" class="jump-link" href="#python-network"><span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> Back to Top</a>
+
+                    
+
+<ul class="sitemap navigation menu do-not-print" role="tree" id="container">
+    
+    <li class="tier-1 element-1">
+        <a href="https://www.python.org/about/" >About</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/apps/" title="">Applications</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/quotes/" title="">Quotes</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/gettingstarted/" title="">Getting Started</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/help/" title="">Help</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-2">
+        <a href="https://www.python.org/downloads/" >Downloads</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/downloads/" title="">All releases</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/downloads/source/" title="">Source code</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/downloads/windows/" title="">Windows</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/downloads/mac-osx/" title="">Mac OS X</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/download/other/" title="">Other Platforms</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://docs.python.org/3/license.html" title="">License</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/download/alternatives" title="">Alternative Implementations</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-3">
+        <a href="https://www.python.org/doc/" >Documentation</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/doc/" title="">Docs</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/doc/av" title="">Audio/Visual Talks</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://wiki.python.org/moin/BeginnersGuide" title="">Beginner&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://docs.python.org/faq/" title="">FAQ</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="http://wiki.python.org/moin/Languages" title="">Non-English Docs</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="../index.html" title="">PEP Index</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://wiki.python.org/moin/PythonBooks" title="">Python Books</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-4">
+        <a href="https://www.python.org/community/" >Community</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/community/diversity/" title="">Diversity</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/community/irc/" title="">IRC</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/community/lists/" title="">Mailing Lists</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/workshops/" title="">Python Conferences</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/community/sigs/" title="">Special Interest Groups</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://wiki.python.org/moin/" title="">Python Wiki</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/community/logos/" title="">Python Logo</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://www.python.org/community/merchandise/" title="">Merchandise</a></li>
+    
+        <li class="tier-2 element-9" role="treeitem"><a href="https://www.python.org/community/awards" title="">Community Awards</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-5">
+        <a href="https://www.python.org/about/success/" title="success-stories">Success Stories</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/success/#arts" title="">Arts</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/success/#business" title="">Business</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/success/#education" title="">Education</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/success/#engineering" title="">Engineering</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/about/success/#government" title="">Government</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://www.python.org/about/success/#scientific" title="">Scientific</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/about/success/#software-development" title="">Software Development</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-6">
+        <a href="https://www.python.org/blogs/" title="News from around the Python world">News</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/blogs/" title="Python Insider Blog Posts">Python News</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://planetpython.org/" title="Planet Python">Community News</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="http://pyfound.blogspot.com/" title="PSF Blog">PSF News</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pycon.blogspot.com/" title="PyCon Blog">PyCon News</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-7">
+        <a href="https://www.python.org/events/" >Events</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/events/python-events/" title="">Python Events</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/events/python-user-group/" title="">User Group Events</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/events/python-events/past/" title="">Python Events Archive</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/events/python-user-group/past/" title="">User Group Events Archive</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://wiki.python.org/moin/PythonEventsCalendar#Submitting_an_Event" title="">Submit an Event</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-8">
+        <a href="https://www.python.org/dev/" >Contributing</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="http://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://bugs.python.org/" title="">Issue Tracker</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://mail.python.org/mailman/listinfo/python-dev" title="">python-dev list</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pythonmentors.com/" title="">Core Mentorship</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+</ul>
+
+
+                    <a id="back-to-top-2" class="jump-link" href="#python-network"><span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> Back to Top</a>
+                    
+
+                </div><!-- end .container -->
+            </div> <!-- end .main-footer-links -->
+
+            <div class="site-base">
+                <div class="container">
+                    
+                    <ul class="footer-links navigation menu do-not-print" role="tree">
+                        <li class="tier-1 element-1"><a href="https://www.python.org/about/help/">Help &amp; <span class="say-no-more">General</span> Contact</a></li>
+                        <li class="tier-1 element-2"><a href="https://www.python.org/community/diversity/">Diversity <span class="say-no-more">Initiatives</span></a></li>
+                        <li class="tier-1 element-3"><a href="https://github.com/python/pythondotorg/issues">Submit Website Bug</a></li>
+                        <!--<li class="tier-1 element-3"><a href="#"><span class="say-no-more">Website</span> Colophon</a></li>-->
+                    </ul>
+
+                    <div class="copyright">
+                        <p><small>
+                            <span class="pre">Copyright &copy;2001-2015.</span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/psf-landing/">Python Software Foundation</a></span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/about/legal/">Legal Statements</a></span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/privacy/">Privacy Policy</a></span>
+                        </small></p>
+                    </div>
+
+                </div><!-- end .container -->
+            </div><!-- end .site-base -->
+
+        </footer>
+
+    </div><!-- end #touchnav-wrapper -->
+
+    
+    <script src="../../../../ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="../../../static/js/libs/jquery-1.8.2.min.js"><\/script>')</script>
+
+    <script src="../../../static/js/libs/masonry.pkgd.min.js"></script>
+
+    <script type="text/javascript" src="../../../static/js/main-min.js" charset="utf-8"></script>
+    
+
+    <!--[if lte IE 7]>
+    <script type="text/javascript" src="/static/js/plugins/IE8-min.js" charset="utf-8"></script>
+    
+    
+    <![endif]-->
+
+    <!--[if lte IE 8]>
+    <script type="text/javascript" src="/static/js/plugins/getComputedStyle-min.js" charset="utf-8"></script>
+    
+    
+    <![endif]-->
+
+    
+
+    
+    
+
+</body>
+</html>

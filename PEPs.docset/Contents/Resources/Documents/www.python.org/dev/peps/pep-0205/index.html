@@ -1,0 +1,1334 @@
+<!doctype html>
+<!--[if lt IE 7]>   <html class="no-js ie6 lt-ie7 lt-ie8 lt-ie9">   <![endif]-->
+<!--[if IE 7]>      <html class="no-js ie7 lt-ie8 lt-ie9">          <![endif]-->
+<!--[if IE 8]>      <html class="no-js ie8 lt-ie9">                 <![endif]-->
+<!--[if gt IE 8]><!--><html class="no-js" lang="en" dir="ltr">  <!--<![endif]-->
+
+
+<!-- Mirrored from www.python.org/dev/peps/pep-0205/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 03 Sep 2015 04:34:05 GMT -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <link rel="prefetch" href="../../../../ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js">
+
+    <meta name="application-name" content="Python.org">
+    <meta name="msapplication-tooltip" content="The official home of the Python Programming Language">
+    <meta name="apple-mobile-web-app-title" content="Python.org">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="format-detection" content="telephone=no">
+    <meta http-equiv="cleartype" content="on">
+    <meta http-equiv="imagetoolbar" content="false">
+
+    <script src="../../../static/js/libs/modernizr.js"></script>
+
+    <link href="../../../static/stylesheets/style.css" rel="stylesheet" type="text/css" title="default" />
+    <link href="../../../static/stylesheets/mq.css" rel="stylesheet" type="text/css" media="not print, braille, embossed, speech, tty" />
+    
+
+    <!--[if (lte IE 8)&(!IEMobile)]>
+    <link href="/static/stylesheets/no-mq.css" rel="stylesheet" type="text/css" media="screen" />
+    
+    
+    <![endif]-->
+
+    
+    <link rel="icon" type="image/x-icon" href="https://www.python.org/static/favicon.ico">
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="../../../static/apple-touch-icon-144x144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="../../../static/apple-touch-icon-114x114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="../../../static/apple-touch-icon-72x72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="../../../static/apple-touch-icon-precomposed.png">
+    <link rel="apple-touch-icon" href="../../../static/apple-touch-icon-precomposed.png">
+
+    
+    <meta name="msapplication-TileImage" content="/static/metro-icon-144x144-precomposed.png"><!-- white shape -->
+    <meta name="msapplication-TileColor" content="#3673a5"><!-- python blue -->
+    <meta name="msapplication-navbutton-color" content="#3673a5">
+
+    <meta property="og:site_name" content="Python.org">
+    <meta property="og:type" content="website">
+
+    <title>PEP 205 -- Weak References | Python.org</title>
+    <meta property="og:title" content="Welcome to Python.org">
+
+    
+    <meta name="description" content="The official home of the Python Programming Language">
+    <meta name="og:description" content="The official home of the Python Programming Language">
+    <meta name="keywords" content="Python programming language object oriented web free open source software license documentation download community">
+    <meta property="og:tag" content="Python programming language object oriented web free open source software license documentation download community">
+    <meta property="og:published_time" content="">
+    <meta property="og:modified_time" content="">
+    <meta property="og:author" content="">
+    <meta property="og:section" content=""> 
+    <meta property="og:url" content="">
+    <meta property="og:image" content="">
+    <meta property="og:video" content="">
+
+    <link rel="author" href="https://www.python.org/static/humans.txt">
+
+    
+
+    
+    <script type="application/ld+json">
+     {
+       "@context": "http://schema.org",
+       "@type": "WebSite",
+       "url": "https://www.python.org/",
+       "potentialAction": {
+         "@type": "SearchAction",
+         "target": "https://www.python.org/search/?q={search_term_string}",
+         "query-input": "required name=search_term_string"
+       }
+     }
+    </script>
+
+    
+    <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-39055973-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+    </script>
+    
+</head>
+
+<body class="python pages pep-page">
+
+    <div id="touchnav-wrapper">
+
+        <div id="nojs" class="do-not-print">
+            <p><strong>Notice:</strong> While Javascript is not essential for this website, your interaction with the content will be limited. Please turn Javascript on for the full experience. </p>
+        </div>
+
+        <!--[if lt IE 8]>
+        <div id="oldie-warning" class="do-not-print">
+            <p><strong>Notice:</strong> Your browser is <em>ancient</em> and <a href="http://www.ie6countdown.com/">Microsoft agrees</a>. <a href="http://browsehappy.com/">Upgrade to a different browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to experience a better web.</p>
+        </div>
+        <![endif]-->
+
+        <!-- Sister Site Links -->
+        <div id="top" class="top-bar do-not-print">
+
+            <nav class="meta-navigation container" role="navigation">
+
+                
+                <div class="skip-link screen-reader-text">
+                    <a href="#content" title="Skip to content">Skip to content</a>
+                </div>
+
+                
+                <a id="close-python-network" class="jump-link" href="#python-network" aria-hidden="true">
+                    <span aria-hidden="true" class="icon-arrow-down"><span>&#9660;</span></span> Close
+                </a>
+
+                
+
+<ul class="menu" role="tree">
+    
+    <li class="python-meta ">
+        <a href="https://www.python.org/" title="The Python Programming Language" >Python</a>
+    </li>
+    
+    <li class="psf-meta ">
+        <a href="https://www.python.org/psf-landing/" title="The Python Software Foundation" >PSF</a>
+    </li>
+    
+    <li class="docs-meta ">
+        <a href="https://docs.python.org/" title="Python Documentation" >Docs</a>
+    </li>
+    
+    <li class="pypi-meta ">
+        <a href="https://pypi.python.org/" title="Python Package Index" >PyPI</a>
+    </li>
+    
+    <li class="jobs-meta ">
+        <a href="https://www.python.org/jobs/" title="Python Job Board" >Jobs</a>
+    </li>
+    
+    <li class="shop-meta ">
+        <a href="https://www.python.org/community/" title="Python Community" >Community</a>
+    </li>
+    
+</ul>
+
+
+                <a id="python-network" class="jump-link" href="#top" aria-hidden="true">
+                    <span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> The Python Network
+                </a>
+
+            </nav>
+
+        </div>
+
+        <!-- Header elements -->
+        <header class="main-header" role="banner">
+            <div class="container">
+
+                <h1 class="site-headline">
+                    <a href="https://www.python.org/"><img class="python-logo" src="../../../static/img/python-logo.png" alt="python&trade;"></a>
+                </h1>
+
+                <div class="options-bar do-not-print">
+
+                    
+                    <a id="site-map-link" class="jump-to-menu" href="#site-map"><span class="menu-icon">&equiv;</span> Menu</a><form class="search-the-site" action="https://www.python.org/search/" method="get">
+                        <fieldset title="Search Python.org">
+
+                            <span aria-hidden="true" class="icon-search"></span>
+
+                            <label class="screen-reader-text" for="id-search-field">Search This Site</label>
+                            <input id="id-search-field" name="q" type="search" role="textbox" class="search-field" placeholder="Search" value="" tabindex="1">
+
+                            <button type="submit" name="submit" id="submit" class="search-button" title="Submit this Search" tabindex="3">
+                                GO
+                            </button>
+
+                            
+                            <!--[if IE]><input type="text" style="display: none;" disabled="disabled" size="1" tabindex="4"><![endif]-->
+
+                        </fieldset>
+                    </form><span class="breaker"></span><div class="adjust-font-size" aria-hidden="true">
+                        <ul class="navigation menu" aria-label="Adjust Text Size on Page">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                <a href="#" class="action-trigger"><strong><small>A</small> A</strong></a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a class="text-shrink" title="Make Text Smaller" href="javascript:;">Smaller</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a class="text-grow" title="Make Text Larger" href="javascript:;">Larger</a></li>
+                                    <li class="tier-2 element-3" role="treeitem"><a class="text-reset" title="Reset any font size changes I have made" href="javascript:;">Reset</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div><div class="winkwink-nudgenudge">
+                        <ul class="navigation menu" aria-label="Social Media Navigation">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                <a href="#" class="action-trigger">Socialize</a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a href="http://plus.google.com/+Python"><span aria-hidden="true" class="icon-google-plus"></span>Google+</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a href="http://www.facebook.com/pythonlang?fref=ts"><span aria-hidden="true" class="icon-facebook"></span>Facebook</a></li>
+                                    <li class="tier-2 element-3" role="treeitem"><a href="http://twitter.com/ThePSF"><span aria-hidden="true" class="icon-twitter"></span>Twitter</a></li>
+                                    <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/irc/"><span aria-hidden="true" class="icon-freenode"></span>Chat on IRC</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div><div class="account-signin">
+                        <ul class="navigation menu" aria-label="Social Media Navigation">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                
+                                <a href="https://www.python.org/accounts/login/" title="Sign Up or Sign In to Python.org">Sign In</a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/accounts/signup/">Sign Up / Register</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/accounts/login/">Sign In</a></li>
+                                </ul>
+                                
+                            </li>
+                        </ul>
+                    </div>
+
+                </div><!-- end options-bar -->
+
+                <nav id="mainnav" class="python-navigation main-navigation do-not-print" role="navigation">
+                    
+                        
+<ul class="navigation menu" role="menubar" aria-label="Main Navigation">
+  
+    
+    
+    <li id="about" class="tier-1 element-1  " aria-haspopup="true">
+        <a href="https://www.python.org/about/" title="" class="">About</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/apps/" title="">Applications</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/quotes/" title="">Quotes</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/gettingstarted/" title="">Getting Started</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/help/" title="">Help</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="downloads" class="tier-1 element-2  " aria-haspopup="true">
+        <a href="https://www.python.org/downloads/" title="" class="">Downloads</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/downloads/" title="">All releases</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/downloads/source/" title="">Source code</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/downloads/windows/" title="">Windows</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/downloads/mac-osx/" title="">Mac OS X</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/download/other/" title="">Other Platforms</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://docs.python.org/3/license.html" title="">License</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/download/alternatives" title="">Alternative Implementations</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="documentation" class="tier-1 element-3  " aria-haspopup="true">
+        <a href="https://www.python.org/doc/" title="" class="">Documentation</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/doc/" title="">Docs</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/doc/av" title="">Audio/Visual Talks</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://wiki.python.org/moin/BeginnersGuide" title="">Beginner&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://docs.python.org/faq/" title="">FAQ</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="http://wiki.python.org/moin/Languages" title="">Non-English Docs</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="../index.html" title="">PEP Index</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://wiki.python.org/moin/PythonBooks" title="">Python Books</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="community" class="tier-1 element-4  " aria-haspopup="true">
+        <a href="https://www.python.org/community/" title="" class="">Community</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/community/diversity/" title="">Diversity</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/community/irc/" title="">IRC</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/community/lists/" title="">Mailing Lists</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/workshops/" title="">Python Conferences</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/community/sigs/" title="">Special Interest Groups</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://wiki.python.org/moin/" title="">Python Wiki</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/community/logos/" title="">Python Logo</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://www.python.org/community/merchandise/" title="">Merchandise</a></li>
+    
+        <li class="tier-2 element-9" role="treeitem"><a href="https://www.python.org/community/awards" title="">Community Awards</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="success-stories" class="tier-1 element-5  " aria-haspopup="true">
+        <a href="https://www.python.org/about/success/" title="success-stories" class="">Success Stories</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/success/#arts" title="">Arts</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/success/#business" title="">Business</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/success/#education" title="">Education</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/success/#engineering" title="">Engineering</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/about/success/#government" title="">Government</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://www.python.org/about/success/#scientific" title="">Scientific</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/about/success/#software-development" title="">Software Development</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="news" class="tier-1 element-6  " aria-haspopup="true">
+        <a href="https://www.python.org/blogs/" title="News from around the Python world" class="">News</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/blogs/" title="Python Insider Blog Posts">Python News</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://planetpython.org/" title="Planet Python">Community News</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="http://pyfound.blogspot.com/" title="PSF Blog">PSF News</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pycon.blogspot.com/" title="PyCon Blog">PyCon News</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="events" class="tier-1 element-7  " aria-haspopup="true">
+        <a href="https://www.python.org/events/" title="" class="">Events</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/events/python-events/" title="">Python Events</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/events/python-user-group/" title="">User Group Events</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/events/python-events/past/" title="">Python Events Archive</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/events/python-user-group/past/" title="">User Group Events Archive</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://wiki.python.org/moin/PythonEventsCalendar#Submitting_an_Event" title="">Submit an Event</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    
+  
+</ul>
+
+                    
+                </nav>
+
+                <div class="header-banner "> <!-- for optional "do-not-print" class -->
+                    
+                    
+                </div>
+
+                
+                
+
+             </div><!-- end .container -->
+        </header>
+
+        <div id="content" class="content-wrapper">
+            <!-- Main Content Column -->
+            <div class="container">
+
+                <section class="main-content with-left-sidebar" role="main">
+
+                    
+<ul class="breadcrumbs menu">
+    <li>
+        <a href="https://www.python.org/" title="The Python Programming Language">Python</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>
+        <a href="https://www.python.org/dev/">Python Developer's Guide</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>
+        <a href="../index.html">PEP Index</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>PEP 205 -- Weak References</li>
+</ul>
+
+
+                    
+<style>
+   .pep-page pre {
+        padding: .5em;
+        background: inherit;
+        border-left: 0px;
+        -webkit-box-shadow: 0 0 0 0;
+        -moz-box-shadow: 0 0 0 0;
+        box-shadow: 0 0 0 0;
+   }
+</style>
+
+    
+    <article class="text">
+        
+
+        <header class="article-header">
+            <h1 class="page-title">PEP 205 -- Weak References</h1>
+        </header>
+
+        <html>
+ <body>
+  <div class="header">
+   <table border="0">
+    <tr>
+     <th>
+      PEP:
+     </th>
+     <td>
+      205
+     </td>
+    </tr>
+    <tr>
+     <th>
+      Title:
+     </th>
+     <td>
+      Weak References
+     </td>
+    </tr>
+    <tr>
+     <th>
+      Author:
+     </th>
+     <td>
+      Fred L. Drake, Jr. &lt;fdrake at acm.org&gt;
+     </td>
+    </tr>
+    <tr>
+     <th>
+      Status:
+     </th>
+     <td>
+      Final
+     </td>
+    </tr>
+    <tr>
+     <th>
+      Type:
+     </th>
+     <td>
+      Standards Track
+     </td>
+    </tr>
+    <tr>
+     <th>
+      Created:
+     </th>
+     <td>
+     </td>
+    </tr>
+    <tr>
+     <th>
+      Python-Version:
+     </th>
+     <td>
+      2.1
+     </td>
+    </tr>
+    <tr>
+     <th>
+      Post-History:
+     </th>
+     <td>
+      11-Jan-2001
+     </td>
+    </tr>
+   </table>
+  </div>
+  <div class="content">
+   <h3>
+    Motivation
+   </h3>
+   <pre>
+    There are two basic applications for weak references which have
+    been noted by Python programmers: object caches and reduction of
+    pain from circular references.
+
+    Caches (weak dictionaries)
+
+        There is a need to allow objects to be maintained that represent
+        external state, mapping a single instance to the external
+        reality, where allowing multiple instances to be mapped to the
+        same external resource would create unnecessary difficulty
+        maintaining synchronization among instances.  In these cases,
+        a common idiom is to support a cache of instances; a factory
+        function is used to return either a new or existing instance.
+
+        The difficulty in this approach is that one of two things must
+        be tolerated: either the cache grows without bound, or there
+        needs to be explicit management of the cache elsewhere in the
+        application.  The later can be very tedious and leads to more
+        code than is really necessary to solve the problem at hand,
+        and the former can be unacceptable for long-running processes
+        or even relatively short processes with substantial memory
+        requirements.
+
+        - External objects that need to be represented by a single
+          instance, no matter how many internal users there are.  This
+          can be useful for representing files that need to be written
+          back to disk in whole rather than locked &amp; modified for
+          every use.
+
+        - Objects that are expensive to create, but may be needed by
+          multiple internal consumers.  Similar to the first case, but
+          not necessarily bound to external resources, and possibly
+          not an issue for shared state.  Weak references are only
+          useful in this case if there is some flavor of "soft"
+          references or if there is a high likelihood that users of
+          individual objects will overlap in lifespan.
+
+    Circular references
+
+        - DOMs require a huge amount of circular (to parent &amp; document
+          nodes) references, but these could be eliminated using a weak
+          dictionary mapping from each node to its parent.  This
+          might be especially useful in the context of something like
+          xml.dom.pulldom, allowing the .unlink() operation to become
+          a no-op.
+
+    This proposal is divided into the following sections:
+
+        - Proposed Solution
+        - Implementation Strategy
+        - Possible Applications
+        - Previous Weak Reference Work in Python
+        - Weak References in Java
+
+    The full text of one early proposal is included as an appendix
+    since it does not appear to be available on the net.
+
+
+</pre>
+   <h3>
+    Aspects of the Solution Space
+   </h3>
+   <pre>
+    There are two distinct aspects to the weak references problem:
+
+        - Invalidation of weak references
+        - Presentation of weak references to Python code
+
+    Invalidation:
+
+    Past approaches to weak reference invalidation have often hinged
+    on storing a strong reference and being able to examine all the
+    instances of weak reference objects, and invalidating them when
+    the reference count of their referent goes to one (indicating that
+    the reference stored by the weak reference is the last remaining
+    reference).  This has the advantage that the memory management
+    machinery in Python need not change, and that any type can be
+    weakly referenced.
+
+    The disadvantage of this approach to invalidation is that it
+    assumes that the management of the weak references is called
+    sufficiently frequently that weakly-referenced objects are noticed
+    within a reasonably short time frame; since this means a scan over
+    some data structure to invalidate references, an operation which
+    is O(N) on the number of weakly referenced objects, this is not
+    effectively amortized for any single object which is weakly
+    referenced.  This also assumes that the application is calling
+    into code which handles weakly-referenced objects with some
+    frequency, which makes weak-references less attractive for library
+    code.
+
+    An alternate approach to invalidation is that the de-allocation
+    code to be aware of the possibility of weak references and make a
+    specific call into the weak-reference management code to all
+    invalidation whenever an object is deallocated.  This requires a
+    change in the tp_dealloc handler for weakly-referencable objects;
+    an additional call is needed at the "top" of the handler for
+    objects which support weak-referencing, and an efficient way to
+    map from an object to a chain of weak references for that object
+    is needed as well.
+
+    Presentation:
+
+    Two ways that weak references are presented to the Python layer
+    have been as explicit reference objects upon which some operation
+    is required in order to retrieve a usable reference to the
+    underlying object, and proxy objects which masquerade as the
+    original objects as much as possible.
+
+    Reference objects are easy to work with when some additional layer
+    of object managemenet is being added in Python; references can be
+    checked for liveness explicitly, without having to invoke
+    operations on the referents and catching some special exception
+    raised when an invalid weak reference is used.
+
+    However, a number of users favor the proxy appoach simply because
+    the weak reference looks so much like the original object.
+
+
+</pre>
+   <h3>
+    Proposed Solution
+   </h3>
+   <pre>
+    Weak references should be able to point to any Python object that
+    may have substantial memory size (directly or indirectly), or hold
+    references to external resources (database connections, open
+    files, etc.).
+
+    A new module, weakref, will contain new functions used to create
+    weak references.  weakref.ref() will create a "weak reference
+    object" and optionally attach a callback which will be called when
+    the object is about to be finalized.  weakref.mapping() will
+    create a "weak dictionary".  A third function, weakref.proxy(),
+    will create a proxy object that behaves somewhat like the original
+    object.
+
+    A weak reference object will allow access to the referenced object
+    if it hasn't been collected and to determine if the object still
+    exists in memory.  Retrieving the referent is done by calling the
+    reference object.  If the referent is no longer alive, this will
+    return None instead.
+
+    A weak dictionary maps arbitrary keys to values, but does not own
+    a reference to the values.  When the values are finalized, the
+    (key, value) pairs for which it is a value are removed from all
+    the mappings containing such pairs.  Like dictionaries, weak
+    dictionaries are not hashable.
+
+    Proxy objects are weak references that attempt to behave like the
+    object they proxy, as much as they can.  Regardless of the
+    underlying type, proxies are not hashable since their ability to
+    act as a weak reference relies on a fundamental mutability that
+    will cause failures when used as dictionary keys -- even if the
+    proper hash value is computed before the referent dies, the
+    resulting proxy cannot be used as a dictionary key since it cannot
+    be compared once the referent has expired, and comparability is
+    necessary for dictionary keys.  Operations on proxy objects after
+    the referent dies cause weakref.ReferenceError to be raised in
+    most cases.  "is" comparisons, type(), and id() will continue to
+    work, but always refer to the proxy and not the referent.
+
+    The callbacks registered with weak references must accept a single
+    parameter, which will be the weak reference or proxy object
+    itself.  The object cannot be accessed or resurrected in the
+    callback.
+
+
+</pre>
+   <h3>
+    Implementation Strategy
+   </h3>
+   <pre>
+    The implementation of weak references will include a list of
+    reference containers that must be cleared for each weakly-
+    referencable object.  If the reference is from a weak dictionary,
+    the dictionary entry is cleared first.  Then, any associated
+    callback is called with the object passed as a parameter.  Once
+    all callbacks have been called, the object is finalized and
+    deallocated.
+
+    Many built-in types will participate in the weak-reference
+    management, and any extension type can elect to do so.  The type
+    structure will contain an additional field which provides an
+    offset into the instance structure which contains a list of weak
+    reference structures.  If the value of the field is &lt;= 0, the
+    object does not participate.  In this case, weakref.ref(),
+    &lt;weakdict&gt;.__setitem__() and .setdefault(), and item assignment will
+    raise TypeError.  If the value of the field is &gt; 0, a new weak
+    reference can be generated and added to the list.
+
+    This approach is taken to allow arbitrary extension types to
+    participate, without taking a memory hit for numbers or other
+    small types.
+
+    Standard types which support weak references include instances,
+    functions, and bound &amp; unbound methods.  With the addition of
+    class types ("new-style classes") in Python 2.2, types grew
+    support for weak references.  Instances of class types are weakly
+    referencable if they have a base type which is weakly referencable,
+    the class not specify __slots__, or a slot is named __weakref__.
+    Generators also support weak references.
+
+
+</pre>
+   <h3>
+    Possible Applications
+   </h3>
+   <pre>
+    PyGTK+ bindings?
+
+    Tkinter -- could avoid circular references by using weak
+    references from widgets to their parents.  Objects won't be
+    discarded any sooner in the typical case, but there won't be so
+    much dependence on the programmer calling .destroy() before
+    releasing a reference.  This would mostly benefit long-running
+    applications.
+
+    DOM trees.
+
+
+</pre>
+   <h3>
+    Previous Weak Reference Work in Python
+   </h3>
+   <pre>
+    Dianne Hackborn has proposed something called "virtual references".
+    'vref' objects are very similar to java.lang.ref.WeakReference
+    objects, except there is no equivalent to the invalidation
+    queues.  Implementing a "weak dictionary" would be just as
+    difficult as using only weak references (without the invalidation
+    queue) in Java.  Information on this has disappeared from the Web,
+    but is included below as an Appendix.
+
+    Marc-André Lemburg's mx.Proxy package:
+
+        <a href="http://www.lemburg.com/files/python/mxProxy.html">http://www.lemburg.com/files/python/mxProxy.html</a>
+
+    The weakdict module by Dieter Maurer is implemented in C and
+    Python.  It appears that the Web pages have not been updated since
+    Python 1.5.2a, so I'm not yet sure if the implementation is
+    compatible with Python 2.0.
+
+        <a href="http://www.handshake.de/~dieter/weakdict.html">http://www.handshake.de/~dieter/weakdict.html</a>
+
+    PyWeakReference by Alex Shindich:
+
+        <a href="http://sourceforge.net/projects/pyweakreference/">http://sourceforge.net/projects/pyweakreference/</a>
+
+    Eric Tiedemann has a weak dictionary implementation:
+
+        <a href="http://www.hyperreal.org/~est/python/weak/">http://www.hyperreal.org/~est/python/weak/</a>
+
+
+</pre>
+   <h3>
+    Weak References in Java
+   </h3>
+   <pre>
+    <a href="http://java.sun.com/j2se/1.3/docs/api/java/lang/ref/package-summary.html">http://java.sun.com/j2se/1.3/docs/api/java/lang/ref/package-summary.html</a>
+
+    Java provides three forms of weak references, and one interesting
+    helper class.  The three forms are called "weak", "soft", and
+    "phantom" references.  The relevant classes are defined in the
+    java.lang.ref package.
+
+    For each of the reference types, there is an option to add the
+    reference to a queue when it is invalidated by the memory
+    allocator.  The primary purpose of this facility seems to be that
+    it allows larger structures to be composed to incorporate
+    weak-reference semantics without having to impose substantial
+    additional locking requirements.  For instance, it would not be
+    difficult to use this facility to create a "weak" hash table which
+    removes keys and referents when a reference is no longer used
+    elsewhere.  Using weak references for the objects without some
+    sort of notification queue for invalidations leads to much more
+    tedious implementation of the various operations required on hash
+    tables.  This can be a performance bottleneck if deallocations of
+    the stored objects are infrequent.
+
+    Java's "weak" references are most like Dianne Hackborn's old vref
+    proposal: a reference object refers to a single Python object,
+    but does not own a reference to that object.  When that object is
+    deallocated, the reference object is invalidated.  Users of the
+    reference object can easily determine that the reference has been
+    invalidated, or a NullObjectDereferenceError can be raised when
+    an attempt is made to use the referred-to object.
+
+    The "soft" references are similar, but are not invalidated as soon
+    as all other references to the referred-to object have been
+    released.  The "soft" reference does own a reference, but allows
+    the memory allocator to free the referent if the memory is needed
+    elsewhere.  It is not clear whether this means soft references are
+    released before the malloc() implementation calls sbrk() or its
+    equivalent, or if soft references are only cleared when malloc()
+    returns NULL.
+
+    "Phantom" references are a little different; unlike weak and soft
+    references, the referent is not cleared when the reference is
+    added to its queue.  When all phantom references for an object
+    are dequeued, the object is cleared.  This can be used to keep an
+    object alive until some additional cleanup is performed which
+    needs to happen before the objects .finalize() method is called.
+
+    Unlike the other two reference types, "phantom" references must be
+    associated with an invalidation queue.
+
+
+</pre>
+   <h3>
+    Appendix -- Dianne Hackborn's vref proposal (1995)
+   </h3>
+   <pre>
+    [This has been indented and paragraphs reflowed, but there have be
+    no content changes.  --Fred]
+
+    Proposal: Virtual References
+
+    In an attempt to partly address the recurring discussion
+    concerning reference counting vs. garbage collection, I would like
+    to propose an extension to Python which should help in the
+    creation of "well structured" cyclic graphs.  In particular, it
+    should allow at least trees with parent back-pointers and
+    doubly-linked lists to be created without worry about cycles.
+
+    The basic mechanism I'd like to propose is that of a "virtual
+    reference," or a "vref" from here on out.  A vref is essentially a
+    handle on an object that does not increment the object's reference
+    count.  This means that holding a vref on an object will not keep
+    the object from being destroyed.  This would allow the Python
+    programmer, for example, to create the aforementioned tree
+    structure tree structure, which is automatically destroyed when it
+    is no longer in use -- by making all of the parent back-references
+    into vrefs, they no longer create reference cycles which keep the
+    tree from being destroyed.
+
+    In order to implement this mechanism, the Python core must ensure
+    that no -real- pointers are ever left referencing objects that no
+    longer exist.  The implementation I would like to propose involves
+    two basic additions to the current Python system:
+
+    1. A new "vref" type, through which the Python programmer creates
+       and manipulates virtual references.  Internally, it is
+       basically a C-level Python object with a pointer to the Python
+       object it is a reference to.  Unlike all other Python code,
+       however, it does not change the reference count of this object.
+       In addition, it includes two pointers to implement a
+       doubly-linked list, which is used below.
+
+    2. The addition of a new field to the basic Python object
+       [PyObject_Head in object.h], which is either NULL, or points to
+       the head of a list of all vref objects that reference it.  When
+       a vref object attaches itself to another object, it adds itself
+       to this linked list.  Then, if an object with any vrefs on it
+       is deallocated, it may walk this list and ensure that all of
+       the vrefs on it point to some safe value, e.g. Nothing.
+
+
+    This implementation should hopefully have a minimal impact on the
+    current Python core -- when no vrefs exist, it should only add one
+    pointer to all objects, and a check for a NULL pointer every time
+    an object is deallocated.
+
+    Back at the Python language level, I have considered two possible
+    semantics for the vref object --
+
+    ==&gt; Pointer semantics:
+
+      In this model, a vref behaves essentially like a Python-level
+      pointer; the Python program must explicitly dereference the vref
+      to manipulate the actual object it references.
+
+      An example vref module using this model could include the
+      function "new"; When used as 'MyVref = vref.new(MyObject)', it
+      returns a new vref object such that that MyVref.object ==
+      MyObject.  MyVref.object would then change to Nothing if
+      MyObject is ever deallocated.
+
+      For a concrete example, we may introduce some new C-style syntax:
+
+      &amp; -- unary operator, creates a vref on an object, same as vref.new().
+      * -- unary operator, dereference a vref, same as VrefObject.object.
+
+      We can then define:
+
+      1.     type(&amp;MyObject) == vref.VrefType
+      2.        *(&amp;MyObject) == MyObject
+      3. (*(&amp;MyObject)).attr == MyObject.attr
+      4.          &amp;&amp;MyObject == Nothing
+      5.           *MyObject -&gt; exception
+
+      Rule #4 is subtle, but comes about because we have made a vref
+      to (a vref with no real references).  Thus the outer vref is
+      cleared to Nothing when the inner one inevitably disappears.
+
+    ==&gt; Proxy semantics:
+
+      In this model, the Python programmer manipulates vref objects
+      just as if she were manipulating the object it is a reference
+      of.  This is accomplished by implementing the vref so that all
+      operations on it are redirected to its referenced object.  With
+      this model, the dereference operator (*) no longer makes sense;
+      instead, we have only the reference operator (&amp;), and define:
+
+      1.  type(&amp;MyObject) == type(MyObject)
+      2.        &amp;MyObject == MyObject
+      3. (&amp;MyObject).attr == MyObject.attr
+      4.       &amp;&amp;MyObject == MyObject
+
+      Again, rule #4 is important -- here, the outer vref is in fact a
+      reference to the original object, and -not- the inner vref.
+      This is because all operations applied to a vref actually apply
+      to its object, so that creating a vref of a vref actually
+      results in creating a vref of the latter's object.
+
+    The first, pointer semantics, has the advantage that it would be
+    very easy to implement; the vref type is extremely simple,
+    requiring at minimum a single attribute, object, and a function to
+    create a reference.
+
+    However, I really like the proxy semantics.  Not only does it put
+    less of a burden on the Python programmer, but it allows you to do
+    nice things like use a vref anywhere you would use the actual
+    object.  Unfortunately, it would probably an extreme pain, if not
+    practically impossible, to implement in the current Python
+    implementation.  I do have some thoughts, though, on how to do
+    this, if it seems interesting; one possibility is to introduce new
+    type-checking functions which handle the vref.  This would
+    hopefully older C modules which don't expect vrefs to simply
+    return a type error, until they can be fixed.
+
+    Finally, there are some other additional capabilities that this
+    system could provide.  One that seems particularily interesting to
+    me involves allowing the Python programmer to add "destructor"
+    function to a vref -- this Python function would be called
+    immediately prior to the referenced object being deallocated,
+    allowing a Python program to invisibly attach itself to another
+    object and watch for it to disappear.  This seems neat, though I
+    haven't actually come up with any practical uses for it, yet... :)
+
+    -- Dianne
+
+
+</pre>
+   <h3>
+    Copyright
+   </h3>
+   <pre>
+    This document has been placed in the public domain.
+
+
+
+</pre>
+  </div>
+ </body>
+
+<!-- Mirrored from www.python.org/dev/peps/pep-0205/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 03 Sep 2015 04:34:05 GMT -->
+</html>Source: <a href="https://hg.python.org/peps/file/tip/pep-0205.txt">https://hg.python.org/peps/file/tip/pep-0205.txt</a>
+
+    </article>
+
+
+                </section>
+
+                
+
+
+<aside class="left-sidebar" role="secondary">
+
+    
+
+
+
+
+
+
+    
+
+
+
+
+
+        <div class="twitter-widget sidebar-widget">
+        <a class="twitter-timeline" data-dnt="true" href="https://twitter.com/ThePSF" data-widget-id="434113224703610882">Tweets by @ThePSF</a>
+        <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+    </div>
+
+    <div class="psf-sidebar-widget sidebar-widget">
+        <h3 class="widget-title">The PSF</h3>
+<p>The Python Software Foundation is the organization behind Python. Become a member of the PSF and help advance the software and our mission. </p>
+
+    </div>
+
+</aside>
+
+
+
+                
+                
+
+
+            </div><!-- end .container -->
+        </div><!-- end #content .content-wrapper -->
+
+        <!-- Footer and social media list -->
+        <footer id="site-map" class="main-footer" role="contentinfo">
+            <div class="main-footer-links">
+                <div class="container">
+
+                    
+                    <a id="back-to-top-1" class="jump-link" href="#python-network"><span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> Back to Top</a>
+
+                    
+
+<ul class="sitemap navigation menu do-not-print" role="tree" id="container">
+    
+    <li class="tier-1 element-1">
+        <a href="https://www.python.org/about/" >About</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/apps/" title="">Applications</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/quotes/" title="">Quotes</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/gettingstarted/" title="">Getting Started</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/help/" title="">Help</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-2">
+        <a href="https://www.python.org/downloads/" >Downloads</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/downloads/" title="">All releases</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/downloads/source/" title="">Source code</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/downloads/windows/" title="">Windows</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/downloads/mac-osx/" title="">Mac OS X</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/download/other/" title="">Other Platforms</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://docs.python.org/3/license.html" title="">License</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/download/alternatives" title="">Alternative Implementations</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-3">
+        <a href="https://www.python.org/doc/" >Documentation</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/doc/" title="">Docs</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/doc/av" title="">Audio/Visual Talks</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://wiki.python.org/moin/BeginnersGuide" title="">Beginner&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://docs.python.org/faq/" title="">FAQ</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="http://wiki.python.org/moin/Languages" title="">Non-English Docs</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="../index.html" title="">PEP Index</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://wiki.python.org/moin/PythonBooks" title="">Python Books</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-4">
+        <a href="https://www.python.org/community/" >Community</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/community/diversity/" title="">Diversity</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/community/irc/" title="">IRC</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/community/lists/" title="">Mailing Lists</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/workshops/" title="">Python Conferences</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/community/sigs/" title="">Special Interest Groups</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://wiki.python.org/moin/" title="">Python Wiki</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/community/logos/" title="">Python Logo</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://www.python.org/community/merchandise/" title="">Merchandise</a></li>
+    
+        <li class="tier-2 element-9" role="treeitem"><a href="https://www.python.org/community/awards" title="">Community Awards</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-5">
+        <a href="https://www.python.org/about/success/" title="success-stories">Success Stories</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/success/#arts" title="">Arts</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/success/#business" title="">Business</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/success/#education" title="">Education</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/success/#engineering" title="">Engineering</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/about/success/#government" title="">Government</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://www.python.org/about/success/#scientific" title="">Scientific</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/about/success/#software-development" title="">Software Development</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-6">
+        <a href="https://www.python.org/blogs/" title="News from around the Python world">News</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/blogs/" title="Python Insider Blog Posts">Python News</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://planetpython.org/" title="Planet Python">Community News</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="http://pyfound.blogspot.com/" title="PSF Blog">PSF News</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pycon.blogspot.com/" title="PyCon Blog">PyCon News</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-7">
+        <a href="https://www.python.org/events/" >Events</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/events/python-events/" title="">Python Events</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/events/python-user-group/" title="">User Group Events</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/events/python-events/past/" title="">Python Events Archive</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/events/python-user-group/past/" title="">User Group Events Archive</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://wiki.python.org/moin/PythonEventsCalendar#Submitting_an_Event" title="">Submit an Event</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-8">
+        <a href="https://www.python.org/dev/" >Contributing</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="http://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://bugs.python.org/" title="">Issue Tracker</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://mail.python.org/mailman/listinfo/python-dev" title="">python-dev list</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pythonmentors.com/" title="">Core Mentorship</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+</ul>
+
+
+                    <a id="back-to-top-2" class="jump-link" href="#python-network"><span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> Back to Top</a>
+                    
+
+                </div><!-- end .container -->
+            </div> <!-- end .main-footer-links -->
+
+            <div class="site-base">
+                <div class="container">
+                    
+                    <ul class="footer-links navigation menu do-not-print" role="tree">
+                        <li class="tier-1 element-1"><a href="https://www.python.org/about/help/">Help &amp; <span class="say-no-more">General</span> Contact</a></li>
+                        <li class="tier-1 element-2"><a href="https://www.python.org/community/diversity/">Diversity <span class="say-no-more">Initiatives</span></a></li>
+                        <li class="tier-1 element-3"><a href="https://github.com/python/pythondotorg/issues">Submit Website Bug</a></li>
+                        <!--<li class="tier-1 element-3"><a href="#"><span class="say-no-more">Website</span> Colophon</a></li>-->
+                    </ul>
+
+                    <div class="copyright">
+                        <p><small>
+                            <span class="pre">Copyright &copy;2001-2015.</span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/psf-landing/">Python Software Foundation</a></span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/about/legal/">Legal Statements</a></span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/privacy/">Privacy Policy</a></span>
+                        </small></p>
+                    </div>
+
+                </div><!-- end .container -->
+            </div><!-- end .site-base -->
+
+        </footer>
+
+    </div><!-- end #touchnav-wrapper -->
+
+    
+    <script src="../../../../ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="../../../static/js/libs/jquery-1.8.2.min.js"><\/script>')</script>
+
+    <script src="../../../static/js/libs/masonry.pkgd.min.js"></script>
+
+    <script type="text/javascript" src="../../../static/js/main-min.js" charset="utf-8"></script>
+    
+
+    <!--[if lte IE 7]>
+    <script type="text/javascript" src="/static/js/plugins/IE8-min.js" charset="utf-8"></script>
+    
+    
+    <![endif]-->
+
+    <!--[if lte IE 8]>
+    <script type="text/javascript" src="/static/js/plugins/getComputedStyle-min.js" charset="utf-8"></script>
+    
+    
+    <![endif]-->
+
+    
+
+    
+    
+
+</body>
+</html>

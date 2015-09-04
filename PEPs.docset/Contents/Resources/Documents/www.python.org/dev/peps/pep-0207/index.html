@@ -1,0 +1,1362 @@
+<!doctype html>
+<!--[if lt IE 7]>   <html class="no-js ie6 lt-ie7 lt-ie8 lt-ie9">   <![endif]-->
+<!--[if IE 7]>      <html class="no-js ie7 lt-ie8 lt-ie9">          <![endif]-->
+<!--[if IE 8]>      <html class="no-js ie8 lt-ie9">                 <![endif]-->
+<!--[if gt IE 8]><!--><html class="no-js" lang="en" dir="ltr">  <!--<![endif]-->
+
+
+<!-- Mirrored from www.python.org/dev/peps/pep-0207/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 03 Sep 2015 04:34:05 GMT -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <link rel="prefetch" href="../../../../ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js">
+
+    <meta name="application-name" content="Python.org">
+    <meta name="msapplication-tooltip" content="The official home of the Python Programming Language">
+    <meta name="apple-mobile-web-app-title" content="Python.org">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="format-detection" content="telephone=no">
+    <meta http-equiv="cleartype" content="on">
+    <meta http-equiv="imagetoolbar" content="false">
+
+    <script src="../../../static/js/libs/modernizr.js"></script>
+
+    <link href="../../../static/stylesheets/style.css" rel="stylesheet" type="text/css" title="default" />
+    <link href="../../../static/stylesheets/mq.css" rel="stylesheet" type="text/css" media="not print, braille, embossed, speech, tty" />
+    
+
+    <!--[if (lte IE 8)&(!IEMobile)]>
+    <link href="/static/stylesheets/no-mq.css" rel="stylesheet" type="text/css" media="screen" />
+    
+    
+    <![endif]-->
+
+    
+    <link rel="icon" type="image/x-icon" href="https://www.python.org/static/favicon.ico">
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="../../../static/apple-touch-icon-144x144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="../../../static/apple-touch-icon-114x114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="../../../static/apple-touch-icon-72x72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="../../../static/apple-touch-icon-precomposed.png">
+    <link rel="apple-touch-icon" href="../../../static/apple-touch-icon-precomposed.png">
+
+    
+    <meta name="msapplication-TileImage" content="/static/metro-icon-144x144-precomposed.png"><!-- white shape -->
+    <meta name="msapplication-TileColor" content="#3673a5"><!-- python blue -->
+    <meta name="msapplication-navbutton-color" content="#3673a5">
+
+    <meta property="og:site_name" content="Python.org">
+    <meta property="og:type" content="website">
+
+    <title>PEP 207 -- Rich Comparisons | Python.org</title>
+    <meta property="og:title" content="Welcome to Python.org">
+
+    
+    <meta name="description" content="The official home of the Python Programming Language">
+    <meta name="og:description" content="The official home of the Python Programming Language">
+    <meta name="keywords" content="Python programming language object oriented web free open source software license documentation download community">
+    <meta property="og:tag" content="Python programming language object oriented web free open source software license documentation download community">
+    <meta property="og:published_time" content="">
+    <meta property="og:modified_time" content="">
+    <meta property="og:author" content="">
+    <meta property="og:section" content=""> 
+    <meta property="og:url" content="">
+    <meta property="og:image" content="">
+    <meta property="og:video" content="">
+
+    <link rel="author" href="https://www.python.org/static/humans.txt">
+
+    
+
+    
+    <script type="application/ld+json">
+     {
+       "@context": "http://schema.org",
+       "@type": "WebSite",
+       "url": "https://www.python.org/",
+       "potentialAction": {
+         "@type": "SearchAction",
+         "target": "https://www.python.org/search/?q={search_term_string}",
+         "query-input": "required name=search_term_string"
+       }
+     }
+    </script>
+
+    
+    <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-39055973-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+    </script>
+    
+</head>
+
+<body class="python pages pep-page">
+
+    <div id="touchnav-wrapper">
+
+        <div id="nojs" class="do-not-print">
+            <p><strong>Notice:</strong> While Javascript is not essential for this website, your interaction with the content will be limited. Please turn Javascript on for the full experience. </p>
+        </div>
+
+        <!--[if lt IE 8]>
+        <div id="oldie-warning" class="do-not-print">
+            <p><strong>Notice:</strong> Your browser is <em>ancient</em> and <a href="http://www.ie6countdown.com/">Microsoft agrees</a>. <a href="http://browsehappy.com/">Upgrade to a different browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to experience a better web.</p>
+        </div>
+        <![endif]-->
+
+        <!-- Sister Site Links -->
+        <div id="top" class="top-bar do-not-print">
+
+            <nav class="meta-navigation container" role="navigation">
+
+                
+                <div class="skip-link screen-reader-text">
+                    <a href="#content" title="Skip to content">Skip to content</a>
+                </div>
+
+                
+                <a id="close-python-network" class="jump-link" href="#python-network" aria-hidden="true">
+                    <span aria-hidden="true" class="icon-arrow-down"><span>&#9660;</span></span> Close
+                </a>
+
+                
+
+<ul class="menu" role="tree">
+    
+    <li class="python-meta ">
+        <a href="https://www.python.org/" title="The Python Programming Language" >Python</a>
+    </li>
+    
+    <li class="psf-meta ">
+        <a href="https://www.python.org/psf-landing/" title="The Python Software Foundation" >PSF</a>
+    </li>
+    
+    <li class="docs-meta ">
+        <a href="https://docs.python.org/" title="Python Documentation" >Docs</a>
+    </li>
+    
+    <li class="pypi-meta ">
+        <a href="https://pypi.python.org/" title="Python Package Index" >PyPI</a>
+    </li>
+    
+    <li class="jobs-meta ">
+        <a href="https://www.python.org/jobs/" title="Python Job Board" >Jobs</a>
+    </li>
+    
+    <li class="shop-meta ">
+        <a href="https://www.python.org/community/" title="Python Community" >Community</a>
+    </li>
+    
+</ul>
+
+
+                <a id="python-network" class="jump-link" href="#top" aria-hidden="true">
+                    <span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> The Python Network
+                </a>
+
+            </nav>
+
+        </div>
+
+        <!-- Header elements -->
+        <header class="main-header" role="banner">
+            <div class="container">
+
+                <h1 class="site-headline">
+                    <a href="https://www.python.org/"><img class="python-logo" src="../../../static/img/python-logo.png" alt="python&trade;"></a>
+                </h1>
+
+                <div class="options-bar do-not-print">
+
+                    
+                    <a id="site-map-link" class="jump-to-menu" href="#site-map"><span class="menu-icon">&equiv;</span> Menu</a><form class="search-the-site" action="https://www.python.org/search/" method="get">
+                        <fieldset title="Search Python.org">
+
+                            <span aria-hidden="true" class="icon-search"></span>
+
+                            <label class="screen-reader-text" for="id-search-field">Search This Site</label>
+                            <input id="id-search-field" name="q" type="search" role="textbox" class="search-field" placeholder="Search" value="" tabindex="1">
+
+                            <button type="submit" name="submit" id="submit" class="search-button" title="Submit this Search" tabindex="3">
+                                GO
+                            </button>
+
+                            
+                            <!--[if IE]><input type="text" style="display: none;" disabled="disabled" size="1" tabindex="4"><![endif]-->
+
+                        </fieldset>
+                    </form><span class="breaker"></span><div class="adjust-font-size" aria-hidden="true">
+                        <ul class="navigation menu" aria-label="Adjust Text Size on Page">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                <a href="#" class="action-trigger"><strong><small>A</small> A</strong></a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a class="text-shrink" title="Make Text Smaller" href="javascript:;">Smaller</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a class="text-grow" title="Make Text Larger" href="javascript:;">Larger</a></li>
+                                    <li class="tier-2 element-3" role="treeitem"><a class="text-reset" title="Reset any font size changes I have made" href="javascript:;">Reset</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div><div class="winkwink-nudgenudge">
+                        <ul class="navigation menu" aria-label="Social Media Navigation">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                <a href="#" class="action-trigger">Socialize</a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a href="http://plus.google.com/+Python"><span aria-hidden="true" class="icon-google-plus"></span>Google+</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a href="http://www.facebook.com/pythonlang?fref=ts"><span aria-hidden="true" class="icon-facebook"></span>Facebook</a></li>
+                                    <li class="tier-2 element-3" role="treeitem"><a href="http://twitter.com/ThePSF"><span aria-hidden="true" class="icon-twitter"></span>Twitter</a></li>
+                                    <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/irc/"><span aria-hidden="true" class="icon-freenode"></span>Chat on IRC</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div><div class="account-signin">
+                        <ul class="navigation menu" aria-label="Social Media Navigation">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                
+                                <a href="https://www.python.org/accounts/login/" title="Sign Up or Sign In to Python.org">Sign In</a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/accounts/signup/">Sign Up / Register</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/accounts/login/">Sign In</a></li>
+                                </ul>
+                                
+                            </li>
+                        </ul>
+                    </div>
+
+                </div><!-- end options-bar -->
+
+                <nav id="mainnav" class="python-navigation main-navigation do-not-print" role="navigation">
+                    
+                        
+<ul class="navigation menu" role="menubar" aria-label="Main Navigation">
+  
+    
+    
+    <li id="about" class="tier-1 element-1  " aria-haspopup="true">
+        <a href="https://www.python.org/about/" title="" class="">About</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/apps/" title="">Applications</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/quotes/" title="">Quotes</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/gettingstarted/" title="">Getting Started</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/help/" title="">Help</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="downloads" class="tier-1 element-2  " aria-haspopup="true">
+        <a href="https://www.python.org/downloads/" title="" class="">Downloads</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/downloads/" title="">All releases</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/downloads/source/" title="">Source code</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/downloads/windows/" title="">Windows</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/downloads/mac-osx/" title="">Mac OS X</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/download/other/" title="">Other Platforms</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://docs.python.org/3/license.html" title="">License</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/download/alternatives" title="">Alternative Implementations</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="documentation" class="tier-1 element-3  " aria-haspopup="true">
+        <a href="https://www.python.org/doc/" title="" class="">Documentation</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/doc/" title="">Docs</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/doc/av" title="">Audio/Visual Talks</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://wiki.python.org/moin/BeginnersGuide" title="">Beginner&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://docs.python.org/faq/" title="">FAQ</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="http://wiki.python.org/moin/Languages" title="">Non-English Docs</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="../index.html" title="">PEP Index</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://wiki.python.org/moin/PythonBooks" title="">Python Books</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="community" class="tier-1 element-4  " aria-haspopup="true">
+        <a href="https://www.python.org/community/" title="" class="">Community</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/community/diversity/" title="">Diversity</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/community/irc/" title="">IRC</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/community/lists/" title="">Mailing Lists</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/workshops/" title="">Python Conferences</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/community/sigs/" title="">Special Interest Groups</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://wiki.python.org/moin/" title="">Python Wiki</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/community/logos/" title="">Python Logo</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://www.python.org/community/merchandise/" title="">Merchandise</a></li>
+    
+        <li class="tier-2 element-9" role="treeitem"><a href="https://www.python.org/community/awards" title="">Community Awards</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="success-stories" class="tier-1 element-5  " aria-haspopup="true">
+        <a href="https://www.python.org/about/success/" title="success-stories" class="">Success Stories</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/success/#arts" title="">Arts</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/success/#business" title="">Business</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/success/#education" title="">Education</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/success/#engineering" title="">Engineering</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/about/success/#government" title="">Government</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://www.python.org/about/success/#scientific" title="">Scientific</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/about/success/#software-development" title="">Software Development</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="news" class="tier-1 element-6  " aria-haspopup="true">
+        <a href="https://www.python.org/blogs/" title="News from around the Python world" class="">News</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/blogs/" title="Python Insider Blog Posts">Python News</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://planetpython.org/" title="Planet Python">Community News</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="http://pyfound.blogspot.com/" title="PSF Blog">PSF News</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pycon.blogspot.com/" title="PyCon Blog">PyCon News</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="events" class="tier-1 element-7  " aria-haspopup="true">
+        <a href="https://www.python.org/events/" title="" class="">Events</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/events/python-events/" title="">Python Events</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/events/python-user-group/" title="">User Group Events</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/events/python-events/past/" title="">Python Events Archive</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/events/python-user-group/past/" title="">User Group Events Archive</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://wiki.python.org/moin/PythonEventsCalendar#Submitting_an_Event" title="">Submit an Event</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    
+  
+</ul>
+
+                    
+                </nav>
+
+                <div class="header-banner "> <!-- for optional "do-not-print" class -->
+                    
+                    
+                </div>
+
+                
+                
+
+             </div><!-- end .container -->
+        </header>
+
+        <div id="content" class="content-wrapper">
+            <!-- Main Content Column -->
+            <div class="container">
+
+                <section class="main-content with-left-sidebar" role="main">
+
+                    
+<ul class="breadcrumbs menu">
+    <li>
+        <a href="https://www.python.org/" title="The Python Programming Language">Python</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>
+        <a href="https://www.python.org/dev/">Python Developer's Guide</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>
+        <a href="../index.html">PEP Index</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>PEP 207 -- Rich Comparisons</li>
+</ul>
+
+
+                    
+<style>
+   .pep-page pre {
+        padding: .5em;
+        background: inherit;
+        border-left: 0px;
+        -webkit-box-shadow: 0 0 0 0;
+        -moz-box-shadow: 0 0 0 0;
+        box-shadow: 0 0 0 0;
+   }
+</style>
+
+    
+    <article class="text">
+        
+
+        <header class="article-header">
+            <h1 class="page-title">PEP 207 -- Rich Comparisons</h1>
+        </header>
+
+        <html>
+ <body>
+  <div class="header">
+   <table border="0">
+    <tr>
+     <th>
+      PEP:
+     </th>
+     <td>
+      207
+     </td>
+    </tr>
+    <tr>
+     <th>
+      Title:
+     </th>
+     <td>
+      Rich Comparisons
+     </td>
+    </tr>
+    <tr>
+     <th>
+      Author:
+     </th>
+     <td>
+      Guido van Rossum &lt;guido at python.org&gt;, David Ascher &lt;DavidA at ActiveState.com&gt;
+     </td>
+    </tr>
+    <tr>
+     <th>
+      Status:
+     </th>
+     <td>
+      Final
+     </td>
+    </tr>
+    <tr>
+     <th>
+      Type:
+     </th>
+     <td>
+      Standards Track
+     </td>
+    </tr>
+    <tr>
+     <th>
+      Created:
+     </th>
+     <td>
+     </td>
+    </tr>
+    <tr>
+     <th>
+      Python-Version:
+     </th>
+     <td>
+      2.1
+     </td>
+    </tr>
+    <tr>
+     <th>
+      Post-History:
+     </th>
+     <td>
+     </td>
+    </tr>
+   </table>
+  </div>
+  <div class="content">
+   <h3>
+    Abstract
+   </h3>
+   <pre>
+    This PEP proposes several new features for comparisons:
+
+    - Allow separately overloading of &lt;, &gt;, &lt;=, &gt;=, ==, !=, both in
+      classes and in C extensions.
+
+    - Allow any of those overloaded operators to return something else
+      besides a Boolean result.
+
+
+</pre>
+   <h3>
+    Motivation
+   </h3>
+   <pre>
+    The main motivation comes from NumPy, whose users agree that A&lt;B
+    should return an array of elementwise comparison outcomes; they
+    currently have to spell this as less(A,B) because A&lt;B can only
+    return a Boolean result or raise an exception.
+
+    An additional motivation is that frequently, types don't have a
+    natural ordering, but still need to be compared for equality.
+    Currently such a type *must* implement comparison and thus define
+    an arbitrary ordering, just so that equality can be tested.
+
+    Also, for some object types an equality test can be implemented
+    much more efficiently than an ordering test; for example, lists
+    and dictionaries that differ in length are unequal, but the
+    ordering requires inspecting some (potentially all) items.
+
+
+</pre>
+   <h3>
+    Previous Work
+   </h3>
+   <pre>
+    Rich Comparisons have been proposed before; in particular by David
+    Ascher, after experience with Numerical Python:
+
+      <a href="http://starship.python.net/crew/da/proposals/richcmp.html">http://starship.python.net/crew/da/proposals/richcmp.html</a>
+
+    It is also included below as an Appendix.  Most of the material in
+    this PEP is derived from David's proposal.
+
+
+</pre>
+   <h3>
+    Concerns
+   </h3>
+   <pre>
+    1 Backwards compatibility, both at the Python level (classes using
+      __cmp__ need not be changed) and at the C level (extensions
+      defining tp_compare need not be changed, code using
+      PyObject_Compare() must work even if the compared objects use
+      the new rich comparison scheme).
+
+    2 When A&lt;B returns a matrix of elementwise comparisons, an easy
+      mistake to make is to use this expression in a Boolean context.
+      Without special precautions, it would always be true.  This use
+      should raise an exception instead.
+
+    3 If a class overrides x==y but nothing else, should x!=y be
+      computed as not(x==y), or fail?  What about the similar
+      relationship between &lt; and &gt;=, or between &gt; and &lt;=?
+
+    4 Similarly, should we allow x&lt;y to be calculated from y&gt;x?  And
+      x&lt;=y from not(x&gt;y)?  And x==y from y==x, or x!=y from y!=x?
+
+    5 When comparison operators return elementwise comparisons, what
+      to do about shortcut operators like A&lt;B&lt;C, ``A&lt;B and C&lt;D'',
+      ``A&lt;B or C&lt;D''?
+
+    6 What to do about min() and max(), the 'in' and 'not in'
+      operators, list.sort(), dictionary key comparison, and other
+      uses of comparisons by built-in operations?
+
+
+</pre>
+   <h3>
+    Proposed Resolutions
+   </h3>
+   <pre>
+    1 Full backwards compatibility can be achieved as follows.  When
+      an object defines tp_compare() but not tp_richcompare(), and a
+      rich comparison is requested, the outcome of tp_compare() is
+      used in the ovious way.  E.g. if "&lt;" is requested, an exception if
+      tp_compare() raises an exception, the outcome is 1 if
+      tp_compare() is negative, and 0 if it is zero or positive.  Etc.
+
+      Full forward compatibility can be achieved as follows.  When a
+      classic comparison is requested on an object that implements
+      tp_richcompare(), up to three comparisons are used: first == is
+      tried, and if it returns true, 0 is returned; next, &lt; is tried
+      and if it returns true, -1 is returned; next, &gt; is tried and if
+      it returns true, +1 is returned.  If any operator tried returns
+      a non-Boolean value (see below), the exception raised by
+      conversion to Boolean is passed through.  If none of the
+      operators tried returns true, the classic comparison fallbacks
+      are tried next.
+
+      (I thought long and hard about the order in which the three
+      comparisons should be tried.  At one point I had a convincing
+      argument for doing it in this order, based on the behavior of
+      comparisons for cyclical data structures.  But since that code
+      has changed again, I'm not so sure that it makes a difference
+      any more.)
+
+    2 Any type that returns a collection of Booleans instead of a
+      single boolean should define nb_nonzero() to raise an exception.
+      Such a type is considered a non-Boolean.
+
+    3 The == and != operators are not assumed to be each other's
+      complement (e.g. IEEE 754 floating point numbers do not satisfy
+      this).  It is up to the type to implement this if desired.
+      Similar for &lt; and &gt;=, or &gt; and &lt;=; there are lots of examples
+      where these assumptions aren't true (e.g. tabnanny).
+
+    4 The reflexivity rules *are* assumed by Python.  Thus, the
+      interpreter may swap y&gt;x with x&lt;y, y&gt;=x with x&lt;=y, and may swap
+      the arguments of x==y and x!=y.  (Note: Python currently assumes
+      that x==x is always true and x!=x is never true; this should not
+      be assumed.)
+
+    5 In the current proposal, when A&lt;B returns an array of
+      elementwise comparisons, this outcome is considered non-Boolean,
+      and its interpretation as Boolean by the shortcut operators
+      raises an exception.  David Ascher's proposal tries to deal
+      with this; I don't think this is worth the additional complexity
+      in the code generator.  Instead of A&lt;B&lt;C, you can write
+      (A&lt;B)&amp;(B&lt;C).
+
+    6 The min() and list.sort() operations will only use the
+      &lt; operator; max() will only use the &gt; operator.  The 'in' and
+      'not in' operators and dictionary lookup will only use the ==
+      operator.
+
+
+</pre>
+   <h3>
+    Implementation Proposal
+   </h3>
+   <pre>
+    This closely follows David Ascher's proposal.
+
+    C API
+
+    - New functions:
+
+      PyObject *PyObject_RichCompare(PyObject *, PyObject *, int)
+
+      This performs the requested rich comparison, returning a Python
+      object or raising an exception.  The 3rd argument must be one of
+      Py_LT, Py_LE, Py_EQ, Py_NE, Py_GT or Py_GE.
+
+      int PyObject_RichCompareBool(PyObject *, PyObject *, int)
+
+      This performs the requested rich comparison, returning a
+      Boolean: -1 for exception, 0 for false, 1 for true.  The 3rd
+      argument must be one of Py_LT, Py_LE, Py_EQ, Py_NE, Py_GT or
+      Py_GE.  Note that when PyObject_RichCompare() returns a
+      non-Boolean object, PyObject_RichCompareBool() will raise an
+      exception.
+
+    - New typedef:
+
+      typedef PyObject *(*richcmpfunc) (PyObject *, PyObject *, int);
+
+    - New slot in type object, replacing spare tp_xxx7:
+
+      richcmpfunc tp_richcompare;
+
+      This should be a function with the same signature as
+      PyObject_RichCompare(), and performing the same comparison.
+      At least one of the arguments is of the type whose
+      tp_richcompare slot is being used, but the other may have a
+      different type.  If the function cannot compare the particular
+      combination of objects, it should return a new reference to
+      Py_NotImplemented.
+
+    - PyObject_Compare() is changed to try rich comparisons if they
+      are defined (but only if classic comparisons aren't defined).
+
+    Changes to the interpreter
+
+    - Whenever PyObject_Compare() is called with the intent of getting
+      the outcome of a particular comparison (e.g. in list.sort(), and
+      of course for the comparison operators in ceval.c), the code is
+      changed to call PyObject_RichCompare() or
+      PyObject_RichCompareBool() instead; if the C code needs to know
+      the outcome of the comparison, PyObject_IsTrue() is called on
+      the result (which may raise an exception).
+
+    - Most built-in types that currently define a comparison will be
+      modified to define a rich comparison instead.  (This is
+      optional; I've converted lists, tuples, complex numbers, and
+      arrays so far, and am not sure whether I will convert others.)
+
+    Classes
+
+    - Classes can define new special methods __lt__, __le__, __eq__,
+      __ne__,__gt__, __ge__ to override the corresponding operators.
+      (I.e., &lt;, &lt;=, ==, !=, &gt;, &gt;=. You gotta love the Fortran
+      heritage.)  If a class defines __cmp__ as well, it is only used
+      when __lt__ etc. have been tried and return NotImplemented.
+
+
+</pre>
+   <h3>
+    Copyright
+   </h3>
+   <pre>
+    This document has been placed in the public domain.
+
+
+</pre>
+   <h3>
+    Appendix
+   </h3>
+   <pre>
+    Here is most of David Ascher's original proposal (version 0.2.1,
+    dated Wed Jul 22 16:49:28 1998; I've left the Contents, History
+    and Patches sections out).  It addresses almost all concerns
+    above.
+
+
+</pre>
+   <h3>
+    Abstract
+   </h3>
+   <pre>
+    A new mechanism allowing comparisons of Python objects to return
+    values other than -1, 0, or 1 (or raise exceptions) is
+    proposed. This mechanism is entirely backwards compatible, and can
+    be controlled at the level of the C PyObject type or of the Python
+    class definition. There are three cooperating parts to the
+    proposed mechanism:
+
+    - the use of the last slot in the type object structure to store a
+    pointer to a rich comparison function
+
+    - the addition of special methods for classes
+
+    - the addition of an optional argument to the builtin cmp()
+    function.
+
+
+</pre>
+   <h3>
+    Motivation
+   </h3>
+   <pre>
+    The current comparison protocol for Python objects assumes that
+    any two Python objects can be compared (as of Python 1.5, object
+    comparisons can raise exceptions), and that the return value for
+    any comparison should be -1, 0 or 1. -1 indicates that the first
+    argument to the comparison function is less than the right one, +1
+    indicating the contrapositive, and 0 indicating that the two
+    objects are equal. While this mechanism allows the establishment
+    of a order relationship (e.g. for use by the sort() method of list
+    objects), it has proven to be limited in the context of Numeric
+    Python (NumPy).
+
+    Specifically, NumPy allows the creation of multidimensional
+    arrays, which support most of the numeric operators. Thus:
+
+             x = array((1,2,3,4))        y = array((2,2,4,4))
+
+    are two NumPy arrays. While they can be added elementwise,:
+
+             z = x + y   # z == array((3,4,7,8))
+
+    they cannot be compared in the current framework - the released
+    version of NumPy compares the pointers, (thus yielding junk
+    information) which was the only solution before the recent
+    addition of the ability (in 1.5) to raise exceptions in comparison
+    functions.
+
+    Even with the ability to raise exceptions, the current protocol
+    makes array comparisons useless. To deal with this fact, NumPy
+    includes several functions which perform the comparisons: less(),
+    less_equal(), greater(), greater_equal(), equal(),
+    not_equal(). These functions return arrays with the same shape as
+    their arguments (modulo broadcasting), filled with 0's and 1's
+    depending on whether the comparison is true or not for each
+    element pair. Thus, for example, using the arrays x and y defined
+    above:
+
+             less(x,y) 
+
+    would be an array containing the numbers (1,0,0,0).
+
+    The current proposal is to modify the Python object interface to
+    allow the NumPy package to make it so that x &lt; y returns the same
+    thing as less(x,y). The exact return value is up to the NumPy
+    package -- what this proposal really asks for is changing the
+    Python core so that extension objects have the ability to return
+    something other than -1, 0, 1, should their authors choose to do
+    so.
+
+</pre>
+   <h3>
+    Current State of Affairs
+   </h3>
+   <pre>
+    The current protocol is, at the C level, that each object type
+    defines a tp_compare slot, which is a pointer to a function which
+    takes two PyObject* references and returns -1, 0, or 1. This
+    function is called by the PyObject_Compare() function defined in
+    the C API. PyObject_Compare() is also called by the builtin
+    function cmp() which takes two arguments.
+
+</pre>
+   <h3>
+    Proposed Mechanism
+   </h3>
+   <pre>
+    1. Changes to the C structure for type objects
+
+    The last available slot in the PyTypeObject, reserved up to now
+    for future expansion, is used to optionally store a pointer to a
+    new comparison function, of type richcmpfunc defined by:
+
+           typedef PyObject *(*richcmpfunc)
+                Py_PROTO((PyObject *, PyObject *, int));
+
+    This function takes three arguments. The first two are the objects
+    to be compared, and the third is an integer corresponding to an
+    opcode (one of LT, LE, EQ, NE, GT, GE). If this slot is left NULL,
+    then rich comparison for that object type is not supported (except
+    for class instances whose class provide the special methods
+    described below).
+
+    The above opcodes need to be added to the published Python/C API
+    (probably under the names Py_LT, Py_LE, etc.)
+
+    2. Additions of special methods for classes
+
+    Classes wishing to support the rich comparison mechanisms must add
+    one or more of the following new special methods:
+
+             def __lt__(self, other):
+                ...
+             def __le__(self, other):
+                ...
+             def __gt__(self, other):
+                ...
+             def __ge__(self, other):
+                ...
+             def __eq__(self, other):
+                ...
+             def __ne__(self, other):
+                ...
+
+    Each of these is called when the class instance is the on the
+    left-hand-side of the corresponding operators (&lt;, &lt;=, &gt;, &gt;=, ==,
+    and != or &lt;&gt;). The argument other is set to the object on the
+    right side of the operator. The return value of these methods is
+    up to the class implementor (after all, that's the entire point of
+    the proposal).
+
+    If the object on the left side of the operator does not define an
+    appropriate rich comparison operator (either at the C level or
+    with one of the special methods, then the comparison is reversed,
+    and the right hand operator is called with the opposite operator,
+    and the two objects are swapped. This assumes that a &lt; b and b &gt; a
+    are equivalent, as are a &lt;= b and b &gt;= a, and that == and != are
+    commutative (e.g. a == b if and only if b == a).
+
+    For example, if obj1 is an object which supports the rich
+    comparison protocol and x and y are objects which do not support
+    the rich comparison protocol, then obj1 &lt; x will call the __lt__
+    method of obj1 with x as the second argument. x &lt; obj1 will call
+    obj1's __gt__ method with x as a second argument, and x &lt; y will
+    just use the existing (non-rich) comparison mechanism.
+
+    The above mechanism is such that classes can get away with not
+    implementing either __lt__ and __le__ or __gt__ and
+    __ge__. Further smarts could have been added to the comparison
+    mechanism, but this limited set of allowed "swaps" was chosen
+    because it doesn't require the infrastructure to do any processing
+    (negation) of return values. The choice of six special methods was
+    made over a single (e.g. __richcmp__) method to allow the
+    dispatching on the opcode to be performed at the level of the C
+    implementation rather than the user-defined method.
+
+    3. Addition of an optional argument to the builtin cmp()
+
+    The builtin cmp() is still used for simple comparisons. For rich
+    comparisons, it is called with a third argument, one of "&lt;", "&lt;=",
+    "&gt;", "&gt;=", "==", "!=", "&lt;&gt;" (the last two have the same
+    meaning). When called with one of these strings as the third
+    argument, cmp() can return any Python object. Otherwise, it can
+    only return -1, 0 or 1 as before.
+
+</pre>
+   <h3>
+    Chained Comparisons
+   </h3>
+   <pre>
+    Problem
+
+    It would be nice to allow objects for which the comparison returns
+    something other than -1, 0, or 1 to be used in chained
+    comparisons, such as:
+
+             x &lt; y &lt; z
+
+    Currently, this is interpreted by Python as:
+
+             temp1 = x &lt; y
+             if temp1:
+               return y &lt; z
+             else:
+               return temp1     
+
+    Note that this requires testing the truth value of the result of
+    comparisons, with potential "shortcutting" of the right-side
+    comparison testings. In other words, the truth-value of the result
+    of the result of the comparison determines the result of a chained
+    operation. This is problematic in the case of arrays, since if x,
+    y and z are three arrays, then the user expects:
+
+            x &lt; y &lt; z
+
+    to be an array of 0's and 1's where 1's are in the locations
+    corresponding to the elements of y which are between the
+    corresponding elements in x and z. In other words, the right-hand
+    side must be evaluated regardless of the result of x &lt; y, which is
+    incompatible with the mechanism currently in use by the parser.
+
+    Solution
+
+    Guido mentioned that one possible way out would be to change the
+    code generated by chained comparisons to allow arrays to be
+    chained-compared intelligently. What follows is a mixture of his
+    idea and my suggestions. The code generated for x &lt; y &lt; z would be
+    equivalent to:
+
+             temp1 = x &lt; y
+             if temp1:
+               temp2 = y &lt; z
+               return boolean_combine(temp1, temp2)
+             else:
+               return temp1     
+
+    where boolean_combine is a new function which does something like
+    the following:
+
+             def boolean_combine(a, b):
+                 if hasattr(a, '__boolean_and__') or \
+                    hasattr(b, '__boolean_and__'):
+                     try:
+                         return a.__boolean_and__(b)
+                     except:
+                         return b.__boolean_and__(a)
+                 else: # standard behavior
+                     if a:
+                         return b
+                     else: 
+                         return 0
+
+    where the __boolean_and__ special method is implemented for
+    C-level types by another value of the third argument to the
+    richcmp function. This method would perform a boolean comparison
+    of the arrays (currently implemented in the umath module as the
+    logical_and ufunc).
+
+    Thus, objects returned by rich comparisons should always test
+    true, but should define another special method which creates
+    boolean combinations of them and their argument.
+
+    This solution has the advantage of allowing chained comparisons to
+    work for arrays, but the disadvantage that it requires comparison
+    arrays to always return true (in an ideal world, I'd have them
+    always raise an exception on truth testing, since the meaning of
+    testing "if a&gt;b:" is massively ambiguous.
+
+    The inlining already present which deals with integer comparisons
+    would still apply, resulting in no performance cost for the most
+    common cases.
+
+
+</pre>
+  </div>
+ </body>
+
+<!-- Mirrored from www.python.org/dev/peps/pep-0207/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 03 Sep 2015 04:34:05 GMT -->
+</html>Source: <a href="https://hg.python.org/peps/file/tip/pep-0207.txt">https://hg.python.org/peps/file/tip/pep-0207.txt</a>
+
+    </article>
+
+
+                </section>
+
+                
+
+
+<aside class="left-sidebar" role="secondary">
+
+    
+
+
+
+
+
+
+    
+
+
+
+
+
+        <div class="twitter-widget sidebar-widget">
+        <a class="twitter-timeline" data-dnt="true" href="https://twitter.com/ThePSF" data-widget-id="434113224703610882">Tweets by @ThePSF</a>
+        <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+    </div>
+
+    <div class="psf-sidebar-widget sidebar-widget">
+        <h3 class="widget-title">The PSF</h3>
+<p>The Python Software Foundation is the organization behind Python. Become a member of the PSF and help advance the software and our mission. </p>
+
+    </div>
+
+</aside>
+
+
+
+                
+                
+
+
+            </div><!-- end .container -->
+        </div><!-- end #content .content-wrapper -->
+
+        <!-- Footer and social media list -->
+        <footer id="site-map" class="main-footer" role="contentinfo">
+            <div class="main-footer-links">
+                <div class="container">
+
+                    
+                    <a id="back-to-top-1" class="jump-link" href="#python-network"><span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> Back to Top</a>
+
+                    
+
+<ul class="sitemap navigation menu do-not-print" role="tree" id="container">
+    
+    <li class="tier-1 element-1">
+        <a href="https://www.python.org/about/" >About</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/apps/" title="">Applications</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/quotes/" title="">Quotes</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/gettingstarted/" title="">Getting Started</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/help/" title="">Help</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-2">
+        <a href="https://www.python.org/downloads/" >Downloads</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/downloads/" title="">All releases</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/downloads/source/" title="">Source code</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/downloads/windows/" title="">Windows</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/downloads/mac-osx/" title="">Mac OS X</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/download/other/" title="">Other Platforms</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://docs.python.org/3/license.html" title="">License</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/download/alternatives" title="">Alternative Implementations</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-3">
+        <a href="https://www.python.org/doc/" >Documentation</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/doc/" title="">Docs</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/doc/av" title="">Audio/Visual Talks</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://wiki.python.org/moin/BeginnersGuide" title="">Beginner&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://docs.python.org/faq/" title="">FAQ</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="http://wiki.python.org/moin/Languages" title="">Non-English Docs</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="../index.html" title="">PEP Index</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://wiki.python.org/moin/PythonBooks" title="">Python Books</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-4">
+        <a href="https://www.python.org/community/" >Community</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/community/diversity/" title="">Diversity</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/community/irc/" title="">IRC</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/community/lists/" title="">Mailing Lists</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/workshops/" title="">Python Conferences</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/community/sigs/" title="">Special Interest Groups</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://wiki.python.org/moin/" title="">Python Wiki</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/community/logos/" title="">Python Logo</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://www.python.org/community/merchandise/" title="">Merchandise</a></li>
+    
+        <li class="tier-2 element-9" role="treeitem"><a href="https://www.python.org/community/awards" title="">Community Awards</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-5">
+        <a href="https://www.python.org/about/success/" title="success-stories">Success Stories</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/success/#arts" title="">Arts</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/success/#business" title="">Business</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/success/#education" title="">Education</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/success/#engineering" title="">Engineering</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/about/success/#government" title="">Government</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://www.python.org/about/success/#scientific" title="">Scientific</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/about/success/#software-development" title="">Software Development</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-6">
+        <a href="https://www.python.org/blogs/" title="News from around the Python world">News</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/blogs/" title="Python Insider Blog Posts">Python News</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://planetpython.org/" title="Planet Python">Community News</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="http://pyfound.blogspot.com/" title="PSF Blog">PSF News</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pycon.blogspot.com/" title="PyCon Blog">PyCon News</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-7">
+        <a href="https://www.python.org/events/" >Events</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/events/python-events/" title="">Python Events</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/events/python-user-group/" title="">User Group Events</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/events/python-events/past/" title="">Python Events Archive</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/events/python-user-group/past/" title="">User Group Events Archive</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://wiki.python.org/moin/PythonEventsCalendar#Submitting_an_Event" title="">Submit an Event</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-8">
+        <a href="https://www.python.org/dev/" >Contributing</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="http://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://bugs.python.org/" title="">Issue Tracker</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://mail.python.org/mailman/listinfo/python-dev" title="">python-dev list</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pythonmentors.com/" title="">Core Mentorship</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+</ul>
+
+
+                    <a id="back-to-top-2" class="jump-link" href="#python-network"><span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> Back to Top</a>
+                    
+
+                </div><!-- end .container -->
+            </div> <!-- end .main-footer-links -->
+
+            <div class="site-base">
+                <div class="container">
+                    
+                    <ul class="footer-links navigation menu do-not-print" role="tree">
+                        <li class="tier-1 element-1"><a href="https://www.python.org/about/help/">Help &amp; <span class="say-no-more">General</span> Contact</a></li>
+                        <li class="tier-1 element-2"><a href="https://www.python.org/community/diversity/">Diversity <span class="say-no-more">Initiatives</span></a></li>
+                        <li class="tier-1 element-3"><a href="https://github.com/python/pythondotorg/issues">Submit Website Bug</a></li>
+                        <!--<li class="tier-1 element-3"><a href="#"><span class="say-no-more">Website</span> Colophon</a></li>-->
+                    </ul>
+
+                    <div class="copyright">
+                        <p><small>
+                            <span class="pre">Copyright &copy;2001-2015.</span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/psf-landing/">Python Software Foundation</a></span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/about/legal/">Legal Statements</a></span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/privacy/">Privacy Policy</a></span>
+                        </small></p>
+                    </div>
+
+                </div><!-- end .container -->
+            </div><!-- end .site-base -->
+
+        </footer>
+
+    </div><!-- end #touchnav-wrapper -->
+
+    
+    <script src="../../../../ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="../../../static/js/libs/jquery-1.8.2.min.js"><\/script>')</script>
+
+    <script src="../../../static/js/libs/masonry.pkgd.min.js"></script>
+
+    <script type="text/javascript" src="../../../static/js/main-min.js" charset="utf-8"></script>
+    
+
+    <!--[if lte IE 7]>
+    <script type="text/javascript" src="/static/js/plugins/IE8-min.js" charset="utf-8"></script>
+    
+    
+    <![endif]-->
+
+    <!--[if lte IE 8]>
+    <script type="text/javascript" src="/static/js/plugins/getComputedStyle-min.js" charset="utf-8"></script>
+    
+    
+    <![endif]-->
+
+    
+
+    
+    
+
+</body>
+</html>

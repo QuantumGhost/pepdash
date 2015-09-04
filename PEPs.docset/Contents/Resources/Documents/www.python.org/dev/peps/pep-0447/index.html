@@ -1,0 +1,2712 @@
+<!doctype html>
+<!--[if lt IE 7]>   <html class="no-js ie6 lt-ie7 lt-ie8 lt-ie9">   <![endif]-->
+<!--[if IE 7]>      <html class="no-js ie7 lt-ie8 lt-ie9">          <![endif]-->
+<!--[if IE 8]>      <html class="no-js ie8 lt-ie9">                 <![endif]-->
+<!--[if gt IE 8]><!--><html class="no-js" lang="en" dir="ltr">  <!--<![endif]-->
+
+
+<!-- Mirrored from www.python.org/dev/peps/pep-0447/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 03 Sep 2015 04:33:21 GMT -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <link rel="prefetch" href="../../../../ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js">
+
+    <meta name="application-name" content="Python.org">
+    <meta name="msapplication-tooltip" content="The official home of the Python Programming Language">
+    <meta name="apple-mobile-web-app-title" content="Python.org">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="format-detection" content="telephone=no">
+    <meta http-equiv="cleartype" content="on">
+    <meta http-equiv="imagetoolbar" content="false">
+
+    <script src="../../../static/js/libs/modernizr.js"></script>
+
+    <link href="../../../static/stylesheets/style.css" rel="stylesheet" type="text/css" title="default" />
+    <link href="../../../static/stylesheets/mq.css" rel="stylesheet" type="text/css" media="not print, braille, embossed, speech, tty" />
+    
+
+    <!--[if (lte IE 8)&(!IEMobile)]>
+    <link href="/static/stylesheets/no-mq.css" rel="stylesheet" type="text/css" media="screen" />
+    
+    
+    <![endif]-->
+
+    
+    <link rel="icon" type="image/x-icon" href="https://www.python.org/static/favicon.ico">
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="../../../static/apple-touch-icon-144x144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="../../../static/apple-touch-icon-114x114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="../../../static/apple-touch-icon-72x72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="../../../static/apple-touch-icon-precomposed.png">
+    <link rel="apple-touch-icon" href="../../../static/apple-touch-icon-precomposed.png">
+
+    
+    <meta name="msapplication-TileImage" content="/static/metro-icon-144x144-precomposed.png"><!-- white shape -->
+    <meta name="msapplication-TileColor" content="#3673a5"><!-- python blue -->
+    <meta name="msapplication-navbutton-color" content="#3673a5">
+
+    <meta property="og:site_name" content="Python.org">
+    <meta property="og:type" content="website">
+
+    <title>PEP 0447 -- Add __getdescriptor__ method to metaclass | Python.org</title>
+    <meta property="og:title" content="Welcome to Python.org">
+
+    
+    <meta name="description" content="The official home of the Python Programming Language">
+    <meta name="og:description" content="The official home of the Python Programming Language">
+    <meta name="keywords" content="Python programming language object oriented web free open source software license documentation download community">
+    <meta property="og:tag" content="Python programming language object oriented web free open source software license documentation download community">
+    <meta property="og:published_time" content="">
+    <meta property="og:modified_time" content="">
+    <meta property="og:author" content="">
+    <meta property="og:section" content=""> 
+    <meta property="og:url" content="">
+    <meta property="og:image" content="">
+    <meta property="og:video" content="">
+
+    <link rel="author" href="https://www.python.org/static/humans.txt">
+
+    
+
+    
+    <script type="application/ld+json">
+     {
+       "@context": "http://schema.org",
+       "@type": "WebSite",
+       "url": "https://www.python.org/",
+       "potentialAction": {
+         "@type": "SearchAction",
+         "target": "https://www.python.org/search/?q={search_term_string}",
+         "query-input": "required name=search_term_string"
+       }
+     }
+    </script>
+
+    
+    <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-39055973-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+    </script>
+    
+</head>
+
+<body class="python pages pep-page">
+
+    <div id="touchnav-wrapper">
+
+        <div id="nojs" class="do-not-print">
+            <p><strong>Notice:</strong> While Javascript is not essential for this website, your interaction with the content will be limited. Please turn Javascript on for the full experience. </p>
+        </div>
+
+        <!--[if lt IE 8]>
+        <div id="oldie-warning" class="do-not-print">
+            <p><strong>Notice:</strong> Your browser is <em>ancient</em> and <a href="http://www.ie6countdown.com/">Microsoft agrees</a>. <a href="http://browsehappy.com/">Upgrade to a different browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to experience a better web.</p>
+        </div>
+        <![endif]-->
+
+        <!-- Sister Site Links -->
+        <div id="top" class="top-bar do-not-print">
+
+            <nav class="meta-navigation container" role="navigation">
+
+                
+                <div class="skip-link screen-reader-text">
+                    <a href="#content" title="Skip to content">Skip to content</a>
+                </div>
+
+                
+                <a id="close-python-network" class="jump-link" href="#python-network" aria-hidden="true">
+                    <span aria-hidden="true" class="icon-arrow-down"><span>&#9660;</span></span> Close
+                </a>
+
+                
+
+<ul class="menu" role="tree">
+    
+    <li class="python-meta ">
+        <a href="https://www.python.org/" title="The Python Programming Language" >Python</a>
+    </li>
+    
+    <li class="psf-meta ">
+        <a href="https://www.python.org/psf-landing/" title="The Python Software Foundation" >PSF</a>
+    </li>
+    
+    <li class="docs-meta ">
+        <a href="https://docs.python.org/" title="Python Documentation" >Docs</a>
+    </li>
+    
+    <li class="pypi-meta ">
+        <a href="https://pypi.python.org/" title="Python Package Index" >PyPI</a>
+    </li>
+    
+    <li class="jobs-meta ">
+        <a href="https://www.python.org/jobs/" title="Python Job Board" >Jobs</a>
+    </li>
+    
+    <li class="shop-meta ">
+        <a href="https://www.python.org/community/" title="Python Community" >Community</a>
+    </li>
+    
+</ul>
+
+
+                <a id="python-network" class="jump-link" href="#top" aria-hidden="true">
+                    <span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> The Python Network
+                </a>
+
+            </nav>
+
+        </div>
+
+        <!-- Header elements -->
+        <header class="main-header" role="banner">
+            <div class="container">
+
+                <h1 class="site-headline">
+                    <a href="https://www.python.org/"><img class="python-logo" src="../../../static/img/python-logo.png" alt="python&trade;"></a>
+                </h1>
+
+                <div class="options-bar do-not-print">
+
+                    
+                    <a id="site-map-link" class="jump-to-menu" href="#site-map"><span class="menu-icon">&equiv;</span> Menu</a><form class="search-the-site" action="https://www.python.org/search/" method="get">
+                        <fieldset title="Search Python.org">
+
+                            <span aria-hidden="true" class="icon-search"></span>
+
+                            <label class="screen-reader-text" for="id-search-field">Search This Site</label>
+                            <input id="id-search-field" name="q" type="search" role="textbox" class="search-field" placeholder="Search" value="" tabindex="1">
+
+                            <button type="submit" name="submit" id="submit" class="search-button" title="Submit this Search" tabindex="3">
+                                GO
+                            </button>
+
+                            
+                            <!--[if IE]><input type="text" style="display: none;" disabled="disabled" size="1" tabindex="4"><![endif]-->
+
+                        </fieldset>
+                    </form><span class="breaker"></span><div class="adjust-font-size" aria-hidden="true">
+                        <ul class="navigation menu" aria-label="Adjust Text Size on Page">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                <a href="#" class="action-trigger"><strong><small>A</small> A</strong></a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a class="text-shrink" title="Make Text Smaller" href="javascript:;">Smaller</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a class="text-grow" title="Make Text Larger" href="javascript:;">Larger</a></li>
+                                    <li class="tier-2 element-3" role="treeitem"><a class="text-reset" title="Reset any font size changes I have made" href="javascript:;">Reset</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div><div class="winkwink-nudgenudge">
+                        <ul class="navigation menu" aria-label="Social Media Navigation">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                <a href="#" class="action-trigger">Socialize</a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a href="http://plus.google.com/+Python"><span aria-hidden="true" class="icon-google-plus"></span>Google+</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a href="http://www.facebook.com/pythonlang?fref=ts"><span aria-hidden="true" class="icon-facebook"></span>Facebook</a></li>
+                                    <li class="tier-2 element-3" role="treeitem"><a href="http://twitter.com/ThePSF"><span aria-hidden="true" class="icon-twitter"></span>Twitter</a></li>
+                                    <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/irc/"><span aria-hidden="true" class="icon-freenode"></span>Chat on IRC</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div><div class="account-signin">
+                        <ul class="navigation menu" aria-label="Social Media Navigation">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                
+                                <a href="https://www.python.org/accounts/login/" title="Sign Up or Sign In to Python.org">Sign In</a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/accounts/signup/">Sign Up / Register</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/accounts/login/">Sign In</a></li>
+                                </ul>
+                                
+                            </li>
+                        </ul>
+                    </div>
+
+                </div><!-- end options-bar -->
+
+                <nav id="mainnav" class="python-navigation main-navigation do-not-print" role="navigation">
+                    
+                        
+<ul class="navigation menu" role="menubar" aria-label="Main Navigation">
+  
+    
+    
+    <li id="about" class="tier-1 element-1  " aria-haspopup="true">
+        <a href="https://www.python.org/about/" title="" class="">About</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/apps/" title="">Applications</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/quotes/" title="">Quotes</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/gettingstarted/" title="">Getting Started</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/help/" title="">Help</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="downloads" class="tier-1 element-2  " aria-haspopup="true">
+        <a href="https://www.python.org/downloads/" title="" class="">Downloads</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/downloads/" title="">All releases</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/downloads/source/" title="">Source code</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/downloads/windows/" title="">Windows</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/downloads/mac-osx/" title="">Mac OS X</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/download/other/" title="">Other Platforms</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://docs.python.org/3/license.html" title="">License</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/download/alternatives" title="">Alternative Implementations</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="documentation" class="tier-1 element-3  " aria-haspopup="true">
+        <a href="https://www.python.org/doc/" title="" class="">Documentation</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/doc/" title="">Docs</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/doc/av" title="">Audio/Visual Talks</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://wiki.python.org/moin/BeginnersGuide" title="">Beginner&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://docs.python.org/faq/" title="">FAQ</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="http://wiki.python.org/moin/Languages" title="">Non-English Docs</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="../index.html" title="">PEP Index</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://wiki.python.org/moin/PythonBooks" title="">Python Books</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="community" class="tier-1 element-4  " aria-haspopup="true">
+        <a href="https://www.python.org/community/" title="" class="">Community</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/community/diversity/" title="">Diversity</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/community/irc/" title="">IRC</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/community/lists/" title="">Mailing Lists</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/workshops/" title="">Python Conferences</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/community/sigs/" title="">Special Interest Groups</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://wiki.python.org/moin/" title="">Python Wiki</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/community/logos/" title="">Python Logo</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://www.python.org/community/merchandise/" title="">Merchandise</a></li>
+    
+        <li class="tier-2 element-9" role="treeitem"><a href="https://www.python.org/community/awards" title="">Community Awards</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="success-stories" class="tier-1 element-5  " aria-haspopup="true">
+        <a href="https://www.python.org/about/success/" title="success-stories" class="">Success Stories</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/success/#arts" title="">Arts</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/success/#business" title="">Business</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/success/#education" title="">Education</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/success/#engineering" title="">Engineering</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/about/success/#government" title="">Government</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://www.python.org/about/success/#scientific" title="">Scientific</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/about/success/#software-development" title="">Software Development</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="news" class="tier-1 element-6  " aria-haspopup="true">
+        <a href="https://www.python.org/blogs/" title="News from around the Python world" class="">News</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/blogs/" title="Python Insider Blog Posts">Python News</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://planetpython.org/" title="Planet Python">Community News</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="http://pyfound.blogspot.com/" title="PSF Blog">PSF News</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pycon.blogspot.com/" title="PyCon Blog">PyCon News</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="events" class="tier-1 element-7  " aria-haspopup="true">
+        <a href="https://www.python.org/events/" title="" class="">Events</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/events/python-events/" title="">Python Events</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/events/python-user-group/" title="">User Group Events</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/events/python-events/past/" title="">Python Events Archive</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/events/python-user-group/past/" title="">User Group Events Archive</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://wiki.python.org/moin/PythonEventsCalendar#Submitting_an_Event" title="">Submit an Event</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    
+  
+</ul>
+
+                    
+                </nav>
+
+                <div class="header-banner "> <!-- for optional "do-not-print" class -->
+                    
+                    
+                </div>
+
+                
+                
+
+             </div><!-- end .container -->
+        </header>
+
+        <div id="content" class="content-wrapper">
+            <!-- Main Content Column -->
+            <div class="container">
+
+                <section class="main-content with-left-sidebar" role="main">
+
+                    
+<ul class="breadcrumbs menu">
+    <li>
+        <a href="https://www.python.org/" title="The Python Programming Language">Python</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>
+        <a href="https://www.python.org/dev/">Python Developer's Guide</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>
+        <a href="../index.html">PEP Index</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>PEP 0447 -- Add __getdescriptor__ method to metaclass</li>
+</ul>
+
+
+                    
+<style>
+   .pep-page pre {
+        padding: .5em;
+        background: inherit;
+        border-left: 0px;
+        -webkit-box-shadow: 0 0 0 0;
+        -moz-box-shadow: 0 0 0 0;
+        box-shadow: 0 0 0 0;
+   }
+</style>
+
+    
+    <article class="text">
+        
+
+        <header class="article-header">
+            <h1 class="page-title">PEP 0447 -- Add __getdescriptor__ method to metaclass</h1>
+        </header>
+
+        <!--
+This HTML is auto-generated.  DO NOT EDIT THIS FILE!  If you are writing a new
+PEP, see http://www.python.org/dev/peps/pep-0001 for instructions and links
+to templates.  DO NOT USE THIS HTML FILE AS YOUR TEMPLATE!
+-->
+<html>
+ <body>
+  <table class="rfc2822 docutils field-list" frame="void" rules="none">
+   <col class="field-name">
+   </col>
+   <col class="field-body">
+   </col>
+   <tbody valign="top">
+    <tr class="field">
+     <th class="field-name">
+      PEP:
+     </th>
+     <td class="field-body">
+      447
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Title:
+     </th>
+     <td class="field-body">
+      Add __getdescriptor__ method to metaclass
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Author:
+     </th>
+     <td class="field-body">
+      Ronald Oussoren &lt;ronaldoussoren at mac.com&gt;
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Status:
+     </th>
+     <td class="field-body">
+      Draft
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Type:
+     </th>
+     <td class="field-body">
+      Standards Track
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Created:
+     </th>
+     <td class="field-body">
+      12-Jun-2013
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Post-History:
+     </th>
+     <td class="field-body">
+      2-Jul-2013, 15-Jul-2013, 29-Jul-2013, 22-Jul-2015
+     </td>
+    </tr>
+   </tbody>
+  </table>
+  <hr/>
+  <div class="contents topic" id="contents">
+   <p class="topic-title first">
+    Contents
+   </p>
+   <ul class="simple">
+    <li>
+     <a class="reference internal" href="#abstract" id="id38">
+      Abstract
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#rationale" id="id39">
+      Rationale
+     </a>
+     <ul>
+      <li>
+       <a class="reference internal" href="#background" id="id40">
+        Background
+       </a>
+      </li>
+     </ul>
+    </li>
+    <li>
+     <a class="reference internal" href="#the-superclass-attribute-lookup-hook" id="id41">
+      The superclass attribute lookup hook
+     </a>
+     <ul>
+      <li>
+       <a class="reference internal" href="#aside-attribute-resolution-algorithm-in-python" id="id42">
+        Aside: Attribute resolution algorithm in Python
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#in-python-code" id="id43">
+        In Python code
+       </a>
+       <ul>
+        <li>
+         <a class="reference internal" href="#example-usage" id="id44">
+          Example usage
+         </a>
+        </li>
+       </ul>
+      </li>
+      <li>
+       <a class="reference internal" href="#in-c-code" id="id45">
+        In C code
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#use-of-this-hook-by-the-interpreter" id="id46">
+        Use of this hook by the interpreter
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#other-changes-to-the-implementation" id="id47">
+        Other changes to the implementation
+       </a>
+      </li>
+     </ul>
+    </li>
+    <li>
+     <a class="reference internal" href="#impact-of-this-pep-on-introspection" id="id48">
+      Impact of this PEP on introspection
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#performance-impact" id="id49">
+      Performance impact
+     </a>
+     <ul>
+      <li>
+       <a class="reference internal" href="#micro-benchmarks" id="id50">
+        Micro benchmarks
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#pybench" id="id51">
+        Pybench
+       </a>
+      </li>
+     </ul>
+    </li>
+    <li>
+     <a class="reference internal" href="#alternative-proposals" id="id52">
+      Alternative proposals
+     </a>
+     <ul>
+      <li>
+       <a class="reference internal" href="#getattribute-super" id="id53">
+        <tt class="docutils literal">
+         __getattribute_super__
+        </tt>
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#reuse-tp-getattro" id="id54">
+        Reuse
+        <tt class="docutils literal">
+         tp_getattro
+        </tt>
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#alternative-placement-of-the-new-method" id="id55">
+        Alternative placement of the new method
+       </a>
+      </li>
+     </ul>
+    </li>
+    <li>
+     <a class="reference internal" href="#history" id="id56">
+      History
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#discussion-threads" id="id57">
+      Discussion threads
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#references" id="id58">
+      References
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#copyright" id="id59">
+      Copyright
+     </a>
+    </li>
+   </ul>
+  </div>
+  <div class="section" id="abstract">
+   <h1>
+    <a class="toc-backref" href="#id38">
+     Abstract
+    </a>
+   </h1>
+   <p>
+    Currently
+    <tt class="docutils literal">
+     object.__getattribute__
+    </tt>
+    and
+    <tt class="docutils literal">
+     super.__getattribute__
+    </tt>
+    peek
+in the
+    <tt class="docutils literal">
+     __dict__
+    </tt>
+    of classes on the MRO for a class when looking for
+an attribute. This PEP adds an optional
+    <tt class="docutils literal">
+     __getdescriptor__
+    </tt>
+    method to
+a metaclass that replaces this behavior and gives more control over attribute
+lookup, especially when using a
+    <a class="reference external" href="http://docs.python.org/3/library/functions.html#super">
+     super
+    </a>
+    <a class="footnote-reference" href="#id6" id="id11">
+     [2]
+    </a>
+    object.
+   </p>
+   <p>
+    That is, the MRO walking loop in
+    <tt class="docutils literal">
+     _PyType_Lookup
+    </tt>
+    and
+    <tt class="docutils literal">
+     super.__getattribute__
+    </tt>
+    gets changed from:
+   </p>
+   <pre class="literal-block">
+def lookup(mro_list, name):
+    for cls in mro_list:
+        if name in cls.__dict__:
+            return cls.__dict__
+
+    return NotFound
+</pre>
+   <p>
+    to:
+   </p>
+   <pre class="literal-block">
+def lookup(mro_list, name):
+    for cls in mro_list:
+        try:
+            return cls.__getdescriptor__(name)
+        except AttributeError:
+            pass
+
+    return NotFound
+</pre>
+   <p>
+    The default implemention of
+    <tt class="docutils literal">
+     __getdescriptor__
+    </tt>
+    looks in the class
+dictionary:
+   </p>
+   <pre class="literal-block">
+class type:
+   def __getdescriptor__(cls, name):
+       try:
+           return cls.__dict__[name]
+       except KeyError:
+           raise AttributeError(name) from None
+</pre>
+  </div>
+  <div class="section" id="rationale">
+   <h1>
+    <a class="toc-backref" href="#id39">
+     Rationale
+    </a>
+   </h1>
+   <p>
+    It is currently not possible to influence how the
+    <a class="reference external" href="http://docs.python.org/3/library/functions.html#super">
+     super class
+    </a>
+    <a class="footnote-reference" href="#id6" id="id7">
+     [2]
+    </a>
+    looks
+up attributes (that is,
+    <tt class="docutils literal">
+     super.__getattribute__
+    </tt>
+    unconditionally
+peeks in the class
+    <tt class="docutils literal">
+     __dict__
+    </tt>
+    ), and that can be problematic for
+dynamic classes that can grow new methods on demand, for example dynamic
+proxy classes.
+   </p>
+   <p>
+    The
+    <tt class="docutils literal">
+     __getdescriptor__
+    </tt>
+    method makes it possible to dynamically add
+attributes even when looking them up using the
+    <a class="reference external" href="http://docs.python.org/3/library/functions.html#super">
+     super class
+    </a>
+    <a class="footnote-reference" href="#id6" id="id8">
+     [2]
+    </a>
+    .
+   </p>
+   <p>
+    The new method affects
+    <tt class="docutils literal">
+     object.__getattribute__
+    </tt>
+    (and
+    <a class="reference external" href="http://docs.python.org/3/c-api/object.html#PyObject_GenericGetAttr">
+     PyObject_GenericGetAttr
+    </a>
+    <a class="footnote-reference" href="#id22" id="id23">
+     [6]
+    </a>
+    ) as well for consistency and to have a single
+place to implement dynamic attribute resolution for classes.
+   </p>
+   <div class="section" id="background">
+    <h2>
+     <a class="toc-backref" href="#id40">
+      Background
+     </a>
+    </h2>
+    <p>
+     The current behavior of
+     <tt class="docutils literal">
+      super.__getattribute__
+     </tt>
+     causes problems for
+classes that are dynamic proxies for other (non-Python) classes or types,
+an example of which is
+     <a class="reference external" href="http://pyobjc.sourceforge.net/">
+      PyObjC
+     </a>
+     <a class="footnote-reference" href="#id33" id="id34">
+      [9]
+     </a>
+     . PyObjC creates a Python class for every
+class in the Objective-C runtime, and looks up methods in the Objective-C
+runtime when they are used. This works fine for normal access, but doesn't
+work for access with
+     <a class="reference external" href="http://docs.python.org/3/library/functions.html#super">
+      super
+     </a>
+     <a class="footnote-reference" href="#id6" id="id12">
+      [2]
+     </a>
+     objects. Because of this PyObjC currently
+includes a custom
+     <a class="reference external" href="http://docs.python.org/3/library/functions.html#super">
+      super
+     </a>
+     <a class="footnote-reference" href="#id6" id="id13">
+      [2]
+     </a>
+     that must be used with its classes, as well as
+completely reimplementing
+     <a class="reference external" href="http://docs.python.org/3/c-api/object.html#PyObject_GenericGetAttr">
+      PyObject_GenericGetAttr
+     </a>
+     <a class="footnote-reference" href="#id22" id="id24">
+      [6]
+     </a>
+     for normal attribute
+access.
+    </p>
+    <p>
+     The API in this PEP makes it possible to remove the custom
+     <a class="reference external" href="http://docs.python.org/3/library/functions.html#super">
+      super
+     </a>
+     <a class="footnote-reference" href="#id6" id="id14">
+      [2]
+     </a>
+     and
+simplifies the implementation because the custom lookup behavior can be
+added in a central location.
+    </p>
+    <div class="note">
+     <p class="first admonition-title">
+      Note
+     </p>
+     <p class="last">
+      <a class="reference external" href="http://pyobjc.sourceforge.net/">
+       PyObjC
+      </a>
+      <a class="footnote-reference" href="#id33" id="id35">
+       [9]
+      </a>
+      cannot precalculate the contents of the class
+      <tt class="docutils literal">
+       __dict__
+      </tt>
+      because Objective-C classes can grow new methods at runtime. Furthermore
+Objective-C classes tend to contain a lot of methods while most Python
+code will only use a small subset of them, this makes precalculating
+unnecessarily expensive.
+     </p>
+    </div>
+   </div>
+  </div>
+  <div class="section" id="the-superclass-attribute-lookup-hook">
+   <h1>
+    <a class="toc-backref" href="#id41">
+     The superclass attribute lookup hook
+    </a>
+   </h1>
+   <p>
+    Both
+    <tt class="docutils literal">
+     super.__getattribute__
+    </tt>
+    and
+    <tt class="docutils literal">
+     object.__getattribute__
+    </tt>
+    (or
+    <a class="reference external" href="http://docs.python.org/3/c-api/object.html#PyObject_GenericGetAttr">
+     PyObject_GenericGetAttr
+    </a>
+    <a class="footnote-reference" href="#id22" id="id25">
+     [6]
+    </a>
+    and in particular
+    <tt class="docutils literal">
+     _PyType_Lookup
+    </tt>
+    in C code)
+walk an object's MRO and currently peek in the class'
+    <tt class="docutils literal">
+     __dict__
+    </tt>
+    to look up
+attributes.
+   </p>
+   <p>
+    With this proposal both lookup methods no longer peek in the class
+    <tt class="docutils literal">
+     __dict__
+    </tt>
+    but call the special method
+    <tt class="docutils literal">
+     __getdescriptor__
+    </tt>
+    , which is a slot defined
+on the metaclass. The default implementation of that method looks
+up the name the class
+    <tt class="docutils literal">
+     __dict__
+    </tt>
+    , which means that attribute lookup is
+unchanged unless a metatype actually defines the new special method.
+   </p>
+   <div class="section" id="aside-attribute-resolution-algorithm-in-python">
+    <h2>
+     <a class="toc-backref" href="#id42">
+      Aside: Attribute resolution algorithm in Python
+     </a>
+    </h2>
+    <p>
+     The attribute resolution proces as implemented by
+     <tt class="docutils literal">
+      object.__getattribute__
+     </tt>
+     (or PyObject_GenericGetAttr`` in CPython's implementation) is fairly
+straightforward, but not entirely so without reading C code.
+    </p>
+    <p>
+     The current CPython implementation of object.__getattribute__ is basicly
+equivalent to the following (pseudo-) Python code (excluding some house
+keeping and speed tricks):
+    </p>
+    <pre class="literal-block">
+def _PyType_Lookup(tp, name):
+    mro = tp.mro()
+    assert isinstance(mro, tuple)
+
+    for base in mro:
+       assert isinstance(base, type)
+
+       # PEP 447 will change these lines:
+       try:
+           return base.__dict__[name]
+       except KeyError:
+           pass
+
+    return None
+
+
+class object:
+    def __getattribute__(self, name):
+        assert isinstance(name, str)
+
+        tp = type(self)
+        descr = _PyType_Lookup(tp, name)
+
+        f = None
+        if descr is not None:
+            f = descr.__get__
+            if f is not None and descr.__set__ is not None:
+                # Data descriptor
+                return f(descr, self, type(self))
+
+        dict = self.__dict__
+        if dict is not None:
+            try:
+                return self.__dict__[name]
+            except KeyError:
+                pass
+
+        if f is not None:
+            # Non-data descriptor
+            return f(descr, self, type(self))
+
+        if descr is not None:
+            # Regular class attribute
+            return descr
+
+        raise AttributeError(name)
+
+
+class super:
+    def __getattribute__(self, name):
+       assert isinstance(name, unicode)
+
+       if name != '__class__':
+           starttype = self.__self_type__
+           mro = startype.mro()
+
+           try:
+               idx = mro.index(self.__thisclass__)
+
+           except ValueError:
+               pass
+
+           else:
+               for base in mro[idx+1:]:
+                   # PEP 447 will change these lines:
+                   try:
+                       descr = base.__dict__[name]
+                   except KeyError:
+                       continue
+
+                   f = descr.__get__
+                   if f is not None:
+                       return f(descr,
+                           None if (self.__self__ is self.__self_type__) else self.__self__,
+                           starttype)
+
+                   else:
+                       return descr
+
+       return object.__getattribute__(self, name)
+</pre>
+    <p>
+     This PEP should change the dict lookup at the lines starting at "#
+     <a class="reference external" href="index.html">
+      PEP 447
+     </a>
+     " with
+a method call to perform the actual lookup, making is possible to affect that
+lookup both for normal attribute access and access through the
+     <a class="reference external" href="http://docs.python.org/3/library/functions.html#super">
+      super proxy
+     </a>
+     <a class="footnote-reference" href="#id6" id="id10">
+      [2]
+     </a>
+     .
+    </p>
+    <p>
+     Note that specific classes can already completely override the default
+behaviour by implementing their own
+     <tt class="docutils literal">
+      __getattribute__
+     </tt>
+     slot (with or without
+calling the super class implementation).
+    </p>
+   </div>
+   <div class="section" id="in-python-code">
+    <h2>
+     <a class="toc-backref" href="#id43">
+      In Python code
+     </a>
+    </h2>
+    <p>
+     A meta type can define a method
+     <tt class="docutils literal">
+      __getdescriptor__
+     </tt>
+     that is called during
+attribute resolution by both
+     <tt class="docutils literal">
+      super.__getattribute__
+     </tt>
+     and
+     <tt class="docutils literal">
+      object.__getattribute
+     </tt>
+     :
+    </p>
+    <pre class="literal-block">
+class MetaType(type):
+    def __getdescriptor__(cls, name):
+        try:
+            return cls.__dict__[name]
+        except KeyError:
+            raise AttributeError(name) from None
+</pre>
+    <p>
+     The
+     <tt class="docutils literal">
+      __getdescriptor__
+     </tt>
+     method has as its arguments a class (which is an
+instance of the meta type) and the name of the attribute that is looked up.
+It should return the value of the attribute without invoking descriptors,
+and should raise
+     <a class="reference external" href="http://docs.python.org/3/library/exceptions.html#AttributeError">
+      AttributeError
+     </a>
+     <a class="footnote-reference" href="#id31" id="id32">
+      [8]
+     </a>
+     when the name cannot be found.
+    </p>
+    <p>
+     The
+     <a class="reference external" href="http://docs.python.org/3/library/functions.html#type">
+      type
+     </a>
+     <a class="footnote-reference" href="#id28" id="id29">
+      [7]
+     </a>
+     class provides a default implementation for
+     <tt class="docutils literal">
+      __getdescriptor__
+     </tt>
+     ,
+that looks up the name in the class dictionary.
+    </p>
+    <div class="section" id="example-usage">
+     <h3>
+      <a class="toc-backref" href="#id44">
+       Example usage
+      </a>
+     </h3>
+     <p>
+      The code below implements a silly metaclass that redirects attribute lookup to
+uppercase versions of names:
+     </p>
+     <pre class="literal-block">
+class UpperCaseAccess (type):
+    def __getdescriptor__(cls, name):
+        try:
+            return cls.__dict__[name.upper()]
+        except KeyError:
+            raise AttributeError(name) from None
+
+class SillyObject (metaclass=UpperCaseAccess):
+    def m(self):
+        return 42
+
+    def M(self):
+        return "fourtytwo"
+
+obj = SillyObject()
+assert obj.m() == "fortytwo"
+</pre>
+     <p>
+      As mentioned earlier in this PEP a more realistic use case of this
+functionallity is a
+      <tt class="docutils literal">
+       __getdescriptor__
+      </tt>
+      method that dynamicly populates the
+class
+      <tt class="docutils literal">
+       __dict__
+      </tt>
+      based on attribute access, primarily when it is not
+possible to reliably keep the class dict in sync with its source, for example
+because the source used to populate
+      <tt class="docutils literal">
+       __dict__
+      </tt>
+      is dynamic as well and does
+not have triggers that can be used to detect changes to that source.
+     </p>
+     <p>
+      An example of that are the class bridges in PyObjC: the class bridge is a
+Python object (class) that represents an Objective-C class and conceptually
+has a Python method for every Objective-C method in the Objective-C class.
+As with Python it is possible to add new methods to an Objective-C class, or
+replace existing ones, and there are no callbacks that can be used to detect
+this.
+     </p>
+    </div>
+   </div>
+   <div class="section" id="in-c-code">
+    <h2>
+     <a class="toc-backref" href="#id45">
+      In C code
+     </a>
+    </h2>
+    <p>
+     A new type flag
+     <tt class="docutils literal">
+      Py_TPFLAGS_GETDESCRIPTOR
+     </tt>
+     with value
+     <tt class="docutils literal">
+      (1UL &lt;&lt; 11)
+     </tt>
+     that
+indicates that the new slot is present and to be used.
+    </p>
+    <p>
+     A new slot
+     <tt class="docutils literal">
+      tp_getdescriptor
+     </tt>
+     is added to the
+     <tt class="docutils literal">
+      PyTypeObject
+     </tt>
+     struct, this
+slot corresponds to the
+     <tt class="docutils literal">
+      __getdescriptor__
+     </tt>
+     method on
+     <a class="reference external" href="http://docs.python.org/3/library/functions.html#type">
+      type
+     </a>
+     <a class="footnote-reference" href="#id28" id="id30">
+      [7]
+     </a>
+     .
+    </p>
+    <p>
+     The slot has the following prototype:
+    </p>
+    <pre class="literal-block">
+PyObject* (*getdescriptorfunc)(PyTypeObject* cls, PyObject* name);
+</pre>
+    <p>
+     This method should lookup
+     <em>
+      name
+     </em>
+     in the namespace of
+     <em>
+      cls
+     </em>
+     , without looking at
+superclasses, and should not invoke descriptors. The method returns
+     <tt class="docutils literal">
+      NULL
+     </tt>
+     without setting an exception when the
+     <em>
+      name
+     </em>
+     cannot be found, and returns a
+new reference otherwise (not a borrowed reference).
+    </p>
+    <p>
+     Classes with a
+     <tt class="docutils literal">
+      tp_getdescriptor
+     </tt>
+     slot must add
+     <tt class="docutils literal">
+      Py_TPFLAGS_GETDESCRIPTOR
+     </tt>
+     to
+     <tt class="docutils literal">
+      tp_flags
+     </tt>
+     to indicate that new slot must be used.
+    </p>
+   </div>
+   <div class="section" id="use-of-this-hook-by-the-interpreter">
+    <h2>
+     <a class="toc-backref" href="#id46">
+      Use of this hook by the interpreter
+     </a>
+    </h2>
+    <p>
+     The new method is required for metatypes and as such is defined on
+     <cite>
+      type_
+     </cite>
+     .
+Both
+     <tt class="docutils literal">
+      super.__getattribute__
+     </tt>
+     and
+     <tt class="docutils literal">
+      object.__getattribute__
+     </tt>
+     /
+     <a class="reference external" href="http://docs.python.org/3/c-api/object.html#PyObject_GenericGetAttr">
+      PyObject_GenericGetAttr
+     </a>
+     <a class="footnote-reference" href="#id22" id="id26">
+      [6]
+     </a>
+     (through
+     <tt class="docutils literal">
+      _PyType_Lookup
+     </tt>
+     ) use the this
+     <tt class="docutils literal">
+      __getdescriptor__
+     </tt>
+     method when
+walking the MRO.
+    </p>
+   </div>
+   <div class="section" id="other-changes-to-the-implementation">
+    <h2>
+     <a class="toc-backref" href="#id47">
+      Other changes to the implementation
+     </a>
+    </h2>
+    <p>
+     The change for
+     <a class="reference external" href="http://docs.python.org/3/c-api/object.html#PyObject_GenericGetAttr">
+      PyObject_GenericGetAttr
+     </a>
+     <a class="footnote-reference" href="#id22" id="id27">
+      [6]
+     </a>
+     will be done by changing the private
+function
+     <tt class="docutils literal">
+      _PyType_Lookup
+     </tt>
+     . This currently returns a borrowed reference, but
+must return a new reference when the
+     <tt class="docutils literal">
+      __getdescriptor__
+     </tt>
+     method is present.
+Because of this
+     <tt class="docutils literal">
+      _PyType_Lookup
+     </tt>
+     will be renamed to
+     <tt class="docutils literal">
+      _PyType_LookupName
+     </tt>
+     ,
+this will cause compile-time errors for all out-of-tree users of this
+private API.
+    </p>
+    <p>
+     For the same reason
+     <tt class="docutils literal">
+      _PyType_LookupId
+     </tt>
+     is renamed to
+     <tt class="docutils literal">
+      _PyType_LookupId2
+     </tt>
+     .
+A number of other functions in typeobject.c with the same issue do not get
+an updated name because they are private to that file.
+    </p>
+    <p>
+     The attribute lookup cache in
+     <tt class="docutils literal">
+      Objects/typeobject.c
+     </tt>
+     is disabled for classes
+that have a metaclass that overrides
+     <tt class="docutils literal">
+      __getdescriptor__
+     </tt>
+     , because using the
+cache might not be valid for such classes.
+    </p>
+   </div>
+  </div>
+  <div class="section" id="impact-of-this-pep-on-introspection">
+   <h1>
+    <a class="toc-backref" href="#id48">
+     Impact of this PEP on introspection
+    </a>
+   </h1>
+   <p>
+    Use of the method introduced in this PEP can affect introspection of classes
+with a metaclass that uses a custom
+    <tt class="docutils literal">
+     __getdescriptor__
+    </tt>
+    method. This section
+lists those changes.
+   </p>
+   <p>
+    The items listed below are only affected by custom
+    <tt class="docutils literal">
+     __getdescriptor__
+    </tt>
+    methods, the default implementation for
+    <tt class="docutils literal">
+     object
+    </tt>
+    won't cause problems
+because that still only uses the class
+    <tt class="docutils literal">
+     __dict__
+    </tt>
+    and won't cause visible
+changes to the visible behaviour of the
+    <tt class="docutils literal">
+     object.__getattribute__
+    </tt>
+    .
+   </p>
+   <ul>
+    <li>
+     <p class="first">
+      <tt class="docutils literal">
+       dir
+      </tt>
+      might not show all attributes
+     </p>
+     <p>
+      As with a custom
+      <tt class="docutils literal">
+       __getattribute__
+      </tt>
+      method
+      <a class="reference external" href="http://docs.python.org/3/library/functions.html#dir">
+       dir()
+      </a>
+      <a class="footnote-reference" href="#id15" id="id16">
+       [3]
+      </a>
+      might not see all
+(instance) attributes when using the
+      <tt class="docutils literal">
+       __getdescriptor__()
+      </tt>
+      method to
+dynamicly resolve attributes.
+     </p>
+     <p>
+      The solution for that is quite simple: classes using
+      <tt class="docutils literal">
+       __getdescriptor__
+      </tt>
+      should also implement
+      <a class="reference external" href="https://docs.python.org/3/reference/datamodel.html#object.__dir__">
+       __dir__()
+      </a>
+      <a class="footnote-reference" href="#id20" id="id21">
+       [5]
+      </a>
+      if they want full support for the builtin
+      <a class="reference external" href="http://docs.python.org/3/library/functions.html#dir">
+       dir()
+      </a>
+      <a class="footnote-reference" href="#id15" id="id17">
+       [3]
+      </a>
+      function.
+     </p>
+    </li>
+    <li>
+     <p class="first">
+      <tt class="docutils literal">
+       inspect.getattr_static
+      </tt>
+      might not show all attributes
+     </p>
+     <p>
+      The function
+      <tt class="docutils literal">
+       inspect.getattr_static
+      </tt>
+      intentionally does not invoke
+      <tt class="docutils literal">
+       __getattribute__
+      </tt>
+      and descriptors to avoid invoking user code during
+introspection with this function. The
+      <tt class="docutils literal">
+       __getdescriptor__
+      </tt>
+      method will also
+be ignored and is another way in which the result of
+      <tt class="docutils literal">
+       inspect.getattr_static
+      </tt>
+      can be different from that of
+      <tt class="docutils literal">
+       builtin.getattr
+      </tt>
+      .
+     </p>
+    </li>
+    <li>
+     <p class="first">
+      <tt class="docutils literal">
+       inspect.getmembers
+      </tt>
+      and
+      <tt class="docutils literal">
+       inspect.classify_class_attrs
+      </tt>
+     </p>
+     <p>
+      Both of these functions directly access the class __dict__ of classes along
+the MRO, and hence can be affected by a custom
+      <tt class="docutils literal">
+       __getdescriptor__
+      </tt>
+      method.
+     </p>
+     <p>
+      Code with a custom
+      <tt class="docutils literal">
+       __getdescriptor__
+      </tt>
+      method that want to play nice with
+these methods also needs to ensure that the
+      <tt class="docutils literal">
+       __dict__
+      </tt>
+      is set up correctly
+when that is accessed directly by Python code.
+     </p>
+     <p>
+      Note that
+      <tt class="docutils literal">
+       inspect.getmembers
+      </tt>
+      is used by
+      <tt class="docutils literal">
+       pydoc
+      </tt>
+      and hence this can
+affect runtime documentation introspection.
+     </p>
+    </li>
+    <li>
+     <p class="first">
+      Direct introspection of the class
+      <tt class="docutils literal">
+       __dict__
+      </tt>
+     </p>
+     <p>
+      Any code that directly access the class
+      <tt class="docutils literal">
+       __dict__
+      </tt>
+      for introspection
+can be affected by a custom
+      <tt class="docutils literal">
+       __getdescriptor__
+      </tt>
+      method, see the previous
+item.
+     </p>
+    </li>
+   </ul>
+  </div>
+  <div class="section" id="performance-impact">
+   <h1>
+    <a class="toc-backref" href="#id49">
+     Performance impact
+    </a>
+   </h1>
+   <p>
+    <strong>
+     WARNING
+    </strong>
+    : The benchmark results in this section are old, and will be updated
+when I've ported the patch to the current trunk. I don't expect significant
+changes to the results in this section.
+   </p>
+   <div class="section" id="micro-benchmarks">
+    <h2>
+     <a class="toc-backref" href="#id50">
+      Micro benchmarks
+     </a>
+    </h2>
+    <p>
+     <a class="reference external" href="http://bugs.python.org/issue18181">
+      Issue 18181
+     </a>
+     <a class="footnote-reference" href="#id2" id="id3">
+      [1]
+     </a>
+     has a micro benchmark as one of its attachments
+(
+     <a class="reference external" href="http://bugs.python.org/file40013/pep447-micro-bench.py">
+      pep447-micro-bench.py
+     </a>
+     <a class="footnote-reference" href="#id36" id="id37">
+      [10]
+     </a>
+     ) that specifically tests the speed of attribute
+lookup, both directly and through super.
+    </p>
+    <p>
+     Note that attribute lookup with deep class hierarchies is significantly slower
+when using a custom
+     <tt class="docutils literal">
+      __getdescriptor__
+     </tt>
+     method. This is because the
+attribute lookup cache for CPython cannot be used when having this method.
+    </p>
+   </div>
+   <div class="section" id="pybench">
+    <h2>
+     <a class="toc-backref" href="#id51">
+      Pybench
+     </a>
+    </h2>
+    <p>
+     The pybench output below compares an implementation of this PEP with the
+regular source tree, both based on changeset a5681f50bae2, run on an idle
+machine an Core i7 processor running Centos 6.4.
+    </p>
+    <p>
+     Even though the machine was idle there were clear differences between runs,
+I've seen difference in "minimum time" vary from -0.1% to +1.5%, with similar
+(but slightly smaller) differences in the "average time" difference.
+    </p>
+    <pre class="literal-block">
+-------------------------------------------------------------------------------
+PYBENCH 2.1
+-------------------------------------------------------------------------------
+* using CPython 3.4.0a0 (default, Jul 29 2013, 13:01:34) [GCC 4.4.7 20120313 (Red Hat 4.4.7-3)]
+* disabled garbage collection
+* system check interval set to maximum: 2147483647
+* using timer: time.perf_counter
+* timer: resolution=1e-09, implementation=clock_gettime(CLOCK_MONOTONIC)
+
+-------------------------------------------------------------------------------
+Benchmark: pep447.pybench
+-------------------------------------------------------------------------------
+
+    Rounds: 10
+    Warp:   10
+    Timer:  time.perf_counter
+
+    Machine Details:
+       Platform ID:    Linux-2.6.32-358.114.1.openstack.el6.x86_64-x86_64-with-centos-6.4-Final
+       Processor:      x86_64
+
+    Python:
+       Implementation: CPython
+       Executable:     /tmp/default-pep447/bin/python3
+       Version:        3.4.0a0
+       Compiler:       GCC 4.4.7 20120313 (Red Hat 4.4.7-3)
+       Bits:           64bit
+       Build:          Jul 29 2013 14:09:12 (#default)
+       Unicode:        UCS4
+
+
+-------------------------------------------------------------------------------
+Comparing with: default.pybench
+-------------------------------------------------------------------------------
+
+    Rounds: 10
+    Warp:   10
+    Timer:  time.perf_counter
+
+    Machine Details:
+       Platform ID:    Linux-2.6.32-358.114.1.openstack.el6.x86_64-x86_64-with-centos-6.4-Final
+       Processor:      x86_64
+
+    Python:
+       Implementation: CPython
+       Executable:     /tmp/default/bin/python3
+       Version:        3.4.0a0
+       Compiler:       GCC 4.4.7 20120313 (Red Hat 4.4.7-3)
+       Bits:           64bit
+       Build:          Jul 29 2013 13:01:34 (#default)
+       Unicode:        UCS4
+
+
+Test                             minimum run-time        average  run-time
+                                 this    other   diff    this    other   diff
+-------------------------------------------------------------------------------
+          BuiltinFunctionCalls:    45ms    44ms   +1.3%    45ms    44ms   +1.3%
+           BuiltinMethodLookup:    26ms    27ms   -2.4%    27ms    27ms   -2.2%
+                 CompareFloats:    33ms    34ms   -0.7%    33ms    34ms   -1.1%
+         CompareFloatsIntegers:    66ms    67ms   -0.9%    66ms    67ms   -0.8%
+               CompareIntegers:    51ms    50ms   +0.9%    51ms    50ms   +0.8%
+        CompareInternedStrings:    34ms    33ms   +0.4%    34ms    34ms   -0.4%
+                  CompareLongs:    29ms    29ms   -0.1%    29ms    29ms   -0.0%
+                CompareStrings:    43ms    44ms   -1.8%    44ms    44ms   -1.8%
+    ComplexPythonFunctionCalls:    44ms    42ms   +3.9%    44ms    42ms   +4.1%
+                 ConcatStrings:    33ms    33ms   -0.4%    33ms    33ms   -1.0%
+               CreateInstances:    47ms    48ms   -2.9%    47ms    49ms   -3.4%
+            CreateNewInstances:    35ms    36ms   -2.5%    36ms    36ms   -2.5%
+       CreateStringsWithConcat:    69ms    70ms   -0.7%    69ms    70ms   -0.9%
+                  DictCreation:    52ms    50ms   +3.1%    52ms    50ms   +3.0%
+             DictWithFloatKeys:    40ms    44ms  -10.1%    43ms    45ms   -5.8%
+           DictWithIntegerKeys:    32ms    36ms  -11.2%    35ms    37ms   -4.6%
+            DictWithStringKeys:    29ms    34ms  -15.7%    35ms    40ms  -11.0%
+                      ForLoops:    30ms    29ms   +2.2%    30ms    29ms   +2.2%
+                    IfThenElse:    38ms    41ms   -6.7%    38ms    41ms   -6.9%
+                   ListSlicing:    36ms    36ms   -0.7%    36ms    37ms   -1.3%
+                NestedForLoops:    43ms    45ms   -3.1%    43ms    45ms   -3.2%
+      NestedListComprehensions:    39ms    40ms   -1.7%    39ms    40ms   -2.1%
+          NormalClassAttribute:    86ms    82ms   +5.1%    86ms    82ms   +5.0%
+       NormalInstanceAttribute:    42ms    42ms   +0.3%    42ms    42ms   +0.0%
+           PythonFunctionCalls:    39ms    38ms   +3.5%    39ms    38ms   +2.8%
+             PythonMethodCalls:    51ms    49ms   +3.0%    51ms    50ms   +2.8%
+                     Recursion:    67ms    68ms   -1.4%    67ms    68ms   -1.4%
+                  SecondImport:    41ms    36ms  +12.5%    41ms    36ms  +12.6%
+           SecondPackageImport:    45ms    40ms  +13.1%    45ms    40ms  +13.2%
+         SecondSubmoduleImport:    92ms    95ms   -2.4%    95ms    98ms   -3.6%
+       SimpleComplexArithmetic:    28ms    28ms   -0.1%    28ms    28ms   -0.2%
+        SimpleDictManipulation:    57ms    57ms   -1.0%    57ms    58ms   -1.0%
+         SimpleFloatArithmetic:    29ms    28ms   +4.7%    29ms    28ms   +4.9%
+      SimpleIntFloatArithmetic:    37ms    41ms   -8.5%    37ms    41ms   -8.7%
+       SimpleIntegerArithmetic:    37ms    41ms   -9.4%    37ms    42ms  -10.2%
+      SimpleListComprehensions:    33ms    33ms   -1.9%    33ms    34ms   -2.9%
+        SimpleListManipulation:    28ms    30ms   -4.3%    29ms    30ms   -4.1%
+          SimpleLongArithmetic:    26ms    26ms   +0.5%    26ms    26ms   +0.5%
+                    SmallLists:    40ms    40ms   +0.1%    40ms    40ms   +0.1%
+                   SmallTuples:    46ms    47ms   -2.4%    46ms    48ms   -3.0%
+         SpecialClassAttribute:   126ms   120ms   +4.7%   126ms   121ms   +4.4%
+      SpecialInstanceAttribute:    42ms    42ms   +0.6%    42ms    42ms   +0.8%
+                StringMappings:    94ms    91ms   +3.9%    94ms    91ms   +3.8%
+              StringPredicates:    48ms    49ms   -1.7%    48ms    49ms   -2.1%
+                 StringSlicing:    45ms    45ms   +1.4%    46ms    45ms   +1.5%
+                     TryExcept:    23ms    22ms   +4.9%    23ms    22ms   +4.8%
+                    TryFinally:    32ms    32ms   -0.1%    32ms    32ms   +0.1%
+                TryRaiseExcept:    17ms    17ms   +0.9%    17ms    17ms   +0.5%
+                  TupleSlicing:    49ms    48ms   +1.1%    49ms    49ms   +1.0%
+                   WithFinally:    48ms    47ms   +2.3%    48ms    47ms   +2.4%
+               WithRaiseExcept:    45ms    44ms   +0.8%    45ms    45ms   +0.5%
+-------------------------------------------------------------------------------
+Totals:                          2284ms  2287ms   -0.1%  2306ms  2308ms   -0.1%
+
+(this=pep447.pybench, other=default.pybench)
+</pre>
+    <p>
+     A run of the benchmark suite (with option "-b 2n3") also seems to indicate that
+the performance impact is minimal:
+    </p>
+    <pre class="literal-block">
+Report on Linux fangorn.local 2.6.32-358.114.1.openstack.el6.x86_64 #1 SMP Wed Jul 3 02:11:25 EDT 2013 x86_64 x86_64
+Total CPU cores: 8
+
+### call_method_slots ###
+Min: 0.304120 -&gt; 0.282791: 1.08x faster
+Avg: 0.304394 -&gt; 0.282906: 1.08x faster
+Significant (t=2329.92)
+Stddev: 0.00016 -&gt; 0.00004: 4.1814x smaller
+
+### call_simple ###
+Min: 0.249268 -&gt; 0.221175: 1.13x faster
+Avg: 0.249789 -&gt; 0.221387: 1.13x faster
+Significant (t=2770.11)
+Stddev: 0.00012 -&gt; 0.00013: 1.1101x larger
+
+### django_v2 ###
+Min: 0.632590 -&gt; 0.601519: 1.05x faster
+Avg: 0.635085 -&gt; 0.602653: 1.05x faster
+Significant (t=321.32)
+Stddev: 0.00087 -&gt; 0.00051: 1.6933x smaller
+
+### fannkuch ###
+Min: 1.033181 -&gt; 0.999779: 1.03x faster
+Avg: 1.036457 -&gt; 1.001840: 1.03x faster
+Significant (t=260.31)
+Stddev: 0.00113 -&gt; 0.00070: 1.6112x smaller
+
+### go ###
+Min: 0.526714 -&gt; 0.544428: 1.03x slower
+Avg: 0.529649 -&gt; 0.547626: 1.03x slower
+Significant (t=-93.32)
+Stddev: 0.00136 -&gt; 0.00136: 1.0028x smaller
+
+### iterative_count ###
+Min: 0.109748 -&gt; 0.116513: 1.06x slower
+Avg: 0.109816 -&gt; 0.117202: 1.07x slower
+Significant (t=-357.08)
+Stddev: 0.00008 -&gt; 0.00019: 2.3664x larger
+
+### json_dump_v2 ###
+Min: 2.554462 -&gt; 2.609141: 1.02x slower
+Avg: 2.564472 -&gt; 2.620013: 1.02x slower
+Significant (t=-76.93)
+Stddev: 0.00538 -&gt; 0.00481: 1.1194x smaller
+
+### meteor_contest ###
+Min: 0.196336 -&gt; 0.191925: 1.02x faster
+Avg: 0.196878 -&gt; 0.192698: 1.02x faster
+Significant (t=61.86)
+Stddev: 0.00053 -&gt; 0.00041: 1.2925x smaller
+
+### nbody ###
+Min: 0.228039 -&gt; 0.235551: 1.03x slower
+Avg: 0.228857 -&gt; 0.236052: 1.03x slower
+Significant (t=-54.15)
+Stddev: 0.00130 -&gt; 0.00029: 4.4810x smaller
+
+### pathlib ###
+Min: 0.108501 -&gt; 0.105339: 1.03x faster
+Avg: 0.109084 -&gt; 0.105619: 1.03x faster
+Significant (t=311.08)
+Stddev: 0.00022 -&gt; 0.00011: 1.9314x smaller
+
+### regex_effbot ###
+Min: 0.057905 -&gt; 0.056447: 1.03x faster
+Avg: 0.058055 -&gt; 0.056760: 1.02x faster
+Significant (t=79.22)
+Stddev: 0.00006 -&gt; 0.00015: 2.7741x larger
+
+### silent_logging ###
+Min: 0.070810 -&gt; 0.072436: 1.02x slower
+Avg: 0.070899 -&gt; 0.072609: 1.02x slower
+Significant (t=-191.59)
+Stddev: 0.00004 -&gt; 0.00008: 2.2640x larger
+
+### spectral_norm ###
+Min: 0.290255 -&gt; 0.299286: 1.03x slower
+Avg: 0.290335 -&gt; 0.299541: 1.03x slower
+Significant (t=-572.10)
+Stddev: 0.00005 -&gt; 0.00015: 2.8547x larger
+
+### threaded_count ###
+Min: 0.107215 -&gt; 0.115206: 1.07x slower
+Avg: 0.107488 -&gt; 0.115996: 1.08x slower
+Significant (t=-109.39)
+Stddev: 0.00016 -&gt; 0.00076: 4.8665x larger
+
+The following not significant results are hidden, use -v to show them:
+call_method, call_method_unknown, chaos, fastpickle, fastunpickle, float, formatted_logging, hexiom2, json_load, normal_startup, nqueens, pidigits, raytrace, regex_compile, regex_v8, richards, simple_logging, startup_nosite, telco, unpack_sequence.
+</pre>
+   </div>
+  </div>
+  <div class="section" id="alternative-proposals">
+   <h1>
+    <a class="toc-backref" href="#id52">
+     Alternative proposals
+    </a>
+   </h1>
+   <div class="section" id="getattribute-super">
+    <h2>
+     <a class="toc-backref" href="#id53">
+      <tt class="docutils literal">
+       __getattribute_super__
+      </tt>
+     </a>
+    </h2>
+    <p>
+     An earlier version of this PEP used the following static method on classes:
+    </p>
+    <pre class="literal-block">
+def __getattribute_super__(cls, name, object, owner): pass
+</pre>
+    <p>
+     This method performed name lookup as well as invoking descriptors and was
+necessarily limited to working only with
+     <tt class="docutils literal">
+      super.__getattribute__
+     </tt>
+     .
+    </p>
+   </div>
+   <div class="section" id="reuse-tp-getattro">
+    <h2>
+     <a class="toc-backref" href="#id54">
+      Reuse
+      <tt class="docutils literal">
+       tp_getattro
+      </tt>
+     </a>
+    </h2>
+    <p>
+     It would be nice to avoid adding a new slot, thus keeping the API simpler and
+easier to understand.  A comment on
+     <a class="reference external" href="http://bugs.python.org/issue18181">
+      Issue 18181
+     </a>
+     <a class="footnote-reference" href="#id2" id="id4">
+      [1]
+     </a>
+     asked about reusing the
+     <tt class="docutils literal">
+      tp_getattro
+     </tt>
+     slot, that is super could call the
+     <tt class="docutils literal">
+      tp_getattro
+     </tt>
+     slot of all
+methods along the MRO.
+    </p>
+    <p>
+     That won't work because
+     <tt class="docutils literal">
+      tp_getattro
+     </tt>
+     will look in the instance
+     <tt class="docutils literal">
+      __dict__
+     </tt>
+     before it tries to resolve attributes using classes in the MRO.
+This would mean that using
+     <tt class="docutils literal">
+      tp_getattro
+     </tt>
+     instead of peeking the class
+dictionaries changes the semantics of the
+     <a class="reference external" href="http://docs.python.org/3/library/functions.html#super">
+      super class
+     </a>
+     <a class="footnote-reference" href="#id6" id="id9">
+      [2]
+     </a>
+     .
+    </p>
+   </div>
+   <div class="section" id="alternative-placement-of-the-new-method">
+    <h2>
+     <a class="toc-backref" href="#id55">
+      Alternative placement of the new method
+     </a>
+    </h2>
+    <p>
+     This PEP proposes to add
+     <tt class="docutils literal">
+      __getdescriptor__
+     </tt>
+     as a method on the metaclass.
+An alternative would be to add it as a class method on the class itself
+(simular to how
+     <tt class="docutils literal">
+      __new__
+     </tt>
+     is a
+     <a class="reference external" href="http://docs.python.org/3/library/functions.html#staticmethod">
+      staticmethod
+     </a>
+     <a class="footnote-reference" href="#id18" id="id19">
+      [4]
+     </a>
+     of the class and not a method
+of the metaclass).
+    </p>
+    <p>
+     The advantage of using a method on the metaclass is that will give an error
+when two classes on the MRO have different metaclasses that may have different
+behaviors for
+     <tt class="docutils literal">
+      __getdescriptor__
+     </tt>
+     . With a normal classmethod that problem
+would pass undetected while it might cause subtle errors when running the code.
+    </p>
+   </div>
+  </div>
+  <div class="section" id="history">
+   <h1>
+    <a class="toc-backref" href="#id56">
+     History
+    </a>
+   </h1>
+   <ul>
+    <li>
+     <p class="first">
+      23-Jul-2015: Added type flag
+      <tt class="docutils literal">
+       Py_TPFLAGS_GETDESCRIPTOR
+      </tt>
+      after talking
+with Guido.
+     </p>
+     <p>
+      The new flag is primarily useful to avoid crashing when loading an extension
+for an older version of CPython and could have positive speed implications
+as well.
+     </p>
+    </li>
+    <li>
+     <p class="first">
+      Jul-2014: renamed slot to
+      <tt class="docutils literal">
+       __getdescriptor__
+      </tt>
+      , the old name didn't
+match the naming style of other slots and was less descriptive.
+     </p>
+    </li>
+   </ul>
+  </div>
+  <div class="section" id="discussion-threads">
+   <h1>
+    <a class="toc-backref" href="#id57">
+     Discussion threads
+    </a>
+   </h1>
+   <ul class="simple">
+    <li>
+     The initial version of the PEP was send with
+Message-ID
+     <a class="reference external" href="mailto:75030FAC-6918-4E94-95DA-67A88D53E6F5@mac.com">
+      mailto:75030FAC-6918-4E94-95DA-67A88D53E6F5@mac.com
+     </a>
+    </li>
+    <li>
+     Further discusion starting at a message with
+Message-ID
+     <a class="reference external" href="mailto:5BB87CC4-F31B-4213-AAAC-0C0CE738460C@mac.com">
+      mailto:5BB87CC4-F31B-4213-AAAC-0C0CE738460C@mac.com
+     </a>
+    </li>
+    <li>
+     And more discussion starting at message with
+Message-ID
+     <a class="reference external" href="mailto:00AA7433-C853-4101-9718-060468EBAC54@mac.com">
+      mailto:00AA7433-C853-4101-9718-060468EBAC54@mac.com
+     </a>
+    </li>
+   </ul>
+  </div>
+  <div class="section" id="references">
+   <h1>
+    <a class="toc-backref" href="#id58">
+     References
+    </a>
+   </h1>
+   <ul class="simple">
+    <li>
+     <a class="reference external" href="http://bugs.python.org/issue18181">
+      Issue 18181
+     </a>
+     <a class="footnote-reference" href="#id2" id="id5">
+      [1]
+     </a>
+     contains an out of date prototype implementation
+    </li>
+   </ul>
+   <table class="docutils footnote" frame="void" id="id2" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       [1]
+      </td>
+      <td>
+       <em>
+        (
+        <a class="fn-backref" href="#id3">
+         1
+        </a>
+        ,
+        <a class="fn-backref" href="#id4">
+         2
+        </a>
+        ,
+        <a class="fn-backref" href="#id5">
+         3
+        </a>
+        )
+       </em>
+       <a class="reference external" href="http://bugs.python.org/issue18181">
+        http://bugs.python.org/issue18181
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id6" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       [2]
+      </td>
+      <td>
+       <em>
+        (
+        <a class="fn-backref" href="#id7">
+         1
+        </a>
+        ,
+        <a class="fn-backref" href="#id8">
+         2
+        </a>
+        ,
+        <a class="fn-backref" href="#id9">
+         3
+        </a>
+        ,
+        <a class="fn-backref" href="#id10">
+         4
+        </a>
+        ,
+        <a class="fn-backref" href="#id11">
+         5
+        </a>
+        ,
+        <a class="fn-backref" href="#id12">
+         6
+        </a>
+        ,
+        <a class="fn-backref" href="#id13">
+         7
+        </a>
+        ,
+        <a class="fn-backref" href="#id14">
+         8
+        </a>
+        )
+       </em>
+       <a class="reference external" href="http://docs.python.org/3/library/functions.html#super">
+        http://docs.python.org/3/library/functions.html#super
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id15" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       [3]
+      </td>
+      <td>
+       <em>
+        (
+        <a class="fn-backref" href="#id16">
+         1
+        </a>
+        ,
+        <a class="fn-backref" href="#id17">
+         2
+        </a>
+        )
+       </em>
+       <a class="reference external" href="http://docs.python.org/3/library/functions.html#dir">
+        http://docs.python.org/3/library/functions.html#dir
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id18" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id19">
+        [4]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="http://docs.python.org/3/library/functions.html#staticmethod">
+        http://docs.python.org/3/library/functions.html#staticmethod
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id20" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id21">
+        [5]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="https://docs.python.org/3/reference/datamodel.html#object.__dir__">
+        https://docs.python.org/3/reference/datamodel.html#object.__dir__
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id22" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       [6]
+      </td>
+      <td>
+       <em>
+        (
+        <a class="fn-backref" href="#id23">
+         1
+        </a>
+        ,
+        <a class="fn-backref" href="#id24">
+         2
+        </a>
+        ,
+        <a class="fn-backref" href="#id25">
+         3
+        </a>
+        ,
+        <a class="fn-backref" href="#id26">
+         4
+        </a>
+        ,
+        <a class="fn-backref" href="#id27">
+         5
+        </a>
+        )
+       </em>
+       <a class="reference external" href="http://docs.python.org/3/c-api/object.html#PyObject_GenericGetAttr">
+        http://docs.python.org/3/c-api/object.html#PyObject_GenericGetAttr
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id28" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       [7]
+      </td>
+      <td>
+       <em>
+        (
+        <a class="fn-backref" href="#id29">
+         1
+        </a>
+        ,
+        <a class="fn-backref" href="#id30">
+         2
+        </a>
+        )
+       </em>
+       <a class="reference external" href="http://docs.python.org/3/library/functions.html#type">
+        http://docs.python.org/3/library/functions.html#type
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id31" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id32">
+        [8]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="http://docs.python.org/3/library/exceptions.html#AttributeError">
+        http://docs.python.org/3/library/exceptions.html#AttributeError
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id33" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       [9]
+      </td>
+      <td>
+       <em>
+        (
+        <a class="fn-backref" href="#id34">
+         1
+        </a>
+        ,
+        <a class="fn-backref" href="#id35">
+         2
+        </a>
+        )
+       </em>
+       <a class="reference external" href="http://pyobjc.sourceforge.net/">
+        http://pyobjc.sourceforge.net/
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id36" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id37">
+        [10]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="http://bugs.python.org/file40013/pep447-micro-bench.py">
+        http://bugs.python.org/file40013/pep447-micro-bench.py
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+  </div>
+  <div class="section" id="copyright">
+   <h1>
+    <a class="toc-backref" href="#id59">
+     Copyright
+    </a>
+   </h1>
+   <p>
+    This document has been placed in the public domain.
+   </p>
+  </div>
+ </body>
+
+<!-- Mirrored from www.python.org/dev/peps/pep-0447/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 03 Sep 2015 04:33:21 GMT -->
+</html>Source: <a href="https://hg.python.org/peps/file/tip/pep-0447.txt">https://hg.python.org/peps/file/tip/pep-0447.txt</a>
+
+    </article>
+
+
+                </section>
+
+                
+
+
+<aside class="left-sidebar" role="secondary">
+
+    
+
+
+
+
+
+
+    
+
+
+
+
+
+        <div class="twitter-widget sidebar-widget">
+        <a class="twitter-timeline" data-dnt="true" href="https://twitter.com/ThePSF" data-widget-id="434113224703610882">Tweets by @ThePSF</a>
+        <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+    </div>
+
+    <div class="psf-sidebar-widget sidebar-widget">
+        <h3 class="widget-title">The PSF</h3>
+<p>The Python Software Foundation is the organization behind Python. Become a member of the PSF and help advance the software and our mission. </p>
+
+    </div>
+
+</aside>
+
+
+
+                
+                
+
+
+            </div><!-- end .container -->
+        </div><!-- end #content .content-wrapper -->
+
+        <!-- Footer and social media list -->
+        <footer id="site-map" class="main-footer" role="contentinfo">
+            <div class="main-footer-links">
+                <div class="container">
+
+                    
+                    <a id="back-to-top-1" class="jump-link" href="#python-network"><span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> Back to Top</a>
+
+                    
+
+<ul class="sitemap navigation menu do-not-print" role="tree" id="container">
+    
+    <li class="tier-1 element-1">
+        <a href="https://www.python.org/about/" >About</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/apps/" title="">Applications</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/quotes/" title="">Quotes</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/gettingstarted/" title="">Getting Started</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/help/" title="">Help</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-2">
+        <a href="https://www.python.org/downloads/" >Downloads</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/downloads/" title="">All releases</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/downloads/source/" title="">Source code</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/downloads/windows/" title="">Windows</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/downloads/mac-osx/" title="">Mac OS X</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/download/other/" title="">Other Platforms</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://docs.python.org/3/license.html" title="">License</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/download/alternatives" title="">Alternative Implementations</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-3">
+        <a href="https://www.python.org/doc/" >Documentation</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/doc/" title="">Docs</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/doc/av" title="">Audio/Visual Talks</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://wiki.python.org/moin/BeginnersGuide" title="">Beginner&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://docs.python.org/faq/" title="">FAQ</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="http://wiki.python.org/moin/Languages" title="">Non-English Docs</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="../index.html" title="">PEP Index</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://wiki.python.org/moin/PythonBooks" title="">Python Books</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-4">
+        <a href="https://www.python.org/community/" >Community</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/community/diversity/" title="">Diversity</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/community/irc/" title="">IRC</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/community/lists/" title="">Mailing Lists</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/workshops/" title="">Python Conferences</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/community/sigs/" title="">Special Interest Groups</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://wiki.python.org/moin/" title="">Python Wiki</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/community/logos/" title="">Python Logo</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://www.python.org/community/merchandise/" title="">Merchandise</a></li>
+    
+        <li class="tier-2 element-9" role="treeitem"><a href="https://www.python.org/community/awards" title="">Community Awards</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-5">
+        <a href="https://www.python.org/about/success/" title="success-stories">Success Stories</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/success/#arts" title="">Arts</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/success/#business" title="">Business</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/success/#education" title="">Education</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/success/#engineering" title="">Engineering</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/about/success/#government" title="">Government</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://www.python.org/about/success/#scientific" title="">Scientific</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/about/success/#software-development" title="">Software Development</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-6">
+        <a href="https://www.python.org/blogs/" title="News from around the Python world">News</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/blogs/" title="Python Insider Blog Posts">Python News</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://planetpython.org/" title="Planet Python">Community News</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="http://pyfound.blogspot.com/" title="PSF Blog">PSF News</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pycon.blogspot.com/" title="PyCon Blog">PyCon News</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-7">
+        <a href="https://www.python.org/events/" >Events</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/events/python-events/" title="">Python Events</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/events/python-user-group/" title="">User Group Events</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/events/python-events/past/" title="">Python Events Archive</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/events/python-user-group/past/" title="">User Group Events Archive</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://wiki.python.org/moin/PythonEventsCalendar#Submitting_an_Event" title="">Submit an Event</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-8">
+        <a href="https://www.python.org/dev/" >Contributing</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="http://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://bugs.python.org/" title="">Issue Tracker</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://mail.python.org/mailman/listinfo/python-dev" title="">python-dev list</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pythonmentors.com/" title="">Core Mentorship</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+</ul>
+
+
+                    <a id="back-to-top-2" class="jump-link" href="#python-network"><span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> Back to Top</a>
+                    
+
+                </div><!-- end .container -->
+            </div> <!-- end .main-footer-links -->
+
+            <div class="site-base">
+                <div class="container">
+                    
+                    <ul class="footer-links navigation menu do-not-print" role="tree">
+                        <li class="tier-1 element-1"><a href="https://www.python.org/about/help/">Help &amp; <span class="say-no-more">General</span> Contact</a></li>
+                        <li class="tier-1 element-2"><a href="https://www.python.org/community/diversity/">Diversity <span class="say-no-more">Initiatives</span></a></li>
+                        <li class="tier-1 element-3"><a href="https://github.com/python/pythondotorg/issues">Submit Website Bug</a></li>
+                        <!--<li class="tier-1 element-3"><a href="#"><span class="say-no-more">Website</span> Colophon</a></li>-->
+                    </ul>
+
+                    <div class="copyright">
+                        <p><small>
+                            <span class="pre">Copyright &copy;2001-2015.</span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/psf-landing/">Python Software Foundation</a></span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/about/legal/">Legal Statements</a></span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/privacy/">Privacy Policy</a></span>
+                        </small></p>
+                    </div>
+
+                </div><!-- end .container -->
+            </div><!-- end .site-base -->
+
+        </footer>
+
+    </div><!-- end #touchnav-wrapper -->
+
+    
+    <script src="../../../../ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="../../../static/js/libs/jquery-1.8.2.min.js"><\/script>')</script>
+
+    <script src="../../../static/js/libs/masonry.pkgd.min.js"></script>
+
+    <script type="text/javascript" src="../../../static/js/main-min.js" charset="utf-8"></script>
+    
+
+    <!--[if lte IE 7]>
+    <script type="text/javascript" src="/static/js/plugins/IE8-min.js" charset="utf-8"></script>
+    
+    
+    <![endif]-->
+
+    <!--[if lte IE 8]>
+    <script type="text/javascript" src="/static/js/plugins/getComputedStyle-min.js" charset="utf-8"></script>
+    
+    
+    <![endif]-->
+
+    
+
+    
+    
+
+</body>
+</html>

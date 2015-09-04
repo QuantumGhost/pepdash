@@ -1,0 +1,1889 @@
+<!doctype html>
+<!--[if lt IE 7]>   <html class="no-js ie6 lt-ie7 lt-ie8 lt-ie9">   <![endif]-->
+<!--[if IE 7]>      <html class="no-js ie7 lt-ie8 lt-ie9">          <![endif]-->
+<!--[if IE 8]>      <html class="no-js ie8 lt-ie9">                 <![endif]-->
+<!--[if gt IE 8]><!--><html class="no-js" lang="en" dir="ltr">  <!--<![endif]-->
+
+
+<!-- Mirrored from www.python.org/dev/peps/pep-3141/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 03 Sep 2015 04:35:32 GMT -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <link rel="prefetch" href="../../../../ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js">
+
+    <meta name="application-name" content="Python.org">
+    <meta name="msapplication-tooltip" content="The official home of the Python Programming Language">
+    <meta name="apple-mobile-web-app-title" content="Python.org">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="format-detection" content="telephone=no">
+    <meta http-equiv="cleartype" content="on">
+    <meta http-equiv="imagetoolbar" content="false">
+
+    <script src="../../../static/js/libs/modernizr.js"></script>
+
+    <link href="../../../static/stylesheets/style.css" rel="stylesheet" type="text/css" title="default" />
+    <link href="../../../static/stylesheets/mq.css" rel="stylesheet" type="text/css" media="not print, braille, embossed, speech, tty" />
+    
+
+    <!--[if (lte IE 8)&(!IEMobile)]>
+    <link href="/static/stylesheets/no-mq.css" rel="stylesheet" type="text/css" media="screen" />
+    
+    
+    <![endif]-->
+
+    
+    <link rel="icon" type="image/x-icon" href="https://www.python.org/static/favicon.ico">
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="../../../static/apple-touch-icon-144x144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="../../../static/apple-touch-icon-114x114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="../../../static/apple-touch-icon-72x72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="../../../static/apple-touch-icon-precomposed.png">
+    <link rel="apple-touch-icon" href="../../../static/apple-touch-icon-precomposed.png">
+
+    
+    <meta name="msapplication-TileImage" content="/static/metro-icon-144x144-precomposed.png"><!-- white shape -->
+    <meta name="msapplication-TileColor" content="#3673a5"><!-- python blue -->
+    <meta name="msapplication-navbutton-color" content="#3673a5">
+
+    <meta property="og:site_name" content="Python.org">
+    <meta property="og:type" content="website">
+
+    <title>PEP 3141 -- A Type Hierarchy for Numbers | Python.org</title>
+    <meta property="og:title" content="Welcome to Python.org">
+
+    
+    <meta name="description" content="The official home of the Python Programming Language">
+    <meta name="og:description" content="The official home of the Python Programming Language">
+    <meta name="keywords" content="Python programming language object oriented web free open source software license documentation download community">
+    <meta property="og:tag" content="Python programming language object oriented web free open source software license documentation download community">
+    <meta property="og:published_time" content="">
+    <meta property="og:modified_time" content="">
+    <meta property="og:author" content="">
+    <meta property="og:section" content=""> 
+    <meta property="og:url" content="">
+    <meta property="og:image" content="">
+    <meta property="og:video" content="">
+
+    <link rel="author" href="https://www.python.org/static/humans.txt">
+
+    
+
+    
+    <script type="application/ld+json">
+     {
+       "@context": "http://schema.org",
+       "@type": "WebSite",
+       "url": "https://www.python.org/",
+       "potentialAction": {
+         "@type": "SearchAction",
+         "target": "https://www.python.org/search/?q={search_term_string}",
+         "query-input": "required name=search_term_string"
+       }
+     }
+    </script>
+
+    
+    <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-39055973-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+    </script>
+    
+</head>
+
+<body class="python pages pep-page">
+
+    <div id="touchnav-wrapper">
+
+        <div id="nojs" class="do-not-print">
+            <p><strong>Notice:</strong> While Javascript is not essential for this website, your interaction with the content will be limited. Please turn Javascript on for the full experience. </p>
+        </div>
+
+        <!--[if lt IE 8]>
+        <div id="oldie-warning" class="do-not-print">
+            <p><strong>Notice:</strong> Your browser is <em>ancient</em> and <a href="http://www.ie6countdown.com/">Microsoft agrees</a>. <a href="http://browsehappy.com/">Upgrade to a different browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to experience a better web.</p>
+        </div>
+        <![endif]-->
+
+        <!-- Sister Site Links -->
+        <div id="top" class="top-bar do-not-print">
+
+            <nav class="meta-navigation container" role="navigation">
+
+                
+                <div class="skip-link screen-reader-text">
+                    <a href="#content" title="Skip to content">Skip to content</a>
+                </div>
+
+                
+                <a id="close-python-network" class="jump-link" href="#python-network" aria-hidden="true">
+                    <span aria-hidden="true" class="icon-arrow-down"><span>&#9660;</span></span> Close
+                </a>
+
+                
+
+<ul class="menu" role="tree">
+    
+    <li class="python-meta ">
+        <a href="https://www.python.org/" title="The Python Programming Language" >Python</a>
+    </li>
+    
+    <li class="psf-meta ">
+        <a href="https://www.python.org/psf-landing/" title="The Python Software Foundation" >PSF</a>
+    </li>
+    
+    <li class="docs-meta ">
+        <a href="https://docs.python.org/" title="Python Documentation" >Docs</a>
+    </li>
+    
+    <li class="pypi-meta ">
+        <a href="https://pypi.python.org/" title="Python Package Index" >PyPI</a>
+    </li>
+    
+    <li class="jobs-meta ">
+        <a href="https://www.python.org/jobs/" title="Python Job Board" >Jobs</a>
+    </li>
+    
+    <li class="shop-meta ">
+        <a href="https://www.python.org/community/" title="Python Community" >Community</a>
+    </li>
+    
+</ul>
+
+
+                <a id="python-network" class="jump-link" href="#top" aria-hidden="true">
+                    <span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> The Python Network
+                </a>
+
+            </nav>
+
+        </div>
+
+        <!-- Header elements -->
+        <header class="main-header" role="banner">
+            <div class="container">
+
+                <h1 class="site-headline">
+                    <a href="https://www.python.org/"><img class="python-logo" src="../../../static/img/python-logo.png" alt="python&trade;"></a>
+                </h1>
+
+                <div class="options-bar do-not-print">
+
+                    
+                    <a id="site-map-link" class="jump-to-menu" href="#site-map"><span class="menu-icon">&equiv;</span> Menu</a><form class="search-the-site" action="https://www.python.org/search/" method="get">
+                        <fieldset title="Search Python.org">
+
+                            <span aria-hidden="true" class="icon-search"></span>
+
+                            <label class="screen-reader-text" for="id-search-field">Search This Site</label>
+                            <input id="id-search-field" name="q" type="search" role="textbox" class="search-field" placeholder="Search" value="" tabindex="1">
+
+                            <button type="submit" name="submit" id="submit" class="search-button" title="Submit this Search" tabindex="3">
+                                GO
+                            </button>
+
+                            
+                            <!--[if IE]><input type="text" style="display: none;" disabled="disabled" size="1" tabindex="4"><![endif]-->
+
+                        </fieldset>
+                    </form><span class="breaker"></span><div class="adjust-font-size" aria-hidden="true">
+                        <ul class="navigation menu" aria-label="Adjust Text Size on Page">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                <a href="#" class="action-trigger"><strong><small>A</small> A</strong></a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a class="text-shrink" title="Make Text Smaller" href="javascript:;">Smaller</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a class="text-grow" title="Make Text Larger" href="javascript:;">Larger</a></li>
+                                    <li class="tier-2 element-3" role="treeitem"><a class="text-reset" title="Reset any font size changes I have made" href="javascript:;">Reset</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div><div class="winkwink-nudgenudge">
+                        <ul class="navigation menu" aria-label="Social Media Navigation">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                <a href="#" class="action-trigger">Socialize</a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a href="http://plus.google.com/+Python"><span aria-hidden="true" class="icon-google-plus"></span>Google+</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a href="http://www.facebook.com/pythonlang?fref=ts"><span aria-hidden="true" class="icon-facebook"></span>Facebook</a></li>
+                                    <li class="tier-2 element-3" role="treeitem"><a href="http://twitter.com/ThePSF"><span aria-hidden="true" class="icon-twitter"></span>Twitter</a></li>
+                                    <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/irc/"><span aria-hidden="true" class="icon-freenode"></span>Chat on IRC</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div><div class="account-signin">
+                        <ul class="navigation menu" aria-label="Social Media Navigation">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                
+                                <a href="https://www.python.org/accounts/login/" title="Sign Up or Sign In to Python.org">Sign In</a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/accounts/signup/">Sign Up / Register</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/accounts/login/">Sign In</a></li>
+                                </ul>
+                                
+                            </li>
+                        </ul>
+                    </div>
+
+                </div><!-- end options-bar -->
+
+                <nav id="mainnav" class="python-navigation main-navigation do-not-print" role="navigation">
+                    
+                        
+<ul class="navigation menu" role="menubar" aria-label="Main Navigation">
+  
+    
+    
+    <li id="about" class="tier-1 element-1  " aria-haspopup="true">
+        <a href="https://www.python.org/about/" title="" class="">About</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/apps/" title="">Applications</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/quotes/" title="">Quotes</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/gettingstarted/" title="">Getting Started</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/help/" title="">Help</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="downloads" class="tier-1 element-2  " aria-haspopup="true">
+        <a href="https://www.python.org/downloads/" title="" class="">Downloads</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/downloads/" title="">All releases</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/downloads/source/" title="">Source code</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/downloads/windows/" title="">Windows</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/downloads/mac-osx/" title="">Mac OS X</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/download/other/" title="">Other Platforms</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://docs.python.org/3/license.html" title="">License</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/download/alternatives" title="">Alternative Implementations</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="documentation" class="tier-1 element-3  " aria-haspopup="true">
+        <a href="https://www.python.org/doc/" title="" class="">Documentation</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/doc/" title="">Docs</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/doc/av" title="">Audio/Visual Talks</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://wiki.python.org/moin/BeginnersGuide" title="">Beginner&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://docs.python.org/faq/" title="">FAQ</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="http://wiki.python.org/moin/Languages" title="">Non-English Docs</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="../index.html" title="">PEP Index</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://wiki.python.org/moin/PythonBooks" title="">Python Books</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="community" class="tier-1 element-4  " aria-haspopup="true">
+        <a href="https://www.python.org/community/" title="" class="">Community</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/community/diversity/" title="">Diversity</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/community/irc/" title="">IRC</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/community/lists/" title="">Mailing Lists</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/workshops/" title="">Python Conferences</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/community/sigs/" title="">Special Interest Groups</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://wiki.python.org/moin/" title="">Python Wiki</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/community/logos/" title="">Python Logo</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://www.python.org/community/merchandise/" title="">Merchandise</a></li>
+    
+        <li class="tier-2 element-9" role="treeitem"><a href="https://www.python.org/community/awards" title="">Community Awards</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="success-stories" class="tier-1 element-5  " aria-haspopup="true">
+        <a href="https://www.python.org/about/success/" title="success-stories" class="">Success Stories</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/success/#arts" title="">Arts</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/success/#business" title="">Business</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/success/#education" title="">Education</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/success/#engineering" title="">Engineering</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/about/success/#government" title="">Government</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://www.python.org/about/success/#scientific" title="">Scientific</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/about/success/#software-development" title="">Software Development</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="news" class="tier-1 element-6  " aria-haspopup="true">
+        <a href="https://www.python.org/blogs/" title="News from around the Python world" class="">News</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/blogs/" title="Python Insider Blog Posts">Python News</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://planetpython.org/" title="Planet Python">Community News</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="http://pyfound.blogspot.com/" title="PSF Blog">PSF News</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pycon.blogspot.com/" title="PyCon Blog">PyCon News</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="events" class="tier-1 element-7  " aria-haspopup="true">
+        <a href="https://www.python.org/events/" title="" class="">Events</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/events/python-events/" title="">Python Events</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/events/python-user-group/" title="">User Group Events</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/events/python-events/past/" title="">Python Events Archive</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/events/python-user-group/past/" title="">User Group Events Archive</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://wiki.python.org/moin/PythonEventsCalendar#Submitting_an_Event" title="">Submit an Event</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    
+  
+</ul>
+
+                    
+                </nav>
+
+                <div class="header-banner "> <!-- for optional "do-not-print" class -->
+                    
+                    
+                </div>
+
+                
+                
+
+             </div><!-- end .container -->
+        </header>
+
+        <div id="content" class="content-wrapper">
+            <!-- Main Content Column -->
+            <div class="container">
+
+                <section class="main-content with-left-sidebar" role="main">
+
+                    
+<ul class="breadcrumbs menu">
+    <li>
+        <a href="https://www.python.org/" title="The Python Programming Language">Python</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>
+        <a href="https://www.python.org/dev/">Python Developer's Guide</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>
+        <a href="../index.html">PEP Index</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>PEP 3141 -- A Type Hierarchy for Numbers</li>
+</ul>
+
+
+                    
+<style>
+   .pep-page pre {
+        padding: .5em;
+        background: inherit;
+        border-left: 0px;
+        -webkit-box-shadow: 0 0 0 0;
+        -moz-box-shadow: 0 0 0 0;
+        box-shadow: 0 0 0 0;
+   }
+</style>
+
+    
+    <article class="text">
+        
+
+        <header class="article-header">
+            <h1 class="page-title">PEP 3141 -- A Type Hierarchy for Numbers</h1>
+        </header>
+
+        <!--
+This HTML is auto-generated.  DO NOT EDIT THIS FILE!  If you are writing a new
+PEP, see http://www.python.org/dev/peps/pep-0001 for instructions and links
+to templates.  DO NOT USE THIS HTML FILE AS YOUR TEMPLATE!
+-->
+<html>
+ <body>
+  <table class="rfc2822 docutils field-list" frame="void" rules="none">
+   <col class="field-name">
+   </col>
+   <col class="field-body">
+   </col>
+   <tbody valign="top">
+    <tr class="field">
+     <th class="field-name">
+      PEP:
+     </th>
+     <td class="field-body">
+      3141
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Title:
+     </th>
+     <td class="field-body">
+      A Type Hierarchy for Numbers
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Author:
+     </th>
+     <td class="field-body">
+      Jeffrey Yasskin &lt;jyasskin at google.com&gt;
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Status:
+     </th>
+     <td class="field-body">
+      Final
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Type:
+     </th>
+     <td class="field-body">
+      Standards Track
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Created:
+     </th>
+     <td class="field-body">
+      23-Apr-2007
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Post-History:
+     </th>
+     <td class="field-body">
+      25-Apr-2007, 16-May-2007, 02-Aug-2007
+     </td>
+    </tr>
+   </tbody>
+  </table>
+  <hr/>
+  <div class="contents topic" id="contents">
+   <p class="topic-title first">
+    Contents
+   </p>
+   <ul class="simple">
+    <li>
+     <a class="reference internal" href="#abstract" id="id3">
+      Abstract
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#rationale" id="id4">
+      Rationale
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#specification" id="id5">
+      Specification
+     </a>
+     <ul>
+      <li>
+       <a class="reference internal" href="#numeric-classes" id="id6">
+        Numeric Classes
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#changes-to-operations-and-magic-methods" id="id7">
+        Changes to operations and __magic__ methods
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#notes-for-type-implementors" id="id8">
+        Notes for type implementors
+       </a>
+       <ul>
+        <li>
+         <a class="reference internal" href="#adding-more-numeric-abcs" id="id9">
+          Adding More Numeric ABCs
+         </a>
+        </li>
+        <li>
+         <a class="reference internal" href="#implementing-the-arithmetic-operations" id="id10">
+          Implementing the arithmetic operations
+         </a>
+        </li>
+       </ul>
+      </li>
+     </ul>
+    </li>
+    <li>
+     <a class="reference internal" href="#rejected-alternatives" id="id11">
+      Rejected Alternatives
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#the-decimal-type" id="id12">
+      The Decimal Type
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#references" id="id13">
+      References
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#acknowledgements" id="id14">
+      Acknowledgements
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#copyright" id="id15">
+      Copyright
+     </a>
+    </li>
+   </ul>
+  </div>
+  <div class="section" id="abstract">
+   <h1>
+    <a class="toc-backref" href="#id3">
+     Abstract
+    </a>
+   </h1>
+   <p>
+    This proposal defines a hierarchy of Abstract Base Classes (ABCs) (
+    <a class="reference external" href="../pep-3119/index.html">
+     PEP
+3119
+    </a>
+    ) to represent number-like classes. It proposes a hierarchy of
+    <tt class="docutils literal">
+     Number :&gt; Complex :&gt; Real :&gt; Rational :&gt; Integral
+    </tt>
+    where
+    <tt class="docutils literal">
+     A :&gt; B
+    </tt>
+    means "A is a supertype of B". The hierarchy is inspired by Scheme's
+numeric tower
+    <a class="footnote-reference" href="#schemetower" id="id1">
+     [4]
+    </a>
+    .
+   </p>
+  </div>
+  <div class="section" id="rationale">
+   <h1>
+    <a class="toc-backref" href="#id4">
+     Rationale
+    </a>
+   </h1>
+   <p>
+    Functions that take numbers as arguments should be able to determine
+the properties of those numbers, and if and when overloading based on
+types is added to the language, should be overloadable based on the
+types of the arguments. For example, slicing requires its arguments to
+be
+    <tt class="docutils literal">
+     Integrals
+    </tt>
+    , and the functions in the
+    <tt class="docutils literal">
+     math
+    </tt>
+    module require
+their arguments to be
+    <tt class="docutils literal">
+     Real
+    </tt>
+    .
+   </p>
+  </div>
+  <div class="section" id="specification">
+   <h1>
+    <a class="toc-backref" href="#id5">
+     Specification
+    </a>
+   </h1>
+   <p>
+    This PEP specifies a set of Abstract Base Classes, and suggests a
+general strategy for implementing some of the methods. It uses
+terminology from
+    <a class="reference external" href="../pep-3119/index.html">
+     PEP 3119
+    </a>
+    , but the hierarchy is intended to be
+meaningful for any systematic method of defining sets of classes.
+   </p>
+   <p>
+    The type checks in the standard library should use these classes
+instead of the concrete built-ins.
+   </p>
+   <div class="section" id="numeric-classes">
+    <h2>
+     <a class="toc-backref" href="#id6">
+      Numeric Classes
+     </a>
+    </h2>
+    <p>
+     We begin with a Number class to make it easy for people to be fuzzy
+about what kind of number they expect. This class only helps with
+overloading; it doesn't provide any operations.
+    </p>
+    <pre class="literal-block">
+class Number(metaclass=ABCMeta): pass
+</pre>
+    <p>
+     Most implementations of complex numbers will be hashable, but if you
+need to rely on that, you'll have to check it explicitly: mutable
+numbers are supported by this hierarchy.
+    </p>
+    <pre class="literal-block">
+class Complex(Number):
+    """Complex defines the operations that work on the builtin complex type.
+
+    In short, those are: conversion to complex, bool(), .real, .imag,
+    +, -, *, /, **, abs(), .conjugate(), ==, and !=.
+
+    If it is given heterogenous arguments, and doesn't have special
+    knowledge about them, it should fall back to the builtin complex
+    type as described below.
+    """
+
+    @abstractmethod
+    def __complex__(self):
+        """Return a builtin complex instance."""
+
+    def __bool__(self):
+        """True if self != 0."""
+        return self != 0
+
+    @abstractproperty
+    def real(self):
+        """Retrieve the real component of this number.
+
+        This should subclass Real.
+        """
+        raise NotImplementedError
+
+    @abstractproperty
+    def imag(self):
+        """Retrieve the real component of this number.
+
+        This should subclass Real.
+        """
+        raise NotImplementedError
+
+    @abstractmethod
+    def __add__(self, other):
+        raise NotImplementedError
+
+    @abstractmethod
+    def __radd__(self, other):
+        raise NotImplementedError
+
+    @abstractmethod
+    def __neg__(self):
+        raise NotImplementedError
+
+    def __pos__(self):
+        """Coerces self to whatever class defines the method."""
+        raise NotImplementedError
+
+    def __sub__(self, other):
+        return self + -other
+
+    def __rsub__(self, other):
+        return -self + other
+
+    @abstractmethod
+    def __mul__(self, other):
+        raise NotImplementedError
+
+    @abstractmethod
+    def __rmul__(self, other):
+        raise NotImplementedError
+
+    @abstractmethod
+    def __div__(self, other):
+        """a/b; should promote to float or complex when necessary."""
+        raise NotImplementedError
+
+    @abstractmethod
+    def __rdiv__(self, other):
+        raise NotImplementedError
+
+    @abstractmethod
+    def __pow__(self, exponent):
+        """a**b; should promote to float or complex when necessary."""
+        raise NotImplementedError
+
+    @abstractmethod
+    def __rpow__(self, base):
+        raise NotImplementedError
+
+    @abstractmethod
+    def __abs__(self):
+        """Returns the Real distance from 0."""
+        raise NotImplementedError
+
+    @abstractmethod
+    def conjugate(self):
+        """(x+y*i).conjugate() returns (x-y*i)."""
+        raise NotImplementedError
+
+    @abstractmethod
+    def __eq__(self, other):
+        raise NotImplementedError
+
+    # __ne__ is inherited from object and negates whatever __eq__ does.
+</pre>
+    <p>
+     The
+     <tt class="docutils literal">
+      Real
+     </tt>
+     ABC indicates that the value is on the real line, and
+supports the operations of the
+     <tt class="docutils literal">
+      float
+     </tt>
+     builtin. Real numbers are
+totally ordered except for NaNs (which this PEP basically ignores).
+    </p>
+    <pre class="literal-block">
+class Real(Complex):
+    """To Complex, Real adds the operations that work on real numbers.
+
+    In short, those are: conversion to float, trunc(), math.floor(),
+    math.ceil(), round(), divmod(), //, %, &lt;, &lt;=, &gt;, and &gt;=.
+
+    Real also provides defaults for some of the derived operations.
+    """
+
+    # XXX What to do about the __int__ implementation that's
+    # currently present on float?  Get rid of it?
+
+    @abstractmethod
+    def __float__(self):
+        """Any Real can be converted to a native float object."""
+        raise NotImplementedError
+
+    @abstractmethod
+    def __trunc__(self):
+        """Truncates self to an Integral.
+
+        Returns an Integral i such that:
+          * i&gt;=0 iff self&gt;0;
+          * abs(i) &lt;= abs(self);
+          * for any Integral j satisfying the first two conditions,
+            abs(i) &gt;= abs(j) [i.e. i has "maximal" abs among those].
+        i.e. "truncate towards 0".
+        """
+        raise NotImplementedError
+
+    @abstractmethod
+    def __floor__(self):
+        """Finds the greatest Integral &lt;= self."""
+        raise NotImplementedError
+
+    @abstractmethod
+    def __ceil__(self):
+        """Finds the least Integral &gt;= self."""
+        raise NotImplementedError
+
+    @abstractmethod
+    def __round__(self, ndigits:Integral=None):
+        """Rounds self to ndigits decimal places, defaulting to 0.
+
+        If ndigits is omitted or None, returns an Integral,
+        otherwise returns a Real, preferably of the same type as
+        self. Types may choose which direction to round half. For
+        example, float rounds half toward even.
+
+        """
+        raise NotImplementedError
+
+    def __divmod__(self, other):
+        """The pair (self // other, self % other).
+
+        Sometimes this can be computed faster than the pair of
+        operations.
+        """
+        return (self // other, self % other)
+
+    def __rdivmod__(self, other):
+        """The pair (self // other, self % other).
+
+        Sometimes this can be computed faster than the pair of
+        operations.
+        """
+        return (other // self, other % self)
+
+    @abstractmethod
+    def __floordiv__(self, other):
+        """The floor() of self/other. Integral."""
+        raise NotImplementedError
+
+    @abstractmethod
+    def __rfloordiv__(self, other):
+        """The floor() of other/self."""
+        raise NotImplementedError
+
+    @abstractmethod
+    def __mod__(self, other):
+        """self % other
+
+        See
+        http://mail.python.org/pipermail/python-3000/2006-May/001735.html
+        and consider using "self/other - trunc(self/other)"
+        instead if you're worried about round-off errors.
+        """
+        raise NotImplementedError
+
+    @abstractmethod
+    def __rmod__(self, other):
+        """other % self"""
+        raise NotImplementedError
+
+    @abstractmethod
+    def __lt__(self, other):
+        """&lt; on Reals defines a total ordering, except perhaps for NaN."""
+        raise NotImplementedError
+
+    @abstractmethod
+    def __le__(self, other):
+        raise NotImplementedError
+
+    # __gt__ and __ge__ are automatically done by reversing the arguments.
+    # (But __le__ is not computed as the opposite of __gt__!)
+
+    # Concrete implementations of Complex abstract methods.
+    # Subclasses may override these, but don't have to.
+
+    def __complex__(self):
+        return complex(float(self))
+
+    @property
+    def real(self):
+        return +self
+
+    @property
+    def imag(self):
+        return 0
+
+    def conjugate(self):
+        """Conjugate is a no-op for Reals."""
+        return +self
+</pre>
+    <p>
+     We should clean up Demo/classes/Rat.py and promote it into
+rational.py in the standard library. Then it will implement the
+Rational ABC.
+    </p>
+    <pre class="literal-block">
+class Rational(Real, Exact):
+    """.numerator and .denominator should be in lowest terms."""
+
+    @abstractproperty
+    def numerator(self):
+        raise NotImplementedError
+
+    @abstractproperty
+    def denominator(self):
+        raise NotImplementedError
+
+    # Concrete implementation of Real's conversion to float.
+    # (This invokes Integer.__div__().)
+
+    def __float__(self):
+        return self.numerator / self.denominator
+</pre>
+    <p>
+     And finally integers:
+    </p>
+    <pre class="literal-block">
+class Integral(Rational):
+    """Integral adds a conversion to int and the bit-string operations."""
+
+    @abstractmethod
+    def __int__(self):
+        raise NotImplementedError
+
+    def __index__(self):
+        """__index__() exists because float has __int__()."""
+        return int(self)
+
+    def __lshift__(self, other):
+        return int(self) &lt;&lt; int(other)
+
+    def __rlshift__(self, other):
+        return int(other) &lt;&lt; int(self)
+
+    def __rshift__(self, other):
+        return int(self) &gt;&gt; int(other)
+
+    def __rrshift__(self, other):
+        return int(other) &gt;&gt; int(self)
+
+    def __and__(self, other):
+        return int(self) &amp; int(other)
+
+    def __rand__(self, other):
+        return int(other) &amp; int(self)
+
+    def __xor__(self, other):
+        return int(self) ^ int(other)
+
+    def __rxor__(self, other):
+        return int(other) ^ int(self)
+
+    def __or__(self, other):
+        return int(self) | int(other)
+
+    def __ror__(self, other):
+        return int(other) | int(self)
+
+    def __invert__(self):
+        return ~int(self)
+
+    # Concrete implementations of Rational and Real abstract methods.
+    def __float__(self):
+        """float(self) == float(int(self))"""
+        return float(int(self))
+
+    @property
+    def numerator(self):
+        """Integers are their own numerators."""
+        return +self
+
+    @property
+    def denominator(self):
+        """Integers have a denominator of 1."""
+        return 1
+</pre>
+   </div>
+   <div class="section" id="changes-to-operations-and-magic-methods">
+    <h2>
+     <a class="toc-backref" href="#id7">
+      Changes to operations and __magic__ methods
+     </a>
+    </h2>
+    <p>
+     To support more precise narrowing from float to int (and more
+generally, from Real to Integral), we propose the following new
+__magic__ methods, to be called from the corresponding library
+functions. All of these return Integrals rather than Reals.
+    </p>
+    <ol class="arabic simple">
+     <li>
+      <tt class="docutils literal">
+       __trunc__(self)
+      </tt>
+      , called from a new builtin
+      <tt class="docutils literal">
+       trunc(x)
+      </tt>
+      , which
+returns the Integral closest to
+      <tt class="docutils literal">
+       x
+      </tt>
+      between 0 and
+      <tt class="docutils literal">
+       x
+      </tt>
+      .
+     </li>
+     <li>
+      <tt class="docutils literal">
+       __floor__(self)
+      </tt>
+      , called from
+      <tt class="docutils literal">
+       math.floor(x)
+      </tt>
+      , which returns
+the greatest Integral
+      <tt class="docutils literal">
+       &lt;= x
+      </tt>
+      .
+     </li>
+     <li>
+      <tt class="docutils literal">
+       __ceil__(self)
+      </tt>
+      , called from
+      <tt class="docutils literal">
+       math.ceil(x)
+      </tt>
+      , which returns the
+least Integral
+      <tt class="docutils literal">
+       &gt;= x
+      </tt>
+      .
+     </li>
+     <li>
+      <tt class="docutils literal">
+       __round__(self)
+      </tt>
+      , called from
+      <tt class="docutils literal">
+       round(x)
+      </tt>
+      , which returns the
+Integral closest to
+      <tt class="docutils literal">
+       x
+      </tt>
+      , rounding half as the type chooses.
+      <tt class="docutils literal">
+       float
+      </tt>
+      will change in 3.0 to round half toward even. There is
+also a 2-argument version,
+      <tt class="docutils literal">
+       __round__(self, ndigits)
+      </tt>
+      , called
+from
+      <tt class="docutils literal">
+       round(x, ndigits)
+      </tt>
+      , which should return a Real.
+     </li>
+    </ol>
+    <p>
+     In 2.6,
+     <tt class="docutils literal">
+      math.floor
+     </tt>
+     ,
+     <tt class="docutils literal">
+      math.ceil
+     </tt>
+     , and
+     <tt class="docutils literal">
+      round
+     </tt>
+     will continue to
+return floats.
+    </p>
+    <p>
+     The
+     <tt class="docutils literal">
+      int()
+     </tt>
+     conversion implemented by
+     <tt class="docutils literal">
+      float
+     </tt>
+     is equivalent to
+     <tt class="docutils literal">
+      trunc()
+     </tt>
+     .  In general, the
+     <tt class="docutils literal">
+      int()
+     </tt>
+     conversion should try
+     <tt class="docutils literal">
+      __int__()
+     </tt>
+     first and if it is not found, try
+     <tt class="docutils literal">
+      __trunc__()
+     </tt>
+     .
+    </p>
+    <p>
+     <tt class="docutils literal">
+      complex.__{divmod,mod,floordiv,int,float}__
+     </tt>
+     also go away. It would
+be nice to provide a nice error message to help confused porters, but
+not appearing in
+     <tt class="docutils literal">
+      help(complex)
+     </tt>
+     is more important.
+    </p>
+   </div>
+   <div class="section" id="notes-for-type-implementors">
+    <h2>
+     <a class="toc-backref" href="#id8">
+      Notes for type implementors
+     </a>
+    </h2>
+    <p>
+     Implementors should be careful to make equal numbers equal and
+hash them to the same values. This may be subtle if there are two
+different extensions of the real numbers. For example, a complex type
+could reasonably implement hash() as follows:
+    </p>
+    <pre class="literal-block">
+def __hash__(self):
+    return hash(complex(self))
+</pre>
+    <p>
+     but should be careful of any values that fall outside of the built in
+complex's range or precision.
+    </p>
+    <div class="section" id="adding-more-numeric-abcs">
+     <h3>
+      <a class="toc-backref" href="#id9">
+       Adding More Numeric ABCs
+      </a>
+     </h3>
+     <p>
+      There are, of course, more possible ABCs for numbers, and this would
+be a poor hierarchy if it precluded the possibility of adding
+those. You can add
+      <tt class="docutils literal">
+       MyFoo
+      </tt>
+      between
+      <tt class="docutils literal">
+       Complex
+      </tt>
+      and
+      <tt class="docutils literal">
+       Real
+      </tt>
+      with:
+     </p>
+     <pre class="literal-block">
+class MyFoo(Complex): ...
+MyFoo.register(Real)
+</pre>
+    </div>
+    <div class="section" id="implementing-the-arithmetic-operations">
+     <h3>
+      <a class="toc-backref" href="#id10">
+       Implementing the arithmetic operations
+      </a>
+     </h3>
+     <p>
+      We want to implement the arithmetic operations so that mixed-mode
+operations either call an implementation whose author knew about the
+types of both arguments, or convert both to the nearest built in type
+and do the operation there. For subtypes of Integral, this means that
+__add__ and __radd__ should be defined as:
+     </p>
+     <pre class="literal-block">
+class MyIntegral(Integral):
+
+    def __add__(self, other):
+        if isinstance(other, MyIntegral):
+            return do_my_adding_stuff(self, other)
+        elif isinstance(other, OtherTypeIKnowAbout):
+            return do_my_other_adding_stuff(self, other)
+        else:
+            return NotImplemented
+
+    def __radd__(self, other):
+        if isinstance(other, MyIntegral):
+            return do_my_adding_stuff(other, self)
+        elif isinstance(other, OtherTypeIKnowAbout):
+            return do_my_other_adding_stuff(other, self)
+        elif isinstance(other, Integral):
+            return int(other) + int(self)
+        elif isinstance(other, Real):
+            return float(other) + float(self)
+        elif isinstance(other, Complex):
+            return complex(other) + complex(self)
+        else:
+            return NotImplemented
+</pre>
+     <p>
+      There are 5 different cases for a mixed-type operation on subclasses
+of Complex. I'll refer to all of the above code that doesn't refer to
+MyIntegral and OtherTypeIKnowAbout as "boilerplate".
+      <tt class="docutils literal">
+       a
+      </tt>
+      will be an
+instance of
+      <tt class="docutils literal">
+       A
+      </tt>
+      , which is a subtype of
+      <tt class="docutils literal">
+       Complex
+      </tt>
+      (
+      <tt class="docutils literal">
+       a : A &lt;:
+Complex
+      </tt>
+      ), and
+      <tt class="docutils literal">
+       b : B &lt;: Complex
+      </tt>
+      . I'll consider
+      <tt class="docutils literal">
+       a + b
+      </tt>
+      :
+     </p>
+     <blockquote>
+      <ol class="arabic simple">
+       <li>
+        If A defines an __add__ which accepts b, all is well.
+       </li>
+       <li>
+        If A falls back to the boilerplate code, and it were to return
+a value from __add__, we'd miss the possibility that B defines
+a more intelligent __radd__, so the boilerplate should return
+NotImplemented from __add__. (Or A may not implement __add__ at
+all.)
+       </li>
+       <li>
+        Then B's __radd__ gets a chance. If it accepts a, all is well.
+       </li>
+       <li>
+        If it falls back to the boilerplate, there are no more possible
+methods to try, so this is where the default implementation
+should live.
+       </li>
+       <li>
+        If B &lt;: A, Python tries B.__radd__ before A.__add__. This is
+ok, because it was implemented with knowledge of A, so it can
+handle those instances before delegating to Complex.
+       </li>
+      </ol>
+     </blockquote>
+     <p>
+      If
+      <tt class="docutils literal">
+       <span class="pre">
+        A&lt;:Complex
+       </span>
+      </tt>
+      and
+      <tt class="docutils literal">
+       <span class="pre">
+        B&lt;:Real
+       </span>
+      </tt>
+      without sharing any other knowledge,
+then the appropriate shared operation is the one involving the built
+in complex, and both __radd__s land there, so
+      <tt class="docutils literal">
+       a+b == b+a
+      </tt>
+      .
+     </p>
+    </div>
+   </div>
+  </div>
+  <div class="section" id="rejected-alternatives">
+   <h1>
+    <a class="toc-backref" href="#id11">
+     Rejected Alternatives
+    </a>
+   </h1>
+   <p>
+    The initial version of this PEP defined an algebraic hierarchy
+inspired by a Haskell Numeric Prelude
+    <a class="footnote-reference" href="#numericprelude" id="id2">
+     [3]
+    </a>
+    including
+MonoidUnderPlus, AdditiveGroup, Ring, and Field, and mentioned several
+other possible algebraic types before getting to the numbers. We had
+expected this to be useful to people using vectors and matrices, but
+the NumPy community really wasn't interested, and we ran into the
+issue that even if
+    <tt class="docutils literal">
+     x
+    </tt>
+    is an instance of
+    <tt class="docutils literal">
+     X &lt;: MonoidUnderPlus
+    </tt>
+    and
+    <tt class="docutils literal">
+     y
+    </tt>
+    is an instance of
+    <tt class="docutils literal">
+     Y &lt;: MonoidUnderPlus
+    </tt>
+    ,
+    <tt class="docutils literal">
+     x + y
+    </tt>
+    may
+still not make sense.
+   </p>
+   <p>
+    Then we gave the numbers a much more branching structure to include
+things like the Gaussian Integers and Z/nZ, which could be Complex but
+wouldn't necessarily support things like division. The community
+decided that this was too much complication for Python, so I've now
+scaled back the proposal to resemble the Scheme numeric tower much
+more closely.
+   </p>
+  </div>
+  <div class="section" id="the-decimal-type">
+   <h1>
+    <a class="toc-backref" href="#id12">
+     The Decimal Type
+    </a>
+   </h1>
+   <p>
+    After consultation with its authors it has been decided that the
+    <tt class="docutils literal">
+     Decimal
+    </tt>
+    type should not at this time be made part of the numeric
+tower.
+   </p>
+  </div>
+  <div class="section" id="references">
+   <h1>
+    <a class="toc-backref" href="#id13">
+     References
+    </a>
+   </h1>
+   <table class="docutils footnote" frame="void" id="pep3119" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       [1]
+      </td>
+      <td>
+       Introducing Abstract Base Classes
+(
+       <a class="reference external" href="../pep-3119/index.html">
+        http://www.python.org/dev/peps/pep-3119/
+       </a>
+       )
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="classtree" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       [2]
+      </td>
+      <td>
+       Possible Python 3K Class Tree?, wiki page by Bill Janssen
+(
+       <a class="reference external" href="http://wiki.python.org/moin/AbstractBaseClasses">
+        http://wiki.python.org/moin/AbstractBaseClasses
+       </a>
+       )
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="numericprelude" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id2">
+        [3]
+       </a>
+      </td>
+      <td>
+       NumericPrelude: An experimental alternative hierarchy
+of numeric type classes
+(
+       <a class="reference external" href="http://darcs.haskell.org/numericprelude/docs/html/index.html">
+        http://darcs.haskell.org/numericprelude/docs/html/index.html
+       </a>
+       )
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="schemetower" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id1">
+        [4]
+       </a>
+      </td>
+      <td>
+       The Scheme numerical tower
+(
+       <a class="reference external" href="http://www.swiss.ai.mit.edu/ftpdir/scheme-reports/r5rs-html/r5rs_8.html#SEC50">
+        http://www.swiss.ai.mit.edu/ftpdir/scheme-reports/r5rs-html/r5rs_8.html#SEC50
+       </a>
+       )
+      </td>
+     </tr>
+    </tbody>
+   </table>
+  </div>
+  <div class="section" id="acknowledgements">
+   <h1>
+    <a class="toc-backref" href="#id14">
+     Acknowledgements
+    </a>
+   </h1>
+   <p>
+    Thanks to Neal Norwitz for encouraging me to write this PEP in the
+first place, to Travis Oliphant for pointing out that the numpy people
+didn't really care about the algebraic concepts, to Alan Isaac for
+reminding me that Scheme had already done this, and to Guido van
+Rossum and lots of other people on the mailing list for refining the
+concept.
+   </p>
+  </div>
+  <div class="section" id="copyright">
+   <h1>
+    <a class="toc-backref" href="#id15">
+     Copyright
+    </a>
+   </h1>
+   <p>
+    This document has been placed in the public domain.
+   </p>
+   <!-- Local Variables:
+mode: indented-text
+indent-tabs-mode: nil
+sentence-end-double-space: t
+fill-column: 70
+coding: utf-8
+End: -->
+  </div>
+ </body>
+
+<!-- Mirrored from www.python.org/dev/peps/pep-3141/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 03 Sep 2015 04:35:32 GMT -->
+</html>Source: <a href="https://hg.python.org/peps/file/tip/pep-3141.txt">https://hg.python.org/peps/file/tip/pep-3141.txt</a>
+
+    </article>
+
+
+                </section>
+
+                
+
+
+<aside class="left-sidebar" role="secondary">
+
+    
+
+
+
+
+
+
+    
+
+
+
+
+
+        <div class="twitter-widget sidebar-widget">
+        <a class="twitter-timeline" data-dnt="true" href="https://twitter.com/ThePSF" data-widget-id="434113224703610882">Tweets by @ThePSF</a>
+        <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+    </div>
+
+    <div class="psf-sidebar-widget sidebar-widget">
+        <h3 class="widget-title">The PSF</h3>
+<p>The Python Software Foundation is the organization behind Python. Become a member of the PSF and help advance the software and our mission. </p>
+
+    </div>
+
+</aside>
+
+
+
+                
+                
+
+
+            </div><!-- end .container -->
+        </div><!-- end #content .content-wrapper -->
+
+        <!-- Footer and social media list -->
+        <footer id="site-map" class="main-footer" role="contentinfo">
+            <div class="main-footer-links">
+                <div class="container">
+
+                    
+                    <a id="back-to-top-1" class="jump-link" href="#python-network"><span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> Back to Top</a>
+
+                    
+
+<ul class="sitemap navigation menu do-not-print" role="tree" id="container">
+    
+    <li class="tier-1 element-1">
+        <a href="https://www.python.org/about/" >About</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/apps/" title="">Applications</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/quotes/" title="">Quotes</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/gettingstarted/" title="">Getting Started</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/help/" title="">Help</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-2">
+        <a href="https://www.python.org/downloads/" >Downloads</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/downloads/" title="">All releases</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/downloads/source/" title="">Source code</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/downloads/windows/" title="">Windows</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/downloads/mac-osx/" title="">Mac OS X</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/download/other/" title="">Other Platforms</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://docs.python.org/3/license.html" title="">License</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/download/alternatives" title="">Alternative Implementations</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-3">
+        <a href="https://www.python.org/doc/" >Documentation</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/doc/" title="">Docs</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/doc/av" title="">Audio/Visual Talks</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://wiki.python.org/moin/BeginnersGuide" title="">Beginner&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://docs.python.org/faq/" title="">FAQ</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="http://wiki.python.org/moin/Languages" title="">Non-English Docs</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="../index.html" title="">PEP Index</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://wiki.python.org/moin/PythonBooks" title="">Python Books</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-4">
+        <a href="https://www.python.org/community/" >Community</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/community/diversity/" title="">Diversity</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/community/irc/" title="">IRC</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/community/lists/" title="">Mailing Lists</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/workshops/" title="">Python Conferences</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/community/sigs/" title="">Special Interest Groups</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://wiki.python.org/moin/" title="">Python Wiki</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/community/logos/" title="">Python Logo</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://www.python.org/community/merchandise/" title="">Merchandise</a></li>
+    
+        <li class="tier-2 element-9" role="treeitem"><a href="https://www.python.org/community/awards" title="">Community Awards</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-5">
+        <a href="https://www.python.org/about/success/" title="success-stories">Success Stories</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/success/#arts" title="">Arts</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/success/#business" title="">Business</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/success/#education" title="">Education</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/success/#engineering" title="">Engineering</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/about/success/#government" title="">Government</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://www.python.org/about/success/#scientific" title="">Scientific</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/about/success/#software-development" title="">Software Development</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-6">
+        <a href="https://www.python.org/blogs/" title="News from around the Python world">News</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/blogs/" title="Python Insider Blog Posts">Python News</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://planetpython.org/" title="Planet Python">Community News</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="http://pyfound.blogspot.com/" title="PSF Blog">PSF News</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pycon.blogspot.com/" title="PyCon Blog">PyCon News</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-7">
+        <a href="https://www.python.org/events/" >Events</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/events/python-events/" title="">Python Events</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/events/python-user-group/" title="">User Group Events</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/events/python-events/past/" title="">Python Events Archive</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/events/python-user-group/past/" title="">User Group Events Archive</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://wiki.python.org/moin/PythonEventsCalendar#Submitting_an_Event" title="">Submit an Event</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-8">
+        <a href="https://www.python.org/dev/" >Contributing</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="http://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://bugs.python.org/" title="">Issue Tracker</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://mail.python.org/mailman/listinfo/python-dev" title="">python-dev list</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pythonmentors.com/" title="">Core Mentorship</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+</ul>
+
+
+                    <a id="back-to-top-2" class="jump-link" href="#python-network"><span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> Back to Top</a>
+                    
+
+                </div><!-- end .container -->
+            </div> <!-- end .main-footer-links -->
+
+            <div class="site-base">
+                <div class="container">
+                    
+                    <ul class="footer-links navigation menu do-not-print" role="tree">
+                        <li class="tier-1 element-1"><a href="https://www.python.org/about/help/">Help &amp; <span class="say-no-more">General</span> Contact</a></li>
+                        <li class="tier-1 element-2"><a href="https://www.python.org/community/diversity/">Diversity <span class="say-no-more">Initiatives</span></a></li>
+                        <li class="tier-1 element-3"><a href="https://github.com/python/pythondotorg/issues">Submit Website Bug</a></li>
+                        <!--<li class="tier-1 element-3"><a href="#"><span class="say-no-more">Website</span> Colophon</a></li>-->
+                    </ul>
+
+                    <div class="copyright">
+                        <p><small>
+                            <span class="pre">Copyright &copy;2001-2015.</span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/psf-landing/">Python Software Foundation</a></span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/about/legal/">Legal Statements</a></span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/privacy/">Privacy Policy</a></span>
+                        </small></p>
+                    </div>
+
+                </div><!-- end .container -->
+            </div><!-- end .site-base -->
+
+        </footer>
+
+    </div><!-- end #touchnav-wrapper -->
+
+    
+    <script src="../../../../ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="../../../static/js/libs/jquery-1.8.2.min.js"><\/script>')</script>
+
+    <script src="../../../static/js/libs/masonry.pkgd.min.js"></script>
+
+    <script type="text/javascript" src="../../../static/js/main-min.js" charset="utf-8"></script>
+    
+
+    <!--[if lte IE 7]>
+    <script type="text/javascript" src="/static/js/plugins/IE8-min.js" charset="utf-8"></script>
+    
+    
+    <![endif]-->
+
+    <!--[if lte IE 8]>
+    <script type="text/javascript" src="/static/js/plugins/getComputedStyle-min.js" charset="utf-8"></script>
+    
+    
+    <![endif]-->
+
+    
+
+    
+    
+
+</body>
+</html>

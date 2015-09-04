@@ -1,0 +1,5005 @@
+<!doctype html>
+<!--[if lt IE 7]>   <html class="no-js ie6 lt-ie7 lt-ie8 lt-ie9">   <![endif]-->
+<!--[if IE 7]>      <html class="no-js ie7 lt-ie8 lt-ie9">          <![endif]-->
+<!--[if IE 8]>      <html class="no-js ie8 lt-ie9">                 <![endif]-->
+<!--[if gt IE 8]><!--><html class="no-js" lang="en" dir="ltr">  <!--<![endif]-->
+
+
+<!-- Mirrored from www.python.org/dev/peps/pep-3108/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 03 Sep 2015 04:35:11 GMT -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <link rel="prefetch" href="../../../../ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js">
+
+    <meta name="application-name" content="Python.org">
+    <meta name="msapplication-tooltip" content="The official home of the Python Programming Language">
+    <meta name="apple-mobile-web-app-title" content="Python.org">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="format-detection" content="telephone=no">
+    <meta http-equiv="cleartype" content="on">
+    <meta http-equiv="imagetoolbar" content="false">
+
+    <script src="../../../static/js/libs/modernizr.js"></script>
+
+    <link href="../../../static/stylesheets/style.css" rel="stylesheet" type="text/css" title="default" />
+    <link href="../../../static/stylesheets/mq.css" rel="stylesheet" type="text/css" media="not print, braille, embossed, speech, tty" />
+    
+
+    <!--[if (lte IE 8)&(!IEMobile)]>
+    <link href="/static/stylesheets/no-mq.css" rel="stylesheet" type="text/css" media="screen" />
+    
+    
+    <![endif]-->
+
+    
+    <link rel="icon" type="image/x-icon" href="https://www.python.org/static/favicon.ico">
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="../../../static/apple-touch-icon-144x144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="../../../static/apple-touch-icon-114x114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="../../../static/apple-touch-icon-72x72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="../../../static/apple-touch-icon-precomposed.png">
+    <link rel="apple-touch-icon" href="../../../static/apple-touch-icon-precomposed.png">
+
+    
+    <meta name="msapplication-TileImage" content="/static/metro-icon-144x144-precomposed.png"><!-- white shape -->
+    <meta name="msapplication-TileColor" content="#3673a5"><!-- python blue -->
+    <meta name="msapplication-navbutton-color" content="#3673a5">
+
+    <meta property="og:site_name" content="Python.org">
+    <meta property="og:type" content="website">
+
+    <title>PEP 3108 -- Standard Library Reorganization | Python.org</title>
+    <meta property="og:title" content="Welcome to Python.org">
+
+    
+    <meta name="description" content="The official home of the Python Programming Language">
+    <meta name="og:description" content="The official home of the Python Programming Language">
+    <meta name="keywords" content="Python programming language object oriented web free open source software license documentation download community">
+    <meta property="og:tag" content="Python programming language object oriented web free open source software license documentation download community">
+    <meta property="og:published_time" content="">
+    <meta property="og:modified_time" content="">
+    <meta property="og:author" content="">
+    <meta property="og:section" content=""> 
+    <meta property="og:url" content="">
+    <meta property="og:image" content="">
+    <meta property="og:video" content="">
+
+    <link rel="author" href="https://www.python.org/static/humans.txt">
+
+    
+
+    
+    <script type="application/ld+json">
+     {
+       "@context": "http://schema.org",
+       "@type": "WebSite",
+       "url": "https://www.python.org/",
+       "potentialAction": {
+         "@type": "SearchAction",
+         "target": "https://www.python.org/search/?q={search_term_string}",
+         "query-input": "required name=search_term_string"
+       }
+     }
+    </script>
+
+    
+    <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-39055973-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+    </script>
+    
+</head>
+
+<body class="python pages pep-page">
+
+    <div id="touchnav-wrapper">
+
+        <div id="nojs" class="do-not-print">
+            <p><strong>Notice:</strong> While Javascript is not essential for this website, your interaction with the content will be limited. Please turn Javascript on for the full experience. </p>
+        </div>
+
+        <!--[if lt IE 8]>
+        <div id="oldie-warning" class="do-not-print">
+            <p><strong>Notice:</strong> Your browser is <em>ancient</em> and <a href="http://www.ie6countdown.com/">Microsoft agrees</a>. <a href="http://browsehappy.com/">Upgrade to a different browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to experience a better web.</p>
+        </div>
+        <![endif]-->
+
+        <!-- Sister Site Links -->
+        <div id="top" class="top-bar do-not-print">
+
+            <nav class="meta-navigation container" role="navigation">
+
+                
+                <div class="skip-link screen-reader-text">
+                    <a href="#content" title="Skip to content">Skip to content</a>
+                </div>
+
+                
+                <a id="close-python-network" class="jump-link" href="#python-network" aria-hidden="true">
+                    <span aria-hidden="true" class="icon-arrow-down"><span>&#9660;</span></span> Close
+                </a>
+
+                
+
+<ul class="menu" role="tree">
+    
+    <li class="python-meta ">
+        <a href="https://www.python.org/" title="The Python Programming Language" >Python</a>
+    </li>
+    
+    <li class="psf-meta ">
+        <a href="https://www.python.org/psf-landing/" title="The Python Software Foundation" >PSF</a>
+    </li>
+    
+    <li class="docs-meta ">
+        <a href="https://docs.python.org/" title="Python Documentation" >Docs</a>
+    </li>
+    
+    <li class="pypi-meta ">
+        <a href="https://pypi.python.org/" title="Python Package Index" >PyPI</a>
+    </li>
+    
+    <li class="jobs-meta ">
+        <a href="https://www.python.org/jobs/" title="Python Job Board" >Jobs</a>
+    </li>
+    
+    <li class="shop-meta ">
+        <a href="https://www.python.org/community/" title="Python Community" >Community</a>
+    </li>
+    
+</ul>
+
+
+                <a id="python-network" class="jump-link" href="#top" aria-hidden="true">
+                    <span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> The Python Network
+                </a>
+
+            </nav>
+
+        </div>
+
+        <!-- Header elements -->
+        <header class="main-header" role="banner">
+            <div class="container">
+
+                <h1 class="site-headline">
+                    <a href="https://www.python.org/"><img class="python-logo" src="../../../static/img/python-logo.png" alt="python&trade;"></a>
+                </h1>
+
+                <div class="options-bar do-not-print">
+
+                    
+                    <a id="site-map-link" class="jump-to-menu" href="#site-map"><span class="menu-icon">&equiv;</span> Menu</a><form class="search-the-site" action="https://www.python.org/search/" method="get">
+                        <fieldset title="Search Python.org">
+
+                            <span aria-hidden="true" class="icon-search"></span>
+
+                            <label class="screen-reader-text" for="id-search-field">Search This Site</label>
+                            <input id="id-search-field" name="q" type="search" role="textbox" class="search-field" placeholder="Search" value="" tabindex="1">
+
+                            <button type="submit" name="submit" id="submit" class="search-button" title="Submit this Search" tabindex="3">
+                                GO
+                            </button>
+
+                            
+                            <!--[if IE]><input type="text" style="display: none;" disabled="disabled" size="1" tabindex="4"><![endif]-->
+
+                        </fieldset>
+                    </form><span class="breaker"></span><div class="adjust-font-size" aria-hidden="true">
+                        <ul class="navigation menu" aria-label="Adjust Text Size on Page">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                <a href="#" class="action-trigger"><strong><small>A</small> A</strong></a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a class="text-shrink" title="Make Text Smaller" href="javascript:;">Smaller</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a class="text-grow" title="Make Text Larger" href="javascript:;">Larger</a></li>
+                                    <li class="tier-2 element-3" role="treeitem"><a class="text-reset" title="Reset any font size changes I have made" href="javascript:;">Reset</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div><div class="winkwink-nudgenudge">
+                        <ul class="navigation menu" aria-label="Social Media Navigation">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                <a href="#" class="action-trigger">Socialize</a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a href="http://plus.google.com/+Python"><span aria-hidden="true" class="icon-google-plus"></span>Google+</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a href="http://www.facebook.com/pythonlang?fref=ts"><span aria-hidden="true" class="icon-facebook"></span>Facebook</a></li>
+                                    <li class="tier-2 element-3" role="treeitem"><a href="http://twitter.com/ThePSF"><span aria-hidden="true" class="icon-twitter"></span>Twitter</a></li>
+                                    <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/irc/"><span aria-hidden="true" class="icon-freenode"></span>Chat on IRC</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div><div class="account-signin">
+                        <ul class="navigation menu" aria-label="Social Media Navigation">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                
+                                <a href="https://www.python.org/accounts/login/" title="Sign Up or Sign In to Python.org">Sign In</a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/accounts/signup/">Sign Up / Register</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/accounts/login/">Sign In</a></li>
+                                </ul>
+                                
+                            </li>
+                        </ul>
+                    </div>
+
+                </div><!-- end options-bar -->
+
+                <nav id="mainnav" class="python-navigation main-navigation do-not-print" role="navigation">
+                    
+                        
+<ul class="navigation menu" role="menubar" aria-label="Main Navigation">
+  
+    
+    
+    <li id="about" class="tier-1 element-1  " aria-haspopup="true">
+        <a href="https://www.python.org/about/" title="" class="">About</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/apps/" title="">Applications</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/quotes/" title="">Quotes</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/gettingstarted/" title="">Getting Started</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/help/" title="">Help</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="downloads" class="tier-1 element-2  " aria-haspopup="true">
+        <a href="https://www.python.org/downloads/" title="" class="">Downloads</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/downloads/" title="">All releases</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/downloads/source/" title="">Source code</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/downloads/windows/" title="">Windows</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/downloads/mac-osx/" title="">Mac OS X</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/download/other/" title="">Other Platforms</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://docs.python.org/3/license.html" title="">License</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/download/alternatives" title="">Alternative Implementations</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="documentation" class="tier-1 element-3  " aria-haspopup="true">
+        <a href="https://www.python.org/doc/" title="" class="">Documentation</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/doc/" title="">Docs</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/doc/av" title="">Audio/Visual Talks</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://wiki.python.org/moin/BeginnersGuide" title="">Beginner&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://docs.python.org/faq/" title="">FAQ</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="http://wiki.python.org/moin/Languages" title="">Non-English Docs</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="../index.html" title="">PEP Index</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://wiki.python.org/moin/PythonBooks" title="">Python Books</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="community" class="tier-1 element-4  " aria-haspopup="true">
+        <a href="https://www.python.org/community/" title="" class="">Community</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/community/diversity/" title="">Diversity</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/community/irc/" title="">IRC</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/community/lists/" title="">Mailing Lists</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/workshops/" title="">Python Conferences</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/community/sigs/" title="">Special Interest Groups</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://wiki.python.org/moin/" title="">Python Wiki</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/community/logos/" title="">Python Logo</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://www.python.org/community/merchandise/" title="">Merchandise</a></li>
+    
+        <li class="tier-2 element-9" role="treeitem"><a href="https://www.python.org/community/awards" title="">Community Awards</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="success-stories" class="tier-1 element-5  " aria-haspopup="true">
+        <a href="https://www.python.org/about/success/" title="success-stories" class="">Success Stories</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/success/#arts" title="">Arts</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/success/#business" title="">Business</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/success/#education" title="">Education</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/success/#engineering" title="">Engineering</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/about/success/#government" title="">Government</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://www.python.org/about/success/#scientific" title="">Scientific</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/about/success/#software-development" title="">Software Development</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="news" class="tier-1 element-6  " aria-haspopup="true">
+        <a href="https://www.python.org/blogs/" title="News from around the Python world" class="">News</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/blogs/" title="Python Insider Blog Posts">Python News</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://planetpython.org/" title="Planet Python">Community News</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="http://pyfound.blogspot.com/" title="PSF Blog">PSF News</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pycon.blogspot.com/" title="PyCon Blog">PyCon News</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="events" class="tier-1 element-7  " aria-haspopup="true">
+        <a href="https://www.python.org/events/" title="" class="">Events</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/events/python-events/" title="">Python Events</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/events/python-user-group/" title="">User Group Events</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/events/python-events/past/" title="">Python Events Archive</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/events/python-user-group/past/" title="">User Group Events Archive</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://wiki.python.org/moin/PythonEventsCalendar#Submitting_an_Event" title="">Submit an Event</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    
+  
+</ul>
+
+                    
+                </nav>
+
+                <div class="header-banner "> <!-- for optional "do-not-print" class -->
+                    
+                    
+                </div>
+
+                
+                
+
+             </div><!-- end .container -->
+        </header>
+
+        <div id="content" class="content-wrapper">
+            <!-- Main Content Column -->
+            <div class="container">
+
+                <section class="main-content with-left-sidebar" role="main">
+
+                    
+<ul class="breadcrumbs menu">
+    <li>
+        <a href="https://www.python.org/" title="The Python Programming Language">Python</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>
+        <a href="https://www.python.org/dev/">Python Developer's Guide</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>
+        <a href="../index.html">PEP Index</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>PEP 3108 -- Standard Library Reorganization</li>
+</ul>
+
+
+                    
+<style>
+   .pep-page pre {
+        padding: .5em;
+        background: inherit;
+        border-left: 0px;
+        -webkit-box-shadow: 0 0 0 0;
+        -moz-box-shadow: 0 0 0 0;
+        box-shadow: 0 0 0 0;
+   }
+</style>
+
+    
+    <article class="text">
+        
+
+        <header class="article-header">
+            <h1 class="page-title">PEP 3108 -- Standard Library Reorganization</h1>
+        </header>
+
+        <!--
+This HTML is auto-generated.  DO NOT EDIT THIS FILE!  If you are writing a new
+PEP, see http://www.python.org/dev/peps/pep-0001 for instructions and links
+to templates.  DO NOT USE THIS HTML FILE AS YOUR TEMPLATE!
+-->
+<html>
+ <body>
+  <table class="rfc2822 docutils field-list" frame="void" rules="none">
+   <col class="field-name">
+   </col>
+   <col class="field-body">
+   </col>
+   <tbody valign="top">
+    <tr class="field">
+     <th class="field-name">
+      PEP:
+     </th>
+     <td class="field-body">
+      3108
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Title:
+     </th>
+     <td class="field-body">
+      Standard Library Reorganization
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Author:
+     </th>
+     <td class="field-body">
+      Brett Cannon &lt;brett at python.org&gt;
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Status:
+     </th>
+     <td class="field-body">
+      Final
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Type:
+     </th>
+     <td class="field-body">
+      Standards Track
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Created:
+     </th>
+     <td class="field-body">
+      01-Jan-2007
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Python-Version:
+     </th>
+     <td class="field-body">
+      3.0
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Post-History:
+     </th>
+     <td class="field-body">
+      28-Apr-2008
+     </td>
+    </tr>
+   </tbody>
+  </table>
+  <hr/>
+  <div class="contents topic" id="contents">
+   <p class="topic-title first">
+    Contents
+   </p>
+   <ul class="simple">
+    <li>
+     <a class="reference internal" href="#abstract" id="id45">
+      Abstract
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#modules-to-remove" id="id46">
+      Modules to Remove
+     </a>
+     <ul>
+      <li>
+       <a class="reference internal" href="#previously-deprecated-done" id="id47">
+        Previously deprecated [done]
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#platform-specific-with-minimal-use-done" id="id48">
+        Platform-specific with minimal use [done]
+       </a>
+       <ul>
+        <li>
+         <a class="reference internal" href="#irix" id="id49">
+          IRIX
+         </a>
+        </li>
+        <li>
+         <a class="reference internal" href="#mac-specific-modules" id="id50">
+          Mac-specific modules
+         </a>
+        </li>
+        <li>
+         <a class="reference internal" href="#solaris" id="id51">
+          Solaris
+         </a>
+        </li>
+       </ul>
+      </li>
+      <li>
+       <a class="reference internal" href="#hardly-used-done" id="id52">
+        Hardly used [done]
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#obsolete" id="id53">
+        Obsolete
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#maintenance-burden" id="id54">
+        Maintenance Burden
+       </a>
+      </li>
+     </ul>
+    </li>
+    <li>
+     <a class="reference internal" href="#modules-to-rename" id="id55">
+      Modules to Rename
+     </a>
+     <ul>
+      <li>
+       <a class="reference internal" href="#pep-8-violations-done" id="id56">
+        PEP 8 violations [done]
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#merging-c-and-python-implementations-of-the-same-interface" id="id57">
+        Merging C and Python implementations of the same interface
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#no-public-documented-interface-done" id="id58">
+        No public, documented interface [done]
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#poorly-chosen-names-done" id="id59">
+        Poorly chosen names [done]
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#grouping-of-modules-done" id="id60">
+        Grouping of modules [done]
+       </a>
+       <ul>
+        <li>
+         <a class="reference internal" href="#dbm-package" id="id61">
+          dbm package
+         </a>
+        </li>
+        <li>
+         <a class="reference internal" href="#html-package" id="id62">
+          html package
+         </a>
+        </li>
+        <li>
+         <a class="reference internal" href="#http-package" id="id63">
+          http package
+         </a>
+        </li>
+        <li>
+         <a class="reference internal" href="#tkinter-package" id="id64">
+          tkinter package
+         </a>
+        </li>
+        <li>
+         <a class="reference internal" href="#urllib-package" id="id65">
+          urllib package
+         </a>
+        </li>
+        <li>
+         <a class="reference internal" href="#xmlrpc-package" id="id66">
+          xmlrpc package
+         </a>
+        </li>
+       </ul>
+      </li>
+     </ul>
+    </li>
+    <li>
+     <a class="reference internal" href="#transition-plan" id="id67">
+      Transition Plan
+     </a>
+     <ul>
+      <li>
+       <a class="reference internal" href="#issues" id="id68">
+        Issues
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#for-modules-to-be-removed" id="id69">
+        For modules to be removed
+       </a>
+       <ul>
+        <li>
+         <a class="reference internal" href="#in-python-3-0" id="id70">
+          In Python 3.0
+         </a>
+        </li>
+        <li>
+         <a class="reference internal" href="#in-python-2-6" id="id71">
+          In Python 2.6
+         </a>
+        </li>
+       </ul>
+      </li>
+      <li>
+       <a class="reference internal" href="#renaming-of-modules" id="id72">
+        Renaming of modules
+       </a>
+       <ul>
+        <li>
+         <a class="reference internal" href="#python-3-0" id="id73">
+          Python 3.0
+         </a>
+        </li>
+        <li>
+         <a class="reference internal" href="#python-2-6" id="id74">
+          Python 2.6
+         </a>
+        </li>
+       </ul>
+      </li>
+     </ul>
+    </li>
+    <li>
+     <a class="reference internal" href="#open-issues" id="id75">
+      Open Issues
+     </a>
+     <ul>
+      <li>
+       <a class="reference internal" href="#renaming-of-modules-maintained-outside-of-the-stdlib" id="id76">
+        Renaming of modules maintained outside of the stdlib
+       </a>
+      </li>
+     </ul>
+    </li>
+    <li>
+     <a class="reference internal" href="#rejected-ideas" id="id77">
+      Rejected Ideas
+     </a>
+     <ul>
+      <li>
+       <a class="reference internal" href="#modules-that-were-originally-suggested-for-removal" id="id78">
+        Modules that were originally suggested for removal
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#introducing-a-new-top-level-package" id="id79">
+        Introducing a new top-level package
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#introducing-new-packages-to-contain-theme-related-modules" id="id80">
+        Introducing new packages to contain theme-related modules
+       </a>
+      </li>
+     </ul>
+    </li>
+    <li>
+     <a class="reference internal" href="#references" id="id81">
+      References
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#copyright" id="id82">
+      Copyright
+     </a>
+    </li>
+   </ul>
+  </div>
+  <div class="note">
+   <p class="first admonition-title">
+    Note
+   </p>
+   <p class="last">
+    The merging of profile/cProfile as of Python 3.3 did not
+occur, and thus is considered abandoned (although it would be
+acceptable to do in the future).
+   </p>
+  </div>
+  <div class="section" id="abstract">
+   <h1>
+    <a class="toc-backref" href="#id45">
+     Abstract
+    </a>
+   </h1>
+   <p>
+    Just like the language itself, Python's standard library (stdlib) has
+grown over the years to be very rich.  But over time some modules
+have lost their need to be included with Python.  There has also been
+an introduction of a naming convention for modules since Python's
+inception that not all modules follow.
+   </p>
+   <p>
+    Python 3.0 has presents a chance to remove modules that do not have
+long term usefulness.  This chance also allows for the renaming of
+modules so that they follow the Python style guide
+    <a class="footnote-reference" href="#pep-0008" id="id1">
+     [8]
+    </a>
+    .  This
+PEP lists modules that should not be included in Python 3.0 or which
+need to be renamed.
+   </p>
+  </div>
+  <div class="section" id="modules-to-remove">
+   <h1>
+    <a class="toc-backref" href="#id46">
+     Modules to Remove
+    </a>
+   </h1>
+   <p>
+    Guido pronounced that "silly old stuff" is to be deleted from the
+stdlib for Py3K
+    <a class="footnote-reference" href="#silly-old-stuff" id="id2">
+     [12]
+    </a>
+    .  This is open-ended on purpose.
+Each module to be removed needs to have a justification as to why it
+should no longer be distributed with Python.  This can range from the
+module being deprecated in Python 2.x to being for a platform that is
+no longer widely used.
+   </p>
+   <p>
+    This section of the PEP lists the various modules to be removed. Each
+subsection represents a different reason for modules to be
+removed.  Each module must have a specific justification on top of
+being listed in a specific subsection so as to make sure only modules
+that truly deserve to be removed are in fact removed.
+   </p>
+   <p>
+    When a reason mentions how long it has been since a module has been
+"uniquely edited", it is in reference to how long it has been since a
+checkin was done specifically for the module and not for a change that
+applied universally across the entire stdlib.  If an edit time is not
+denoted as "unique" then it is the last time the file was edited,
+period.
+   </p>
+   <div class="section" id="previously-deprecated-done">
+    <h2>
+     <a class="toc-backref" href="#id47">
+      Previously deprecated [done]
+     </a>
+    </h2>
+    <p>
+     <a class="reference external" href="../pep-0004/index.html">
+      PEP 4
+     </a>
+     lists all modules that have been deprecated in the stdlib
+     <a class="footnote-reference" href="#pep-0004" id="id3">
+      [7]
+     </a>
+     .  The specified motivations mirror those listed in
+     <a class="reference external" href="../pep-0004/index.html">
+      PEP 4
+     </a>
+     . All modules listed
+in the PEP at the time of the first alpha release of Python 3.0 will
+be removed.
+    </p>
+    <p>
+     The entire contents of lib-old will also be removed.  These modules
+have already been removed from being imported but are kept in the
+distribution for Python for users that rely upon the code.
+    </p>
+    <ul>
+     <li>
+      <p class="first">
+       cfmfile
+      </p>
+      <blockquote>
+       <ul class="simple">
+        <li>
+         Documented as deprecated since Python 2.4 without an explicit
+reason.
+        </li>
+       </ul>
+      </blockquote>
+     </li>
+     <li>
+      <p class="first">
+       cl
+      </p>
+      <blockquote>
+       <ul class="simple">
+        <li>
+         Documented as obsolete since Python 2.0 or earlier.
+        </li>
+        <li>
+         Interface to SGI hardware.
+        </li>
+       </ul>
+      </blockquote>
+     </li>
+     <li>
+      <p class="first">
+       md5
+      </p>
+      <blockquote>
+       <ul class="simple">
+        <li>
+         Supplanted by the
+         <tt class="docutils literal">
+          hashlib
+         </tt>
+         module.
+        </li>
+       </ul>
+      </blockquote>
+     </li>
+     <li>
+      <p class="first">
+       mimetools
+      </p>
+      <blockquote>
+       <ul class="simple">
+        <li>
+         Documented as obsolete in a previous version.
+        </li>
+        <li>
+         Supplanted by the
+         <tt class="docutils literal">
+          email
+         </tt>
+         package.
+        </li>
+       </ul>
+      </blockquote>
+     </li>
+     <li>
+      <p class="first">
+       MimeWriter
+      </p>
+      <blockquote>
+       <ul class="simple">
+        <li>
+         Supplanted by the
+         <tt class="docutils literal">
+          email
+         </tt>
+         package.
+        </li>
+       </ul>
+      </blockquote>
+     </li>
+     <li>
+      <p class="first">
+       mimify
+      </p>
+      <blockquote>
+       <ul class="simple">
+        <li>
+         Supplanted by the
+         <tt class="docutils literal">
+          email
+         </tt>
+         package.
+        </li>
+       </ul>
+      </blockquote>
+     </li>
+     <li>
+      <p class="first">
+       multifile
+      </p>
+      <blockquote>
+       <ul class="simple">
+        <li>
+         Supplanted by the
+         <tt class="docutils literal">
+          email
+         </tt>
+         package.
+        </li>
+       </ul>
+      </blockquote>
+     </li>
+     <li>
+      <p class="first">
+       posixfile
+      </p>
+      <blockquote>
+       <ul class="simple">
+        <li>
+         Locking is better done by
+         <tt class="docutils literal">
+          fcntl.lockf()
+         </tt>
+         .
+        </li>
+       </ul>
+      </blockquote>
+     </li>
+     <li>
+      <p class="first">
+       rfc822
+      </p>
+      <blockquote>
+       <ul class="simple">
+        <li>
+         Supplanted by the
+         <tt class="docutils literal">
+          email
+         </tt>
+         package.
+        </li>
+       </ul>
+      </blockquote>
+     </li>
+     <li>
+      <p class="first">
+       sha
+      </p>
+      <blockquote>
+       <ul class="simple">
+        <li>
+         Supplanted by the
+         <tt class="docutils literal">
+          hashlib
+         </tt>
+         package.
+        </li>
+       </ul>
+      </blockquote>
+     </li>
+     <li>
+      <p class="first">
+       sv
+      </p>
+      <blockquote>
+       <ul class="simple">
+        <li>
+         Documented as obsolete since Python 2.0 or earlier.
+        </li>
+        <li>
+         Interface to obsolete SGI Indigo hardware.
+        </li>
+       </ul>
+      </blockquote>
+     </li>
+     <li>
+      <p class="first">
+       timing
+      </p>
+      <blockquote>
+       <ul class="simple">
+        <li>
+         Documented as obsolete since Python 2.0 or earlier.
+        </li>
+        <li>
+         <tt class="docutils literal">
+          time.clock()
+         </tt>
+         gives better time resolution.
+        </li>
+       </ul>
+      </blockquote>
+     </li>
+    </ul>
+   </div>
+   <div class="section" id="platform-specific-with-minimal-use-done">
+    <h2>
+     <a class="toc-backref" href="#id48">
+      Platform-specific with minimal use [done]
+     </a>
+    </h2>
+    <p>
+     Python supports many platforms, some of which are not widely used or
+maintained.
+And on some of these platforms there are modules that have limited use
+to people on those platforms.  Because of their limited usefulness it
+would be better to no longer burden the Python development team with
+their maintenance.
+    </p>
+    <p>
+     The modules mentioned below are documented. All undocumented modules
+for the specified platforms will also be removed.
+    </p>
+    <div class="section" id="irix">
+     <h3>
+      <a class="toc-backref" href="#id49">
+       IRIX
+      </a>
+     </h3>
+     <p>
+      The IRIX operating system is no longer produced
+      <a class="footnote-reference" href="#irix-retirement" id="id4">
+       [19]
+      </a>
+      .
+Removing all modules from the plat-irix[56] directory has been deemed
+reasonable because of this fact.
+     </p>
+     <blockquote>
+      <ul class="simple">
+       <li>
+        AL/al
+        <ul>
+         <li>
+          Provides sound support on Indy and Indigo workstations.
+         </li>
+         <li>
+          Both workstations are no longer available.
+         </li>
+         <li>
+          Code has not been uniquely edited in three years.
+         </li>
+        </ul>
+       </li>
+       <li>
+        cd/CD
+        <ul>
+         <li>
+          CD drive control for SGI systems.
+         </li>
+         <li>
+          SGI no longer sells machines with IRIX on them.
+         </li>
+         <li>
+          Code has not been uniquely edited in 14 years.
+         </li>
+        </ul>
+       </li>
+       <li>
+        cddb
+        <ul>
+         <li>
+          Undocumented.
+         </li>
+        </ul>
+       </li>
+       <li>
+        cdplayer
+        <ul>
+         <li>
+          Undocumented.
+         </li>
+        </ul>
+       </li>
+       <li>
+        cl/CL/CL_old
+        <ul>
+         <li>
+          Compression library for SGI systems.
+         </li>
+         <li>
+          SGI no longer sells machines with IRIX on them.
+         </li>
+         <li>
+          Code has not been uniquely edited in 14 years.
+         </li>
+        </ul>
+       </li>
+       <li>
+        DEVICE/GL/gl/cgen/cgensuport
+        <ul>
+         <li>
+          GL access, which is the predecessor to OpenGL.
+         </li>
+         <li>
+          Has not been edited in at least eight years.
+         </li>
+         <li>
+          Third-party libraries provide better support (PyOpenGL
+          <a class="footnote-reference" href="#pyopengl" id="id5">
+           [16]
+          </a>
+          ).
+         </li>
+        </ul>
+       </li>
+       <li>
+        ERRNO
+        <ul>
+         <li>
+          Undocumented.
+         </li>
+        </ul>
+       </li>
+       <li>
+        FILE
+        <ul>
+         <li>
+          Undocumented.
+         </li>
+        </ul>
+       </li>
+       <li>
+        FL/fl/flp
+        <ul>
+         <li>
+          Wrapper for the FORMS library
+          <a class="footnote-reference" href="#irix-forms" id="id6">
+           [20]
+          </a>
+         </li>
+         <li>
+          FORMS has not been edited in 12 years.
+         </li>
+         <li>
+          Library is not widely used.
+         </li>
+         <li>
+          First eight hits on Google are for Python docs for fl.
+         </li>
+        </ul>
+       </li>
+       <li>
+        fm
+        <ul>
+         <li>
+          Wrapper to the IRIS Font Manager library.
+         </li>
+         <li>
+          Only available on SGI machines which no longer come with IRIX.
+         </li>
+        </ul>
+       </li>
+       <li>
+        GET
+        <ul>
+         <li>
+          Undocumented.
+         </li>
+        </ul>
+       </li>
+       <li>
+        GLWS
+        <ul>
+         <li>
+          Undocumented.
+         </li>
+        </ul>
+       </li>
+       <li>
+        imgfile
+        <ul>
+         <li>
+          Wrapper for SGI libimage library for imglib image files
+(
+          <tt class="docutils literal">
+           .rgb
+          </tt>
+          files).
+         </li>
+         <li>
+          Python Imaging Library provdes read-only support
+          <a class="footnote-reference" href="#pil" id="id7">
+           [17]
+          </a>
+          .
+         </li>
+         <li>
+          Not uniquely edited in 13 years.
+         </li>
+        </ul>
+       </li>
+       <li>
+        IN
+        <ul>
+         <li>
+          Undocumented.
+         </li>
+        </ul>
+       </li>
+       <li>
+        IOCTL
+        <ul>
+         <li>
+          Undocumented.
+         </li>
+        </ul>
+       </li>
+       <li>
+        jpeg
+        <ul>
+         <li>
+          Wrapper for JPEG (de)compressor.
+         </li>
+         <li>
+          Code not uniquely edited in nine years.
+         </li>
+         <li>
+          Third-party libraries provide better support
+(Python Imaging Library
+          <a class="footnote-reference" href="#pil" id="id8">
+           [17]
+          </a>
+          ).
+         </li>
+        </ul>
+       </li>
+       <li>
+        panel
+        <ul>
+         <li>
+          Undocumented.
+         </li>
+        </ul>
+       </li>
+       <li>
+        panelparser
+        <ul>
+         <li>
+          Undocumented.
+         </li>
+        </ul>
+       </li>
+       <li>
+        readcd
+        <ul>
+         <li>
+          Undocumented.
+         </li>
+        </ul>
+       </li>
+       <li>
+        SV
+        <ul>
+         <li>
+          Undocumented.
+         </li>
+        </ul>
+       </li>
+       <li>
+        torgb
+        <ul>
+         <li>
+          Undocumented.
+         </li>
+        </ul>
+       </li>
+       <li>
+        WAIT
+        <ul>
+         <li>
+          Undocumented.
+         </li>
+        </ul>
+       </li>
+      </ul>
+     </blockquote>
+    </div>
+    <div class="section" id="mac-specific-modules">
+     <h3>
+      <a class="toc-backref" href="#id50">
+       Mac-specific modules
+      </a>
+     </h3>
+     <p>
+      The Mac-specific modules are not well-maintained (e.g., the bgen
+tool used to auto-generate many of the modules has never been
+updated to support UCS-4). It is also not Python's place to maintain
+such a large amount of OS-specific modules. Thus all modules under
+      <tt class="docutils literal">
+       <span class="pre">
+        Lib/plat-mac
+       </span>
+      </tt>
+      and
+      <tt class="docutils literal">
+       Mac
+      </tt>
+      are to be removed.
+     </p>
+     <p>
+      A stub module for proxy access will be provided for use by urllib.
+     </p>
+     <ul>
+      <li>
+       <p class="first">
+        _builtinSuites
+       </p>
+       <blockquote>
+        <ul class="simple">
+         <li>
+          Undocumented.
+         </li>
+         <li>
+          Package under lib-scriptpackages.
+         </li>
+        </ul>
+       </blockquote>
+      </li>
+      <li>
+       <p class="first">
+        Audio_mac
+       </p>
+       <blockquote>
+        <ul class="simple">
+         <li>
+          Undocumented.
+         </li>
+        </ul>
+       </blockquote>
+      </li>
+      <li>
+       <p class="first">
+        aepack
+       </p>
+       <blockquote>
+        <ul>
+         <li>
+          <p class="first">
+           OSA support is better through third-party modules.
+          </p>
+          <blockquote>
+           <ul class="simple">
+            <li>
+             Appscript
+             <a class="footnote-reference" href="#appscript" id="id9">
+              [22]
+             </a>
+             .
+            </li>
+           </ul>
+          </blockquote>
+         </li>
+         <li>
+          <p class="first">
+           Hard-coded endianness which breaks on Intel Macs.
+          </p>
+         </li>
+         <li>
+          <p class="first">
+           Might need to rename if Carbon package dependent.
+          </p>
+         </li>
+        </ul>
+       </blockquote>
+      </li>
+      <li>
+       <p class="first">
+        aetools
+       </p>
+       <blockquote>
+        <ul class="simple">
+         <li>
+          See aepack.
+         </li>
+        </ul>
+       </blockquote>
+      </li>
+      <li>
+       <p class="first">
+        aetypes
+       </p>
+       <blockquote>
+        <ul class="simple">
+         <li>
+          See aepack.
+         </li>
+        </ul>
+       </blockquote>
+      </li>
+      <li>
+       <p class="first">
+        applesingle
+       </p>
+       <blockquote>
+        <ul class="simple">
+         <li>
+          Undocumented.
+         </li>
+         <li>
+          AppleSingle is a binary file format for A/UX.
+         </li>
+         <li>
+          A/UX no longer distributed.
+         </li>
+        </ul>
+       </blockquote>
+      </li>
+      <li>
+       <p class="first">
+        appletrawmain
+       </p>
+       <blockquote>
+        <ul class="simple">
+         <li>
+          Undocumented.
+         </li>
+        </ul>
+       </blockquote>
+      </li>
+      <li>
+       <p class="first">
+        appletrunner
+       </p>
+       <blockquote>
+        <ul class="simple">
+         <li>
+          Undocumented.
+         </li>
+        </ul>
+       </blockquote>
+      </li>
+      <li>
+       <p class="first">
+        argvemulator
+       </p>
+       <blockquote>
+        <ul class="simple">
+         <li>
+          Undocumented.
+         </li>
+        </ul>
+       </blockquote>
+      </li>
+      <li>
+       <p class="first">
+        autoGIL
+       </p>
+       <blockquote>
+        <ul class="simple">
+         <li>
+          Very bad model for using Python with the CFRunLoop.
+         </li>
+        </ul>
+       </blockquote>
+      </li>
+      <li>
+       <p class="first">
+        bgenlocations
+       </p>
+       <blockquote>
+        <ul class="simple">
+         <li>
+          Undocumented.
+         </li>
+        </ul>
+       </blockquote>
+      </li>
+      <li>
+       <p class="first">
+        buildtools
+       </p>
+       <blockquote>
+        <ul class="simple">
+         <li>
+          Documented as deprecated since Python 2.3 without an explicit
+reason.
+         </li>
+        </ul>
+       </blockquote>
+      </li>
+      <li>
+       <p class="first">
+        bundlebuilder
+       </p>
+       <blockquote>
+        <ul class="simple">
+         <li>
+          Undocumented.
+         </li>
+        </ul>
+       </blockquote>
+      </li>
+      <li>
+       <p class="first">
+        Carbon
+       </p>
+       <blockquote>
+        <ul class="simple">
+         <li>
+          Carbon development has stopped.
+         </li>
+         <li>
+          Does not support 64-bit systems completely.
+         </li>
+         <li>
+          Dependent on bgen which has never been updated to support UCS-4
+Unicode builds of Python.
+         </li>
+        </ul>
+       </blockquote>
+      </li>
+      <li>
+       <p class="first">
+        CodeWarrior
+       </p>
+       <blockquote>
+        <ul class="simple">
+         <li>
+          Undocumented.
+         </li>
+         <li>
+          Package under lib-scriptpackages.
+         </li>
+        </ul>
+       </blockquote>
+      </li>
+      <li>
+       <p class="first">
+        ColorPicker
+       </p>
+       <blockquote>
+        <ul class="simple">
+         <li>
+          Better to use Cocoa for GUIs.
+         </li>
+        </ul>
+       </blockquote>
+      </li>
+      <li>
+       <p class="first">
+        EasyDialogs
+       </p>
+       <blockquote>
+        <ul class="simple">
+         <li>
+          Better to use Cocoa for GUIs.
+         </li>
+        </ul>
+       </blockquote>
+      </li>
+      <li>
+       <p class="first">
+        Explorer
+       </p>
+       <blockquote>
+        <ul class="simple">
+         <li>
+          Undocumented.
+         </li>
+         <li>
+          Package under lib-scriptpackages.
+         </li>
+        </ul>
+       </blockquote>
+      </li>
+      <li>
+       <p class="first">
+        Finder
+       </p>
+       <blockquote>
+        <ul class="simple">
+         <li>
+          Undocumented.
+         </li>
+         <li>
+          Package under lib-scriptpackages.
+         </li>
+        </ul>
+       </blockquote>
+      </li>
+      <li>
+       <p class="first">
+        findertools
+       </p>
+       <blockquote>
+        <ul class="simple">
+         <li>
+          No longer useful.
+         </li>
+        </ul>
+       </blockquote>
+      </li>
+      <li>
+       <p class="first">
+        FrameWork
+       </p>
+       <blockquote>
+        <ul class="simple">
+         <li>
+          Poorly documented.
+         </li>
+         <li>
+          Not updated to support Carbon Events.
+         </li>
+        </ul>
+       </blockquote>
+      </li>
+      <li>
+       <p class="first">
+        gensuitemodule
+       </p>
+       <blockquote>
+        <ul class="simple">
+         <li>
+          See aepack.
+         </li>
+        </ul>
+       </blockquote>
+      </li>
+      <li>
+       <p class="first">
+        ic
+       </p>
+      </li>
+      <li>
+       <p class="first">
+        icglue
+       </p>
+      </li>
+      <li>
+       <p class="first">
+        icopen
+       </p>
+       <blockquote>
+        <ul class="simple">
+         <li>
+          Not needed on OS X.
+         </li>
+         <li>
+          Meant to replace 'open' which is usually a bad thing to do.
+         </li>
+        </ul>
+       </blockquote>
+      </li>
+      <li>
+       <p class="first">
+        macerrors
+       </p>
+       <blockquote>
+        <ul class="simple">
+         <li>
+          Undocumented.
+         </li>
+        </ul>
+       </blockquote>
+      </li>
+      <li>
+       <p class="first">
+        MacOS
+       </p>
+       <blockquote>
+        <ul class="simple">
+         <li>
+          Would also mean the removal of binhex.
+         </li>
+        </ul>
+       </blockquote>
+      </li>
+      <li>
+       <p class="first">
+        macostools
+       </p>
+      </li>
+      <li>
+       <p class="first">
+        macresource
+       </p>
+       <blockquote>
+        <ul class="simple">
+         <li>
+          Undocumented.
+         </li>
+        </ul>
+       </blockquote>
+      </li>
+      <li>
+       <p class="first">
+        MiniAEFrame
+       </p>
+       <blockquote>
+        <ul class="simple">
+         <li>
+          See aepack.
+         </li>
+        </ul>
+       </blockquote>
+      </li>
+      <li>
+       <p class="first">
+        Nav
+       </p>
+       <blockquote>
+        <ul class="simple">
+         <li>
+          Undocumented.
+         </li>
+        </ul>
+       </blockquote>
+      </li>
+      <li>
+       <p class="first">
+        Netscape
+       </p>
+       <blockquote>
+        <ul class="simple">
+         <li>
+          Undocumented.
+         </li>
+         <li>
+          Package under lib-scriptpackages.
+         </li>
+        </ul>
+       </blockquote>
+      </li>
+      <li>
+       <p class="first">
+        OSATerminology
+       </p>
+      </li>
+      <li>
+       <p class="first">
+        pimp
+       </p>
+       <blockquote>
+        <ul class="simple">
+         <li>
+          Undocumented.
+         </li>
+        </ul>
+       </blockquote>
+      </li>
+      <li>
+       <p class="first">
+        PixMapWrapper
+       </p>
+       <blockquote>
+        <ul class="simple">
+         <li>
+          Undocumented.
+         </li>
+        </ul>
+       </blockquote>
+      </li>
+      <li>
+       <p class="first">
+        StdSuites
+       </p>
+       <blockquote>
+        <ul class="simple">
+         <li>
+          Undocumented.
+         </li>
+         <li>
+          Package under lib-scriptpackages.
+         </li>
+        </ul>
+       </blockquote>
+      </li>
+      <li>
+       <p class="first">
+        SystemEvents
+       </p>
+       <blockquote>
+        <ul class="simple">
+         <li>
+          Undocumented.
+         </li>
+         <li>
+          Package under lib-scriptpackages.
+         </li>
+        </ul>
+       </blockquote>
+      </li>
+      <li>
+       <p class="first">
+        Terminal
+       </p>
+       <blockquote>
+        <ul class="simple">
+         <li>
+          Undocumented.
+         </li>
+         <li>
+          Package under lib-scriptpackages.
+         </li>
+        </ul>
+       </blockquote>
+      </li>
+      <li>
+       <p class="first">
+        terminalcommand
+       </p>
+       <blockquote>
+        <ul class="simple">
+         <li>
+          Undocumented.
+         </li>
+        </ul>
+       </blockquote>
+      </li>
+      <li>
+       <p class="first">
+        videoreader
+       </p>
+       <blockquote>
+        <ul class="simple">
+         <li>
+          No longer used.
+         </li>
+        </ul>
+       </blockquote>
+      </li>
+      <li>
+       <p class="first">
+        W
+       </p>
+       <blockquote>
+        <ul class="simple">
+         <li>
+          No longer distributed with Python.
+         </li>
+        </ul>
+       </blockquote>
+      </li>
+     </ul>
+    </div>
+    <div class="section" id="solaris">
+     <h3>
+      <a class="toc-backref" href="#id51">
+       Solaris
+      </a>
+     </h3>
+     <blockquote>
+      <ul class="simple">
+       <li>
+        SUNAUDIODEV/sunaudiodev
+        <ul>
+         <li>
+          Access to the sound card on Sun machines.
+         </li>
+         <li>
+          Code not uniquely edited in over eight years.
+         </li>
+        </ul>
+       </li>
+      </ul>
+     </blockquote>
+    </div>
+   </div>
+   <div class="section" id="hardly-used-done">
+    <h2>
+     <a class="toc-backref" href="#id52">
+      Hardly used [done]
+     </a>
+    </h2>
+    <p>
+     Some platform-independent modules are rarely used.  There are a number of
+possible explanations for this, including, ease of reimplementation, very
+small audience or lack of adherence to more modern standards.
+    </p>
+    <ul class="simple">
+     <li>
+      audiodev
+      <ul>
+       <li>
+        Undocumented.
+       </li>
+       <li>
+        Not edited in five years.
+       </li>
+      </ul>
+     </li>
+     <li>
+      imputil
+      <ul>
+       <li>
+        Undocumented.
+       </li>
+       <li>
+        Never updated to support absolute imports.
+       </li>
+      </ul>
+     </li>
+     <li>
+      mutex
+      <ul>
+       <li>
+        Easy to implement using a semaphore and a queue.
+       </li>
+       <li>
+        Cannot block on a lock attempt.
+       </li>
+       <li>
+        Not uniquely edited since its addition 15 years ago.
+       </li>
+       <li>
+        Only useful with the 'sched' module.
+       </li>
+       <li>
+        Not thread-safe.
+       </li>
+      </ul>
+     </li>
+     <li>
+      stringold
+      <ul>
+       <li>
+        Function versions of the methods on string objects.
+       </li>
+       <li>
+        Obsolete since Python 1.6.
+       </li>
+       <li>
+        Any functionality not in the string object or module will be moved
+to the string module (mostly constants).
+       </li>
+      </ul>
+     </li>
+     <li>
+      sunaudio
+      <ul>
+       <li>
+        Undocumented.
+       </li>
+       <li>
+        Not edited in over seven years.
+       </li>
+       <li>
+        The
+        <tt class="docutils literal">
+         sunau
+        </tt>
+        module provides similar abilities.
+       </li>
+      </ul>
+     </li>
+     <li>
+      toaiff
+      <ul>
+       <li>
+        Undocumented.
+       </li>
+       <li>
+        Requires
+        <tt class="docutils literal">
+         sox
+        </tt>
+        library to be installed on the system.
+       </li>
+      </ul>
+     </li>
+     <li>
+      user
+      <ul>
+       <li>
+        Easily handled by allowing the application specify its own
+module name, check for existence, and import if found.
+       </li>
+      </ul>
+     </li>
+     <li>
+      new
+      <ul>
+       <li>
+        Just a rebinding of names from the 'types' module.
+       </li>
+       <li>
+        Can also call
+        <tt class="docutils literal">
+         type
+        </tt>
+        built-in to get most types easily.
+       </li>
+       <li>
+        Docstring states the module is no longer useful as of revision
+27241 (2002-06-15).
+       </li>
+      </ul>
+     </li>
+     <li>
+      pure
+      <ul>
+       <li>
+        Written before Pure Atria was bought by Rational which was then
+bought by IBM (in other words, very old).
+       </li>
+      </ul>
+     </li>
+     <li>
+      test.testall
+      <ul>
+       <li>
+        From the days before regrtest.
+       </li>
+      </ul>
+     </li>
+    </ul>
+   </div>
+   <div class="section" id="obsolete">
+    <h2>
+     <a class="toc-backref" href="#id53">
+      Obsolete
+     </a>
+    </h2>
+    <p>
+     Becoming obsolete signifies that either another module in the stdlib
+or a widely distributed third-party library provides a better solution
+for what the module is meant for.
+    </p>
+    <ul>
+     <li>
+      <p class="first">
+       Bastion/rexec [done]
+      </p>
+      <ul class="simple">
+       <li>
+        Restricted execution / security.
+       </li>
+       <li>
+        Turned off in Python 2.3.
+       </li>
+       <li>
+        Modules deemed unsafe.
+       </li>
+      </ul>
+     </li>
+     <li>
+      <p class="first">
+       bsddb185 [done]
+      </p>
+      <ul class="simple">
+       <li>
+        Superceded by bsddb3
+       </li>
+       <li>
+        Not built by default.
+       </li>
+       <li>
+        Documentation specifies that the "module should never be used
+directly in new code".
+       </li>
+       <li>
+        Available externally from
+        <a class="reference external" href="http://pypi.python.org/">
+         PyPI
+        </a>
+        <a class="footnote-reference" href="#id43" id="id44">
+         [27]
+        </a>
+        .
+       </li>
+      </ul>
+     </li>
+     <li>
+      <p class="first">
+       Canvas [done]
+      </p>
+      <ul class="simple">
+       <li>
+        Marked as obsolete in a comment by Guido since 2000
+(see
+        <a class="reference external" href="http://bugs.python.org/issue210677">
+         http://bugs.python.org/issue210677
+        </a>
+        ).
+       </li>
+       <li>
+        Better to use the
+        <tt class="docutils literal">
+         Tkinter.Canvas
+        </tt>
+        class.
+       </li>
+      </ul>
+     </li>
+     <li>
+      <p class="first">
+       commands [done]
+      </p>
+      <ul class="simple">
+       <li>
+        subprocess module replaces it
+        <a class="footnote-reference" href="#pep-0324" id="id10">
+         [9]
+        </a>
+        .
+       </li>
+       <li>
+        Remove getstatus(), move rest to subprocess.
+       </li>
+      </ul>
+     </li>
+     <li>
+      <p class="first">
+       compiler [done]
+      </p>
+      <ul class="simple">
+       <li>
+        Having to maintain both the built-in compiler and the stdlib
+package is redundant
+        <a class="footnote-reference" href="#ast-removal" id="id11">
+         [24]
+        </a>
+        .
+       </li>
+       <li>
+        The AST created by the compiler is available
+        <a class="footnote-reference" href="#ast" id="id12">
+         [23]
+        </a>
+        .
+       </li>
+       <li>
+        Mechanism to compile from an AST needs to be added.
+       </li>
+      </ul>
+     </li>
+     <li>
+      <p class="first">
+       dircache [done]
+      </p>
+      <ul class="simple">
+       <li>
+        Negligible use.
+       </li>
+       <li>
+        Easily replicated.
+       </li>
+      </ul>
+     </li>
+     <li>
+      <p class="first">
+       dl [done]
+      </p>
+      <ul class="simple">
+       <li>
+        ctypes provides better support for same functionality.
+       </li>
+      </ul>
+     </li>
+     <li>
+      <p class="first">
+       fpformat [done]
+      </p>
+      <ul class="simple">
+       <li>
+        All functionality is supported by string interpolation.
+       </li>
+      </ul>
+     </li>
+     <li>
+      <p class="first">
+       htmllib [done]
+      </p>
+      <ul class="simple">
+       <li>
+        Superseded by HTMLParser.
+       </li>
+      </ul>
+     </li>
+     <li>
+      <p class="first">
+       ihooks [done]
+      </p>
+      <ul class="simple">
+       <li>
+        Undocumented.
+       </li>
+       <li>
+        For use with rexec which has been turned off since Python 2.3.
+       </li>
+      </ul>
+     </li>
+     <li>
+      <p class="first">
+       imageop [done]
+      </p>
+      <ul>
+       <li>
+        <p class="first">
+         Better support by third-party libraries
+(Python Imaging Library
+         <a class="footnote-reference" href="#pil" id="id13">
+          [17]
+         </a>
+         ).
+        </p>
+       </li>
+       <li>
+        <dl class="first docutils">
+         <dt>
+          Unit tests relied on rgbimg and imgfile.
+         </dt>
+         <dd>
+          <ul class="first last simple">
+           <li>
+            rgbimg was removed in Python 2.6.
+           </li>
+           <li>
+            imgfile slated for removal in this PEP.
+           </li>
+          </ul>
+         </dd>
+        </dl>
+       </li>
+      </ul>
+     </li>
+     <li>
+      <p class="first">
+       linuxaudiodev [done]
+      </p>
+      <ul class="simple">
+       <li>
+        Replaced by ossaudiodev.
+       </li>
+      </ul>
+     </li>
+     <li>
+      <p class="first">
+       mhlib [done]
+      </p>
+      <ul class="simple">
+       <li>
+        Should be removed as an individual module; use
+        <tt class="docutils literal">
+         mailbox
+        </tt>
+        instead.
+       </li>
+      </ul>
+     </li>
+     <li>
+      <p class="first">
+       popen2 [done]
+      </p>
+      <ul class="simple">
+       <li>
+        subprocess module replaces it
+        <a class="footnote-reference" href="#pep-0324" id="id14">
+         [9]
+        </a>
+        .
+       </li>
+      </ul>
+     </li>
+     <li>
+      <p class="first">
+       sgmllib [done]
+      </p>
+      <ul class="simple">
+       <li>
+        Does not fully parse SGML.
+       </li>
+       <li>
+        In the stdlib for support to htmllib which is slated for removal.
+       </li>
+      </ul>
+     </li>
+     <li>
+      <p class="first">
+       sre [done]
+      </p>
+      <ul class="simple">
+       <li>
+        Previously deprecated; import
+        <tt class="docutils literal">
+         re
+        </tt>
+        instead.
+       </li>
+      </ul>
+     </li>
+     <li>
+      <p class="first">
+       stat [TODO need to move all uses over to
+       <tt class="docutils literal">
+        os.stat()
+       </tt>
+       ]
+      </p>
+      <ul class="simple">
+       <li>
+        <tt class="docutils literal">
+         os.stat()
+        </tt>
+        now returns a tuple with attributes.
+       </li>
+       <li>
+        Functions in the module should be made into methods for the object
+returned by os.stat.
+       </li>
+      </ul>
+     </li>
+     <li>
+      <p class="first">
+       statvfs [done]
+      </p>
+      <ul class="simple">
+       <li>
+        <tt class="docutils literal">
+         os.statvfs
+        </tt>
+        now returns a tuple with attributes.
+       </li>
+      </ul>
+     </li>
+     <li>
+      <p class="first">
+       thread [done]
+      </p>
+      <ul class="simple">
+       <li>
+        People should use 'threading' instead.
+        <ul>
+         <li>
+          Rename 'thread' to _thread.
+         </li>
+         <li>
+          Deprecate dummy_thread and rename _dummy_thread.
+         </li>
+         <li>
+          Move thread.get_ident over to threading.
+         </li>
+        </ul>
+       </li>
+       <li>
+        Guido has previously supported the deprecation
+        <a class="footnote-reference" href="#thread-deprecation" id="id15">
+         [13]
+        </a>
+        .
+       </li>
+      </ul>
+     </li>
+     <li>
+      <p class="first">
+       urllib [done]
+      </p>
+      <ul class="simple">
+       <li>
+        Superceded by urllib2.
+       </li>
+       <li>
+        Functionality unique to urllib will be kept in the
+urllib package.
+       </li>
+      </ul>
+     </li>
+     <li>
+      <p class="first">
+       UserDict [done: 3.0] [TODO handle 2.6]
+      </p>
+      <ul class="simple">
+       <li>
+        Not as useful since types can be a superclass.
+       </li>
+       <li>
+        Useful bits moved to the 'collections' module.
+       </li>
+      </ul>
+     </li>
+     <li>
+      <p class="first">
+       UserList/UserString [done]
+      </p>
+      <ul class="simple">
+       <li>
+        Not useful since types can be a superclass.
+       </li>
+       <li>
+        Moved to the 'collections' module.
+       </li>
+      </ul>
+     </li>
+    </ul>
+   </div>
+   <div class="section" id="maintenance-burden">
+    <h2>
+     <a class="toc-backref" href="#id54">
+      Maintenance Burden
+     </a>
+    </h2>
+    <p>
+     Over the years, certain modules have become a heavy burden upon
+python-dev to maintain. In situations like this, it is better for the
+module to be given to the community to maintain to free python-dev to
+focus more on language support and other modules in the standard
+library that do not take up a undue amount of time and effort.
+    </p>
+    <ul class="simple">
+     <li>
+      bsddb3
+      <ul>
+       <li>
+        Externally maintained at
+        <a class="reference external" href="http://www.jcea.es/programacion/pybsddb.htm">
+         http://www.jcea.es/programacion/pybsddb.htm
+        </a>
+        .
+       </li>
+       <li>
+        Consistent testing instability.
+       </li>
+       <li>
+        Berkeley DB follows a different release schedule than Python,
+leading to the bindings not necessarily being in sync with what is
+available.
+       </li>
+      </ul>
+     </li>
+    </ul>
+   </div>
+  </div>
+  <div class="section" id="modules-to-rename">
+   <h1>
+    <a class="toc-backref" href="#id55">
+     Modules to Rename
+    </a>
+   </h1>
+   <p>
+    Many modules existed in
+the stdlib before
+    <a class="reference external" href="../pep-0008/index.html">
+     PEP 8
+    </a>
+    came into existence
+    <a class="footnote-reference" href="#pep-0008" id="id16">
+     [8]
+    </a>
+    .  This has
+led to some naming inconsistencies and namespace bloat that should be
+addressed.
+   </p>
+   <div class="section" id="pep-8-violations-done">
+    <h2>
+     <a class="reference external" href="../pep-0008/index.html">
+      PEP 8
+     </a>
+     violations [done]
+    </h2>
+    <p>
+     <a class="reference external" href="../pep-0008/index.html">
+      PEP 8
+     </a>
+     specifies that modules "should have short, all-lowercase names"
+where "underscores can be used ... if it improves readability"
+     <a class="footnote-reference" href="#pep-0008" id="id17">
+      [8]
+     </a>
+     .  The use of underscores is discouraged in package names.
+The following modules violate
+     <a class="reference external" href="../pep-0008/index.html">
+      PEP 8
+     </a>
+     and are not somehow being renamed
+by being moved to a package.
+    </p>
+    <table border="1" class="docutils">
+     <colgroup>
+      <col width="26%">
+      </col>
+      <col width="74%">
+      </col>
+     </colgroup>
+     <thead valign="bottom">
+      <tr>
+       <th class="head">
+        Current Name
+       </th>
+       <th class="head">
+        Replacement Name
+       </th>
+      </tr>
+     </thead>
+     <tbody valign="top">
+      <tr>
+       <td>
+        _winreg
+       </td>
+       <td>
+        winreg
+       </td>
+      </tr>
+      <tr>
+       <td>
+        ConfigParser
+       </td>
+       <td>
+        configparser
+       </td>
+      </tr>
+      <tr>
+       <td>
+        copy_reg
+       </td>
+       <td>
+        copyreg
+       </td>
+      </tr>
+      <tr>
+       <td>
+        Queue
+       </td>
+       <td>
+        queue
+       </td>
+      </tr>
+      <tr>
+       <td>
+        SocketServer
+       </td>
+       <td>
+        socketserver
+       </td>
+      </tr>
+     </tbody>
+    </table>
+   </div>
+   <div class="section" id="merging-c-and-python-implementations-of-the-same-interface">
+    <h2>
+     <a class="toc-backref" href="#id57">
+      Merging C and Python implementations of the same interface
+     </a>
+    </h2>
+    <p>
+     Several interfaces have both a Python and C implementation.  While it
+is great to have a C implementation for speed with a Python
+implementation as fallback, there is no need to expose the two
+implementations independently in the stdlib.  For Python 3.0 all
+interfaces with two implementations will be merged into a single
+public interface.
+    </p>
+    <p>
+     The C module is to be given a leading underscore to delineate the fact
+that it is not the reference implementation (the Python implementation
+is).  This means that any semantic difference between the C and Python
+versions must be dealt with before Python 3.0 or else the C
+implementation will be removed until it can be fixed.
+    </p>
+    <p>
+     One interface that is not listed below is xml.etree.ElementTree.  This
+is an externally maintained module and thus is not under the direct
+control of the Python development team for renaming.  See
+     <a class="reference internal" href="#open-issues">
+      Open
+Issues
+     </a>
+     for a discussion on this.
+    </p>
+    <ul class="simple">
+     <li>
+      pickle/cPickle [done]
+      <ul>
+       <li>
+        Rename cPickle to _pickle.
+       </li>
+       <li>
+        Semantic completeness of C implementation
+        <em>
+         not
+        </em>
+        verified.
+       </li>
+      </ul>
+     </li>
+     <li>
+      profile/cProfile [TODO]
+      <ul>
+       <li>
+        Rename cProfile to _profile.
+       </li>
+       <li>
+        Semantic completeness of C implementation
+        <em>
+         not
+        </em>
+        verified.
+       </li>
+      </ul>
+     </li>
+     <li>
+      StringIO/cStringIO [done]
+      <ul>
+       <li>
+        Add the class to the 'io' module.
+       </li>
+      </ul>
+     </li>
+    </ul>
+   </div>
+   <div class="section" id="no-public-documented-interface-done">
+    <h2>
+     <a class="toc-backref" href="#id58">
+      No public, documented interface [done]
+     </a>
+    </h2>
+    <p>
+     There are several modules in the stdlib that have no defined public
+interface.  These modules exist as support code for other modules that
+are exposed.  Because they are not meant to be used directly they
+should be renamed to reflect this fact.
+    </p>
+    <table border="1" class="docutils">
+     <colgroup>
+      <col width="28%">
+      </col>
+      <col width="72%">
+      </col>
+     </colgroup>
+     <thead valign="bottom">
+      <tr>
+       <th class="head">
+        Current Name
+       </th>
+       <th class="head">
+        Replacement Name
+       </th>
+      </tr>
+     </thead>
+     <tbody valign="top">
+      <tr>
+       <td>
+        markupbase
+       </td>
+       <td>
+        _markupbase
+       </td>
+      </tr>
+     </tbody>
+    </table>
+   </div>
+   <div class="section" id="poorly-chosen-names-done">
+    <h2>
+     <a class="toc-backref" href="#id59">
+      Poorly chosen names [done]
+     </a>
+    </h2>
+    <p>
+     A few modules have names that were poorly chosen in hindsight.  They
+should be renamed so as to prevent their bad name from perpetuating
+beyond the 2.x series.
+    </p>
+    <table border="1" class="docutils">
+     <colgroup>
+      <col width="35%">
+      </col>
+      <col width="65%">
+      </col>
+     </colgroup>
+     <thead valign="bottom">
+      <tr>
+       <th class="head">
+        Current Name
+       </th>
+       <th class="head">
+        Replacement Name
+       </th>
+      </tr>
+     </thead>
+     <tbody valign="top">
+      <tr>
+       <td>
+        repr
+       </td>
+       <td>
+        reprlib
+       </td>
+      </tr>
+      <tr>
+       <td>
+        test.test_support
+       </td>
+       <td>
+        test.support
+       </td>
+      </tr>
+     </tbody>
+    </table>
+   </div>
+   <div class="section" id="grouping-of-modules-done">
+    <h2>
+     <a class="toc-backref" href="#id60">
+      Grouping of modules [done]
+     </a>
+    </h2>
+    <p>
+     As the stdlib has grown, several areas within it have expanded to
+include multiple modules (e.g., support for database files). It
+thus makes sense to group related modules into packages.
+    </p>
+    <div class="section" id="dbm-package">
+     <h3>
+      <a class="toc-backref" href="#id61">
+       dbm package
+      </a>
+     </h3>
+     <table border="1" class="docutils">
+      <colgroup>
+       <col width="35%">
+       </col>
+       <col width="65%">
+       </col>
+      </colgroup>
+      <thead valign="bottom">
+       <tr>
+        <th class="head">
+         Current Name
+        </th>
+        <th class="head">
+         Replacement Name
+        </th>
+       </tr>
+      </thead>
+      <tbody valign="top">
+       <tr>
+        <td>
+         anydbm
+        </td>
+        <td>
+         dbm.__init__
+         <a class="footnote-reference" href="#id20" id="id18">
+          [1]
+         </a>
+        </td>
+       </tr>
+       <tr>
+        <td>
+         dbhash
+        </td>
+        <td>
+         dbm.bsd
+        </td>
+       </tr>
+       <tr>
+        <td>
+         dbm
+        </td>
+        <td>
+         dbm.ndbm
+        </td>
+       </tr>
+       <tr>
+        <td>
+         dumbdm
+        </td>
+        <td>
+         dbm.dumb
+        </td>
+       </tr>
+       <tr>
+        <td>
+         gdbm
+        </td>
+        <td>
+         dbm.gnu
+        </td>
+       </tr>
+       <tr>
+        <td>
+         whichdb
+        </td>
+        <td>
+         dbm.__init__
+         <a class="footnote-reference" href="#id20" id="id19">
+          [1]
+         </a>
+        </td>
+       </tr>
+      </tbody>
+     </table>
+     <table class="docutils footnote" frame="void" id="id20" rules="none">
+      <colgroup>
+       <col class="label">
+       </col>
+       <col>
+       </col>
+      </colgroup>
+      <tbody valign="top">
+       <tr>
+        <td class="label">
+         [1]
+        </td>
+        <td>
+         <em>
+          (
+          <a class="fn-backref" href="#id18">
+           1
+          </a>
+          ,
+          <a class="fn-backref" href="#id19">
+           2
+          </a>
+          )
+         </em>
+         <tt class="docutils literal">
+          dbm.__init__
+         </tt>
+         can combine
+         <tt class="docutils literal">
+          anybdbm
+         </tt>
+         and
+         <tt class="docutils literal">
+          whichdb
+         </tt>
+         since
+the public API for both modules has no name conflict and the
+two modules have closely related usage.
+        </td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="section" id="html-package">
+     <h3>
+      <a class="toc-backref" href="#id62">
+       html package
+      </a>
+     </h3>
+     <table border="1" class="docutils">
+      <colgroup>
+       <col width="37%">
+       </col>
+       <col width="63%">
+       </col>
+      </colgroup>
+      <thead valign="bottom">
+       <tr>
+        <th class="head">
+         Current Name
+        </th>
+        <th class="head">
+         Replacement Name
+        </th>
+       </tr>
+      </thead>
+      <tbody valign="top">
+       <tr>
+        <td>
+         HTMLParser
+        </td>
+        <td>
+         html.parser
+        </td>
+       </tr>
+       <tr>
+        <td>
+         htmlentitydefs
+        </td>
+        <td>
+         html.entities
+        </td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="section" id="http-package">
+     <h3>
+      <a class="toc-backref" href="#id63">
+       http package
+      </a>
+     </h3>
+     <table border="1" class="docutils">
+      <colgroup>
+       <col width="35%">
+       </col>
+       <col width="65%">
+       </col>
+      </colgroup>
+      <thead valign="bottom">
+       <tr>
+        <th class="head">
+         Current Name
+        </th>
+        <th class="head">
+         Replacement Name
+        </th>
+       </tr>
+      </thead>
+      <tbody valign="top">
+       <tr>
+        <td>
+         httplib
+        </td>
+        <td>
+         http.client
+        </td>
+       </tr>
+       <tr>
+        <td>
+         BaseHTTPServer
+        </td>
+        <td>
+         http.server
+         <a class="footnote-reference" href="#id24" id="id21">
+          [2]
+         </a>
+        </td>
+       </tr>
+       <tr>
+        <td>
+         CGIHTTPServer
+        </td>
+        <td>
+         http.server
+         <a class="footnote-reference" href="#id24" id="id22">
+          [2]
+         </a>
+        </td>
+       </tr>
+       <tr>
+        <td>
+         SimpleHTTPServer
+        </td>
+        <td>
+         http.server
+         <a class="footnote-reference" href="#id24" id="id23">
+          [2]
+         </a>
+        </td>
+       </tr>
+       <tr>
+        <td>
+         Cookie
+        </td>
+        <td>
+         http.cookies
+        </td>
+       </tr>
+       <tr>
+        <td>
+         cookielib
+        </td>
+        <td>
+         http.cookiejar
+        </td>
+       </tr>
+      </tbody>
+     </table>
+     <table class="docutils footnote" frame="void" id="id24" rules="none">
+      <colgroup>
+       <col class="label">
+       </col>
+       <col>
+       </col>
+      </colgroup>
+      <tbody valign="top">
+       <tr>
+        <td class="label">
+         [2]
+        </td>
+        <td>
+         <em>
+          (
+          <a class="fn-backref" href="#id21">
+           1
+          </a>
+          ,
+          <a class="fn-backref" href="#id22">
+           2
+          </a>
+          ,
+          <a class="fn-backref" href="#id23">
+           3
+          </a>
+          )
+         </em>
+         The
+         <tt class="docutils literal">
+          http.server
+         </tt>
+         module can combine the specified modules
+safely as they have no naming conflicts.
+        </td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="section" id="tkinter-package">
+     <h3>
+      <a class="toc-backref" href="#id64">
+       tkinter package
+      </a>
+     </h3>
+     <table border="1" class="docutils">
+      <colgroup>
+       <col width="37%">
+       </col>
+       <col width="63%">
+       </col>
+      </colgroup>
+      <thead valign="bottom">
+       <tr>
+        <th class="head">
+         Current Name
+        </th>
+        <th class="head">
+         Replacement Name
+        </th>
+       </tr>
+      </thead>
+      <tbody valign="top">
+       <tr>
+        <td>
+         Dialog
+        </td>
+        <td>
+         tkinter.dialog
+        </td>
+       </tr>
+       <tr>
+        <td>
+         FileDialog
+        </td>
+        <td>
+         tkinter.filedialog
+         <a class="footnote-reference" href="#id29" id="id25">
+          [4]
+         </a>
+        </td>
+       </tr>
+       <tr>
+        <td>
+         FixTk
+        </td>
+        <td>
+         tkinter._fix
+        </td>
+       </tr>
+       <tr>
+        <td>
+         ScrolledText
+        </td>
+        <td>
+         tkinter.scrolledtext
+        </td>
+       </tr>
+       <tr>
+        <td>
+         SimpleDialog
+        </td>
+        <td>
+         tkinter.simpledialog
+         <a class="footnote-reference" href="#id30" id="id26">
+          [5]
+         </a>
+        </td>
+       </tr>
+       <tr>
+        <td>
+         Tix
+        </td>
+        <td>
+         tkinter.tix
+        </td>
+       </tr>
+       <tr>
+        <td>
+         Tkconstants
+        </td>
+        <td>
+         tkinter.constants
+        </td>
+       </tr>
+       <tr>
+        <td>
+         Tkdnd
+        </td>
+        <td>
+         tkinter.dnd
+        </td>
+       </tr>
+       <tr>
+        <td>
+         Tkinter
+        </td>
+        <td>
+         tkinter.__init__
+        </td>
+       </tr>
+       <tr>
+        <td>
+         tkColorChooser
+        </td>
+        <td>
+         tkinter.colorchooser
+        </td>
+       </tr>
+       <tr>
+        <td>
+         tkCommonDialog
+        </td>
+        <td>
+         tkinter.commondialog
+        </td>
+       </tr>
+       <tr>
+        <td>
+         tkFileDialog
+        </td>
+        <td>
+         tkinter.filedialog
+         <a class="footnote-reference" href="#id29" id="id27">
+          [4]
+         </a>
+        </td>
+       </tr>
+       <tr>
+        <td>
+         tkFont
+        </td>
+        <td>
+         tkinter.font
+        </td>
+       </tr>
+       <tr>
+        <td>
+         tkMessageBox
+        </td>
+        <td>
+         tkinter.messagebox
+        </td>
+       </tr>
+       <tr>
+        <td>
+         tkSimpleDialog
+        </td>
+        <td>
+         tkinter.simpledialog
+         <a class="footnote-reference" href="#id30" id="id28">
+          [5]
+         </a>
+        </td>
+       </tr>
+       <tr>
+        <td>
+         turtle
+        </td>
+        <td>
+         tkinter.turtle
+        </td>
+       </tr>
+      </tbody>
+     </table>
+     <table class="docutils footnote" frame="void" id="id29" rules="none">
+      <colgroup>
+       <col class="label">
+       </col>
+       <col>
+       </col>
+      </colgroup>
+      <tbody valign="top">
+       <tr>
+        <td class="label">
+         [4]
+        </td>
+        <td>
+         <em>
+          (
+          <a class="fn-backref" href="#id25">
+           1
+          </a>
+          ,
+          <a class="fn-backref" href="#id27">
+           2
+          </a>
+          )
+         </em>
+         <tt class="docutils literal">
+          tkinter.filedialog
+         </tt>
+         can safely combine
+         <tt class="docutils literal">
+          FileDialog
+         </tt>
+         and
+         <tt class="docutils literal">
+          tkFileDialog
+         </tt>
+         as there are no naming conflicts.
+        </td>
+       </tr>
+      </tbody>
+     </table>
+     <table class="docutils footnote" frame="void" id="id30" rules="none">
+      <colgroup>
+       <col class="label">
+       </col>
+       <col>
+       </col>
+      </colgroup>
+      <tbody valign="top">
+       <tr>
+        <td class="label">
+         [5]
+        </td>
+        <td>
+         <em>
+          (
+          <a class="fn-backref" href="#id26">
+           1
+          </a>
+          ,
+          <a class="fn-backref" href="#id28">
+           2
+          </a>
+          )
+         </em>
+         <tt class="docutils literal">
+          tkinter.simpledialog
+         </tt>
+         can safely combine
+         <tt class="docutils literal">
+          SimpleDialog
+         </tt>
+         and
+         <tt class="docutils literal">
+          tkSimpleDialog
+         </tt>
+         have no naming conflicts.
+        </td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="section" id="urllib-package">
+     <h3>
+      <a class="toc-backref" href="#id65">
+       urllib package
+      </a>
+     </h3>
+     <p>
+      Originally this new package was to be named
+      <tt class="docutils literal">
+       url
+      </tt>
+      , but because of
+the common use of the name as a variable, it has been deemed better
+to keep the name
+      <tt class="docutils literal">
+       urllib
+      </tt>
+      and instead shift existing modules around
+into a new package.
+     </p>
+     <table border="1" class="docutils">
+      <colgroup>
+       <col width="27%">
+       </col>
+       <col width="73%">
+       </col>
+      </colgroup>
+      <thead valign="bottom">
+       <tr>
+        <th class="head">
+         Current Name
+        </th>
+        <th class="head">
+         Replacement Name
+        </th>
+       </tr>
+      </thead>
+      <tbody valign="top">
+       <tr>
+        <td>
+         urllib2
+        </td>
+        <td>
+         urllib.request, urllib.error
+        </td>
+       </tr>
+       <tr>
+        <td>
+         urlparse
+        </td>
+        <td>
+         urllib.parse
+        </td>
+       </tr>
+       <tr>
+        <td>
+         urllib
+        </td>
+        <td>
+         urllib.parse, urllib.request, urllib.error
+         <a class="footnote-reference" href="#id32" id="id31">
+          [6]
+         </a>
+        </td>
+       </tr>
+       <tr>
+        <td>
+         robotparser
+        </td>
+        <td>
+         urllib.robotparser
+        </td>
+       </tr>
+      </tbody>
+     </table>
+     <table class="docutils footnote" frame="void" id="id32" rules="none">
+      <colgroup>
+       <col class="label">
+       </col>
+       <col>
+       </col>
+      </colgroup>
+      <tbody valign="top">
+       <tr>
+        <td class="label">
+         <a class="fn-backref" href="#id31">
+          [6]
+         </a>
+        </td>
+        <td>
+         The quoting-related functions from
+         <tt class="docutils literal">
+          urllib
+         </tt>
+         will be added
+to
+         <tt class="docutils literal">
+          urllib.parse
+         </tt>
+         .
+         <tt class="docutils literal">
+          urllib.URLOpener
+         </tt>
+         and
+         <tt class="docutils literal">
+          urllib.FancyUrlOpener
+         </tt>
+         will be added to
+         <tt class="docutils literal">
+          urllib.request
+         </tt>
+         as long as the documentation for both modules is updated.
+        </td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="section" id="xmlrpc-package">
+     <h3>
+      <a class="toc-backref" href="#id66">
+       xmlrpc package
+      </a>
+     </h3>
+     <table border="1" class="docutils">
+      <colgroup>
+       <col width="37%">
+       </col>
+       <col width="63%">
+       </col>
+      </colgroup>
+      <thead valign="bottom">
+       <tr>
+        <th class="head">
+         Current Name
+        </th>
+        <th class="head">
+         Replacement Name
+        </th>
+       </tr>
+      </thead>
+      <tbody valign="top">
+       <tr>
+        <td>
+         xmlrpclib
+        </td>
+        <td>
+         xmlrpc.client
+        </td>
+       </tr>
+       <tr>
+        <td>
+         DocXMLRPCServer
+        </td>
+        <td>
+         xmlrpc.server
+         <a class="footnote-reference" href="#id35" id="id33">
+          [3]
+         </a>
+        </td>
+       </tr>
+       <tr>
+        <td>
+         SimpleXMLRPCServer
+        </td>
+        <td>
+         xmlrpc.server
+         <a class="footnote-reference" href="#id35" id="id34">
+          [3]
+         </a>
+        </td>
+       </tr>
+      </tbody>
+     </table>
+     <table class="docutils footnote" frame="void" id="id35" rules="none">
+      <colgroup>
+       <col class="label">
+       </col>
+       <col>
+       </col>
+      </colgroup>
+      <tbody valign="top">
+       <tr>
+        <td class="label">
+         [3]
+        </td>
+        <td>
+         <em>
+          (
+          <a class="fn-backref" href="#id33">
+           1
+          </a>
+          ,
+          <a class="fn-backref" href="#id34">
+           2
+          </a>
+          )
+         </em>
+         The modules being combined into
+         <tt class="docutils literal">
+          xmlrpc.server
+         </tt>
+         have no
+naming conflicts and thus can safely be merged.
+        </td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+   </div>
+  </div>
+  <div class="section" id="transition-plan">
+   <h1>
+    <a class="toc-backref" href="#id67">
+     Transition Plan
+    </a>
+   </h1>
+   <div class="section" id="issues">
+    <h2>
+     <a class="toc-backref" href="#id68">
+      Issues
+     </a>
+    </h2>
+    <p>
+     Issues related to this PEP:
+    </p>
+    <ul>
+     <li>
+      <dl class="first docutils">
+       <dt>
+        <a class="reference external" href="http://bugs.python.org/issue2775">
+         Issue 2775
+        </a>
+        <a class="footnote-reference" href="#id39" id="id40">
+         [25]
+        </a>
+       </dt>
+       <dd>
+        <p class="first last">
+         Master tracking issue
+        </p>
+       </dd>
+      </dl>
+     </li>
+     <li>
+      <dl class="first docutils">
+       <dt>
+        <a class="reference external" href="http://bugs.python.org/issue2828">
+         Issue 2828
+        </a>
+        <a class="footnote-reference" href="#id41" id="id42">
+         [26]
+        </a>
+       </dt>
+       <dd>
+        <p class="first last">
+         clean up undoc.rst
+        </p>
+       </dd>
+      </dl>
+     </li>
+    </ul>
+   </div>
+   <div class="section" id="for-modules-to-be-removed">
+    <h2>
+     <a class="toc-backref" href="#id69">
+      For modules to be removed
+     </a>
+    </h2>
+    <p>
+     For module removals, it is easiest to remove the module first in
+Python 3.0 to see where dependencies exist. This makes finding
+code that (possibly) requires the suppression of the
+DeprecationWarning easier.
+    </p>
+    <div class="section" id="in-python-3-0">
+     <h3>
+      <a class="toc-backref" href="#id70">
+       In Python 3.0
+      </a>
+     </h3>
+     <ol class="arabic simple">
+      <li>
+       Remove the module.
+      </li>
+      <li>
+       Remove related tests.
+      </li>
+      <li>
+       Remove all documentation (typically the module's documentation
+file and its entry in a file for the Library Reference).
+      </li>
+      <li>
+       Edit
+       <tt class="docutils literal">
+        Modules/Setup.dist
+       </tt>
+       and
+       <tt class="docutils literal">
+        setup.py
+       </tt>
+       if needed.
+      </li>
+      <li>
+       Run the regression test suite (using
+       <tt class="docutils literal">
+        <span class="pre">
+         -uall
+        </span>
+       </tt>
+       ); watch out for
+tests that are skipped because an import failed for the removed
+module.
+      </li>
+      <li>
+       Check in the change (with an appropriate
+       <tt class="docutils literal">
+        Misc/NEWS
+       </tt>
+       entry).
+      </li>
+      <li>
+       Update this PEP noting that the 3.0 step is done.
+      </li>
+     </ol>
+    </div>
+    <div class="section" id="in-python-2-6">
+     <h3>
+      <a class="toc-backref" href="#id71">
+       In Python 2.6
+      </a>
+     </h3>
+     <ol class="arabic">
+      <li>
+       <p class="first">
+        Add the following code to the deprecated module if it is
+implemented in Python as the first piece of executed code
+(adjusting the module name and the
+        <tt class="docutils literal">
+         warnings
+        </tt>
+        import and
+needed):
+       </p>
+       <pre class="literal-block">
+from warnings import warnpy3k
+warnpy3k("the XXX module has been removed in Python 3.0",
+         stacklevel=2)
+del warnpy3k
+</pre>
+       <p>
+        or the following if it is an extension module:
+       </p>
+       <pre class="literal-block">
+if (PyErr_WarnPy3k("the XXX module has been removed in "
+                      "Python 3.0", 2) &lt; 0)
+       return;
+</pre>
+       <p>
+        (the Python-Dev TextMate bundle, available from
+        <tt class="docutils literal">
+         Misc/TextMate
+        </tt>
+        ,
+contains a command that will generate all of this for you).
+       </p>
+      </li>
+      <li>
+       <p class="first">
+        Update the documentation. For modules with their own documentation
+file, use the
+        <tt class="docutils literal">
+         :deprecated:
+        </tt>
+        option with the
+        <tt class="docutils literal">
+         module
+        </tt>
+        directive
+along with the
+        <tt class="docutils literal">
+         deprecated
+        </tt>
+        directive, stating the deprecation
+is occurring in 2.6, but is for the module's removal in 3.0.:
+       </p>
+       <pre class="literal-block">
+.. deprecated:: 2.6
+   The :mod:`XXX` module has been removed in Python 3.0.
+</pre>
+       <p>
+        For modules simply listed in a file (e.g.,
+        <tt class="docutils literal">
+         undoc.rst
+        </tt>
+        ), use the
+        <tt class="docutils literal">
+         warning
+        </tt>
+        directive.
+       </p>
+      </li>
+      <li>
+       <p class="first">
+        Add the module to the module deletion test in
+        <tt class="docutils literal">
+         test_py3kwarn
+        </tt>
+        .
+       </p>
+      </li>
+      <li>
+       <dl class="first docutils">
+        <dt>
+         Suppress the warning in the module's test code using
+        </dt>
+        <dd>
+         <p class="first last">
+          <tt class="docutils literal">
+           test.test_support.import_module(name, deprecated=True)
+          </tt>
+          .
+         </p>
+        </dd>
+       </dl>
+      </li>
+      <li>
+       <p class="first">
+        Check in the change w/ appropriate
+        <tt class="docutils literal">
+         Misc/NEWS
+        </tt>
+        entry (
+        <strong>
+         block
+        </strong>
+        this checkin in
+        <tt class="docutils literal">
+         py3k
+        </tt>
+        !).
+       </p>
+      </li>
+      <li>
+       <p class="first">
+        Update this PEP noting that the 2.6 step is done.
+       </p>
+      </li>
+     </ol>
+    </div>
+   </div>
+   <div class="section" id="renaming-of-modules">
+    <h2>
+     <a class="toc-backref" href="#id72">
+      Renaming of modules
+     </a>
+    </h2>
+    <p>
+     Support in the 2to3 refactoring tool for renames will be used to help
+people transition to new module names
+     <a class="footnote-reference" href="#to3" id="id36">
+      [15]
+     </a>
+     .  Import statements will be rewritten so that only the import
+statement and none of the rest of the code needs to be touched.  This
+will be accomplished by using the
+     <tt class="docutils literal">
+      as
+     </tt>
+     keyword in import statements
+to bind in the module namespace to the old name while importing based
+on the new name (when the keyword is not already used, otherwise the
+re-assigned name should be left alone and only the module that is
+imported needs to be changed). The
+     <tt class="docutils literal">
+      fix_imports
+     </tt>
+     fixer is an
+example of how to approach this.
+    </p>
+    <div class="section" id="python-3-0">
+     <h3>
+      <a class="toc-backref" href="#id73">
+       Python 3.0
+      </a>
+     </h3>
+     <ol class="arabic simple">
+      <li>
+       Update 2to3 in the sandbox to support the rename.
+      </li>
+      <li>
+       Use
+       <tt class="docutils literal">
+        svn move
+       </tt>
+       to rename the module.
+      </li>
+      <li>
+       Update all import statements in the stdlib to use the new name
+(use 2to3's
+       <tt class="docutils literal">
+        fix_imports
+       </tt>
+       fixer for the easiest solution).
+      </li>
+      <li>
+       Rename the module in its own documentation.
+      </li>
+      <li>
+       Update all references in the documentation from the old name to
+the new name.
+      </li>
+      <li>
+       Run
+       <tt class="docutils literal">
+        regrtest.py
+        <span class="pre">
+         -uall
+        </span>
+       </tt>
+       to verify the rename worked.
+      </li>
+      <li>
+       Add an entry in
+       <tt class="docutils literal">
+        Misc/NEWS
+       </tt>
+       .
+      </li>
+      <li>
+       Commit the changes.
+      </li>
+     </ol>
+    </div>
+    <div class="section" id="python-2-6">
+     <h3>
+      <a class="toc-backref" href="#id74">
+       Python 2.6
+      </a>
+     </h3>
+     <ol class="arabic">
+      <li>
+       <p class="first">
+        In the module's documentation, add a note mentioning that the module is
+renamed in Python 3.0:
+       </p>
+       <pre class="literal-block">
+.. note::
+   The :mod:`OLDNAME` module has been renamed to :mod:`NEWNAME` in
+   Python 3.0.
+</pre>
+      </li>
+      <li>
+       <p class="first">
+        Commit the documentation change.
+       </p>
+      </li>
+      <li>
+       <p class="first">
+        Block the revision in py3k.
+       </p>
+      </li>
+     </ol>
+    </div>
+   </div>
+  </div>
+  <div class="section" id="open-issues">
+   <h1>
+    <a class="toc-backref" href="#id75">
+     Open Issues
+    </a>
+   </h1>
+   <div class="section" id="renaming-of-modules-maintained-outside-of-the-stdlib">
+    <h2>
+     <a class="toc-backref" href="#id76">
+      Renaming of modules maintained outside of the stdlib
+     </a>
+    </h2>
+    <p>
+     xml.etree.ElementTree not only does not meet
+     <a class="reference external" href="../pep-0008/index.html">
+      PEP 8
+     </a>
+     naming standards
+but it also has an exposed C implementation
+     <a class="footnote-reference" href="#pep-0008" id="id37">
+      [8]
+     </a>
+     .  It is an
+externally maintained package, though
+     <a class="footnote-reference" href="#pep-0360" id="id38">
+      [10]
+     </a>
+     .  A request will be
+made for the maintainer to change the name so that it matches
+     <a class="reference external" href="../pep-0008/index.html">
+      PEP 8
+     </a>
+     and hides the C implementation.
+    </p>
+   </div>
+  </div>
+  <div class="section" id="rejected-ideas">
+   <h1>
+    <a class="toc-backref" href="#id77">
+     Rejected Ideas
+    </a>
+   </h1>
+   <div class="section" id="modules-that-were-originally-suggested-for-removal">
+    <h2>
+     <a class="toc-backref" href="#id78">
+      Modules that were originally suggested for removal
+     </a>
+    </h2>
+    <ul>
+     <li>
+      <p class="first">
+       asynchat/asyncore
+      </p>
+      <ul class="simple">
+       <li>
+        Josiah Carlson has said he will maintain the modules.
+       </li>
+      </ul>
+     </li>
+     <li>
+      <p class="first">
+       audioop/sunau/aifc
+      </p>
+      <blockquote>
+       <ul class="simple">
+        <li>
+         Audio modules where the formats are still used.
+        </li>
+       </ul>
+      </blockquote>
+     </li>
+     <li>
+      <p class="first">
+       base64/quopri/uu
+      </p>
+      <ul class="simple">
+       <li>
+        All still widely used.
+       </li>
+       <li>
+        'codecs' module does not provide as nice of an API for basic
+usage.
+       </li>
+      </ul>
+     </li>
+     <li>
+      <p class="first">
+       fileinput
+      </p>
+      <ul class="simple">
+       <li>
+        Useful when having to work with stdin.
+       </li>
+      </ul>
+     </li>
+     <li>
+      <p class="first">
+       linecache
+      </p>
+      <blockquote>
+       <ul class="simple">
+        <li>
+         Used internally in several places.
+        </li>
+       </ul>
+      </blockquote>
+     </li>
+     <li>
+      <p class="first">
+       nis
+      </p>
+      <ul class="simple">
+       <li>
+        Testimonials from people that new installations of NIS are still
+occurring
+       </li>
+      </ul>
+     </li>
+     <li>
+      <p class="first">
+       getopt
+      </p>
+      <ul class="simple">
+       <li>
+        Simpler than optparse.
+       </li>
+      </ul>
+     </li>
+     <li>
+      <p class="first">
+       repr
+      </p>
+      <ul class="simple">
+       <li>
+        Useful as a basis for overriding.
+       </li>
+       <li>
+        Used internally.
+       </li>
+      </ul>
+     </li>
+     <li>
+      <p class="first">
+       sched
+      </p>
+      <ul class="simple">
+       <li>
+        Useful for simulations.
+       </li>
+      </ul>
+     </li>
+     <li>
+      <p class="first">
+       symtable/_symtable
+      </p>
+      <ul class="simple">
+       <li>
+        Docs were written.
+       </li>
+      </ul>
+     </li>
+     <li>
+      <p class="first">
+       telnetlib
+      </p>
+      <ul class="simple">
+       <li>
+        Really handy for quick-and-dirty remote access.
+       </li>
+       <li>
+        Some hardware supports using telnet for configuration and
+querying.
+       </li>
+      </ul>
+     </li>
+     <li>
+      <p class="first">
+       Tkinter
+      </p>
+      <ul class="simple">
+       <li>
+        Would prevent IDLE from existing.
+       </li>
+       <li>
+        No GUI toolkit would be available out of the box.
+       </li>
+      </ul>
+     </li>
+    </ul>
+   </div>
+   <div class="section" id="introducing-a-new-top-level-package">
+    <h2>
+     <a class="toc-backref" href="#id79">
+      Introducing a new top-level package
+     </a>
+    </h2>
+    <p>
+     It has been suggested that the entire stdlib be placed within its own
+package.  This PEP will not address this issue as it has its own
+design issues (naming, does it deserve special consideration in import
+semantics, etc.).  Everything within this PEP can easily be handled if
+a new top-level package is introduced.
+    </p>
+   </div>
+   <div class="section" id="introducing-new-packages-to-contain-theme-related-modules">
+    <h2>
+     <a class="toc-backref" href="#id80">
+      Introducing new packages to contain theme-related modules
+     </a>
+    </h2>
+    <p>
+     During the writing of this PEP it was noticed that certain themes
+appeared in the stdlib.  In the past people have suggested introducing
+new packages to help collect modules that share a similar theme (e.g.,
+audio).  An Open Issue was created to suggest some new packages to
+introduce.
+    </p>
+    <p>
+     In the end, though, not enough support could be pulled together to
+warrant moving forward with the idea.  Instead name simplification has
+been chosen as the guiding force for PEPs to create.
+    </p>
+   </div>
+  </div>
+  <div class="section" id="references">
+   <h1>
+    <a class="toc-backref" href="#id81">
+     References
+    </a>
+   </h1>
+   <table class="docutils footnote" frame="void" id="pep-0004" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id3">
+        [7]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="../pep-0004/index.html">
+        PEP 4
+       </a>
+       : Deprecation of Standard Modules
+(
+       <a class="reference external" href="../pep-0004/index.html">
+        http://www.python.org/dev/peps/pep-0004/
+       </a>
+       )
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="pep-0008" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       [8]
+      </td>
+      <td>
+       <em>
+        (
+        <a class="fn-backref" href="#id1">
+         1
+        </a>
+        ,
+        <a class="fn-backref" href="#id16">
+         2
+        </a>
+        ,
+        <a class="fn-backref" href="#id17">
+         3
+        </a>
+        ,
+        <a class="fn-backref" href="#id37">
+         4
+        </a>
+        )
+       </em>
+       <a class="reference external" href="../pep-0008/index.html">
+        PEP 8
+       </a>
+       : Style Guide for Python Code
+(
+       <a class="reference external" href="../pep-0008/index.html">
+        http://www.python.org/dev/peps/pep-0008/
+       </a>
+       )
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="pep-0324" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       [9]
+      </td>
+      <td>
+       <em>
+        (
+        <a class="fn-backref" href="#id10">
+         1
+        </a>
+        ,
+        <a class="fn-backref" href="#id14">
+         2
+        </a>
+        )
+       </em>
+       <a class="reference external" href="../pep-0324/index.html">
+        PEP 324
+       </a>
+       : subprocess -- New process module
+(
+       <a class="reference external" href="../pep-0324/index.html">
+        http://www.python.org/dev/peps/pep-0324/
+       </a>
+       )
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="pep-0360" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id38">
+        [10]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="../pep-0360/index.html">
+        PEP 360
+       </a>
+       : Externally Maintained Packages
+(
+       <a class="reference external" href="../pep-0360/index.html">
+        http://www.python.org/dev/peps/pep-0360/
+       </a>
+       )
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="module-index" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       [11]
+      </td>
+      <td>
+       Python Documentation: Global Module Index
+(
+       <a class="reference external" href="http://docs.python.org/modindex.html">
+        http://docs.python.org/modindex.html
+       </a>
+       )
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="silly-old-stuff" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id2">
+        [12]
+       </a>
+      </td>
+      <td>
+       Python-Dev email: "Py3k release schedule worries"
+(
+       <a class="reference external" href="http://mail.python.org/pipermail/python-3000/2006-December/005130.html">
+        http://mail.python.org/pipermail/python-3000/2006-December/005130.html
+       </a>
+       )
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="thread-deprecation" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id15">
+        [13]
+       </a>
+      </td>
+      <td>
+       Python-Dev email: Autoloading?
+(
+       <a class="reference external" href="http://mail.python.org/pipermail/python-dev/2005-October/057244.html">
+        http://mail.python.org/pipermail/python-dev/2005-October/057244.html
+       </a>
+       )
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="py-dev-summary-2004-11-01" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       [14]
+      </td>
+      <td>
+       Python-Dev Summary: 2004-11-01
+(
+       <a class="reference external" href="http://www.python.org/dev/summary/2004-11-01_2004-11-15/#id10">
+        http://www.python.org/dev/summary/2004-11-01_2004-11-15/#id10
+       </a>
+       )
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="to3" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id36">
+        [15]
+       </a>
+      </td>
+      <td>
+       2to3 refactoring tool
+(
+       <a class="reference external" href="http://svn.python.org/view/sandbox/trunk/2to3/">
+        http://svn.python.org/view/sandbox/trunk/2to3/
+       </a>
+       )
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="pyopengl" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id5">
+        [16]
+       </a>
+      </td>
+      <td>
+       PyOpenGL
+(
+       <a class="reference external" href="http://pyopengl.sourceforge.net/">
+        http://pyopengl.sourceforge.net/
+       </a>
+       )
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="pil" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       [17]
+      </td>
+      <td>
+       <em>
+        (
+        <a class="fn-backref" href="#id7">
+         1
+        </a>
+        ,
+        <a class="fn-backref" href="#id8">
+         2
+        </a>
+        ,
+        <a class="fn-backref" href="#id13">
+         3
+        </a>
+        )
+       </em>
+       Python Imaging Library (PIL)
+(
+       <a class="reference external" href="http://www.pythonware.com/products/pil/">
+        http://www.pythonware.com/products/pil/
+       </a>
+       )
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="twisted" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       [18]
+      </td>
+      <td>
+       Twisted
+(
+       <a class="reference external" href="http://twistedmatrix.com/trac/">
+        http://twistedmatrix.com/trac/
+       </a>
+       )
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="irix-retirement" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id4">
+        [19]
+       </a>
+      </td>
+      <td>
+       SGI Press Release:
+End of General Availability for MIPS IRIX Products -- December 2006
+(
+       <a class="reference external" href="http://www.sgi.com/support/mips_irix.html">
+        http://www.sgi.com/support/mips_irix.html
+       </a>
+       )
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="irix-forms" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id6">
+        [20]
+       </a>
+      </td>
+      <td>
+       FORMS Library by Mark Overmars
+(
+       <a class="reference external" href="ftp://ftp.cs.ruu.nl/pub/SGI/FORMS">
+        ftp://ftp.cs.ruu.nl/pub/SGI/FORMS
+       </a>
+       )
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="sun-au" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       [21]
+      </td>
+      <td>
+       Wikipedia: Au file format
+(
+       <a class="reference external" href="http://en.wikipedia.org/wiki/Au_file_format">
+        http://en.wikipedia.org/wiki/Au_file_format
+       </a>
+       )
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="appscript" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id9">
+        [22]
+       </a>
+      </td>
+      <td>
+       appscript
+(
+       <a class="reference external" href="http://appscript.sourceforge.net/">
+        http://appscript.sourceforge.net/
+       </a>
+       )
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="ast" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id12">
+        [23]
+       </a>
+      </td>
+      <td>
+       _ast module
+(
+       <a class="reference external" href="http://docs.python.org/library/ast.html">
+        http://docs.python.org/library/ast.html
+       </a>
+       )
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="ast-removal" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id11">
+        [24]
+       </a>
+      </td>
+      <td>
+       python-dev email: getting compiler package failures
+(
+       <a class="reference external" href="http://mail.python.org/pipermail/python-3000/2007-May/007615.html">
+        http://mail.python.org/pipermail/python-3000/2007-May/007615.html
+       </a>
+       )
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id39" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id40">
+        [25]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="http://bugs.python.org/issue2775">
+        http://bugs.python.org/issue2775
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id41" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id42">
+        [26]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="http://bugs.python.org/issue2828">
+        http://bugs.python.org/issue2828
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id43" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id44">
+        [27]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="http://pypi.python.org/">
+        http://pypi.python.org/
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+  </div>
+  <div class="section" id="copyright">
+   <h1>
+    <a class="toc-backref" href="#id82">
+     Copyright
+    </a>
+   </h1>
+   <p>
+    This document has been placed in the public domain.
+   </p>
+   <!-- Local Variables:
+mode: indented-text
+indent-tabs-mode: nil
+sentence-end-double-space: t
+fill-column: 70
+coding: utf-8
+End: -->
+  </div>
+ </body>
+
+<!-- Mirrored from www.python.org/dev/peps/pep-3108/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 03 Sep 2015 04:35:14 GMT -->
+</html>Source: <a href="https://hg.python.org/peps/file/tip/pep-3108.txt">https://hg.python.org/peps/file/tip/pep-3108.txt</a>
+
+    </article>
+
+
+                </section>
+
+                
+
+
+<aside class="left-sidebar" role="secondary">
+
+    
+
+
+
+
+
+
+    
+
+
+
+
+
+        <div class="twitter-widget sidebar-widget">
+        <a class="twitter-timeline" data-dnt="true" href="https://twitter.com/ThePSF" data-widget-id="434113224703610882">Tweets by @ThePSF</a>
+        <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+    </div>
+
+    <div class="psf-sidebar-widget sidebar-widget">
+        <h3 class="widget-title">The PSF</h3>
+<p>The Python Software Foundation is the organization behind Python. Become a member of the PSF and help advance the software and our mission. </p>
+
+    </div>
+
+</aside>
+
+
+
+                
+                
+
+
+            </div><!-- end .container -->
+        </div><!-- end #content .content-wrapper -->
+
+        <!-- Footer and social media list -->
+        <footer id="site-map" class="main-footer" role="contentinfo">
+            <div class="main-footer-links">
+                <div class="container">
+
+                    
+                    <a id="back-to-top-1" class="jump-link" href="#python-network"><span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> Back to Top</a>
+
+                    
+
+<ul class="sitemap navigation menu do-not-print" role="tree" id="container">
+    
+    <li class="tier-1 element-1">
+        <a href="https://www.python.org/about/" >About</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/apps/" title="">Applications</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/quotes/" title="">Quotes</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/gettingstarted/" title="">Getting Started</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/help/" title="">Help</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-2">
+        <a href="https://www.python.org/downloads/" >Downloads</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/downloads/" title="">All releases</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/downloads/source/" title="">Source code</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/downloads/windows/" title="">Windows</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/downloads/mac-osx/" title="">Mac OS X</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/download/other/" title="">Other Platforms</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://docs.python.org/3/license.html" title="">License</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/download/alternatives" title="">Alternative Implementations</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-3">
+        <a href="https://www.python.org/doc/" >Documentation</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/doc/" title="">Docs</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/doc/av" title="">Audio/Visual Talks</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://wiki.python.org/moin/BeginnersGuide" title="">Beginner&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://docs.python.org/faq/" title="">FAQ</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="http://wiki.python.org/moin/Languages" title="">Non-English Docs</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="../index.html" title="">PEP Index</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://wiki.python.org/moin/PythonBooks" title="">Python Books</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-4">
+        <a href="https://www.python.org/community/" >Community</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/community/diversity/" title="">Diversity</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/community/irc/" title="">IRC</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/community/lists/" title="">Mailing Lists</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/workshops/" title="">Python Conferences</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/community/sigs/" title="">Special Interest Groups</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://wiki.python.org/moin/" title="">Python Wiki</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/community/logos/" title="">Python Logo</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://www.python.org/community/merchandise/" title="">Merchandise</a></li>
+    
+        <li class="tier-2 element-9" role="treeitem"><a href="https://www.python.org/community/awards" title="">Community Awards</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-5">
+        <a href="https://www.python.org/about/success/" title="success-stories">Success Stories</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/success/#arts" title="">Arts</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/success/#business" title="">Business</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/success/#education" title="">Education</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/success/#engineering" title="">Engineering</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/about/success/#government" title="">Government</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://www.python.org/about/success/#scientific" title="">Scientific</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/about/success/#software-development" title="">Software Development</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-6">
+        <a href="https://www.python.org/blogs/" title="News from around the Python world">News</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/blogs/" title="Python Insider Blog Posts">Python News</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://planetpython.org/" title="Planet Python">Community News</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="http://pyfound.blogspot.com/" title="PSF Blog">PSF News</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pycon.blogspot.com/" title="PyCon Blog">PyCon News</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-7">
+        <a href="https://www.python.org/events/" >Events</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/events/python-events/" title="">Python Events</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/events/python-user-group/" title="">User Group Events</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/events/python-events/past/" title="">Python Events Archive</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/events/python-user-group/past/" title="">User Group Events Archive</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://wiki.python.org/moin/PythonEventsCalendar#Submitting_an_Event" title="">Submit an Event</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-8">
+        <a href="https://www.python.org/dev/" >Contributing</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="http://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://bugs.python.org/" title="">Issue Tracker</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://mail.python.org/mailman/listinfo/python-dev" title="">python-dev list</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pythonmentors.com/" title="">Core Mentorship</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+</ul>
+
+
+                    <a id="back-to-top-2" class="jump-link" href="#python-network"><span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> Back to Top</a>
+                    
+
+                </div><!-- end .container -->
+            </div> <!-- end .main-footer-links -->
+
+            <div class="site-base">
+                <div class="container">
+                    
+                    <ul class="footer-links navigation menu do-not-print" role="tree">
+                        <li class="tier-1 element-1"><a href="https://www.python.org/about/help/">Help &amp; <span class="say-no-more">General</span> Contact</a></li>
+                        <li class="tier-1 element-2"><a href="https://www.python.org/community/diversity/">Diversity <span class="say-no-more">Initiatives</span></a></li>
+                        <li class="tier-1 element-3"><a href="https://github.com/python/pythondotorg/issues">Submit Website Bug</a></li>
+                        <!--<li class="tier-1 element-3"><a href="#"><span class="say-no-more">Website</span> Colophon</a></li>-->
+                    </ul>
+
+                    <div class="copyright">
+                        <p><small>
+                            <span class="pre">Copyright &copy;2001-2015.</span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/psf-landing/">Python Software Foundation</a></span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/about/legal/">Legal Statements</a></span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/privacy/">Privacy Policy</a></span>
+                        </small></p>
+                    </div>
+
+                </div><!-- end .container -->
+            </div><!-- end .site-base -->
+
+        </footer>
+
+    </div><!-- end #touchnav-wrapper -->
+
+    
+    <script src="../../../../ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="../../../static/js/libs/jquery-1.8.2.min.js"><\/script>')</script>
+
+    <script src="../../../static/js/libs/masonry.pkgd.min.js"></script>
+
+    <script type="text/javascript" src="../../../static/js/main-min.js" charset="utf-8"></script>
+    
+
+    <!--[if lte IE 7]>
+    <script type="text/javascript" src="/static/js/plugins/IE8-min.js" charset="utf-8"></script>
+    
+    
+    <![endif]-->
+
+    <!--[if lte IE 8]>
+    <script type="text/javascript" src="/static/js/plugins/getComputedStyle-min.js" charset="utf-8"></script>
+    
+    
+    <![endif]-->
+
+    
+
+    
+    
+
+</body>
+</html>

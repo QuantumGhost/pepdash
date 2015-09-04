@@ -1,0 +1,3328 @@
+<!doctype html>
+<!--[if lt IE 7]>   <html class="no-js ie6 lt-ie7 lt-ie8 lt-ie9">   <![endif]-->
+<!--[if IE 7]>      <html class="no-js ie7 lt-ie8 lt-ie9">          <![endif]-->
+<!--[if IE 8]>      <html class="no-js ie8 lt-ie9">                 <![endif]-->
+<!--[if gt IE 8]><!--><html class="no-js" lang="en" dir="ltr">  <!--<![endif]-->
+
+
+<!-- Mirrored from www.python.org/dev/peps/pep-0495/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 03 Sep 2015 04:33:44 GMT -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <link rel="prefetch" href="../../../../ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js">
+
+    <meta name="application-name" content="Python.org">
+    <meta name="msapplication-tooltip" content="The official home of the Python Programming Language">
+    <meta name="apple-mobile-web-app-title" content="Python.org">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="format-detection" content="telephone=no">
+    <meta http-equiv="cleartype" content="on">
+    <meta http-equiv="imagetoolbar" content="false">
+
+    <script src="../../../static/js/libs/modernizr.js"></script>
+
+    <link href="../../../static/stylesheets/style.css" rel="stylesheet" type="text/css" title="default" />
+    <link href="../../../static/stylesheets/mq.css" rel="stylesheet" type="text/css" media="not print, braille, embossed, speech, tty" />
+    
+
+    <!--[if (lte IE 8)&(!IEMobile)]>
+    <link href="/static/stylesheets/no-mq.css" rel="stylesheet" type="text/css" media="screen" />
+    
+    
+    <![endif]-->
+
+    
+    <link rel="icon" type="image/x-icon" href="https://www.python.org/static/favicon.ico">
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="../../../static/apple-touch-icon-144x144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="../../../static/apple-touch-icon-114x114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="../../../static/apple-touch-icon-72x72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="../../../static/apple-touch-icon-precomposed.png">
+    <link rel="apple-touch-icon" href="../../../static/apple-touch-icon-precomposed.png">
+
+    
+    <meta name="msapplication-TileImage" content="/static/metro-icon-144x144-precomposed.png"><!-- white shape -->
+    <meta name="msapplication-TileColor" content="#3673a5"><!-- python blue -->
+    <meta name="msapplication-navbutton-color" content="#3673a5">
+
+    <meta property="og:site_name" content="Python.org">
+    <meta property="og:type" content="website">
+
+    <title>PEP 0495 -- Local Time Disambiguation | Python.org</title>
+    <meta property="og:title" content="Welcome to Python.org">
+
+    
+    <meta name="description" content="The official home of the Python Programming Language">
+    <meta name="og:description" content="The official home of the Python Programming Language">
+    <meta name="keywords" content="Python programming language object oriented web free open source software license documentation download community">
+    <meta property="og:tag" content="Python programming language object oriented web free open source software license documentation download community">
+    <meta property="og:published_time" content="">
+    <meta property="og:modified_time" content="">
+    <meta property="og:author" content="">
+    <meta property="og:section" content=""> 
+    <meta property="og:url" content="">
+    <meta property="og:image" content="">
+    <meta property="og:video" content="">
+
+    <link rel="author" href="https://www.python.org/static/humans.txt">
+
+    
+
+    
+    <script type="application/ld+json">
+     {
+       "@context": "http://schema.org",
+       "@type": "WebSite",
+       "url": "https://www.python.org/",
+       "potentialAction": {
+         "@type": "SearchAction",
+         "target": "https://www.python.org/search/?q={search_term_string}",
+         "query-input": "required name=search_term_string"
+       }
+     }
+    </script>
+
+    
+    <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-39055973-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+    </script>
+    
+</head>
+
+<body class="python pages pep-page">
+
+    <div id="touchnav-wrapper">
+
+        <div id="nojs" class="do-not-print">
+            <p><strong>Notice:</strong> While Javascript is not essential for this website, your interaction with the content will be limited. Please turn Javascript on for the full experience. </p>
+        </div>
+
+        <!--[if lt IE 8]>
+        <div id="oldie-warning" class="do-not-print">
+            <p><strong>Notice:</strong> Your browser is <em>ancient</em> and <a href="http://www.ie6countdown.com/">Microsoft agrees</a>. <a href="http://browsehappy.com/">Upgrade to a different browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to experience a better web.</p>
+        </div>
+        <![endif]-->
+
+        <!-- Sister Site Links -->
+        <div id="top" class="top-bar do-not-print">
+
+            <nav class="meta-navigation container" role="navigation">
+
+                
+                <div class="skip-link screen-reader-text">
+                    <a href="#content" title="Skip to content">Skip to content</a>
+                </div>
+
+                
+                <a id="close-python-network" class="jump-link" href="#python-network" aria-hidden="true">
+                    <span aria-hidden="true" class="icon-arrow-down"><span>&#9660;</span></span> Close
+                </a>
+
+                
+
+<ul class="menu" role="tree">
+    
+    <li class="python-meta ">
+        <a href="https://www.python.org/" title="The Python Programming Language" >Python</a>
+    </li>
+    
+    <li class="psf-meta ">
+        <a href="https://www.python.org/psf-landing/" title="The Python Software Foundation" >PSF</a>
+    </li>
+    
+    <li class="docs-meta ">
+        <a href="https://docs.python.org/" title="Python Documentation" >Docs</a>
+    </li>
+    
+    <li class="pypi-meta ">
+        <a href="https://pypi.python.org/" title="Python Package Index" >PyPI</a>
+    </li>
+    
+    <li class="jobs-meta ">
+        <a href="https://www.python.org/jobs/" title="Python Job Board" >Jobs</a>
+    </li>
+    
+    <li class="shop-meta ">
+        <a href="https://www.python.org/community/" title="Python Community" >Community</a>
+    </li>
+    
+</ul>
+
+
+                <a id="python-network" class="jump-link" href="#top" aria-hidden="true">
+                    <span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> The Python Network
+                </a>
+
+            </nav>
+
+        </div>
+
+        <!-- Header elements -->
+        <header class="main-header" role="banner">
+            <div class="container">
+
+                <h1 class="site-headline">
+                    <a href="https://www.python.org/"><img class="python-logo" src="../../../static/img/python-logo.png" alt="python&trade;"></a>
+                </h1>
+
+                <div class="options-bar do-not-print">
+
+                    
+                    <a id="site-map-link" class="jump-to-menu" href="#site-map"><span class="menu-icon">&equiv;</span> Menu</a><form class="search-the-site" action="https://www.python.org/search/" method="get">
+                        <fieldset title="Search Python.org">
+
+                            <span aria-hidden="true" class="icon-search"></span>
+
+                            <label class="screen-reader-text" for="id-search-field">Search This Site</label>
+                            <input id="id-search-field" name="q" type="search" role="textbox" class="search-field" placeholder="Search" value="" tabindex="1">
+
+                            <button type="submit" name="submit" id="submit" class="search-button" title="Submit this Search" tabindex="3">
+                                GO
+                            </button>
+
+                            
+                            <!--[if IE]><input type="text" style="display: none;" disabled="disabled" size="1" tabindex="4"><![endif]-->
+
+                        </fieldset>
+                    </form><span class="breaker"></span><div class="adjust-font-size" aria-hidden="true">
+                        <ul class="navigation menu" aria-label="Adjust Text Size on Page">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                <a href="#" class="action-trigger"><strong><small>A</small> A</strong></a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a class="text-shrink" title="Make Text Smaller" href="javascript:;">Smaller</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a class="text-grow" title="Make Text Larger" href="javascript:;">Larger</a></li>
+                                    <li class="tier-2 element-3" role="treeitem"><a class="text-reset" title="Reset any font size changes I have made" href="javascript:;">Reset</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div><div class="winkwink-nudgenudge">
+                        <ul class="navigation menu" aria-label="Social Media Navigation">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                <a href="#" class="action-trigger">Socialize</a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a href="http://plus.google.com/+Python"><span aria-hidden="true" class="icon-google-plus"></span>Google+</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a href="http://www.facebook.com/pythonlang?fref=ts"><span aria-hidden="true" class="icon-facebook"></span>Facebook</a></li>
+                                    <li class="tier-2 element-3" role="treeitem"><a href="http://twitter.com/ThePSF"><span aria-hidden="true" class="icon-twitter"></span>Twitter</a></li>
+                                    <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/irc/"><span aria-hidden="true" class="icon-freenode"></span>Chat on IRC</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div><div class="account-signin">
+                        <ul class="navigation menu" aria-label="Social Media Navigation">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                
+                                <a href="https://www.python.org/accounts/login/" title="Sign Up or Sign In to Python.org">Sign In</a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/accounts/signup/">Sign Up / Register</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/accounts/login/">Sign In</a></li>
+                                </ul>
+                                
+                            </li>
+                        </ul>
+                    </div>
+
+                </div><!-- end options-bar -->
+
+                <nav id="mainnav" class="python-navigation main-navigation do-not-print" role="navigation">
+                    
+                        
+<ul class="navigation menu" role="menubar" aria-label="Main Navigation">
+  
+    
+    
+    <li id="about" class="tier-1 element-1  " aria-haspopup="true">
+        <a href="https://www.python.org/about/" title="" class="">About</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/apps/" title="">Applications</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/quotes/" title="">Quotes</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/gettingstarted/" title="">Getting Started</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/help/" title="">Help</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="downloads" class="tier-1 element-2  " aria-haspopup="true">
+        <a href="https://www.python.org/downloads/" title="" class="">Downloads</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/downloads/" title="">All releases</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/downloads/source/" title="">Source code</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/downloads/windows/" title="">Windows</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/downloads/mac-osx/" title="">Mac OS X</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/download/other/" title="">Other Platforms</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://docs.python.org/3/license.html" title="">License</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/download/alternatives" title="">Alternative Implementations</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="documentation" class="tier-1 element-3  " aria-haspopup="true">
+        <a href="https://www.python.org/doc/" title="" class="">Documentation</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/doc/" title="">Docs</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/doc/av" title="">Audio/Visual Talks</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://wiki.python.org/moin/BeginnersGuide" title="">Beginner&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://docs.python.org/faq/" title="">FAQ</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="http://wiki.python.org/moin/Languages" title="">Non-English Docs</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="../index.html" title="">PEP Index</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://wiki.python.org/moin/PythonBooks" title="">Python Books</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="community" class="tier-1 element-4  " aria-haspopup="true">
+        <a href="https://www.python.org/community/" title="" class="">Community</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/community/diversity/" title="">Diversity</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/community/irc/" title="">IRC</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/community/lists/" title="">Mailing Lists</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/workshops/" title="">Python Conferences</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/community/sigs/" title="">Special Interest Groups</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://wiki.python.org/moin/" title="">Python Wiki</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/community/logos/" title="">Python Logo</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://www.python.org/community/merchandise/" title="">Merchandise</a></li>
+    
+        <li class="tier-2 element-9" role="treeitem"><a href="https://www.python.org/community/awards" title="">Community Awards</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="success-stories" class="tier-1 element-5  " aria-haspopup="true">
+        <a href="https://www.python.org/about/success/" title="success-stories" class="">Success Stories</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/success/#arts" title="">Arts</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/success/#business" title="">Business</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/success/#education" title="">Education</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/success/#engineering" title="">Engineering</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/about/success/#government" title="">Government</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://www.python.org/about/success/#scientific" title="">Scientific</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/about/success/#software-development" title="">Software Development</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="news" class="tier-1 element-6  " aria-haspopup="true">
+        <a href="https://www.python.org/blogs/" title="News from around the Python world" class="">News</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/blogs/" title="Python Insider Blog Posts">Python News</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://planetpython.org/" title="Planet Python">Community News</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="http://pyfound.blogspot.com/" title="PSF Blog">PSF News</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pycon.blogspot.com/" title="PyCon Blog">PyCon News</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="events" class="tier-1 element-7  " aria-haspopup="true">
+        <a href="https://www.python.org/events/" title="" class="">Events</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/events/python-events/" title="">Python Events</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/events/python-user-group/" title="">User Group Events</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/events/python-events/past/" title="">Python Events Archive</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/events/python-user-group/past/" title="">User Group Events Archive</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://wiki.python.org/moin/PythonEventsCalendar#Submitting_an_Event" title="">Submit an Event</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    
+  
+</ul>
+
+                    
+                </nav>
+
+                <div class="header-banner "> <!-- for optional "do-not-print" class -->
+                    
+                    
+                </div>
+
+                
+                
+
+             </div><!-- end .container -->
+        </header>
+
+        <div id="content" class="content-wrapper">
+            <!-- Main Content Column -->
+            <div class="container">
+
+                <section class="main-content with-left-sidebar" role="main">
+
+                    
+<ul class="breadcrumbs menu">
+    <li>
+        <a href="https://www.python.org/" title="The Python Programming Language">Python</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>
+        <a href="https://www.python.org/dev/">Python Developer's Guide</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>
+        <a href="../index.html">PEP Index</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>PEP 0495 -- Local Time Disambiguation</li>
+</ul>
+
+
+                    
+<style>
+   .pep-page pre {
+        padding: .5em;
+        background: inherit;
+        border-left: 0px;
+        -webkit-box-shadow: 0 0 0 0;
+        -moz-box-shadow: 0 0 0 0;
+        box-shadow: 0 0 0 0;
+   }
+</style>
+
+    
+    <article class="text">
+        
+
+        <header class="article-header">
+            <h1 class="page-title">PEP 0495 -- Local Time Disambiguation</h1>
+        </header>
+
+        <!--
+This HTML is auto-generated.  DO NOT EDIT THIS FILE!  If you are writing a new
+PEP, see http://www.python.org/dev/peps/pep-0001 for instructions and links
+to templates.  DO NOT USE THIS HTML FILE AS YOUR TEMPLATE!
+-->
+<html>
+ <body>
+  <table class="rfc2822 docutils field-list" frame="void" rules="none">
+   <col class="field-name">
+   </col>
+   <col class="field-body">
+   </col>
+   <tbody valign="top">
+    <tr class="field">
+     <th class="field-name">
+      PEP:
+     </th>
+     <td class="field-body">
+      495
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Title:
+     </th>
+     <td class="field-body">
+      Local Time Disambiguation
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Author:
+     </th>
+     <td class="field-body">
+      Alexander Belopolsky &lt;alexander.belopolsky at gmail.com&gt;, Tim Peters &lt;tim.peters at gmail.com&gt;
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Discussions-To:
+     </th>
+     <td class="field-body">
+      Datetime-SIG &lt;
+      <a class="reference external" href="mailto:datetime-sig@python.org?subject=PEP%20495">
+       datetime-sig at python.org
+      </a>
+      &gt;
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Status:
+     </th>
+     <td class="field-body">
+      Draft
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Type:
+     </th>
+     <td class="field-body">
+      Standards Track
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Created:
+     </th>
+     <td class="field-body">
+      02-Aug-2015
+     </td>
+    </tr>
+   </tbody>
+  </table>
+  <hr/>
+  <div class="contents topic" id="contents">
+   <p class="topic-title first">
+    Contents
+   </p>
+   <ul class="simple">
+    <li>
+     <a class="reference internal" href="#abstract" id="id20">
+      Abstract
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#rationale" id="id21">
+      Rationale
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#terminology" id="id22">
+      Terminology
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#proposal" id="id23">
+      Proposal
+     </a>
+     <ul>
+      <li>
+       <a class="reference internal" href="#the-fold-attribute" id="id24">
+        The "fold" attribute
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#affected-apis" id="id25">
+        Affected APIs
+       </a>
+       <ul>
+        <li>
+         <a class="reference internal" href="#attributes" id="id26">
+          Attributes
+         </a>
+        </li>
+        <li>
+         <a class="reference internal" href="#constructors" id="id27">
+          Constructors
+         </a>
+        </li>
+        <li>
+         <a class="reference internal" href="#methods" id="id28">
+          Methods
+         </a>
+        </li>
+        <li>
+         <a class="reference internal" href="#c-api" id="id29">
+          C-API
+         </a>
+        </li>
+       </ul>
+      </li>
+      <li>
+       <a class="reference internal" href="#affected-behaviors" id="id30">
+        Affected Behaviors
+       </a>
+       <ul>
+        <li>
+         <a class="reference internal" href="#what-time-is-it" id="id31">
+          What time is it?
+         </a>
+        </li>
+        <li>
+         <a class="reference internal" href="#conversion-from-naive-to-aware" id="id32">
+          Conversion from naive to aware
+         </a>
+        </li>
+        <li>
+         <a class="reference internal" href="#conversion-from-posix-seconds-from-epoch" id="id33">
+          Conversion from POSIX seconds from EPOCH
+         </a>
+        </li>
+        <li>
+         <a class="reference internal" href="#conversion-to-posix-seconds-from-epoch" id="id34">
+          Conversion to POSIX seconds from EPOCH
+         </a>
+        </li>
+        <li>
+         <a class="reference internal" href="#aware-datetime-instances" id="id35">
+          Aware datetime instances
+         </a>
+        </li>
+        <li>
+         <a class="reference internal" href="#combining-and-splitting-date-and-time" id="id36">
+          Combining and splitting date and time
+         </a>
+        </li>
+        <li>
+         <a class="reference internal" href="#pickles" id="id37">
+          Pickles
+         </a>
+        </li>
+       </ul>
+      </li>
+     </ul>
+    </li>
+    <li>
+     <a class="reference internal" href="#implementations-of-tzinfo-in-the-standard-library" id="id38">
+      Implementations of tzinfo in the Standard Library
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#guidelines-for-new-tzinfo-implementations" id="id39">
+      Guidelines for New tzinfo Implementations
+     </a>
+     <ul>
+      <li>
+       <a class="reference internal" href="#ignorance-is-bliss" id="id40">
+        Ignorance is Bliss
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#in-the-dst-fold" id="id41">
+        In the DST Fold
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#mind-the-dst-gap" id="id42">
+        Mind the DST Gap
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#non-dst-folds-and-gaps" id="id43">
+        Non-DST Folds and Gaps
+       </a>
+      </li>
+     </ul>
+    </li>
+    <li>
+     <a class="reference internal" href="#temporal-arithmetic" id="id44">
+      Temporal Arithmetic
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#backward-and-forward-compatibility" id="id45">
+      Backward and Forward Compatibility
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#questions-and-answers" id="id46">
+      Questions and Answers
+     </a>
+     <ul>
+      <li>
+       <a class="reference internal" href="#why-not-call-the-new-flag-isdst" id="id47">
+        Why not call the new flag "isdst"?
+       </a>
+       <ul>
+        <li>
+         <a class="reference internal" href="#a-non-technical-answer" id="id48">
+          A non-technical answer
+         </a>
+        </li>
+        <li>
+         <a class="reference internal" href="#a-technical-reason" id="id49">
+          A technical reason
+         </a>
+        </li>
+       </ul>
+      </li>
+      <li>
+       <a class="reference internal" href="#why-fold" id="id50">
+        Why "fold"?
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#what-is-first" id="id51">
+        What is "first"?
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#are-two-values-enough" id="id52">
+        Are two values enough?
+       </a>
+       <ul>
+        <li>
+         <a class="reference internal" href="#backward-compatibility" id="id53">
+          Backward Compatibility
+         </a>
+        </li>
+        <li>
+         <a class="reference internal" href="#analogy-with-tm-isdst" id="id54">
+          Analogy with tm_isdst
+         </a>
+        </li>
+        <li>
+         <a class="reference internal" href="#strict-invalid-time-checking" id="id55">
+          Strict Invalid Time Checking
+         </a>
+        </li>
+       </ul>
+      </li>
+     </ul>
+    </li>
+    <li>
+     <a class="reference internal" href="#implementation" id="id56">
+      Implementation
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#id9" id="id57">
+      References
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#copyright" id="id58">
+      Copyright
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#picture-credit" id="id59">
+      Picture Credit
+     </a>
+    </li>
+   </ul>
+  </div>
+  <div class="section" id="abstract">
+   <h1>
+    <a class="toc-backref" href="#id20">
+     Abstract
+    </a>
+   </h1>
+   <p>
+    This PEP adds a new attribute
+    <tt class="docutils literal">
+     fold
+    </tt>
+    to the instances of
+    <tt class="docutils literal">
+     datetime.time
+    </tt>
+    and
+    <tt class="docutils literal">
+     datetime.datetime
+    </tt>
+    classes that can be used
+to differentiate between two moments in time for which local times are
+the same.  The allowed values for the
+    <cite>
+     fold
+    </cite>
+    attribute will be 0 and 1
+with 0 corresponding to the earlier and 1 to the later of the two
+possible readings of an ambiguous local time.
+   </p>
+   <div class="sidebar">
+    <p class="first sidebar-title">
+     US public service advertisement
+    </p>
+    <img alt="pep-0495-daylightsavings.png" class="last align-center" src="../../../m/dev/peps/pep-0495/pep-0495-daylightsavings.png" style="width: 95%;"/>
+   </div>
+  </div>
+  <div class="section" id="rationale">
+   <h1>
+    <a class="toc-backref" href="#id21">
+     Rationale
+    </a>
+   </h1>
+   <p>
+    In the most world locations there have been and will be times when
+local clocks are moved back.
+    <a class="footnote-reference" href="#id2" id="id1">
+     [1]
+    </a>
+    In those times, intervals are
+introduced in which local clocks show the same time twice in the same
+day.  In these situations, the information displayed on a local clock
+(or stored in a Python datetime instance) is insufficient to identify
+a particular moment in time.  The proposed solution is to add an
+attribute to the
+    <tt class="docutils literal">
+     datetime
+    </tt>
+    instances taking values of 0 and 1 that
+will enumerate the two ambiguous times.
+   </p>
+   <table class="docutils footnote" frame="void" id="id2" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id1">
+        [1]
+       </a>
+      </td>
+      <td>
+       <p class="first">
+        People who live in locations observing the Daylight Saving
+Time (DST) move their clocks back (usually one hour) every Fall.
+       </p>
+       <p>
+        It is less common, but occasionally clocks can be moved back for
+other reasons.  For example, Ukraine skipped the spring-forward
+transition in March 1990 and instead, moved their clocks back on
+July 1, 1990, switching from Moscow Time to Eastern European Time.
+In that case, standard (winter) time was in effect before and after
+the transition.
+       </p>
+       <p class="last">
+        Both DST and standard time changes may result in time shifts other
+than an hour.
+       </p>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+  </div>
+  <div class="section" id="terminology">
+   <h1>
+    <a class="toc-backref" href="#id22">
+     Terminology
+    </a>
+   </h1>
+   <p>
+    When clocks are moved back, we say that a
+    <em>
+     fold
+    </em>
+    <a class="footnote-reference" href="#id4" id="id3">
+     [2]
+    </a>
+    is created in time.
+When the clocks are moved forward, a
+    <em>
+     gap
+    </em>
+    is created.  A local time
+that falls in the fold is called
+    <em>
+     ambiguous
+    </em>
+    .  A local time that falls
+in the gap is called
+    <em>
+     missing
+    </em>
+    .
+   </p>
+   <table class="docutils footnote" frame="void" id="id4" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id3">
+        [2]
+       </a>
+      </td>
+      <td>
+       The term "fall-backward fold" was invented in 1990s by Paul Eggert
+of UCLA who used it in various Internet discussions related to the C language
+standard that culminated in a
+       <a class="reference external" href="http://www.open-std.org/jtc1/sc22/wg14/docs/rr/dr_136.html">
+        Defect Report #139
+       </a>
+       <a class="footnote-reference" href="#id10" id="id11">
+        [5]
+       </a>
+       .
+      </td>
+     </tr>
+    </tbody>
+   </table>
+  </div>
+  <div class="section" id="proposal">
+   <h1>
+    <a class="toc-backref" href="#id23">
+     Proposal
+    </a>
+   </h1>
+   <div class="section" id="the-fold-attribute">
+    <h2>
+     <a class="toc-backref" href="#id24">
+      The "fold" attribute
+     </a>
+    </h2>
+    <p>
+     We propose adding an attribute called
+     <tt class="docutils literal">
+      fold
+     </tt>
+     to the instances
+of
+     <tt class="docutils literal">
+      datetime.time
+     </tt>
+     and
+     <tt class="docutils literal">
+      datetime.datetime
+     </tt>
+     classes.  This attribute
+should have the value 0 for all instances except those that
+represent the second (chronologically) moment in time in an ambiguous
+case. For those instances, the value will be 1.
+     <a class="footnote-reference" href="#id6" id="id5">
+      [3]
+     </a>
+    </p>
+    <table class="docutils footnote" frame="void" id="id6" rules="none">
+     <colgroup>
+      <col class="label">
+      </col>
+      <col>
+      </col>
+     </colgroup>
+     <tbody valign="top">
+      <tr>
+       <td class="label">
+        <a class="fn-backref" href="#id5">
+         [3]
+        </a>
+       </td>
+       <td>
+        An instance that has
+        <tt class="docutils literal">
+         fold=1
+        </tt>
+        in a non-ambiguous case is
+said to represent an invalid time (or is invalid for short), but
+users are not prevented from creating invalid instances by passing
+        <tt class="docutils literal">
+         fold=1
+        </tt>
+        to a constructor or to a
+        <tt class="docutils literal">
+         replace()
+        </tt>
+        method.  This
+is similar to the current situation with the instances that fall in
+the spring-forward gap.  Such instances don't represent any valid
+time, but neither the constructors nor the
+        <tt class="docutils literal">
+         replace()
+        </tt>
+        methods
+check whether the instances that they produce are valid.  Moreover,
+this PEP specifies how various functions should behave when given an
+invalid instance.
+       </td>
+      </tr>
+     </tbody>
+    </table>
+    <img alt="pep-0495-fold.png" class="align-center" src="../../../m/dev/peps/pep-0495/pep-0495-fold.png" style="width: 60%;"/>
+   </div>
+   <div class="section" id="affected-apis">
+    <h2>
+     <a class="toc-backref" href="#id25">
+      Affected APIs
+     </a>
+    </h2>
+    <div class="section" id="attributes">
+     <h3>
+      <a class="toc-backref" href="#id26">
+       Attributes
+      </a>
+     </h3>
+     <p>
+      Instances of
+      <tt class="docutils literal">
+       datetime.time
+      </tt>
+      and
+      <tt class="docutils literal">
+       datetime.datetime
+      </tt>
+      classes will
+get a new attribute
+      <tt class="docutils literal">
+       fold
+      </tt>
+      with two possible values: 0 and 1.
+     </p>
+    </div>
+    <div class="section" id="constructors">
+     <h3>
+      <a class="toc-backref" href="#id27">
+       Constructors
+      </a>
+     </h3>
+     <p>
+      The
+      <tt class="docutils literal">
+       __new__
+      </tt>
+      methods of the
+      <tt class="docutils literal">
+       datetime.time
+      </tt>
+      and
+      <tt class="docutils literal">
+       datetime.datetime
+      </tt>
+      classes will get a new keyword-only argument
+called
+      <tt class="docutils literal">
+       fold
+      </tt>
+      with the default value 0.  The value of the
+      <tt class="docutils literal">
+       fold
+      </tt>
+      argument will be used to initialize the value of the
+      <tt class="docutils literal">
+       fold
+      </tt>
+      attribute in the returned instance.
+     </p>
+    </div>
+    <div class="section" id="methods">
+     <h3>
+      <a class="toc-backref" href="#id28">
+       Methods
+      </a>
+     </h3>
+     <p>
+      The
+      <tt class="docutils literal">
+       replace()
+      </tt>
+      methods of the
+      <tt class="docutils literal">
+       datetime.time
+      </tt>
+      and
+      <tt class="docutils literal">
+       datetime.datetime
+      </tt>
+      classes will get a new keyword-only argument
+called
+      <tt class="docutils literal">
+       fold
+      </tt>
+      .  It will
+behave similarly to the other
+      <tt class="docutils literal">
+       replace()
+      </tt>
+      arguments: if the
+      <tt class="docutils literal">
+       fold
+      </tt>
+      argument is specified and given a value 0 or 1, the new instance
+returned by
+      <tt class="docutils literal">
+       replace()
+      </tt>
+      will have its
+      <tt class="docutils literal">
+       fold
+      </tt>
+      attribute set
+to that value.  In CPython, any non-integer value of
+      <tt class="docutils literal">
+       fold
+      </tt>
+      will
+raise a
+      <tt class="docutils literal">
+       TypeError
+      </tt>
+      , but other implementations may allow the value
+      <tt class="docutils literal">
+       None
+      </tt>
+      to behave the same as when
+      <tt class="docutils literal">
+       fold
+      </tt>
+      is not given.  If the
+      <tt class="docutils literal">
+       fold
+      </tt>
+      argument is not specified, the original value of the
+      <tt class="docutils literal">
+       fold
+      </tt>
+      attribute is copied to the result.
+     </p>
+    </div>
+    <div class="section" id="c-api">
+     <h3>
+      <a class="toc-backref" href="#id29">
+       C-API
+      </a>
+     </h3>
+     <p>
+      Access macros will be defined to extract the value of
+      <tt class="docutils literal">
+       fold
+      </tt>
+      from
+      <tt class="docutils literal">
+       PyDateTime_DateTime
+      </tt>
+      and
+      <tt class="docutils literal">
+       PyDateTime_Time
+      </tt>
+      objects.
+     </p>
+     <pre class="code literal-block">
+int PyDateTime_GET_FOLD(PyDateTime_DateTime *o)
+</pre>
+     <p>
+      Return the value of
+      <tt class="docutils literal">
+       fold
+      </tt>
+      as a C
+      <tt class="docutils literal">
+       int
+      </tt>
+      .
+     </p>
+     <pre class="code literal-block">
+int PyDateTime_TIME_GET_FOLD(PyDateTime_Time *o)
+</pre>
+     <p>
+      Return the value of
+      <tt class="docutils literal">
+       fold
+      </tt>
+      as a C
+      <tt class="docutils literal">
+       int
+      </tt>
+      .
+     </p>
+     <p>
+      New constructors will be defined that will take an additional
+argument to specify the value of
+      <tt class="docutils literal">
+       fold
+      </tt>
+      in the created
+instance:
+     </p>
+     <pre class="code literal-block">
+PyObject* PyDateTime_FromDateAndTimeAndFold(int year, int month, int day, int hour, int minute, int second, int usecond, int fold)
+</pre>
+     <p>
+      Return a
+      <tt class="docutils literal">
+       datetime.datetime
+      </tt>
+      object with the specified year, month,
+day, hour, minute, second, microsecond and fold.
+     </p>
+     <pre class="code literal-block">
+PyObject* PyTime_FromTimeAndFold(int hour, int minute, int second, int usecond, int fold)
+</pre>
+     <p>
+      Return a
+      <tt class="docutils literal">
+       datetime.time
+      </tt>
+      object with the specified hour, minute,
+second, microsecond and fold.
+     </p>
+    </div>
+   </div>
+   <div class="section" id="affected-behaviors">
+    <h2>
+     <a class="toc-backref" href="#id30">
+      Affected Behaviors
+     </a>
+    </h2>
+    <div class="section" id="what-time-is-it">
+     <h3>
+      <a class="toc-backref" href="#id31">
+       What time is it?
+      </a>
+     </h3>
+     <p>
+      The
+      <tt class="docutils literal">
+       datetime.now()
+      </tt>
+      method called with no arguments, will set
+      <tt class="docutils literal">
+       fold=1
+      </tt>
+      when returning the second of the two ambiguous times in a
+system local time fold.  When called with a
+      <tt class="docutils literal">
+       tzinfo
+      </tt>
+      argument, the
+value of the
+      <tt class="docutils literal">
+       fold
+      </tt>
+      will be determined by the
+      <tt class="docutils literal">
+       tzinfo.fromutc()
+      </tt>
+      implementation.  If an instance of the
+      <tt class="docutils literal">
+       datetime.timezone
+      </tt>
+      class
+(
+      <em>
+       e.g.
+      </em>
+      <tt class="docutils literal">
+       datetime.timezone.utc
+      </tt>
+      ) is passed as
+      <tt class="docutils literal">
+       tzinfo
+      </tt>
+      , the
+returned datetime instance will always have
+      <tt class="docutils literal">
+       fold=0
+      </tt>
+      .
+     </p>
+    </div>
+    <div class="section" id="conversion-from-naive-to-aware">
+     <h3>
+      <a class="toc-backref" href="#id32">
+       Conversion from naive to aware
+      </a>
+     </h3>
+     <p>
+      The
+      <tt class="docutils literal">
+       astimezone()
+      </tt>
+      method will now work for naive
+      <tt class="docutils literal">
+       self
+      </tt>
+      .  The
+system local timezone will be assumed in this case and the
+      <tt class="docutils literal">
+       fold
+      </tt>
+      flag will be used to determine which local timezone is in effect
+in the ambiguous case.
+     </p>
+     <p>
+      For example, on a system set to US/Eastern timezone:
+     </p>
+     <pre class="literal-block">
+&gt;&gt;&gt; dt = datetime(2014, 11, 2, 1, 30)
+&gt;&gt;&gt; dt.astimezone().strftime('%D %T %Z%z')
+'11/02/14 01:30:00 EDT-0400'
+&gt;&gt;&gt; dt.replace(fold=1).astimezone().strftime('%D %T %Z%z')
+'11/02/14 01:30:00 EST-0500'
+</pre>
+    </div>
+    <div class="section" id="conversion-from-posix-seconds-from-epoch">
+     <h3>
+      <a class="toc-backref" href="#id33">
+       Conversion from POSIX seconds from EPOCH
+      </a>
+     </h3>
+     <p>
+      The
+      <tt class="docutils literal">
+       fromtimestamp()
+      </tt>
+      static method of
+      <tt class="docutils literal">
+       datetime.datetime
+      </tt>
+      will
+set the
+      <tt class="docutils literal">
+       fold
+      </tt>
+      attribute appropriately in the returned object.
+     </p>
+     <p>
+      For example, on a system set to US/Eastern timezone:
+     </p>
+     <pre class="literal-block">
+&gt;&gt;&gt; datetime.fromtimestamp(1414906200)
+datetime.datetime(2014, 11, 2, 1, 30)
+&gt;&gt;&gt; datetime.fromtimestamp(1414906200 + 3600)
+datetime.datetime(2014, 11, 2, 1, 30, fold=1)
+</pre>
+    </div>
+    <div class="section" id="conversion-to-posix-seconds-from-epoch">
+     <h3>
+      <a class="toc-backref" href="#id34">
+       Conversion to POSIX seconds from EPOCH
+      </a>
+     </h3>
+     <p>
+      The
+      <tt class="docutils literal">
+       timestamp()
+      </tt>
+      method of
+      <tt class="docutils literal">
+       datetime.datetime
+      </tt>
+      will return different
+values for
+      <tt class="docutils literal">
+       datetime.datetime
+      </tt>
+      instances that differ only by the value
+of their
+      <tt class="docutils literal">
+       fold
+      </tt>
+      attribute if and only if these instances represent an
+ambiguous or a missing time.
+     </p>
+     <p>
+      When a
+      <tt class="docutils literal">
+       datetime.datetime
+      </tt>
+      instance
+      <tt class="docutils literal">
+       dt
+      </tt>
+      represents an ambiguous
+time, there are two values
+      <tt class="docutils literal">
+       s0
+      </tt>
+      and
+      <tt class="docutils literal">
+       s1
+      </tt>
+      such that:
+     </p>
+     <pre class="literal-block">
+datetime.fromtimestamp(s0) == datetime.fromtimestamp(s1) == dt
+</pre>
+     <p>
+      In this case,
+      <tt class="docutils literal">
+       dt.timestamp()
+      </tt>
+      will return the smaller of
+      <tt class="docutils literal">
+       s0
+      </tt>
+      and
+      <tt class="docutils literal">
+       s1
+      </tt>
+      values if
+      <tt class="docutils literal">
+       dt.fold == True
+      </tt>
+      and the larger otherwise.
+     </p>
+     <p>
+      For example, on a system set to US/Eastern timezone:
+     </p>
+     <pre class="literal-block">
+&gt;&gt;&gt; datetime(2014, 11, 2, 1, 30, fold=0).timestamp()
+1414906200.0
+&gt;&gt;&gt; datetime(2014, 11, 2, 1, 30, fold=1).timestamp()
+1414909800.0
+</pre>
+     <p>
+      When a
+      <tt class="docutils literal">
+       datetime.datetime
+      </tt>
+      instance
+      <tt class="docutils literal">
+       dt
+      </tt>
+      represents a missing
+time, there is no value
+      <tt class="docutils literal">
+       s
+      </tt>
+      for which:
+     </p>
+     <pre class="literal-block">
+datetime.fromtimestamp(s) == dt
+</pre>
+     <p>
+      but we can form two "nice to know" values of
+      <tt class="docutils literal">
+       s
+      </tt>
+      that differ
+by the size of the gap in seconds.  One is the value of
+      <tt class="docutils literal">
+       s
+      </tt>
+      that would correspond to
+      <tt class="docutils literal">
+       dt
+      </tt>
+      in a timezone where the UTC offset
+is always the same as the offset right before the gap and the
+other is the similar value but in a timezone the  UTC offset
+is always the same as the offset right after the gap.
+     </p>
+     <p>
+      The value returned by
+      <tt class="docutils literal">
+       dt.timestamp()
+      </tt>
+      given a missing
+      <tt class="docutils literal">
+       dt
+      </tt>
+      will be the greater of the two "nice to know" values
+if
+      <tt class="docutils literal">
+       dt.fold == 0
+      </tt>
+      and the smaller otherwise.
+     </p>
+     <p>
+      For example, on a system set to US/Eastern timezone:
+     </p>
+     <pre class="literal-block">
+&gt;&gt;&gt; datetime(2015, 3, 8, 2, 30, fold=0).timestamp()
+1425799800.0
+&gt;&gt;&gt; datetime(2015, 3, 8, 2, 30, fold=1).timestamp()
+1425796200.0
+</pre>
+    </div>
+    <div class="section" id="aware-datetime-instances">
+     <h3>
+      <a class="toc-backref" href="#id35">
+       Aware datetime instances
+      </a>
+     </h3>
+     <p>
+      Users of pre-PEP implementations of
+      <tt class="docutils literal">
+       tzinfo
+      </tt>
+      will not see any
+changes in the behavior of their aware datetime instances.  Two such
+instances that differ only by the value of the
+      <tt class="docutils literal">
+       fold
+      </tt>
+      attribute will
+not be distinguishable by any means other than an explicit access to
+the
+      <tt class="docutils literal">
+       fold
+      </tt>
+      value.
+     </p>
+     <p>
+      On the other hand, if object's
+      <tt class="docutils literal">
+       tzinfo
+      </tt>
+      is set to a fold-aware
+implementation, then the value of
+      <tt class="docutils literal">
+       fold
+      </tt>
+      will affect the result of
+several methods but only if the corresponding time is in a fold or in
+a gap:
+      <tt class="docutils literal">
+       utcoffset()
+      </tt>
+      ,
+      <tt class="docutils literal">
+       dst()
+      </tt>
+      ,
+      <tt class="docutils literal">
+       tzname()
+      </tt>
+      ,
+      <tt class="docutils literal">
+       astimezone()
+      </tt>
+      ,
+      <tt class="docutils literal">
+       strftime()
+      </tt>
+      (if "%Z" or "%z" directive is used in the format
+specification),
+      <tt class="docutils literal">
+       isoformat()
+      </tt>
+      , and
+      <tt class="docutils literal">
+       timetuple()
+      </tt>
+      .
+     </p>
+    </div>
+    <div class="section" id="combining-and-splitting-date-and-time">
+     <h3>
+      <a class="toc-backref" href="#id36">
+       Combining and splitting date and time
+      </a>
+     </h3>
+     <p>
+      The
+      <tt class="docutils literal">
+       datetime.datetime.combine()
+      </tt>
+      method will copy the value of the
+      <tt class="docutils literal">
+       fold
+      </tt>
+      attribute to the resulting
+      <tt class="docutils literal">
+       datetime.datetime
+      </tt>
+      instance.
+     </p>
+     <p>
+      The
+      <tt class="docutils literal">
+       datetime.datetime.time()
+      </tt>
+      method will copy the value of the
+      <tt class="docutils literal">
+       fold
+      </tt>
+      attribute to the resulting
+      <tt class="docutils literal">
+       datetime.time
+      </tt>
+      instance.
+     </p>
+    </div>
+    <div class="section" id="pickles">
+     <h3>
+      <a class="toc-backref" href="#id37">
+       Pickles
+      </a>
+     </h3>
+     <p>
+      Pickle sizes for the
+      <tt class="docutils literal">
+       datetime.datetime
+      </tt>
+      and
+      <tt class="docutils literal">
+       datetime.time
+      </tt>
+      objects will not change.  The
+      <tt class="docutils literal">
+       fold
+      </tt>
+      value will be encoded in the
+first bit of the 5th byte of the
+      <tt class="docutils literal">
+       datetime.datetime
+      </tt>
+      pickle payload
+or the 2nd byte of the datetime.time. In the
+      <a class="reference external" href="https://hg.python.org/cpython/file/d3b20bff9c5d/Include/datetime.h#l17">
+       current implementation
+      </a>
+      <a class="footnote-reference" href="#id12" id="id13">
+       [6]
+      </a>
+      these bytes are used to store minute value (0-59) and the first bit is
+always 0.  (This change only affects pickle format.  In the C
+implementation, the
+      <tt class="docutils literal">
+       fold
+      </tt>
+      attribute will get a full byte to store its
+value.)
+     </p>
+    </div>
+   </div>
+  </div>
+  <div class="section" id="implementations-of-tzinfo-in-the-standard-library">
+   <h1>
+    <a class="toc-backref" href="#id38">
+     Implementations of tzinfo in the Standard Library
+    </a>
+   </h1>
+   <p>
+    No new implementations of
+    <tt class="docutils literal">
+     datetime.tzinfo
+    </tt>
+    abstract class are
+proposed in this PEP.  The existing (fixed offset) timezones do
+not introduce ambiguous local times and their
+    <tt class="docutils literal">
+     utcoffset()
+    </tt>
+    implementation will return the same constant value as they do now
+regardless of the value of
+    <tt class="docutils literal">
+     fold
+    </tt>
+    .
+   </p>
+   <p>
+    The basic implementation of
+    <tt class="docutils literal">
+     fromutc()
+    </tt>
+    in the abstract
+    <tt class="docutils literal">
+     datetime.tzinfo
+    </tt>
+    class will not change.  It is currently not
+used anywhere in the stdlib because the only included
+    <tt class="docutils literal">
+     tzinfo
+    </tt>
+    implementation (the
+    <tt class="docutils literal">
+     datetime.timzeone
+    </tt>
+    class implementing fixed
+offset timezones) override
+    <tt class="docutils literal">
+     fromutc()
+    </tt>
+    .
+   </p>
+  </div>
+  <div class="section" id="guidelines-for-new-tzinfo-implementations">
+   <h1>
+    <a class="toc-backref" href="#id39">
+     Guidelines for New tzinfo Implementations
+    </a>
+   </h1>
+   <p>
+    Implementors of concrete
+    <tt class="docutils literal">
+     datetime.tzinfo
+    </tt>
+    subclasses who want to
+support variable UTC offsets (due to DST and other causes) should follow
+these guidelines.
+   </p>
+   <div class="section" id="ignorance-is-bliss">
+    <h2>
+     <a class="toc-backref" href="#id40">
+      Ignorance is Bliss
+     </a>
+    </h2>
+    <p>
+     New implementations of
+     <tt class="docutils literal">
+      utcoffset()
+     </tt>
+     ,
+     <tt class="docutils literal">
+      tzname()
+     </tt>
+     and
+     <tt class="docutils literal">
+      dst()
+     </tt>
+     methods should ignore the value of
+     <tt class="docutils literal">
+      fold
+     </tt>
+     unless they are called on
+the ambiguous or missing times.
+    </p>
+   </div>
+   <div class="section" id="in-the-dst-fold">
+    <h2>
+     <a class="toc-backref" href="#id41">
+      In the DST Fold
+     </a>
+    </h2>
+    <p>
+     New subclasses should override the base-class
+     <tt class="docutils literal">
+      fromutc()
+     </tt>
+     method and
+implement it so that in all cases where two UTC times
+     <tt class="docutils literal">
+      u1
+     </tt>
+     and
+     <tt class="docutils literal">
+      u2
+     </tt>
+     (
+     <tt class="docutils literal">
+      u1
+     </tt>
+     &lt;
+     <tt class="docutils literal">
+      u2
+     </tt>
+     ) correspond to the same local time
+     <tt class="docutils literal">
+      fromutc(u1)
+     </tt>
+     will return an instance with
+     <tt class="docutils literal">
+      fold=0
+     </tt>
+     and
+     <tt class="docutils literal">
+      fromutc(u2)
+     </tt>
+     will return an instance with
+     <tt class="docutils literal">
+      fold=1
+     </tt>
+     .  In all
+other cases the returned instance should have
+     <tt class="docutils literal">
+      fold=0
+     </tt>
+     .
+    </p>
+    <p>
+     On an ambiguous time introduced at the end of DST, the values returned
+by
+     <tt class="docutils literal">
+      utcoffset()
+     </tt>
+     and
+     <tt class="docutils literal">
+      dst()
+     </tt>
+     methods should be as follows
+    </p>
+    <table border="1" class="docutils">
+     <colgroup>
+      <col width="33%">
+      </col>
+      <col width="31%">
+      </col>
+      <col width="35%">
+      </col>
+     </colgroup>
+     <thead valign="bottom">
+      <tr>
+       <th class="head">
+       </th>
+       <th class="head">
+        fold=0
+       </th>
+       <th class="head">
+        fold=1
+       </th>
+      </tr>
+     </thead>
+     <tbody valign="top">
+      <tr>
+       <td>
+        utcoffset()
+       </td>
+       <td>
+        stdoff + dstoff
+       </td>
+       <td>
+        stdoff
+       </td>
+      </tr>
+      <tr>
+       <td>
+        dst()
+       </td>
+       <td>
+        dstoff
+       </td>
+       <td>
+        zero
+       </td>
+      </tr>
+     </tbody>
+    </table>
+    <p>
+     where
+     <tt class="docutils literal">
+      stdoff
+     </tt>
+     is the standard (non-DST) offset,
+     <tt class="docutils literal">
+      dstoff
+     </tt>
+     is the
+DST correction (typically
+     <tt class="docutils literal">
+      dstoff = timedelta(hours=1)
+     </tt>
+     ) and
+     <tt class="docutils literal">
+      zero
+= timedelta(0)
+     </tt>
+     .
+    </p>
+   </div>
+   <div class="section" id="mind-the-dst-gap">
+    <h2>
+     <a class="toc-backref" href="#id42">
+      Mind the DST Gap
+     </a>
+    </h2>
+    <p>
+     On a missing time introduced at the start of DST, the values returned
+by
+     <tt class="docutils literal">
+      utcoffset()
+     </tt>
+     and
+     <tt class="docutils literal">
+      dst()
+     </tt>
+     methods should be as follows
+    </p>
+    <table border="1" class="docutils">
+     <colgroup>
+      <col width="33%">
+      </col>
+      <col width="31%">
+      </col>
+      <col width="35%">
+      </col>
+     </colgroup>
+     <thead valign="bottom">
+      <tr>
+       <th class="head">
+       </th>
+       <th class="head">
+        fold=0
+       </th>
+       <th class="head">
+        fold=1
+       </th>
+      </tr>
+     </thead>
+     <tbody valign="top">
+      <tr>
+       <td>
+        utcoffset()
+       </td>
+       <td>
+        stdoff
+       </td>
+       <td>
+        stdoff + dstoff
+       </td>
+      </tr>
+      <tr>
+       <td>
+        dst()
+       </td>
+       <td>
+        zero
+       </td>
+       <td>
+        dstoff
+       </td>
+      </tr>
+     </tbody>
+    </table>
+   </div>
+   <div class="section" id="non-dst-folds-and-gaps">
+    <h2>
+     <a class="toc-backref" href="#id43">
+      Non-DST Folds and Gaps
+     </a>
+    </h2>
+    <p>
+     On ambiguous/missing times introduced by the change in the standard time
+offset, the
+     <tt class="docutils literal">
+      dst()
+     </tt>
+     method should return the same value regardless of
+the value of
+     <tt class="docutils literal">
+      fold
+     </tt>
+     and the
+     <tt class="docutils literal">
+      utcoffset()
+     </tt>
+     should return values
+according to the following table:
+    </p>
+    <table border="1" class="docutils">
+     <colgroup>
+      <col width="27%">
+      </col>
+      <col width="26%">
+      </col>
+      <col width="47%">
+      </col>
+     </colgroup>
+     <thead valign="bottom">
+      <tr>
+       <th class="head">
+       </th>
+       <th class="head">
+        fold=0
+       </th>
+       <th class="head">
+        fold=1
+       </th>
+      </tr>
+     </thead>
+     <tbody valign="top">
+      <tr>
+       <td>
+        ambiguous
+       </td>
+       <td>
+        oldoff
+       </td>
+       <td>
+        newoff = oldoff - delta
+       </td>
+      </tr>
+      <tr>
+       <td>
+        missing
+       </td>
+       <td>
+        oldoff
+       </td>
+       <td>
+        newoff = oldoff + delta
+       </td>
+      </tr>
+     </tbody>
+    </table>
+    <p>
+     where
+     <tt class="docutils literal">
+      delta
+     </tt>
+     is the size of the fold or the gap.
+    </p>
+   </div>
+  </div>
+  <div class="section" id="temporal-arithmetic">
+   <h1>
+    <a class="toc-backref" href="#id44">
+     Temporal Arithmetic
+    </a>
+   </h1>
+   <p>
+    The value of "fold" will be ignored in all operations except those
+that involve conversion between timezones.
+    <a class="footnote-reference" href="#id8" id="id7">
+     [4]
+    </a>
+    As a consequence,
+    <tt class="docutils literal">
+     datetime.datetime
+    </tt>
+    or
+    <tt class="docutils literal">
+     datetime.time
+    </tt>
+    instances that differ only
+by the value of
+    <tt class="docutils literal">
+     fold
+    </tt>
+    will compare as equal.  Applications that
+need to differentiate between such instances should check the value of
+    <tt class="docutils literal">
+     fold
+    </tt>
+    or convert them to a timezone that does not have ambiguous
+times.
+   </p>
+   <p>
+    The result of addition (subtraction) of a timedelta to (from) a
+datetime will always have
+    <tt class="docutils literal">
+     fold
+    </tt>
+    set to 0 even if the
+original datetime instance had
+    <tt class="docutils literal">
+     fold=1
+    </tt>
+    .
+   </p>
+   <table class="docutils footnote" frame="void" id="id8" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id7">
+        [4]
+       </a>
+      </td>
+      <td>
+       Computing a difference between two aware datetime instances
+with different values of
+       <tt class="docutils literal">
+        tzinfo
+       </tt>
+       involves an implicit timezone
+conversion.  In this case, the result may depend on the value of
+the
+       <tt class="docutils literal">
+        fold
+       </tt>
+       attribute in either of the instances, but only if the
+instance has
+       <tt class="docutils literal">
+        tzinfo
+       </tt>
+       that accounts for the value of
+       <tt class="docutils literal">
+        fold
+       </tt>
+       in its
+       <tt class="docutils literal">
+        utcoffset()
+       </tt>
+       method.
+      </td>
+     </tr>
+    </tbody>
+   </table>
+  </div>
+  <div class="section" id="backward-and-forward-compatibility">
+   <h1>
+    <a class="toc-backref" href="#id45">
+     Backward and Forward Compatibility
+    </a>
+   </h1>
+   <p>
+    This proposal will have little effect on the programs that do not read
+the
+    <tt class="docutils literal">
+     fold
+    </tt>
+    flag explicitly or use tzinfo implementations that do.
+The only visible change for such programs will be that conversions to
+and from POSIX timestamps will now round-trip correctly (up to
+floating point rounding).  Programs that implemented a work-around to
+the old incorrect behavior may need to be modified.
+   </p>
+   <p>
+    Pickles produced by older programs will remain fully forward
+compatible.  Only datetime/time instances with
+    <tt class="docutils literal">
+     fold=1
+    </tt>
+    pickled
+in the new versions will become unreadable by the older Python
+versions.  Pickles of instances with
+    <tt class="docutils literal">
+     fold=0
+    </tt>
+    (which is the
+default) will remain unchanged.
+   </p>
+  </div>
+  <div class="section" id="questions-and-answers">
+   <h1>
+    <a class="toc-backref" href="#id46">
+     Questions and Answers
+    </a>
+   </h1>
+   <div class="section" id="why-not-call-the-new-flag-isdst">
+    <h2>
+     <a class="toc-backref" href="#id47">
+      Why not call the new flag "isdst"?
+     </a>
+    </h2>
+    <div class="section" id="a-non-technical-answer">
+     <h3>
+      <a class="toc-backref" href="#id48">
+       A non-technical answer
+      </a>
+     </h3>
+     <ul class="simple">
+      <li>
+       Alice: Bob - let's have a stargazing party at 01:30 AM tomorrow!
+      </li>
+      <li>
+       Bob: Should I presume initially that Daylight Saving Time is or is
+not in effect for the specified time?
+      </li>
+      <li>
+       Alice: Huh?
+      </li>
+     </ul>
+     <hr class="docutils"/>
+     <ul class="simple">
+      <li>
+       Bob: Alice - let's have a stargazing party at 01:30 AM tomorrow!
+      </li>
+      <li>
+       Alice: You know, Bob, 01:30 AM will happen twice tomorrow. Which time do you have in mind?
+      </li>
+      <li>
+       Bob:  I did not think about it, but let's pick the first.
+      </li>
+     </ul>
+     <hr class="docutils"/>
+     <p>
+      (same characters, an hour later)
+     </p>
+     <hr class="docutils"/>
+     <ul class="simple">
+      <li>
+       Bob: Alice - this Py-O-Clock gadget of mine asks me to choose
+between fold=0 and fold=1 when I set it for tomorrow 01:30 AM.
+What should I do?
+      </li>
+      <li>
+       Alice: I've never hear of a Py-O-Clock, but I guess fold=0 is
+the first 01:30 AM and fold=1 is the second.
+      </li>
+     </ul>
+    </div>
+    <div class="section" id="a-technical-reason">
+     <h3>
+      <a class="toc-backref" href="#id49">
+       A technical reason
+      </a>
+     </h3>
+     <p>
+      While the
+      <tt class="docutils literal">
+       tm_isdst
+      </tt>
+      field of the
+      <tt class="docutils literal">
+       time.struct_time
+      </tt>
+      object can be
+used to disambiguate local times in the fold, the semantics of such
+disambiguation are completely different from the proposal in this PEP.
+     </p>
+     <p>
+      The main problem with the
+      <tt class="docutils literal">
+       tm_isdst
+      </tt>
+      field is that it is impossible
+to know what value is appropriate for
+      <tt class="docutils literal">
+       tm_isdst
+      </tt>
+      without knowing the
+details about the time zone that are only available to the
+      <tt class="docutils literal">
+       tzinfo
+      </tt>
+      implementation.  Thus while
+      <tt class="docutils literal">
+       tm_isdst
+      </tt>
+      is useful in the
+      <em>
+       output
+      </em>
+      of
+methods such as
+      <tt class="docutils literal">
+       time.localtime
+      </tt>
+      , it is cumbersome as an
+      <em>
+       input
+      </em>
+      of
+methods such as
+      <tt class="docutils literal">
+       time.mktime
+      </tt>
+      .
+     </p>
+     <p>
+      If the programmer misspecified a non-negative value of
+      <tt class="docutils literal">
+       tm_isdst
+      </tt>
+      to
+      <tt class="docutils literal">
+       time.mktime
+      </tt>
+      , the result will be time that is 1 hour off and since
+there is rarely a way to know anything about DST
+      <em>
+       before
+      </em>
+      a call to
+      <tt class="docutils literal">
+       time.mktime
+      </tt>
+      is made, the only sane choice is usually
+      <tt class="docutils literal">
+       <span class="pre">
+        tm_isdst=-1
+       </span>
+      </tt>
+      .
+     </p>
+     <p>
+      Unlike
+      <tt class="docutils literal">
+       tm_isdst
+      </tt>
+      , the proposed
+      <tt class="docutils literal">
+       fold
+      </tt>
+      attribute has no effect on
+the interpretation of the datetime instance unless without that
+attribute two (or no) interpretations are possible.
+     </p>
+     <p>
+      Since it would be very confusing to have something called
+      <tt class="docutils literal">
+       isdst
+      </tt>
+      that does not have the same semantics as
+      <tt class="docutils literal">
+       tm_isdst
+      </tt>
+      , we need a
+different name.  Moreover, the
+      <tt class="docutils literal">
+       datetime.datetime
+      </tt>
+      class already has
+a method called
+      <tt class="docutils literal">
+       dst()
+      </tt>
+      and if we called
+      <tt class="docutils literal">
+       fold
+      </tt>
+      "isdst", we would
+necessarily have situations when "isdst" is zero but
+      <tt class="docutils literal">
+       dst()
+      </tt>
+      is not
+or the other way around.
+     </p>
+    </div>
+   </div>
+   <div class="section" id="why-fold">
+    <h2>
+     <a class="toc-backref" href="#id50">
+      Why "fold"?
+     </a>
+    </h2>
+    <p>
+     Suggested by Guido van Rossum and favored by one (but initially
+disfavored by another) author.  A consensus was reached after the
+allowed values for the attribute were changed from False/True to 0/1.
+The noun "fold" has correct connotations and easy mnemonic rules, but
+at the same time does not invite unbased assumptions.
+    </p>
+   </div>
+   <div class="section" id="what-is-first">
+    <h2>
+     <a class="toc-backref" href="#id51">
+      What is "first"?
+     </a>
+    </h2>
+    <p>
+     This was a working name of the attribute chosen initially because the
+obvious alternative ("second") conflicts with the existing attribute.
+It was rejected mostly on the grounds that it would make True a
+default value.
+    </p>
+    <p>
+     The following alternative names have also been considered:
+    </p>
+    <blockquote>
+     <dl class="docutils">
+      <dt>
+       <strong>
+        later
+       </strong>
+      </dt>
+      <dd>
+       A close contender to "fold".  One author dislikes it because
+it is confusable with equally fitting "latter," but in the age
+of auto-completion everywhere this is a small consideration.  A
+stronger objection may be that in the case of missing time, we
+will have
+       <tt class="docutils literal">
+        later=True
+       </tt>
+       instance converted to an earlier time by
+       <tt class="docutils literal">
+        .astimezone(timezone.utc)
+       </tt>
+       that that with
+       <tt class="docutils literal">
+        later=False
+       </tt>
+       .
+Yet again, this can be interpreted as a desirable indication that
+the original time is invalid.
+      </dd>
+      <dt>
+       <strong>
+        which
+       </strong>
+      </dt>
+      <dd>
+       The
+       <a class="reference external" href="https://mail.python.org/pipermail/python-dev/2015-April/139099.html">
+        original
+       </a>
+       <a class="footnote-reference" href="#id14" id="id15">
+        [7]
+       </a>
+       placeholder name for the
+       <cite>
+        localtime
+       </cite>
+       function
+branch index was
+       <a class="reference external" href="https://mail.python.org/pipermail/datetime-sig/2015-August/000479.html">
+        independently proposed
+       </a>
+       <a class="footnote-reference" href="#id16" id="id17">
+        [8]
+       </a>
+       for the name of the
+disambiguation attribute and received
+       <a class="reference external" href="https://mail.python.org/pipermail/datetime-sig/2015-August/000483.html">
+        some support
+       </a>
+       <a class="footnote-reference" href="#id18" id="id19">
+        [9]
+       </a>
+       .
+      </dd>
+      <dt>
+       <strong>
+        repeated
+       </strong>
+      </dt>
+      <dd>
+       Did not receive any support on the mailing list.
+      </dd>
+      <dt>
+       <strong>
+        ltdf
+       </strong>
+      </dt>
+      <dd>
+       (Local Time Disambiguation Flag) - short and no-one will attempt
+to guess what it means without reading the docs.  (Feel free to
+use it in discussions with the meaning ltdf=False is the
+earlier if you don't want to endorse any of the alternatives
+above.)
+      </dd>
+     </dl>
+    </blockquote>
+   </div>
+   <div class="section" id="are-two-values-enough">
+    <h2>
+     <a class="toc-backref" href="#id52">
+      Are two values enough?
+     </a>
+    </h2>
+    <p>
+     Several reasons have been raised to allow a
+     <tt class="docutils literal">
+      None
+     </tt>
+     or -1 value for
+the
+     <tt class="docutils literal">
+      fold
+     </tt>
+     attribute: backward compatibility, analogy with
+     <tt class="docutils literal">
+      tm_isdst
+     </tt>
+     and strict checking for invalid times.
+    </p>
+    <div class="section" id="backward-compatibility">
+     <h3>
+      <a class="toc-backref" href="#id53">
+       Backward Compatibility
+      </a>
+     </h3>
+     <p>
+      It has been suggested that backward compatibility can be improved if
+the default value of the
+      <tt class="docutils literal">
+       fold
+      </tt>
+      flag was
+      <tt class="docutils literal">
+       None
+      </tt>
+      which would
+signal that pre-PEP behavior is requested.  Based on the analysis
+below, we believe that the proposed changes with the
+      <tt class="docutils literal">
+       fold=0
+      </tt>
+      default are sufficiently backward compatible.
+     </p>
+     <p>
+      This PEP provides only three ways for a program to discover that two
+otherwise identical datetime instances have different values of
+      <tt class="docutils literal">
+       fold
+      </tt>
+      : (1) an explicit check of the
+      <tt class="docutils literal">
+       fold
+      </tt>
+      attribute; (2) if
+the instances are naive - conversion to another timezone using the
+      <tt class="docutils literal">
+       astimezone()
+      </tt>
+      method; and (3) conversion to
+      <tt class="docutils literal">
+       float
+      </tt>
+      using the
+      <tt class="docutils literal">
+       timestamp()
+      </tt>
+      method.
+     </p>
+     <p>
+      Since
+      <tt class="docutils literal">
+       fold
+      </tt>
+      is a new attribute, the first option is not available
+to the existing programs.  Note that option (2) only works for naive
+datetimes that happen to be in a fold or a gap in the system time
+zone.  In all other cases, the value of
+      <tt class="docutils literal">
+       fold
+      </tt>
+      will be ignored in
+the conversion unless the instances use a
+      <tt class="docutils literal">
+       fold
+      </tt>
+      -aware
+      <tt class="docutils literal">
+       tzinfo
+      </tt>
+      which would not be available in a pre-PEP program.  Similarly, the
+      <tt class="docutils literal">
+       astimezone()
+      </tt>
+      called on a naive instance will not be available in
+such program because
+      <tt class="docutils literal">
+       astimezone()
+      </tt>
+      does not currently work with
+naive datetimes.
+     </p>
+     <p>
+      This leaves us with only one situation where an existing program can
+start producing diferent results after the implementation of this PEP:
+when a
+      <tt class="docutils literal">
+       datetime.timestamp()
+      </tt>
+      method is called on a naive datetime
+instance that happen to be in the fold or the gap.  In the current
+implementation, the result is undefined.  Depending on the system
+      <tt class="docutils literal">
+       mktime
+      </tt>
+      implementation, the programs can see different results or
+errors in those cases.  With this PEP in place, the value of timestamp
+will be well-defined in those cases but will depend on the value of
+the
+      <tt class="docutils literal">
+       fold
+      </tt>
+      flag.  We consider the change in
+      <tt class="docutils literal">
+       datetime.timestamp()
+      </tt>
+      method behavior a bug fix enabled by this
+PEP.  The old behavior can still be emulated by the users who depend
+on it by writing
+      <tt class="docutils literal">
+       <span class="pre">
+        time.mktime(dt.timetuple())
+       </span>
+       +
+       <span class="pre">
+        1e-6*dt.microsecond
+       </span>
+      </tt>
+      instead of
+      <tt class="docutils literal">
+       dt.timestamp()
+      </tt>
+      .
+     </p>
+    </div>
+    <div class="section" id="analogy-with-tm-isdst">
+     <h3>
+      <a class="toc-backref" href="#id54">
+       Analogy with tm_isdst
+      </a>
+     </h3>
+     <p>
+      The
+      <tt class="docutils literal">
+       time.mktime
+      </tt>
+      interface allows three values for the
+      <tt class="docutils literal">
+       tm_isdst
+      </tt>
+      flag: -1, 0, and 1.  As we explained above, -1 (asking
+      <tt class="docutils literal">
+       mktime
+      </tt>
+      to
+determine whether DST is in effect for the given time from the rest of
+the fields) is the only choice that is useful in practice.
+     </p>
+     <p>
+      With the
+      <tt class="docutils literal">
+       fold
+      </tt>
+      flag, however,
+      <tt class="docutils literal">
+       datetime.timestamp()
+      </tt>
+      will return
+the same value as
+      <tt class="docutils literal">
+       mktime
+      </tt>
+      with
+      <tt class="docutils literal">
+       <span class="pre">
+        tm_isdst=-1
+       </span>
+      </tt>
+      in 99.98% of the
+time for most time zones with DST transitions.  Moreover,
+      <tt class="docutils literal">
+       <span class="pre">
+        tm_isdst=-1
+       </span>
+      </tt>
+      -like behavior is specified
+      <em>
+       regardless
+      </em>
+      of the value
+of
+      <tt class="docutils literal">
+       fold
+      </tt>
+      .
+     </p>
+     <p>
+      It is only in the 0.02% cases (2 hours per year) that the
+      <tt class="docutils literal">
+       datetime.timestamp()
+      </tt>
+      and
+      <tt class="docutils literal">
+       mktime
+      </tt>
+      with
+      <tt class="docutils literal">
+       <span class="pre">
+        tm_isdst=-1
+       </span>
+      </tt>
+      may
+disagree.  However, even in this case, most of the
+      <tt class="docutils literal">
+       mktime
+      </tt>
+      implementations will return the
+      <tt class="docutils literal">
+       fold=0
+      </tt>
+      or the
+      <tt class="docutils literal">
+       fold=1
+      </tt>
+      value even though relevant standards allow
+      <tt class="docutils literal">
+       mktime
+      </tt>
+      to return -1 and
+set an error code in those cases.
+     </p>
+     <p>
+      In other words,
+      <tt class="docutils literal">
+       <span class="pre">
+        tm_isdst=-1
+       </span>
+      </tt>
+      behavior is not missing from this PEP.
+To the contrary, it is the only behavior provided in two different
+well-defined flavors.  The behavior that is missing is when a given
+local hour is interpreted as a different local hour because of the
+misspecified
+      <tt class="docutils literal">
+       tm_isdst
+      </tt>
+      .
+     </p>
+     <p>
+      For example, in the DST-observing time zones in the Northern
+hemisphere (where DST is in effect in June) one can get
+     </p>
+     <pre class="code literal-block">
+&gt;&gt;&gt; from time import mktime, localtime
+&gt;&gt;&gt; t = mktime((2015, 6, 1, 12, 0, 0, -1, -1, 0))
+&gt;&gt;&gt; localtime(t)[:]
+(2015, 6, 1, 13, 0, 0, 0, 152, 1)
+</pre>
+     <p>
+      Note that 12:00 was interpreted as 13:00 by
+      <tt class="docutils literal">
+       mktime
+      </tt>
+      .  With the
+      <tt class="docutils literal">
+       datetime.timestamp
+      </tt>
+      ,
+      <tt class="docutils literal">
+       datetime.fromtimestamp
+      </tt>
+      , it is currently
+guaranteed that
+     </p>
+     <pre class="code literal-block">
+&gt;&gt;&gt; t = datetime.datetime(2015, 6, 1, 12).timestamp()
+&gt;&gt;&gt; datetime.datetime.fromtimestamp(t)
+datetime.datetime(2015, 6, 1, 12, 0)
+</pre>
+     <p>
+      This PEP extends the same guarantee to both values of
+      <tt class="docutils literal">
+       fold
+      </tt>
+      :
+     </p>
+     <pre class="code literal-block">
+&gt;&gt;&gt; t = datetime.datetime(2015, 6, 1, 12, fold=0).timestamp()
+&gt;&gt;&gt; datetime.datetime.fromtimestamp(t)
+datetime.datetime(2015, 6, 1, 12, 0)
+</pre>
+     <pre class="code literal-block">
+&gt;&gt;&gt; t = datetime.datetime(2015, 6, 1, 12, fold=1).timestamp()
+&gt;&gt;&gt; datetime.datetime.fromtimestamp(t)
+datetime.datetime(2015, 6, 1, 12, 0)
+</pre>
+     <p>
+      Thus one of the suggested uses for
+      <tt class="docutils literal">
+       <span class="pre">
+        fold=-1
+       </span>
+      </tt>
+      -- to match the legacy
+behavior -- is not needed.  Either choice of
+      <tt class="docutils literal">
+       fold
+      </tt>
+      will match the
+old behavior except in the few cases where the old behavior was
+undefined.
+     </p>
+    </div>
+    <div class="section" id="strict-invalid-time-checking">
+     <h3>
+      <a class="toc-backref" href="#id55">
+       Strict Invalid Time Checking
+      </a>
+     </h3>
+     <p>
+      Another suggestion was to use
+      <tt class="docutils literal">
+       <span class="pre">
+        fold=-1
+       </span>
+      </tt>
+      or
+      <tt class="docutils literal">
+       fold=None
+      </tt>
+      to
+indicate that the program truly has no means to deal with the folds
+and gaps and
+      <tt class="docutils literal">
+       dt.utcoffset()
+      </tt>
+      should raise an error whenever
+      <tt class="docutils literal">
+       dt
+      </tt>
+      represents an ambiguous or missing local time.
+     </p>
+     <p>
+      The main problem with this proposal, is that
+      <tt class="docutils literal">
+       dt.utcoffset()
+      </tt>
+      is
+used internally in situations where raising an error is not an option:
+for example, in dictionary lookups or list/set membership checks.  So
+strict gap/fold checking behavior would need to be controlled by a
+separate flag, say
+      <tt class="docutils literal">
+       dt.utcoffset(raise_on_gap=True,
+raise_on_fold=False)
+      </tt>
+      .  However, this functionality can be easily
+implemented in user code:
+     </p>
+     <pre class="code literal-block">
+def utcoffset(dt, raise_on_gap=True, raise_on_fold=False):
+    u = dt.utcoffset()
+    v = dt.replace(fold=not dt.fold).utcoffset()
+    if u == v:
+        return u
+    if (u &lt; v) == dt.fold:
+        if raise_on_fold:
+            raise AmbiguousTimeError
+    else:
+        if raise_on_gap:
+            raise MissingTimeError
+    return u
+</pre>
+     <p>
+      Moreover, raising an error in the problem cases is only one of many
+possible solutions.  An interactive program can ask the user for
+additional input, while a server process may log a warning and take an
+appropriate default action.  We cannot possibly provide functions for
+all possible user requirements, but this PEP provides the means to
+implement any desired behavior in a few lines of code.
+     </p>
+    </div>
+   </div>
+  </div>
+  <div class="section" id="implementation">
+   <h1>
+    <a class="toc-backref" href="#id56">
+     Implementation
+    </a>
+   </h1>
+   <ul class="simple">
+    <li>
+     Github fork:
+     <a class="reference external" href="https://github.com/abalkin/cpython">
+      https://github.com/abalkin/cpython
+     </a>
+    </li>
+    <li>
+     Tracker issue:
+     <a class="reference external" href="http://bugs.python.org/issue24773">
+      http://bugs.python.org/issue24773
+     </a>
+    </li>
+   </ul>
+  </div>
+  <div class="section" id="id9">
+   <h1>
+    <a class="toc-backref" href="#id57">
+     References
+    </a>
+   </h1>
+   <table class="docutils footnote" frame="void" id="id10" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id11">
+        [5]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="http://www.open-std.org/jtc1/sc22/wg14/docs/rr/dr_136.html">
+        http://www.open-std.org/jtc1/sc22/wg14/docs/rr/dr_136.html
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id12" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id13">
+        [6]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="https://hg.python.org/cpython/file/d3b20bff9c5d/Include/datetime.h#l17">
+        https://hg.python.org/cpython/file/d3b20bff9c5d/Include/datetime.h#l17
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id14" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id15">
+        [7]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="https://mail.python.org/pipermail/python-dev/2015-April/139099.html">
+        https://mail.python.org/pipermail/python-dev/2015-April/139099.html
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id16" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id17">
+        [8]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="https://mail.python.org/pipermail/datetime-sig/2015-August/000479.html">
+        https://mail.python.org/pipermail/datetime-sig/2015-August/000479.html
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id18" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id19">
+        [9]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="https://mail.python.org/pipermail/datetime-sig/2015-August/000483.html">
+        https://mail.python.org/pipermail/datetime-sig/2015-August/000483.html
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+  </div>
+  <div class="section" id="copyright">
+   <h1>
+    <a class="toc-backref" href="#id58">
+     Copyright
+    </a>
+   </h1>
+   <p>
+    This document has been placed in the public domain.
+   </p>
+  </div>
+  <div class="section" id="picture-credit">
+   <h1>
+    <a class="toc-backref" href="#id59">
+     Picture Credit
+    </a>
+   </h1>
+   <p>
+    This image is a work of a U.S. military or Department of Defense
+employee, taken or made as part of that person's official duties. As a
+work of the U.S. federal government, the image is in the public
+domain.
+   </p>
+  </div>
+ </body>
+
+<!-- Mirrored from www.python.org/dev/peps/pep-0495/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 03 Sep 2015 04:33:44 GMT -->
+</html>
+
+    </article>
+
+
+                </section>
+
+                
+
+
+<aside class="left-sidebar" role="secondary">
+
+    
+
+
+
+
+
+
+    
+
+
+
+
+
+        <div class="twitter-widget sidebar-widget">
+        <a class="twitter-timeline" data-dnt="true" href="https://twitter.com/ThePSF" data-widget-id="434113224703610882">Tweets by @ThePSF</a>
+        <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+    </div>
+
+    <div class="psf-sidebar-widget sidebar-widget">
+        <h3 class="widget-title">The PSF</h3>
+<p>The Python Software Foundation is the organization behind Python. Become a member of the PSF and help advance the software and our mission. </p>
+
+    </div>
+
+</aside>
+
+
+
+                
+                
+
+
+            </div><!-- end .container -->
+        </div><!-- end #content .content-wrapper -->
+
+        <!-- Footer and social media list -->
+        <footer id="site-map" class="main-footer" role="contentinfo">
+            <div class="main-footer-links">
+                <div class="container">
+
+                    
+                    <a id="back-to-top-1" class="jump-link" href="#python-network"><span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> Back to Top</a>
+
+                    
+
+<ul class="sitemap navigation menu do-not-print" role="tree" id="container">
+    
+    <li class="tier-1 element-1">
+        <a href="https://www.python.org/about/" >About</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/apps/" title="">Applications</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/quotes/" title="">Quotes</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/gettingstarted/" title="">Getting Started</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/help/" title="">Help</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-2">
+        <a href="https://www.python.org/downloads/" >Downloads</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/downloads/" title="">All releases</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/downloads/source/" title="">Source code</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/downloads/windows/" title="">Windows</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/downloads/mac-osx/" title="">Mac OS X</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/download/other/" title="">Other Platforms</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://docs.python.org/3/license.html" title="">License</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/download/alternatives" title="">Alternative Implementations</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-3">
+        <a href="https://www.python.org/doc/" >Documentation</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/doc/" title="">Docs</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/doc/av" title="">Audio/Visual Talks</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://wiki.python.org/moin/BeginnersGuide" title="">Beginner&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://docs.python.org/faq/" title="">FAQ</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="http://wiki.python.org/moin/Languages" title="">Non-English Docs</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="../index.html" title="">PEP Index</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://wiki.python.org/moin/PythonBooks" title="">Python Books</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-4">
+        <a href="https://www.python.org/community/" >Community</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/community/diversity/" title="">Diversity</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/community/irc/" title="">IRC</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/community/lists/" title="">Mailing Lists</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/workshops/" title="">Python Conferences</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/community/sigs/" title="">Special Interest Groups</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://wiki.python.org/moin/" title="">Python Wiki</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/community/logos/" title="">Python Logo</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://www.python.org/community/merchandise/" title="">Merchandise</a></li>
+    
+        <li class="tier-2 element-9" role="treeitem"><a href="https://www.python.org/community/awards" title="">Community Awards</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-5">
+        <a href="https://www.python.org/about/success/" title="success-stories">Success Stories</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/success/#arts" title="">Arts</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/success/#business" title="">Business</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/success/#education" title="">Education</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/success/#engineering" title="">Engineering</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/about/success/#government" title="">Government</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://www.python.org/about/success/#scientific" title="">Scientific</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/about/success/#software-development" title="">Software Development</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-6">
+        <a href="https://www.python.org/blogs/" title="News from around the Python world">News</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/blogs/" title="Python Insider Blog Posts">Python News</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://planetpython.org/" title="Planet Python">Community News</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="http://pyfound.blogspot.com/" title="PSF Blog">PSF News</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pycon.blogspot.com/" title="PyCon Blog">PyCon News</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-7">
+        <a href="https://www.python.org/events/" >Events</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/events/python-events/" title="">Python Events</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/events/python-user-group/" title="">User Group Events</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/events/python-events/past/" title="">Python Events Archive</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/events/python-user-group/past/" title="">User Group Events Archive</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://wiki.python.org/moin/PythonEventsCalendar#Submitting_an_Event" title="">Submit an Event</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-8">
+        <a href="https://www.python.org/dev/" >Contributing</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="http://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://bugs.python.org/" title="">Issue Tracker</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://mail.python.org/mailman/listinfo/python-dev" title="">python-dev list</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pythonmentors.com/" title="">Core Mentorship</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+</ul>
+
+
+                    <a id="back-to-top-2" class="jump-link" href="#python-network"><span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> Back to Top</a>
+                    
+
+                </div><!-- end .container -->
+            </div> <!-- end .main-footer-links -->
+
+            <div class="site-base">
+                <div class="container">
+                    
+                    <ul class="footer-links navigation menu do-not-print" role="tree">
+                        <li class="tier-1 element-1"><a href="https://www.python.org/about/help/">Help &amp; <span class="say-no-more">General</span> Contact</a></li>
+                        <li class="tier-1 element-2"><a href="https://www.python.org/community/diversity/">Diversity <span class="say-no-more">Initiatives</span></a></li>
+                        <li class="tier-1 element-3"><a href="https://github.com/python/pythondotorg/issues">Submit Website Bug</a></li>
+                        <!--<li class="tier-1 element-3"><a href="#"><span class="say-no-more">Website</span> Colophon</a></li>-->
+                    </ul>
+
+                    <div class="copyright">
+                        <p><small>
+                            <span class="pre">Copyright &copy;2001-2015.</span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/psf-landing/">Python Software Foundation</a></span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/about/legal/">Legal Statements</a></span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/privacy/">Privacy Policy</a></span>
+                        </small></p>
+                    </div>
+
+                </div><!-- end .container -->
+            </div><!-- end .site-base -->
+
+        </footer>
+
+    </div><!-- end #touchnav-wrapper -->
+
+    
+    <script src="../../../../ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="../../../static/js/libs/jquery-1.8.2.min.js"><\/script>')</script>
+
+    <script src="../../../static/js/libs/masonry.pkgd.min.js"></script>
+
+    <script type="text/javascript" src="../../../static/js/main-min.js" charset="utf-8"></script>
+    
+
+    <!--[if lte IE 7]>
+    <script type="text/javascript" src="/static/js/plugins/IE8-min.js" charset="utf-8"></script>
+    
+    
+    <![endif]-->
+
+    <!--[if lte IE 8]>
+    <script type="text/javascript" src="/static/js/plugins/getComputedStyle-min.js" charset="utf-8"></script>
+    
+    
+    <![endif]-->
+
+    
+
+    
+    
+
+</body>
+</html>

@@ -1,0 +1,1456 @@
+<!doctype html>
+<!--[if lt IE 7]>   <html class="no-js ie6 lt-ie7 lt-ie8 lt-ie9">   <![endif]-->
+<!--[if IE 7]>      <html class="no-js ie7 lt-ie8 lt-ie9">          <![endif]-->
+<!--[if IE 8]>      <html class="no-js ie8 lt-ie9">                 <![endif]-->
+<!--[if gt IE 8]><!--><html class="no-js" lang="en" dir="ltr">  <!--<![endif]-->
+
+
+<!-- Mirrored from www.python.org/dev/peps/pep-0324/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 03 Sep 2015 04:34:15 GMT -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <link rel="prefetch" href="../../../../ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js">
+
+    <meta name="application-name" content="Python.org">
+    <meta name="msapplication-tooltip" content="The official home of the Python Programming Language">
+    <meta name="apple-mobile-web-app-title" content="Python.org">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="format-detection" content="telephone=no">
+    <meta http-equiv="cleartype" content="on">
+    <meta http-equiv="imagetoolbar" content="false">
+
+    <script src="../../../static/js/libs/modernizr.js"></script>
+
+    <link href="../../../static/stylesheets/style.css" rel="stylesheet" type="text/css" title="default" />
+    <link href="../../../static/stylesheets/mq.css" rel="stylesheet" type="text/css" media="not print, braille, embossed, speech, tty" />
+    
+
+    <!--[if (lte IE 8)&(!IEMobile)]>
+    <link href="/static/stylesheets/no-mq.css" rel="stylesheet" type="text/css" media="screen" />
+    
+    
+    <![endif]-->
+
+    
+    <link rel="icon" type="image/x-icon" href="https://www.python.org/static/favicon.ico">
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="../../../static/apple-touch-icon-144x144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="../../../static/apple-touch-icon-114x114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="../../../static/apple-touch-icon-72x72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="../../../static/apple-touch-icon-precomposed.png">
+    <link rel="apple-touch-icon" href="../../../static/apple-touch-icon-precomposed.png">
+
+    
+    <meta name="msapplication-TileImage" content="/static/metro-icon-144x144-precomposed.png"><!-- white shape -->
+    <meta name="msapplication-TileColor" content="#3673a5"><!-- python blue -->
+    <meta name="msapplication-navbutton-color" content="#3673a5">
+
+    <meta property="og:site_name" content="Python.org">
+    <meta property="og:type" content="website">
+
+    <title>PEP 324 -- subprocess - New process module | Python.org</title>
+    <meta property="og:title" content="Welcome to Python.org">
+
+    
+    <meta name="description" content="The official home of the Python Programming Language">
+    <meta name="og:description" content="The official home of the Python Programming Language">
+    <meta name="keywords" content="Python programming language object oriented web free open source software license documentation download community">
+    <meta property="og:tag" content="Python programming language object oriented web free open source software license documentation download community">
+    <meta property="og:published_time" content="">
+    <meta property="og:modified_time" content="">
+    <meta property="og:author" content="">
+    <meta property="og:section" content=""> 
+    <meta property="og:url" content="">
+    <meta property="og:image" content="">
+    <meta property="og:video" content="">
+
+    <link rel="author" href="https://www.python.org/static/humans.txt">
+
+    
+
+    
+    <script type="application/ld+json">
+     {
+       "@context": "http://schema.org",
+       "@type": "WebSite",
+       "url": "https://www.python.org/",
+       "potentialAction": {
+         "@type": "SearchAction",
+         "target": "https://www.python.org/search/?q={search_term_string}",
+         "query-input": "required name=search_term_string"
+       }
+     }
+    </script>
+
+    
+    <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-39055973-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+    </script>
+    
+</head>
+
+<body class="python pages pep-page">
+
+    <div id="touchnav-wrapper">
+
+        <div id="nojs" class="do-not-print">
+            <p><strong>Notice:</strong> While Javascript is not essential for this website, your interaction with the content will be limited. Please turn Javascript on for the full experience. </p>
+        </div>
+
+        <!--[if lt IE 8]>
+        <div id="oldie-warning" class="do-not-print">
+            <p><strong>Notice:</strong> Your browser is <em>ancient</em> and <a href="http://www.ie6countdown.com/">Microsoft agrees</a>. <a href="http://browsehappy.com/">Upgrade to a different browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to experience a better web.</p>
+        </div>
+        <![endif]-->
+
+        <!-- Sister Site Links -->
+        <div id="top" class="top-bar do-not-print">
+
+            <nav class="meta-navigation container" role="navigation">
+
+                
+                <div class="skip-link screen-reader-text">
+                    <a href="#content" title="Skip to content">Skip to content</a>
+                </div>
+
+                
+                <a id="close-python-network" class="jump-link" href="#python-network" aria-hidden="true">
+                    <span aria-hidden="true" class="icon-arrow-down"><span>&#9660;</span></span> Close
+                </a>
+
+                
+
+<ul class="menu" role="tree">
+    
+    <li class="python-meta ">
+        <a href="https://www.python.org/" title="The Python Programming Language" >Python</a>
+    </li>
+    
+    <li class="psf-meta ">
+        <a href="https://www.python.org/psf-landing/" title="The Python Software Foundation" >PSF</a>
+    </li>
+    
+    <li class="docs-meta ">
+        <a href="https://docs.python.org/" title="Python Documentation" >Docs</a>
+    </li>
+    
+    <li class="pypi-meta ">
+        <a href="https://pypi.python.org/" title="Python Package Index" >PyPI</a>
+    </li>
+    
+    <li class="jobs-meta ">
+        <a href="https://www.python.org/jobs/" title="Python Job Board" >Jobs</a>
+    </li>
+    
+    <li class="shop-meta ">
+        <a href="https://www.python.org/community/" title="Python Community" >Community</a>
+    </li>
+    
+</ul>
+
+
+                <a id="python-network" class="jump-link" href="#top" aria-hidden="true">
+                    <span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> The Python Network
+                </a>
+
+            </nav>
+
+        </div>
+
+        <!-- Header elements -->
+        <header class="main-header" role="banner">
+            <div class="container">
+
+                <h1 class="site-headline">
+                    <a href="https://www.python.org/"><img class="python-logo" src="../../../static/img/python-logo.png" alt="python&trade;"></a>
+                </h1>
+
+                <div class="options-bar do-not-print">
+
+                    
+                    <a id="site-map-link" class="jump-to-menu" href="#site-map"><span class="menu-icon">&equiv;</span> Menu</a><form class="search-the-site" action="https://www.python.org/search/" method="get">
+                        <fieldset title="Search Python.org">
+
+                            <span aria-hidden="true" class="icon-search"></span>
+
+                            <label class="screen-reader-text" for="id-search-field">Search This Site</label>
+                            <input id="id-search-field" name="q" type="search" role="textbox" class="search-field" placeholder="Search" value="" tabindex="1">
+
+                            <button type="submit" name="submit" id="submit" class="search-button" title="Submit this Search" tabindex="3">
+                                GO
+                            </button>
+
+                            
+                            <!--[if IE]><input type="text" style="display: none;" disabled="disabled" size="1" tabindex="4"><![endif]-->
+
+                        </fieldset>
+                    </form><span class="breaker"></span><div class="adjust-font-size" aria-hidden="true">
+                        <ul class="navigation menu" aria-label="Adjust Text Size on Page">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                <a href="#" class="action-trigger"><strong><small>A</small> A</strong></a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a class="text-shrink" title="Make Text Smaller" href="javascript:;">Smaller</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a class="text-grow" title="Make Text Larger" href="javascript:;">Larger</a></li>
+                                    <li class="tier-2 element-3" role="treeitem"><a class="text-reset" title="Reset any font size changes I have made" href="javascript:;">Reset</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div><div class="winkwink-nudgenudge">
+                        <ul class="navigation menu" aria-label="Social Media Navigation">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                <a href="#" class="action-trigger">Socialize</a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a href="http://plus.google.com/+Python"><span aria-hidden="true" class="icon-google-plus"></span>Google+</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a href="http://www.facebook.com/pythonlang?fref=ts"><span aria-hidden="true" class="icon-facebook"></span>Facebook</a></li>
+                                    <li class="tier-2 element-3" role="treeitem"><a href="http://twitter.com/ThePSF"><span aria-hidden="true" class="icon-twitter"></span>Twitter</a></li>
+                                    <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/irc/"><span aria-hidden="true" class="icon-freenode"></span>Chat on IRC</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div><div class="account-signin">
+                        <ul class="navigation menu" aria-label="Social Media Navigation">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                
+                                <a href="https://www.python.org/accounts/login/" title="Sign Up or Sign In to Python.org">Sign In</a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/accounts/signup/">Sign Up / Register</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/accounts/login/">Sign In</a></li>
+                                </ul>
+                                
+                            </li>
+                        </ul>
+                    </div>
+
+                </div><!-- end options-bar -->
+
+                <nav id="mainnav" class="python-navigation main-navigation do-not-print" role="navigation">
+                    
+                        
+<ul class="navigation menu" role="menubar" aria-label="Main Navigation">
+  
+    
+    
+    <li id="about" class="tier-1 element-1  " aria-haspopup="true">
+        <a href="https://www.python.org/about/" title="" class="">About</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/apps/" title="">Applications</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/quotes/" title="">Quotes</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/gettingstarted/" title="">Getting Started</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/help/" title="">Help</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="downloads" class="tier-1 element-2  " aria-haspopup="true">
+        <a href="https://www.python.org/downloads/" title="" class="">Downloads</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/downloads/" title="">All releases</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/downloads/source/" title="">Source code</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/downloads/windows/" title="">Windows</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/downloads/mac-osx/" title="">Mac OS X</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/download/other/" title="">Other Platforms</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://docs.python.org/3/license.html" title="">License</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/download/alternatives" title="">Alternative Implementations</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="documentation" class="tier-1 element-3  " aria-haspopup="true">
+        <a href="https://www.python.org/doc/" title="" class="">Documentation</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/doc/" title="">Docs</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/doc/av" title="">Audio/Visual Talks</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://wiki.python.org/moin/BeginnersGuide" title="">Beginner&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://docs.python.org/faq/" title="">FAQ</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="http://wiki.python.org/moin/Languages" title="">Non-English Docs</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="../index.html" title="">PEP Index</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://wiki.python.org/moin/PythonBooks" title="">Python Books</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="community" class="tier-1 element-4  " aria-haspopup="true">
+        <a href="https://www.python.org/community/" title="" class="">Community</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/community/diversity/" title="">Diversity</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/community/irc/" title="">IRC</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/community/lists/" title="">Mailing Lists</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/workshops/" title="">Python Conferences</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/community/sigs/" title="">Special Interest Groups</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://wiki.python.org/moin/" title="">Python Wiki</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/community/logos/" title="">Python Logo</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://www.python.org/community/merchandise/" title="">Merchandise</a></li>
+    
+        <li class="tier-2 element-9" role="treeitem"><a href="https://www.python.org/community/awards" title="">Community Awards</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="success-stories" class="tier-1 element-5  " aria-haspopup="true">
+        <a href="https://www.python.org/about/success/" title="success-stories" class="">Success Stories</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/success/#arts" title="">Arts</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/success/#business" title="">Business</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/success/#education" title="">Education</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/success/#engineering" title="">Engineering</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/about/success/#government" title="">Government</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://www.python.org/about/success/#scientific" title="">Scientific</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/about/success/#software-development" title="">Software Development</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="news" class="tier-1 element-6  " aria-haspopup="true">
+        <a href="https://www.python.org/blogs/" title="News from around the Python world" class="">News</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/blogs/" title="Python Insider Blog Posts">Python News</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://planetpython.org/" title="Planet Python">Community News</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="http://pyfound.blogspot.com/" title="PSF Blog">PSF News</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pycon.blogspot.com/" title="PyCon Blog">PyCon News</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="events" class="tier-1 element-7  " aria-haspopup="true">
+        <a href="https://www.python.org/events/" title="" class="">Events</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/events/python-events/" title="">Python Events</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/events/python-user-group/" title="">User Group Events</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/events/python-events/past/" title="">Python Events Archive</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/events/python-user-group/past/" title="">User Group Events Archive</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://wiki.python.org/moin/PythonEventsCalendar#Submitting_an_Event" title="">Submit an Event</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    
+  
+</ul>
+
+                    
+                </nav>
+
+                <div class="header-banner "> <!-- for optional "do-not-print" class -->
+                    
+                    
+                </div>
+
+                
+                
+
+             </div><!-- end .container -->
+        </header>
+
+        <div id="content" class="content-wrapper">
+            <!-- Main Content Column -->
+            <div class="container">
+
+                <section class="main-content with-left-sidebar" role="main">
+
+                    
+<ul class="breadcrumbs menu">
+    <li>
+        <a href="https://www.python.org/" title="The Python Programming Language">Python</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>
+        <a href="https://www.python.org/dev/">Python Developer's Guide</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>
+        <a href="../index.html">PEP Index</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>PEP 324 -- subprocess - New process module</li>
+</ul>
+
+
+                    
+<style>
+   .pep-page pre {
+        padding: .5em;
+        background: inherit;
+        border-left: 0px;
+        -webkit-box-shadow: 0 0 0 0;
+        -moz-box-shadow: 0 0 0 0;
+        box-shadow: 0 0 0 0;
+   }
+</style>
+
+    
+    <article class="text">
+        
+
+        <header class="article-header">
+            <h1 class="page-title">PEP 324 -- subprocess - New process module</h1>
+        </header>
+
+        <html>
+ <body>
+  <div class="header">
+   <table border="0">
+    <tr>
+     <th>
+      PEP:
+     </th>
+     <td>
+      324
+     </td>
+    </tr>
+    <tr>
+     <th>
+      Title:
+     </th>
+     <td>
+      subprocess - New process module
+     </td>
+    </tr>
+    <tr>
+     <th>
+      Author:
+     </th>
+     <td>
+      Peter Astrand &lt;astrand at lysator.liu.se&gt;
+     </td>
+    </tr>
+    <tr>
+     <th>
+      Status:
+     </th>
+     <td>
+      Final
+     </td>
+    </tr>
+    <tr>
+     <th>
+      Type:
+     </th>
+     <td>
+      Standards Track
+     </td>
+    </tr>
+    <tr>
+     <th>
+      Content-Type:
+     </th>
+     <td>
+      <a href="../pep-0009/index.html">
+       text/plain
+      </a>
+     </td>
+    </tr>
+    <tr>
+     <th>
+      Created:
+     </th>
+     <td>
+      19-Nov-2003
+     </td>
+    </tr>
+    <tr>
+     <th>
+      Python-Version:
+     </th>
+     <td>
+      2.4
+     </td>
+    </tr>
+    <tr>
+     <th>
+      Post-History:
+     </th>
+     <td>
+     </td>
+    </tr>
+   </table>
+  </div>
+  <div class="content">
+   <h3>
+    Abstract
+   </h3>
+   <pre>
+    This PEP describes a new module for starting and communicating
+    with processes.
+
+
+</pre>
+   <h3>
+    Motivation
+   </h3>
+   <pre>
+    Starting new processes is a common task in any programming
+    language, and very common in a high-level language like Python.
+    Good support for this task is needed, because:
+
+    - Inappropriate functions for starting processes could mean a
+      security risk: If the program is started through the shell, and
+      the arguments contain shell meta characters, the result can be
+      disastrous. [1]
+
+    - It makes Python an even better replacement language for
+      over-complicated shell scripts.
+
+    Currently, Python has a large number of different functions for
+    process creation.  This makes it hard for developers to choose.
+
+    The subprocess module provides the following enhancements over
+    previous functions:
+
+    - One "unified" module provides all functionality from previous
+      functions.
+
+    - Cross-process exceptions: Exceptions happening in the child
+      before the new process has started to execute are re-raised in
+      the parent.  This means that it's easy to handle exec()
+      failures, for example.  With popen2, for example, it's
+      impossible to detect if the execution failed.
+
+    - A hook for executing custom code between fork and exec.  This
+      can be used for, for example, changing uid.
+
+    - No implicit call of /bin/sh.  This means that there is no need
+      for escaping dangerous shell meta characters.
+
+    - All combinations of file descriptor redirection is possible.
+      For example, the "python-dialog" [2] needs to spawn a process
+      and redirect stderr, but not stdout.  This is not possible with
+      current functions, without using temporary files.
+
+    - With the subprocess module, it's possible to control if all open
+      file descriptors should be closed before the new program is
+      executed.
+
+    - Support for connecting several subprocesses (shell "pipe").
+
+    - Universal newline support.
+
+    - A communicate() method, which makes it easy to send stdin data
+      and read stdout and stderr data, without risking deadlocks.
+      Most people are aware of the flow control issues involved with
+      child process communication, but not all have the patience or
+      skills to write a fully correct and deadlock-free select loop.
+      This means that many Python applications contain race
+      conditions.  A communicate() method in the standard library
+      solves this problem.
+
+
+</pre>
+   <h3>
+    Rationale
+   </h3>
+   <pre>
+    The following points summarizes the design:
+
+    - subprocess was based on popen2, which is tried-and-tested.
+
+    - The factory functions in popen2 have been removed, because I
+      consider the class constructor equally easy to work with.
+
+    - popen2 contains several factory functions and classes for
+      different combinations of redirection.  subprocess, however,
+      contains one single class.  Since the subprocess module supports
+      12 different combinations of redirection, providing a class or
+      function for each of them would be cumbersome and not very
+      intuitive.  Even with popen2, this is a readability problem.
+      For example, many people cannot tell the difference between
+      popen2.popen2 and popen2.popen4 without using the documentation.
+
+    - One small utility function is provided: subprocess.call(). It
+      aims to be an enhancement over os.system(), while still very
+      easy to use:
+
+        - It does not use the Standard C function system(), which has
+          limitations.
+
+        - It does not call the shell implicitly.
+
+        - No need for quoting; using an argument list.
+
+        - The return value is easier to work with.
+
+      The call() utility function accepts an 'args' argument, just
+      like the Popen class constructor.  It waits for the command to
+      complete, then returns the returncode attribute.  The
+      implementation is very simple:
+
+      def call(*args, **kwargs):
+          return Popen(*args, **kwargs).wait()
+
+      The motivation behind the call() function is simple: Starting a
+      process and wait for it to finish is a common task.
+
+      While Popen supports a wide range of options, many users have
+      simple needs.  Many people are using os.system() today, mainly
+      because it provides a simple interface.  Consider this example:
+
+          os.system("stty sane -F " + device)
+
+      With subprocess.call(), this would look like:
+
+          subprocess.call(["stty", "sane", "-F", device])
+
+      or, if executing through the shell:
+
+          subprocess.call("stty sane -F " + device, shell=True)
+
+    - The "preexec" functionality makes it possible to run arbitrary
+      code between fork and exec.  One might ask why there are special
+      arguments for setting the environment and current directory, but
+      not for, for example, setting the uid.  The answer is:
+
+        - Changing environment and working directory is considered
+          fairly common.
+
+        - Old functions like spawn() has support for an
+          "env"-argument.
+
+        - env and cwd are considered quite cross-platform: They make
+          sense even on Windows.
+
+     - On POSIX platforms, no extension module is required: the module
+       uses os.fork(), os.execvp() etc.
+
+     - On Windows platforms, the module requires either Mark Hammond's
+       Windows extensions[5], or a small extension module called
+       _subprocess.
+
+
+</pre>
+   <h3>
+    Specification
+   </h3>
+   <pre>
+    This module defines one class called Popen:
+
+        class Popen(args, bufsize=0, executable=None,
+                    stdin=None, stdout=None, stderr=None,
+                    preexec_fn=None, close_fds=False, shell=False,
+                    cwd=None, env=None, universal_newlines=False,
+                    startupinfo=None, creationflags=0):
+
+
+      Arguments are:
+
+    - args should be a string, or a sequence of program arguments.
+      The program to execute is normally the first item in the args
+      sequence or string, but can be explicitly set by using the
+      executable argument.
+      
+      On UNIX, with shell=False (default): In this case, the Popen
+      class uses os.execvp() to execute the child program.  args
+      should normally be a sequence.  A string will be treated as a
+      sequence with the string as the only item (the program to
+      execute).
+      
+      On UNIX, with shell=True: If args is a string, it specifies the
+      command string to execute through the shell.  If args is a
+      sequence, the first item specifies the command string, and any
+      additional items will be treated as additional shell arguments.
+      
+      On Windows: the Popen class uses CreateProcess() to execute the
+      child program, which operates on strings.  If args is a
+      sequence, it will be converted to a string using the
+      list2cmdline method.  Please note that not all MS Windows
+      applications interpret the command line the same way: The
+      list2cmdline is designed for applications using the same rules
+      as the MS C runtime.
+
+    - bufsize, if given, has the same meaning as the corresponding
+      argument to the built-in open() function: 0 means unbuffered, 1
+      means line buffered, any other positive value means use a buffer
+      of (approximately) that size.  A negative bufsize means to use
+      the system default, which usually means fully buffered.  The
+      default value for bufsize is 0 (unbuffered).
+
+    - stdin, stdout and stderr specify the executed programs' standard
+      input, standard output and standard error file handles,
+      respectively.  Valid values are PIPE, an existing file
+      descriptor (a positive integer), an existing file object, and
+      None.  PIPE indicates that a new pipe to the child should be
+      created.  With None, no redirection will occur; the child's file
+      handles will be inherited from the parent.  Additionally, stderr
+      can be STDOUT, which indicates that the stderr data from the
+      applications should be captured into the same file handle as for
+      stdout.
+
+    - If preexec_fn is set to a callable object, this object will be
+      called in the child process just before the child is executed.
+
+    - If close_fds is true, all file descriptors except 0, 1 and 2
+      will be closed before the child process is executed.
+
+    - If shell is true, the specified command will be executed through
+      the shell.  
+
+    - If cwd is not None, the current directory will be changed to cwd
+      before the child is executed.
+
+    - If env is not None, it defines the environment variables for the
+      new process.
+
+    - If universal_newlines is true, the file objects stdout and
+      stderr are opened as a text file, but lines may be terminated
+      by any of '\n', the Unix end-of-line convention, '\r', the
+      Macintosh convention or '\r\n', the Windows convention.  All of
+      these external representations are seen as '\n' by the Python
+      program.  Note: This feature is only available if Python is
+      built with universal newline support (the default).  Also, the
+      newlines attribute of the file objects stdout, stdin and stderr
+      are not updated by the communicate() method.
+
+    - The startupinfo and creationflags, if given, will be passed to
+      the underlying CreateProcess() function.  They can specify
+      things such as appearance of the main window and priority for
+      the new process.  (Windows only)
+
+
+      This module also defines two shortcut functions:
+
+    - call(*args, **kwargs):
+          Run command with arguments.  Wait for command to complete,
+          then return the returncode attribute.
+
+          The arguments are the same as for the Popen constructor.
+          Example:
+
+          retcode = call(["ls", "-l"])
+
+
+    Exceptions
+    ----------
+
+    Exceptions raised in the child process, before the new program has
+    started to execute, will be re-raised in the parent.
+    Additionally, the exception object will have one extra attribute
+    called 'child_traceback', which is a string containing traceback
+    information from the child's point of view.
+
+    The most common exception raised is OSError.  This occurs, for
+    example, when trying to execute a non-existent file.  Applications
+    should prepare for OSErrors.
+
+    A ValueError will be raised if Popen is called with invalid
+    arguments.
+
+
+    Security
+    --------
+
+    Unlike some other popen functions, this implementation will never
+    call /bin/sh implicitly.  This means that all characters,
+    including shell meta-characters, can safely be passed to child
+    processes.
+
+
+    Popen objects
+    -------------
+
+    Instances of the Popen class have the following methods:
+
+    poll()
+        Check if child process has terminated.  Returns returncode
+        attribute.
+
+    wait()
+        Wait for child process to terminate.  Returns returncode
+        attribute.
+
+    communicate(input=None)
+        Interact with process: Send data to stdin.  Read data from
+        stdout and stderr, until end-of-file is reached.  Wait for
+        process to terminate.  The optional stdin argument should be a
+        string to be sent to the child process, or None, if no data
+        should be sent to the child.
+
+        communicate() returns a tuple (stdout, stderr).
+
+        Note: The data read is buffered in memory, so do not use this
+        method if the data size is large or unlimited.
+
+    The following attributes are also available:
+
+    stdin
+        If the stdin argument is PIPE, this attribute is a file object
+        that provides input to the child process.  Otherwise, it is
+        None.
+
+    stdout
+        If the stdout argument is PIPE, this attribute is a file
+        object that provides output from the child process.
+        Otherwise, it is None.
+
+    stderr
+        If the stderr argument is PIPE, this attribute is file object
+        that provides error output from the child process.  Otherwise,
+        it is None.
+
+    pid
+        The process ID of the child process.
+
+    returncode
+        The child return code.  A None value indicates that the
+        process hasn't terminated yet.  A negative value -N indicates
+        that the child was terminated by signal N (UNIX only).
+
+
+</pre>
+   <h3>
+    Replacing older functions with the subprocess module
+   </h3>
+   <pre>
+    In this section, "a ==&gt; b" means that b can be used as a
+    replacement for a.
+
+    Note: All functions in this section fail (more or less) silently
+    if the executed program cannot be found; this module raises an
+    OSError exception.
+
+    In the following examples, we assume that the subprocess module is
+    imported with "from subprocess import *".
+
+
+    Replacing /bin/sh shell backquote
+    ---------------------------------
+
+    output=`mycmd myarg`
+    ==&gt;
+    output = Popen(["mycmd", "myarg"], stdout=PIPE).communicate()[0]
+
+
+    Replacing shell pipe line
+    -------------------------
+
+    output=`dmesg | grep hda`
+    ==&gt;
+    p1 = Popen(["dmesg"], stdout=PIPE)
+    p2 = Popen(["grep", "hda"], stdin=p1.stdout, stdout=PIPE)
+    output = p2.communicate()[0]
+
+
+    Replacing os.system()
+    ---------------------
+
+    sts = os.system("mycmd" + " myarg")
+    ==&gt;
+    p = Popen("mycmd" + " myarg", shell=True)
+    sts = os.waitpid(p.pid, 0)
+
+    Note:
+
+    * Calling the program through the shell is usually not required.
+
+    * It's easier to look at the returncode attribute than the
+      exit status.
+
+    A more real-world example would look like this:
+
+    try:
+        retcode = call("mycmd" + " myarg", shell=True)
+        if retcode &lt; 0:
+            print &gt;&gt;sys.stderr, "Child was terminated by signal", -retcode
+        else:
+            print &gt;&gt;sys.stderr, "Child returned", retcode
+    except OSError, e:
+        print &gt;&gt;sys.stderr, "Execution failed:", e
+
+
+    Replacing os.spawn*
+    -------------------
+
+    P_NOWAIT example:
+
+    pid = os.spawnlp(os.P_NOWAIT, "/bin/mycmd", "mycmd", "myarg")
+    ==&gt;
+    pid = Popen(["/bin/mycmd", "myarg"]).pid
+
+
+    P_WAIT example:
+
+    retcode = os.spawnlp(os.P_WAIT, "/bin/mycmd", "mycmd", "myarg")
+    ==&gt;
+    retcode = call(["/bin/mycmd", "myarg"])
+
+
+    Vector example:
+
+    os.spawnvp(os.P_NOWAIT, path, args)
+    ==&gt;
+    Popen([path] + args[1:])
+
+
+    Environment example:
+
+    os.spawnlpe(os.P_NOWAIT, "/bin/mycmd", "mycmd", "myarg", env)
+    ==&gt;
+    Popen(["/bin/mycmd", "myarg"], env={"PATH": "/usr/bin"})
+
+
+    Replacing os.popen*
+    -------------------
+
+    pipe = os.popen(cmd, mode='r', bufsize)
+    ==&gt;
+    pipe = Popen(cmd, shell=True, bufsize=bufsize, stdout=PIPE).stdout
+
+    pipe = os.popen(cmd, mode='w', bufsize)
+    ==&gt;
+    pipe = Popen(cmd, shell=True, bufsize=bufsize, stdin=PIPE).stdin
+
+
+    (child_stdin, child_stdout) = os.popen2(cmd, mode, bufsize)
+    ==&gt;
+    p = Popen(cmd, shell=True, bufsize=bufsize,
+              stdin=PIPE, stdout=PIPE, close_fds=True)
+    (child_stdin, child_stdout) = (p.stdin, p.stdout)
+
+
+    (child_stdin,
+     child_stdout,
+     child_stderr) = os.popen3(cmd, mode, bufsize)
+    ==&gt;
+    p = Popen(cmd, shell=True, bufsize=bufsize,
+              stdin=PIPE, stdout=PIPE, stderr=PIPE, close_fds=True)
+    (child_stdin,
+     child_stdout,
+     child_stderr) = (p.stdin, p.stdout, p.stderr)
+
+
+    (child_stdin, child_stdout_and_stderr) = os.popen4(cmd, mode, bufsize)
+    ==&gt;
+    p = Popen(cmd, shell=True, bufsize=bufsize,
+              stdin=PIPE, stdout=PIPE, stderr=STDOUT, close_fds=True)
+    (child_stdin, child_stdout_and_stderr) = (p.stdin, p.stdout)
+
+
+    Replacing popen2.*
+    ------------------
+
+    Note: If the cmd argument to popen2 functions is a string, the
+    command is executed through /bin/sh.  If it is a list, the command
+    is directly executed.
+
+    (child_stdout, child_stdin) = popen2.popen2("somestring", bufsize, mode)
+    ==&gt;
+    p = Popen(["somestring"], shell=True, bufsize=bufsize
+              stdin=PIPE, stdout=PIPE, close_fds=True)
+    (child_stdout, child_stdin) = (p.stdout, p.stdin)
+
+
+    (child_stdout, child_stdin) = popen2.popen2(["mycmd", "myarg"], bufsize, mode)
+    ==&gt;
+    p = Popen(["mycmd", "myarg"], bufsize=bufsize,
+              stdin=PIPE, stdout=PIPE, close_fds=True)
+    (child_stdout, child_stdin) = (p.stdout, p.stdin)
+
+    The popen2.Popen3 and popen3.Popen4 basically works as
+    subprocess.Popen, except that:
+
+    * subprocess.Popen raises an exception if the execution fails
+    * the capturestderr argument is replaced with the stderr argument.
+    * stdin=PIPE and stdout=PIPE must be specified.
+    * popen2 closes all file descriptors by default, but you have to
+      specify close_fds=True with subprocess.Popen.
+
+
+</pre>
+   <h3>
+    Open Issues
+   </h3>
+   <pre>
+    Some features have been requested but is not yet implemented.
+    This includes:
+
+    * Support for managing a whole flock of subprocesses
+
+    * Support for managing "daemon" processes
+
+    * Built-in method for killing subprocesses
+
+    While these are useful features, it's expected that these can be
+    added later without problems.
+
+    * expect-like functionality, including pty support.
+
+    pty support is highly platform-dependent, which is a
+    problem.  Also, there are already other modules that provide this
+    kind of functionality[6].
+
+
+</pre>
+   <h3>
+    Backwards Compatibility
+   </h3>
+   <pre>
+    Since this is a new module, no major backward compatible issues
+    are expected.  The module name "subprocess" might collide with
+    other, previous modules[3] with the same name, but the name
+    "subprocess" seems to be the best suggested name so far.  The
+    first name of this module was "popen5", but this name was
+    considered too unintuitive.  For a while, the module was called
+    "process", but this name is already used by Trent Mick's
+    module[4].
+
+    The functions and modules that this new module is trying to
+    replace (os.system, os.spawn*, os.popen*, popen2.*, commands.*)
+    are expected to be available in future Python versions for a long
+    time, to preserve backwards compatibility.
+
+
+</pre>
+   <h3>
+    Reference Implementation
+   </h3>
+   <pre>
+    A reference implementation is available from
+    <a href="http://www.lysator.liu.se/~astrand/popen5/">http://www.lysator.liu.se/~astrand/popen5/.</a>
+
+
+</pre>
+   <h3>
+    References
+   </h3>
+   <pre>
+    [1] Secure Programming for Linux and Unix HOWTO, section 8.3.
+        <a href="http://www.dwheeler.com/secure-programs/">http://www.dwheeler.com/secure-programs/</a>
+
+    [2] Python Dialog
+        <a href="http://pythondialog.sourceforge.net/">http://pythondialog.sourceforge.net/</a>
+
+    [3] <a href="http://www.iol.ie/~padraiga/libs/subProcess.py">http://www.iol.ie/~padraiga/libs/subProcess.py</a>
+
+    [4] <a href="http://starship.python.net/crew/tmick/">http://starship.python.net/crew/tmick/</a>
+
+    [5] <a href="http://starship.python.net/crew/mhammond/win32/">http://starship.python.net/crew/mhammond/win32/</a>
+
+    [6] <a href="http://www.lysator.liu.se/~ceder/pcl-expect/">http://www.lysator.liu.se/~ceder/pcl-expect/</a>
+
+
+</pre>
+   <h3>
+    Copyright
+   </h3>
+   <pre>
+    This document has been placed in the public domain.
+
+
+</pre>
+  </div>
+ </body>
+
+<!-- Mirrored from www.python.org/dev/peps/pep-0324/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 03 Sep 2015 04:34:15 GMT -->
+</html>Source: <a href="https://hg.python.org/peps/file/tip/pep-0324.txt">https://hg.python.org/peps/file/tip/pep-0324.txt</a>
+
+    </article>
+
+
+                </section>
+
+                
+
+
+<aside class="left-sidebar" role="secondary">
+
+    
+
+
+
+
+
+
+    
+
+
+
+
+
+        <div class="twitter-widget sidebar-widget">
+        <a class="twitter-timeline" data-dnt="true" href="https://twitter.com/ThePSF" data-widget-id="434113224703610882">Tweets by @ThePSF</a>
+        <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+    </div>
+
+    <div class="psf-sidebar-widget sidebar-widget">
+        <h3 class="widget-title">The PSF</h3>
+<p>The Python Software Foundation is the organization behind Python. Become a member of the PSF and help advance the software and our mission. </p>
+
+    </div>
+
+</aside>
+
+
+
+                
+                
+
+
+            </div><!-- end .container -->
+        </div><!-- end #content .content-wrapper -->
+
+        <!-- Footer and social media list -->
+        <footer id="site-map" class="main-footer" role="contentinfo">
+            <div class="main-footer-links">
+                <div class="container">
+
+                    
+                    <a id="back-to-top-1" class="jump-link" href="#python-network"><span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> Back to Top</a>
+
+                    
+
+<ul class="sitemap navigation menu do-not-print" role="tree" id="container">
+    
+    <li class="tier-1 element-1">
+        <a href="https://www.python.org/about/" >About</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/apps/" title="">Applications</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/quotes/" title="">Quotes</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/gettingstarted/" title="">Getting Started</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/help/" title="">Help</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-2">
+        <a href="https://www.python.org/downloads/" >Downloads</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/downloads/" title="">All releases</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/downloads/source/" title="">Source code</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/downloads/windows/" title="">Windows</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/downloads/mac-osx/" title="">Mac OS X</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/download/other/" title="">Other Platforms</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://docs.python.org/3/license.html" title="">License</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/download/alternatives" title="">Alternative Implementations</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-3">
+        <a href="https://www.python.org/doc/" >Documentation</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/doc/" title="">Docs</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/doc/av" title="">Audio/Visual Talks</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://wiki.python.org/moin/BeginnersGuide" title="">Beginner&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://docs.python.org/faq/" title="">FAQ</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="http://wiki.python.org/moin/Languages" title="">Non-English Docs</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="../index.html" title="">PEP Index</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://wiki.python.org/moin/PythonBooks" title="">Python Books</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-4">
+        <a href="https://www.python.org/community/" >Community</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/community/diversity/" title="">Diversity</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/community/irc/" title="">IRC</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/community/lists/" title="">Mailing Lists</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/workshops/" title="">Python Conferences</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/community/sigs/" title="">Special Interest Groups</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://wiki.python.org/moin/" title="">Python Wiki</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/community/logos/" title="">Python Logo</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://www.python.org/community/merchandise/" title="">Merchandise</a></li>
+    
+        <li class="tier-2 element-9" role="treeitem"><a href="https://www.python.org/community/awards" title="">Community Awards</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-5">
+        <a href="https://www.python.org/about/success/" title="success-stories">Success Stories</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/success/#arts" title="">Arts</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/success/#business" title="">Business</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/success/#education" title="">Education</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/success/#engineering" title="">Engineering</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/about/success/#government" title="">Government</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://www.python.org/about/success/#scientific" title="">Scientific</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/about/success/#software-development" title="">Software Development</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-6">
+        <a href="https://www.python.org/blogs/" title="News from around the Python world">News</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/blogs/" title="Python Insider Blog Posts">Python News</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://planetpython.org/" title="Planet Python">Community News</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="http://pyfound.blogspot.com/" title="PSF Blog">PSF News</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pycon.blogspot.com/" title="PyCon Blog">PyCon News</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-7">
+        <a href="https://www.python.org/events/" >Events</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/events/python-events/" title="">Python Events</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/events/python-user-group/" title="">User Group Events</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/events/python-events/past/" title="">Python Events Archive</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/events/python-user-group/past/" title="">User Group Events Archive</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://wiki.python.org/moin/PythonEventsCalendar#Submitting_an_Event" title="">Submit an Event</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-8">
+        <a href="https://www.python.org/dev/" >Contributing</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="http://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://bugs.python.org/" title="">Issue Tracker</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://mail.python.org/mailman/listinfo/python-dev" title="">python-dev list</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pythonmentors.com/" title="">Core Mentorship</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+</ul>
+
+
+                    <a id="back-to-top-2" class="jump-link" href="#python-network"><span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> Back to Top</a>
+                    
+
+                </div><!-- end .container -->
+            </div> <!-- end .main-footer-links -->
+
+            <div class="site-base">
+                <div class="container">
+                    
+                    <ul class="footer-links navigation menu do-not-print" role="tree">
+                        <li class="tier-1 element-1"><a href="https://www.python.org/about/help/">Help &amp; <span class="say-no-more">General</span> Contact</a></li>
+                        <li class="tier-1 element-2"><a href="https://www.python.org/community/diversity/">Diversity <span class="say-no-more">Initiatives</span></a></li>
+                        <li class="tier-1 element-3"><a href="https://github.com/python/pythondotorg/issues">Submit Website Bug</a></li>
+                        <!--<li class="tier-1 element-3"><a href="#"><span class="say-no-more">Website</span> Colophon</a></li>-->
+                    </ul>
+
+                    <div class="copyright">
+                        <p><small>
+                            <span class="pre">Copyright &copy;2001-2015.</span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/psf-landing/">Python Software Foundation</a></span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/about/legal/">Legal Statements</a></span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/privacy/">Privacy Policy</a></span>
+                        </small></p>
+                    </div>
+
+                </div><!-- end .container -->
+            </div><!-- end .site-base -->
+
+        </footer>
+
+    </div><!-- end #touchnav-wrapper -->
+
+    
+    <script src="../../../../ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="../../../static/js/libs/jquery-1.8.2.min.js"><\/script>')</script>
+
+    <script src="../../../static/js/libs/masonry.pkgd.min.js"></script>
+
+    <script type="text/javascript" src="../../../static/js/main-min.js" charset="utf-8"></script>
+    
+
+    <!--[if lte IE 7]>
+    <script type="text/javascript" src="/static/js/plugins/IE8-min.js" charset="utf-8"></script>
+    
+    
+    <![endif]-->
+
+    <!--[if lte IE 8]>
+    <script type="text/javascript" src="/static/js/plugins/getComputedStyle-min.js" charset="utf-8"></script>
+    
+    
+    <![endif]-->
+
+    
+
+    
+    
+
+</body>
+</html>

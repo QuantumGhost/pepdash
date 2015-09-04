@@ -1,0 +1,3840 @@
+<!doctype html>
+<!--[if lt IE 7]>   <html class="no-js ie6 lt-ie7 lt-ie8 lt-ie9">   <![endif]-->
+<!--[if IE 7]>      <html class="no-js ie7 lt-ie8 lt-ie9">          <![endif]-->
+<!--[if IE 8]>      <html class="no-js ie8 lt-ie9">                 <![endif]-->
+<!--[if gt IE 8]><!--><html class="no-js" lang="en" dir="ltr">  <!--<![endif]-->
+
+
+<!-- Mirrored from www.python.org/dev/peps/pep-3119/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 03 Sep 2015 04:35:22 GMT -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <link rel="prefetch" href="../../../../ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js">
+
+    <meta name="application-name" content="Python.org">
+    <meta name="msapplication-tooltip" content="The official home of the Python Programming Language">
+    <meta name="apple-mobile-web-app-title" content="Python.org">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="format-detection" content="telephone=no">
+    <meta http-equiv="cleartype" content="on">
+    <meta http-equiv="imagetoolbar" content="false">
+
+    <script src="../../../static/js/libs/modernizr.js"></script>
+
+    <link href="../../../static/stylesheets/style.css" rel="stylesheet" type="text/css" title="default" />
+    <link href="../../../static/stylesheets/mq.css" rel="stylesheet" type="text/css" media="not print, braille, embossed, speech, tty" />
+    
+
+    <!--[if (lte IE 8)&(!IEMobile)]>
+    <link href="/static/stylesheets/no-mq.css" rel="stylesheet" type="text/css" media="screen" />
+    
+    
+    <![endif]-->
+
+    
+    <link rel="icon" type="image/x-icon" href="https://www.python.org/static/favicon.ico">
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="../../../static/apple-touch-icon-144x144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="../../../static/apple-touch-icon-114x114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="../../../static/apple-touch-icon-72x72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="../../../static/apple-touch-icon-precomposed.png">
+    <link rel="apple-touch-icon" href="../../../static/apple-touch-icon-precomposed.png">
+
+    
+    <meta name="msapplication-TileImage" content="/static/metro-icon-144x144-precomposed.png"><!-- white shape -->
+    <meta name="msapplication-TileColor" content="#3673a5"><!-- python blue -->
+    <meta name="msapplication-navbutton-color" content="#3673a5">
+
+    <meta property="og:site_name" content="Python.org">
+    <meta property="og:type" content="website">
+
+    <title>PEP 3119 -- Introducing Abstract Base Classes | Python.org</title>
+    <meta property="og:title" content="Welcome to Python.org">
+
+    
+    <meta name="description" content="The official home of the Python Programming Language">
+    <meta name="og:description" content="The official home of the Python Programming Language">
+    <meta name="keywords" content="Python programming language object oriented web free open source software license documentation download community">
+    <meta property="og:tag" content="Python programming language object oriented web free open source software license documentation download community">
+    <meta property="og:published_time" content="">
+    <meta property="og:modified_time" content="">
+    <meta property="og:author" content="">
+    <meta property="og:section" content=""> 
+    <meta property="og:url" content="">
+    <meta property="og:image" content="">
+    <meta property="og:video" content="">
+
+    <link rel="author" href="https://www.python.org/static/humans.txt">
+
+    
+
+    
+    <script type="application/ld+json">
+     {
+       "@context": "http://schema.org",
+       "@type": "WebSite",
+       "url": "https://www.python.org/",
+       "potentialAction": {
+         "@type": "SearchAction",
+         "target": "https://www.python.org/search/?q={search_term_string}",
+         "query-input": "required name=search_term_string"
+       }
+     }
+    </script>
+
+    
+    <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-39055973-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+    </script>
+    
+</head>
+
+<body class="python pages pep-page">
+
+    <div id="touchnav-wrapper">
+
+        <div id="nojs" class="do-not-print">
+            <p><strong>Notice:</strong> While Javascript is not essential for this website, your interaction with the content will be limited. Please turn Javascript on for the full experience. </p>
+        </div>
+
+        <!--[if lt IE 8]>
+        <div id="oldie-warning" class="do-not-print">
+            <p><strong>Notice:</strong> Your browser is <em>ancient</em> and <a href="http://www.ie6countdown.com/">Microsoft agrees</a>. <a href="http://browsehappy.com/">Upgrade to a different browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to experience a better web.</p>
+        </div>
+        <![endif]-->
+
+        <!-- Sister Site Links -->
+        <div id="top" class="top-bar do-not-print">
+
+            <nav class="meta-navigation container" role="navigation">
+
+                
+                <div class="skip-link screen-reader-text">
+                    <a href="#content" title="Skip to content">Skip to content</a>
+                </div>
+
+                
+                <a id="close-python-network" class="jump-link" href="#python-network" aria-hidden="true">
+                    <span aria-hidden="true" class="icon-arrow-down"><span>&#9660;</span></span> Close
+                </a>
+
+                
+
+<ul class="menu" role="tree">
+    
+    <li class="python-meta ">
+        <a href="https://www.python.org/" title="The Python Programming Language" >Python</a>
+    </li>
+    
+    <li class="psf-meta ">
+        <a href="https://www.python.org/psf-landing/" title="The Python Software Foundation" >PSF</a>
+    </li>
+    
+    <li class="docs-meta ">
+        <a href="https://docs.python.org/" title="Python Documentation" >Docs</a>
+    </li>
+    
+    <li class="pypi-meta ">
+        <a href="https://pypi.python.org/" title="Python Package Index" >PyPI</a>
+    </li>
+    
+    <li class="jobs-meta ">
+        <a href="https://www.python.org/jobs/" title="Python Job Board" >Jobs</a>
+    </li>
+    
+    <li class="shop-meta ">
+        <a href="https://www.python.org/community/" title="Python Community" >Community</a>
+    </li>
+    
+</ul>
+
+
+                <a id="python-network" class="jump-link" href="#top" aria-hidden="true">
+                    <span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> The Python Network
+                </a>
+
+            </nav>
+
+        </div>
+
+        <!-- Header elements -->
+        <header class="main-header" role="banner">
+            <div class="container">
+
+                <h1 class="site-headline">
+                    <a href="https://www.python.org/"><img class="python-logo" src="../../../static/img/python-logo.png" alt="python&trade;"></a>
+                </h1>
+
+                <div class="options-bar do-not-print">
+
+                    
+                    <a id="site-map-link" class="jump-to-menu" href="#site-map"><span class="menu-icon">&equiv;</span> Menu</a><form class="search-the-site" action="https://www.python.org/search/" method="get">
+                        <fieldset title="Search Python.org">
+
+                            <span aria-hidden="true" class="icon-search"></span>
+
+                            <label class="screen-reader-text" for="id-search-field">Search This Site</label>
+                            <input id="id-search-field" name="q" type="search" role="textbox" class="search-field" placeholder="Search" value="" tabindex="1">
+
+                            <button type="submit" name="submit" id="submit" class="search-button" title="Submit this Search" tabindex="3">
+                                GO
+                            </button>
+
+                            
+                            <!--[if IE]><input type="text" style="display: none;" disabled="disabled" size="1" tabindex="4"><![endif]-->
+
+                        </fieldset>
+                    </form><span class="breaker"></span><div class="adjust-font-size" aria-hidden="true">
+                        <ul class="navigation menu" aria-label="Adjust Text Size on Page">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                <a href="#" class="action-trigger"><strong><small>A</small> A</strong></a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a class="text-shrink" title="Make Text Smaller" href="javascript:;">Smaller</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a class="text-grow" title="Make Text Larger" href="javascript:;">Larger</a></li>
+                                    <li class="tier-2 element-3" role="treeitem"><a class="text-reset" title="Reset any font size changes I have made" href="javascript:;">Reset</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div><div class="winkwink-nudgenudge">
+                        <ul class="navigation menu" aria-label="Social Media Navigation">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                <a href="#" class="action-trigger">Socialize</a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a href="http://plus.google.com/+Python"><span aria-hidden="true" class="icon-google-plus"></span>Google+</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a href="http://www.facebook.com/pythonlang?fref=ts"><span aria-hidden="true" class="icon-facebook"></span>Facebook</a></li>
+                                    <li class="tier-2 element-3" role="treeitem"><a href="http://twitter.com/ThePSF"><span aria-hidden="true" class="icon-twitter"></span>Twitter</a></li>
+                                    <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/irc/"><span aria-hidden="true" class="icon-freenode"></span>Chat on IRC</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div><div class="account-signin">
+                        <ul class="navigation menu" aria-label="Social Media Navigation">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                
+                                <a href="https://www.python.org/accounts/login/" title="Sign Up or Sign In to Python.org">Sign In</a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/accounts/signup/">Sign Up / Register</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/accounts/login/">Sign In</a></li>
+                                </ul>
+                                
+                            </li>
+                        </ul>
+                    </div>
+
+                </div><!-- end options-bar -->
+
+                <nav id="mainnav" class="python-navigation main-navigation do-not-print" role="navigation">
+                    
+                        
+<ul class="navigation menu" role="menubar" aria-label="Main Navigation">
+  
+    
+    
+    <li id="about" class="tier-1 element-1  " aria-haspopup="true">
+        <a href="https://www.python.org/about/" title="" class="">About</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/apps/" title="">Applications</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/quotes/" title="">Quotes</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/gettingstarted/" title="">Getting Started</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/help/" title="">Help</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="downloads" class="tier-1 element-2  " aria-haspopup="true">
+        <a href="https://www.python.org/downloads/" title="" class="">Downloads</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/downloads/" title="">All releases</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/downloads/source/" title="">Source code</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/downloads/windows/" title="">Windows</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/downloads/mac-osx/" title="">Mac OS X</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/download/other/" title="">Other Platforms</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://docs.python.org/3/license.html" title="">License</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/download/alternatives" title="">Alternative Implementations</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="documentation" class="tier-1 element-3  " aria-haspopup="true">
+        <a href="https://www.python.org/doc/" title="" class="">Documentation</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/doc/" title="">Docs</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/doc/av" title="">Audio/Visual Talks</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://wiki.python.org/moin/BeginnersGuide" title="">Beginner&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://docs.python.org/faq/" title="">FAQ</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="http://wiki.python.org/moin/Languages" title="">Non-English Docs</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="../index.html" title="">PEP Index</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://wiki.python.org/moin/PythonBooks" title="">Python Books</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="community" class="tier-1 element-4  " aria-haspopup="true">
+        <a href="https://www.python.org/community/" title="" class="">Community</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/community/diversity/" title="">Diversity</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/community/irc/" title="">IRC</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/community/lists/" title="">Mailing Lists</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/workshops/" title="">Python Conferences</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/community/sigs/" title="">Special Interest Groups</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://wiki.python.org/moin/" title="">Python Wiki</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/community/logos/" title="">Python Logo</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://www.python.org/community/merchandise/" title="">Merchandise</a></li>
+    
+        <li class="tier-2 element-9" role="treeitem"><a href="https://www.python.org/community/awards" title="">Community Awards</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="success-stories" class="tier-1 element-5  " aria-haspopup="true">
+        <a href="https://www.python.org/about/success/" title="success-stories" class="">Success Stories</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/success/#arts" title="">Arts</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/success/#business" title="">Business</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/success/#education" title="">Education</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/success/#engineering" title="">Engineering</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/about/success/#government" title="">Government</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://www.python.org/about/success/#scientific" title="">Scientific</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/about/success/#software-development" title="">Software Development</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="news" class="tier-1 element-6  " aria-haspopup="true">
+        <a href="https://www.python.org/blogs/" title="News from around the Python world" class="">News</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/blogs/" title="Python Insider Blog Posts">Python News</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://planetpython.org/" title="Planet Python">Community News</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="http://pyfound.blogspot.com/" title="PSF Blog">PSF News</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pycon.blogspot.com/" title="PyCon Blog">PyCon News</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="events" class="tier-1 element-7  " aria-haspopup="true">
+        <a href="https://www.python.org/events/" title="" class="">Events</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/events/python-events/" title="">Python Events</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/events/python-user-group/" title="">User Group Events</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/events/python-events/past/" title="">Python Events Archive</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/events/python-user-group/past/" title="">User Group Events Archive</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://wiki.python.org/moin/PythonEventsCalendar#Submitting_an_Event" title="">Submit an Event</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    
+  
+</ul>
+
+                    
+                </nav>
+
+                <div class="header-banner "> <!-- for optional "do-not-print" class -->
+                    
+                    
+                </div>
+
+                
+                
+
+             </div><!-- end .container -->
+        </header>
+
+        <div id="content" class="content-wrapper">
+            <!-- Main Content Column -->
+            <div class="container">
+
+                <section class="main-content with-left-sidebar" role="main">
+
+                    
+<ul class="breadcrumbs menu">
+    <li>
+        <a href="https://www.python.org/" title="The Python Programming Language">Python</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>
+        <a href="https://www.python.org/dev/">Python Developer's Guide</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>
+        <a href="../index.html">PEP Index</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>PEP 3119 -- Introducing Abstract Base Classes</li>
+</ul>
+
+
+                    
+<style>
+   .pep-page pre {
+        padding: .5em;
+        background: inherit;
+        border-left: 0px;
+        -webkit-box-shadow: 0 0 0 0;
+        -moz-box-shadow: 0 0 0 0;
+        box-shadow: 0 0 0 0;
+   }
+</style>
+
+    
+    <article class="text">
+        
+
+        <header class="article-header">
+            <h1 class="page-title">PEP 3119 -- Introducing Abstract Base Classes</h1>
+        </header>
+
+        <!--
+This HTML is auto-generated.  DO NOT EDIT THIS FILE!  If you are writing a new
+PEP, see http://www.python.org/dev/peps/pep-0001 for instructions and links
+to templates.  DO NOT USE THIS HTML FILE AS YOUR TEMPLATE!
+-->
+<html>
+ <body>
+  <table class="rfc2822 docutils field-list" frame="void" rules="none">
+   <col class="field-name">
+   </col>
+   <col class="field-body">
+   </col>
+   <tbody valign="top">
+    <tr class="field">
+     <th class="field-name">
+      PEP:
+     </th>
+     <td class="field-body">
+      3119
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Title:
+     </th>
+     <td class="field-body">
+      Introducing Abstract Base Classes
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Author:
+     </th>
+     <td class="field-body">
+      Guido van Rossum &lt;guido at python.org&gt;, Talin &lt;talin at acm.org&gt;
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Status:
+     </th>
+     <td class="field-body">
+      Final
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Type:
+     </th>
+     <td class="field-body">
+      Standards Track
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Created:
+     </th>
+     <td class="field-body">
+      18-Apr-2007
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Post-History:
+     </th>
+     <td class="field-body">
+      26-Apr-2007, 11-May-2007
+     </td>
+    </tr>
+   </tbody>
+  </table>
+  <hr/>
+  <div class="contents topic" id="contents">
+   <p class="topic-title first">
+    Contents
+   </p>
+   <ul class="simple">
+    <li>
+     <a class="reference internal" href="#abstract" id="id29">
+      Abstract
+     </a>
+     <ul>
+      <li>
+       <a class="reference internal" href="#acknowledgements" id="id30">
+        Acknowledgements
+       </a>
+      </li>
+     </ul>
+    </li>
+    <li>
+     <a class="reference internal" href="#rationale" id="id31">
+      Rationale
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#specification" id="id32">
+      Specification
+     </a>
+     <ul>
+      <li>
+       <a class="reference internal" href="#overloading-isinstance-and-issubclass" id="id33">
+        Overloading
+        <tt class="docutils literal">
+         isinstance()
+        </tt>
+        and
+        <tt class="docutils literal">
+         issubclass()
+        </tt>
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#the-abc-module-an-abc-support-framework" id="id34">
+        The
+        <tt class="docutils literal">
+         abc
+        </tt>
+        Module: an ABC Support Framework
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#abcs-for-containers-and-iterators" id="id35">
+        ABCs for Containers and Iterators
+       </a>
+       <ul>
+        <li>
+         <a class="reference internal" href="#one-trick-ponies" id="id36">
+          One Trick Ponies
+         </a>
+        </li>
+        <li>
+         <a class="reference internal" href="#sets" id="id37">
+          Sets
+         </a>
+        </li>
+        <li>
+         <a class="reference internal" href="#mappings" id="id38">
+          Mappings
+         </a>
+        </li>
+        <li>
+         <a class="reference internal" href="#sequences" id="id39">
+          Sequences
+         </a>
+        </li>
+       </ul>
+      </li>
+      <li>
+       <a class="reference internal" href="#strings" id="id40">
+        Strings
+       </a>
+      </li>
+     </ul>
+    </li>
+    <li>
+     <a class="reference internal" href="#abcs-vs-alternatives" id="id41">
+      ABCs vs. Alternatives
+     </a>
+     <ul>
+      <li>
+       <a class="reference internal" href="#abcs-vs-duck-typing" id="id42">
+        ABCs vs. Duck Typing
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#abcs-vs-generic-functions" id="id43">
+        ABCs vs. Generic Functions
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#abcs-vs-interfaces" id="id44">
+        ABCs vs. Interfaces
+       </a>
+      </li>
+     </ul>
+    </li>
+    <li>
+     <a class="reference internal" href="#references" id="id45">
+      References
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#copyright" id="id46">
+      Copyright
+     </a>
+    </li>
+   </ul>
+  </div>
+  <div class="section" id="abstract">
+   <h1>
+    <a class="toc-backref" href="#id29">
+     Abstract
+    </a>
+   </h1>
+   <p>
+    This is a proposal to add Abstract Base Class (ABC) support to Python
+3000.  It proposes:
+   </p>
+   <ul class="simple">
+    <li>
+     A way to overload
+     <tt class="docutils literal">
+      isinstance()
+     </tt>
+     and
+     <tt class="docutils literal">
+      issubclass()
+     </tt>
+     .
+    </li>
+    <li>
+     A new module
+     <tt class="docutils literal">
+      abc
+     </tt>
+     which serves as an "ABC support framework".  It
+defines a metaclass for use with ABCs and a decorator that can be
+used to define abstract methods.
+    </li>
+    <li>
+     Specific ABCs for containers and iterators, to be added to the
+collections module.
+    </li>
+   </ul>
+   <p>
+    Much of the thinking that went into the proposal is not about the
+specific mechanism of ABCs, as contrasted with Interfaces or Generic
+Functions (GFs), but about clarifying philosophical issues like "what
+makes a set", "what makes a mapping" and "what makes a sequence".
+   </p>
+   <p>
+    There's also a companion
+    <a class="reference external" href="../pep-3141/index.html">
+     PEP 3141
+    </a>
+    , which defines ABCs for numeric
+types.
+   </p>
+   <div class="section" id="acknowledgements">
+    <h2>
+     <a class="toc-backref" href="#id30">
+      Acknowledgements
+     </a>
+    </h2>
+    <p>
+     Talin wrote the Rationale below
+     <a class="footnote-reference" href="#id13" id="id1">
+      [1]
+     </a>
+     as well as most of the section on
+ABCs vs. Interfaces.  For that alone he deserves co-authorship.  The
+rest of the PEP uses "I" referring to the first author.
+    </p>
+   </div>
+  </div>
+  <div class="section" id="rationale">
+   <h1>
+    <a class="toc-backref" href="#id31">
+     Rationale
+    </a>
+   </h1>
+   <p>
+    In the domain of object-oriented programming, the usage patterns for
+interacting with an object can be divided into two basic categories,
+which are 'invocation' and 'inspection'.
+   </p>
+   <p>
+    Invocation means interacting with an object by invoking its methods.
+Usually this is combined with polymorphism, so that invoking a given
+method may run different code depending on the type of an object.
+   </p>
+   <p>
+    Inspection means the ability for external code (outside of the
+object's methods) to examine the type or properties of that object,
+and make decisions on how to treat that object based on that
+information.
+   </p>
+   <p>
+    Both usage patterns serve the same general end, which is to be able to
+support the processing of diverse and potentially novel objects in a
+uniform way, but at the same time allowing processing decisions to be
+customized for each different type of object.
+   </p>
+   <p>
+    In classical OOP theory, invocation is the preferred usage pattern,
+and inspection is actively discouraged, being considered a relic of an
+earlier, procedural programming style.  However, in practice this view
+is simply too dogmatic and inflexible, and leads to a kind of design
+rigidity that is very much at odds with the dynamic nature of a
+language like Python.
+   </p>
+   <p>
+    In particular, there is often a need to process objects in a way that
+wasn't anticipated by the creator of the object class.  It is not
+always the best solution to build in to every object methods that
+satisfy the needs of every possible user of that object.  Moreover,
+there are many powerful dispatch philosophies that are in direct
+contrast to the classic OOP requirement of behavior being strictly
+encapsulated within an object, examples being rule or pattern-match
+driven logic.
+   </p>
+   <p>
+    On the other hand, one of the criticisms of inspection by classic
+OOP theorists is the lack of formalisms and the ad hoc nature of what
+is being inspected.  In a language such as Python, in which almost any
+aspect of an object can be reflected and directly accessed by external
+code, there are many different ways to test whether an object conforms
+to a particular protocol or not.  For example, if asking 'is this
+object a mutable sequence container?', one can look for a base class
+of 'list', or one can look for a method named '__getitem__'.  But note
+that although these tests may seem obvious, neither of them are
+correct, as one generates false negatives, and the other false
+positives.
+   </p>
+   <p>
+    The generally agreed-upon remedy is to standardize the tests, and
+group them into a formal arrangement.  This is most easily done by
+associating with each class a set of standard testable properties,
+either via the inheritance mechanism or some other means.  Each test
+carries with it a set of promises: it contains a promise about the
+general behavior of the class, and a promise as to what other class
+methods will be available.
+   </p>
+   <p>
+    This PEP proposes a particular strategy for organizing these tests
+known as Abstract Base Classes, or ABC.  ABCs are simply Python
+classes that are added into an object's inheritance tree to signal
+certain features of that object to an external inspector.  Tests are
+done using
+    <tt class="docutils literal">
+     isinstance()
+    </tt>
+    , and the presence of a particular ABC
+means that the test has passed.
+   </p>
+   <p>
+    In addition, the ABCs define a minimal set of methods that establish
+the characteristic behavior of the type.  Code that discriminates
+objects based on their ABC type can trust that those methods will
+always be present.  Each of these methods are accompanied by an
+generalized abstract semantic definition that is described in the
+documentation for the ABC.  These standard semantic definitions are
+not enforced, but are strongly recommended.
+   </p>
+   <p>
+    Like all other things in Python, these promises are in the nature of a
+gentlemen's agreement, which in this case means that while the
+language does enforce some of the promises made in the ABC, it is up
+to the implementer of the concrete class to insure that the remaining
+ones are kept.
+   </p>
+  </div>
+  <div class="section" id="specification">
+   <h1>
+    <a class="toc-backref" href="#id32">
+     Specification
+    </a>
+   </h1>
+   <p>
+    The specification follows the categories listed in the abstract:
+   </p>
+   <ul class="simple">
+    <li>
+     A way to overload
+     <tt class="docutils literal">
+      isinstance()
+     </tt>
+     and
+     <tt class="docutils literal">
+      issubclass()
+     </tt>
+     .
+    </li>
+    <li>
+     A new module
+     <tt class="docutils literal">
+      abc
+     </tt>
+     which serves as an "ABC support framework".  It
+defines a metaclass for use with ABCs and a decorator that can be
+used to define abstract methods.
+    </li>
+    <li>
+     Specific ABCs for containers and iterators, to be added to the
+collections module.
+    </li>
+   </ul>
+   <div class="section" id="overloading-isinstance-and-issubclass">
+    <h2>
+     <a class="toc-backref" href="#id33">
+      Overloading
+      <tt class="docutils literal">
+       isinstance()
+      </tt>
+      and
+      <tt class="docutils literal">
+       issubclass()
+      </tt>
+     </a>
+    </h2>
+    <p>
+     During the development of this PEP and of its companion,
+     <a class="reference external" href="../pep-3141/index.html">
+      PEP 3141
+     </a>
+     , we
+repeatedly faced the choice between standardizing more, fine-grained
+ABCs or fewer, course-grained ones.  For example, at one stage,
+     <a class="reference external" href="../pep-3141/index.html">
+      PEP
+3141
+     </a>
+     introduced the following stack of base classes used for complex
+numbers: MonoidUnderPlus, AdditiveGroup, Ring, Field, Complex (each
+derived from the previous).  And the discussion mentioned several
+other algebraic categorizations that were left out: Algebraic,
+Transcendental, and IntegralDomain, and PrincipalIdealDomain.  In
+earlier versions of the current PEP, we considered the use cases for
+separate classes like Set, ComposableSet, MutableSet, HashableSet,
+MutableComposableSet, HashableComposableSet.
+    </p>
+    <p>
+     The dilemma here is that we'd rather have fewer ABCs, but then what
+should a user do who needs a less refined ABC?  Consider e.g. the
+plight of a mathematician who wants to define his own kind of
+Transcendental numbers, but also wants float and int to be considered
+Transcendental.
+     <a class="reference external" href="../pep-3141/index.html">
+      PEP 3141
+     </a>
+     originally proposed to patch float.__bases__
+for that purpose, but there are some good reasons to keep the built-in
+types immutable (for one, they are shared between all Python
+interpreters running in the same address space, as is used by
+mod_python
+     <a class="footnote-reference" href="#id28" id="id2">
+      [16]
+     </a>
+     ).
+    </p>
+    <p>
+     Another example would be someone who wants to define a generic
+function (
+     <a class="reference external" href="../pep-3124/index.html">
+      PEP 3124
+     </a>
+     ) for any sequence that has an
+     <tt class="docutils literal">
+      append()
+     </tt>
+     method.
+The
+     <tt class="docutils literal">
+      Sequence
+     </tt>
+     ABC (see below) doesn't promise the
+     <tt class="docutils literal">
+      append()
+     </tt>
+     method, while
+     <tt class="docutils literal">
+      MutableSequence
+     </tt>
+     requires not only
+     <tt class="docutils literal">
+      append()
+     </tt>
+     but
+also various other mutating methods.
+    </p>
+    <p>
+     To solve these and similar dilemmas, the next section will propose a
+metaclass for use with ABCs that will allow us to add an ABC as a
+"virtual base class" (not the same concept as in C++) to any class,
+including to another ABC.  This allows the standard library to define
+ABCs
+     <tt class="docutils literal">
+      Sequence
+     </tt>
+     and
+     <tt class="docutils literal">
+      MutableSequence
+     </tt>
+     and register these as
+virtual base classes for built-in types like
+     <tt class="docutils literal">
+      basestring
+     </tt>
+     ,
+     <tt class="docutils literal">
+      tuple
+     </tt>
+     and
+     <tt class="docutils literal">
+      list
+     </tt>
+     , so that for example the following conditions are all
+true:
+    </p>
+    <pre class="literal-block">
+isinstance([], Sequence)
+issubclass(list, Sequence)
+issubclass(list, MutableSequence)
+isinstance((), Sequence)
+not issubclass(tuple, MutableSequence)
+isinstance("", Sequence)
+issubclass(bytearray, MutableSequence)
+</pre>
+    <p>
+     The primary mechanism proposed here is to allow overloading the
+built-in functions
+     <tt class="docutils literal">
+      isinstance()
+     </tt>
+     and
+     <tt class="docutils literal">
+      issubclass()
+     </tt>
+     .  The
+overloading works as follows: The call
+     <tt class="docutils literal">
+      isinstance(x, C)
+     </tt>
+     first
+checks whether
+     <tt class="docutils literal">
+      C.__instancecheck__
+     </tt>
+     exists, and if so, calls
+     <tt class="docutils literal">
+      C.__instancecheck__(x)
+     </tt>
+     instead of its normal implementation.
+Similarly, the call
+     <tt class="docutils literal">
+      issubclass(D, C)
+     </tt>
+     first checks whether
+     <tt class="docutils literal">
+      C.__subclasscheck__
+     </tt>
+     exists, and if so, calls
+     <tt class="docutils literal">
+      C.__subclasscheck__(D)
+     </tt>
+     instead of its normal implementation.
+    </p>
+    <p>
+     Note that the magic names are not
+     <tt class="docutils literal">
+      __isinstance__
+     </tt>
+     and
+     <tt class="docutils literal">
+      __issubclass__
+     </tt>
+     ; this is because the reversal of the arguments
+could cause confusion, especially for the
+     <tt class="docutils literal">
+      issubclass()
+     </tt>
+     overloader.
+    </p>
+    <p>
+     A prototype implementation of this is given in
+     <a class="footnote-reference" href="#id24" id="id3">
+      [12]
+     </a>
+     .
+    </p>
+    <p>
+     Here is an example with (naively simple) implementations of
+     <tt class="docutils literal">
+      __instancecheck__
+     </tt>
+     and
+     <tt class="docutils literal">
+      __subclasscheck__
+     </tt>
+     :
+    </p>
+    <pre class="literal-block">
+class ABCMeta(type):
+
+    def __instancecheck__(cls, inst):
+        """Implement isinstance(inst, cls)."""
+        return any(cls.__subclasscheck__(c)
+                   for c in {type(inst), inst.__class__})
+
+    def __subclasscheck__(cls, sub):
+        """Implement issubclass(sub, cls)."""
+        candidates = cls.__dict__.get("__subclass__", set()) | {cls}
+        return any(c in candidates for c in sub.mro())
+
+class Sequence(metaclass=ABCMeta):
+    __subclass__ = {list, tuple}
+
+assert issubclass(list, Sequence)
+assert issubclass(tuple, Sequence)
+
+class AppendableSequence(Sequence):
+    __subclass__ = {list}
+
+assert issubclass(list, AppendableSequence)
+assert isinstance([], AppendableSequence)
+
+assert not issubclass(tuple, AppendableSequence)
+assert not isinstance((), AppendableSequence)
+</pre>
+    <p>
+     The next section proposes a full-fledged implementation.
+    </p>
+   </div>
+   <div class="section" id="the-abc-module-an-abc-support-framework">
+    <h2>
+     <a class="toc-backref" href="#id34">
+      The
+      <tt class="docutils literal">
+       abc
+      </tt>
+      Module: an ABC Support Framework
+     </a>
+    </h2>
+    <p>
+     The new standard library module
+     <tt class="docutils literal">
+      abc
+     </tt>
+     , written in pure Python,
+serves as an ABC support framework.  It defines a metaclass
+     <tt class="docutils literal">
+      ABCMeta
+     </tt>
+     and decorators
+     <tt class="docutils literal">
+      @abstractmethod
+     </tt>
+     and
+     <tt class="docutils literal">
+      @abstractproperty
+     </tt>
+     .  A sample implementation is given by
+     <a class="footnote-reference" href="#id25" id="id4">
+      [13]
+     </a>
+     .
+    </p>
+    <p>
+     The
+     <tt class="docutils literal">
+      ABCMeta
+     </tt>
+     class overrides
+     <tt class="docutils literal">
+      __instancecheck__
+     </tt>
+     and
+     <tt class="docutils literal">
+      __subclasscheck__
+     </tt>
+     and defines a
+     <tt class="docutils literal">
+      register
+     </tt>
+     method.  The
+     <tt class="docutils literal">
+      register
+     </tt>
+     method takes one argument, which must be a class; after
+the call
+     <tt class="docutils literal">
+      B.register(C)
+     </tt>
+     , the call
+     <tt class="docutils literal">
+      issubclass(C, B)
+     </tt>
+     will return
+True, by virtue of
+     <tt class="docutils literal">
+      B.__subclasscheck__(C)
+     </tt>
+     returning True.
+Also,
+     <tt class="docutils literal">
+      isinstance(x, B)
+     </tt>
+     is equivalent to
+     <tt class="docutils literal">
+      issubclass(x.__class__,
+B) or issubclass(type(x), B)
+     </tt>
+     .  (It is possible
+     <tt class="docutils literal">
+      type(x)
+     </tt>
+     and
+     <tt class="docutils literal">
+      x.__class__
+     </tt>
+     are not the same object, e.g. when x is a proxy
+object.)
+    </p>
+    <p>
+     These methods are intended to be be called on classes whose metaclass
+is (derived from)
+     <tt class="docutils literal">
+      ABCMeta
+     </tt>
+     ; for example:
+    </p>
+    <pre class="literal-block">
+from abc import ABCMeta
+
+class MyABC(metaclass=ABCMeta):
+    pass
+
+MyABC.register(tuple)
+
+assert issubclass(tuple, MyABC)
+assert isinstance((), MyABC)
+</pre>
+    <p>
+     The last two asserts are equivalent to the following two:
+    </p>
+    <pre class="literal-block">
+assert MyABC.__subclasscheck__(tuple)
+assert MyABC.__instancecheck__(())
+</pre>
+    <p>
+     Of course, you can also directly subclass MyABC:
+    </p>
+    <pre class="literal-block">
+class MyClass(MyABC):
+    pass
+
+assert issubclass(MyClass, MyABC)
+assert isinstance(MyClass(), MyABC)
+</pre>
+    <p>
+     Also, of course, a tuple is not a
+     <tt class="docutils literal">
+      MyClass
+     </tt>
+     :
+    </p>
+    <pre class="literal-block">
+assert not issubclass(tuple, MyClass)
+assert not isinstance((), MyClass)
+</pre>
+    <p>
+     You can register another class as a subclass of
+     <tt class="docutils literal">
+      MyClass
+     </tt>
+     :
+    </p>
+    <pre class="literal-block">
+MyClass.register(list)
+
+assert issubclass(list, MyClass)
+assert issubclass(list, MyABC)
+</pre>
+    <p>
+     You can also register another ABC:
+    </p>
+    <pre class="literal-block">
+class AnotherClass(metaclass=ABCMeta):
+    pass
+
+AnotherClass.register(basestring)
+
+MyClass.register(AnotherClass)
+
+assert isinstance(str, MyABC)
+</pre>
+    <p>
+     That last assert requires tracing the following superclass-subclass
+relationships:
+    </p>
+    <pre class="literal-block">
+MyABC -&gt; MyClass (using regular subclassing)
+MyClass -&gt; AnotherClass (using registration)
+AnotherClass -&gt; basestring (using registration)
+basestring -&gt; str (using regular subclassing)
+</pre>
+    <p>
+     The
+     <tt class="docutils literal">
+      abc
+     </tt>
+     module also defines a new decorator,
+     <tt class="docutils literal">
+      @abstractmethod
+     </tt>
+     ,
+to be used to declare abstract methods.  A class containing at least
+one method declared with this decorator that hasn't been overridden
+yet cannot be instantiated.  Such methods may be called from the
+overriding method in the subclass (using
+     <tt class="docutils literal">
+      super
+     </tt>
+     or direct
+invocation).  For example:
+    </p>
+    <pre class="literal-block">
+from abc import ABCMeta, abstractmethod
+
+class A(metaclass=ABCMeta):
+    @abstractmethod
+    def foo(self): pass
+
+A()  # raises TypeError
+
+class B(A):
+    pass
+
+B()  # raises TypeError
+
+class C(A):
+    def foo(self): print(42)
+
+C()  # works
+</pre>
+    <p>
+     <strong>
+      Note:
+     </strong>
+     The
+     <tt class="docutils literal">
+      @abstractmethod
+     </tt>
+     decorator should only be used
+inside a class body, and only for classes whose metaclass is (derived
+from)
+     <tt class="docutils literal">
+      ABCMeta
+     </tt>
+     .  Dynamically adding abstract methods to a class, or
+attempting to modify the abstraction status of a method or class once
+it is created, are not supported.  The
+     <tt class="docutils literal">
+      @abstractmethod
+     </tt>
+     only
+affects subclasses derived using regular inheritance; "virtual
+subclasses" registered with the
+     <tt class="docutils literal">
+      register()
+     </tt>
+     method are not affected.
+    </p>
+    <p>
+     <strong>
+      Implementation:
+     </strong>
+     The
+     <tt class="docutils literal">
+      @abstractmethod
+     </tt>
+     decorator sets the
+function attribute
+     <tt class="docutils literal">
+      __isabstractmethod__
+     </tt>
+     to the value
+     <tt class="docutils literal">
+      True
+     </tt>
+     .
+The
+     <tt class="docutils literal">
+      ABCMeta.__new__
+     </tt>
+     method computes the type attribute
+     <tt class="docutils literal">
+      __abstractmethods__
+     </tt>
+     as the set of all method names that have an
+     <tt class="docutils literal">
+      __isabstractmethod__
+     </tt>
+     attribute whose value is true.  It does this
+by combining the
+     <tt class="docutils literal">
+      __abstractmethods__
+     </tt>
+     attributes of the base
+classes, adding the names of all methods in the new class dict that
+have a true
+     <tt class="docutils literal">
+      __isabstractmethod__
+     </tt>
+     attribute, and removing the names
+of all methods in the new class dict that don't have a true
+     <tt class="docutils literal">
+      __isabstractmethod__
+     </tt>
+     attribute.  If the resulting
+     <tt class="docutils literal">
+      __abstractmethods__
+     </tt>
+     set is non-empty, the class is considered
+abstract, and attempts to instantiate it will raise
+     <tt class="docutils literal">
+      TypeError
+     </tt>
+     .
+(If this were implemented in CPython, an internal flag
+     <tt class="docutils literal">
+      Py_TPFLAGS_ABSTRACT
+     </tt>
+     could be used to speed up this check
+     <a class="footnote-reference" href="#id18" id="id5">
+      [6]
+     </a>
+     .)
+    </p>
+    <p>
+     <strong>
+      Discussion:
+     </strong>
+     Unlike Java's abstract methods or C++'s pure abstract
+methods, abstract methods as defined here may have an implementation.
+This implementation can be called via the
+     <tt class="docutils literal">
+      super
+     </tt>
+     mechanism from the
+class that overrides it.  This could be useful as an end-point for a
+super-call in framework using cooperative multiple-inheritance
+     <a class="footnote-reference" href="#id19" id="id6">
+      [7]
+     </a>
+     ,
+     <a class="footnote-reference" href="#id20" id="id7">
+      [8]
+     </a>
+     .
+    </p>
+    <p>
+     A second decorator,
+     <tt class="docutils literal">
+      @abstractproperty
+     </tt>
+     , is defined in order to
+define abstract data attributes.  Its implementation is a subclass of
+the built-in
+     <tt class="docutils literal">
+      property
+     </tt>
+     class that adds an
+     <tt class="docutils literal">
+      __isabstractmethod__
+     </tt>
+     attribute:
+    </p>
+    <pre class="literal-block">
+class abstractproperty(property):
+    __isabstractmethod__ = True
+</pre>
+    <p>
+     It can be used in two ways:
+    </p>
+    <pre class="literal-block">
+class C(metaclass=ABCMeta):
+
+    # A read-only property:
+
+    @abstractproperty
+    def readonly(self):
+        return self.__x
+
+    # A read-write property (cannot use decorator syntax):
+
+    def getx(self):
+        return self.__x
+    def setx(self, value):
+        self.__x = value
+    x = abstractproperty(getx, setx)
+</pre>
+    <p>
+     Similar to abstract methods, a subclass inheriting an abstract
+property (declared using either the decorator syntax or the longer
+form) cannot be instantiated unless it overrides that abstract
+property with a concrete property.
+    </p>
+   </div>
+   <div class="section" id="abcs-for-containers-and-iterators">
+    <h2>
+     <a class="toc-backref" href="#id35">
+      ABCs for Containers and Iterators
+     </a>
+    </h2>
+    <p>
+     The
+     <tt class="docutils literal">
+      collections
+     </tt>
+     module will define ABCs necessary and sufficient
+to work with sets, mappings, sequences, and some helper types such as
+iterators and dictionary views.  All ABCs have the above-mentioned
+     <tt class="docutils literal">
+      ABCMeta
+     </tt>
+     as their metaclass.
+    </p>
+    <p>
+     The ABCs provide implementations of their abstract methods that are
+technically valid but fairly useless; e.g.
+     <tt class="docutils literal">
+      __hash__
+     </tt>
+     returns 0, and
+     <tt class="docutils literal">
+      __iter__
+     </tt>
+     returns an empty iterator.  In general, the abstract
+methods represent the behavior of an empty container of the indicated
+type.
+    </p>
+    <p>
+     Some ABCs also provide concrete (i.e. non-abstract) methods; for
+example, the
+     <tt class="docutils literal">
+      Iterator
+     </tt>
+     class has an
+     <tt class="docutils literal">
+      __iter__
+     </tt>
+     method returning
+itself, fulfilling an important invariant of iterators (which in
+Python 2 has to be implemented anew by each iterator class).  These
+ABCs can be considered "mix-in" classes.
+    </p>
+    <p>
+     No ABCs defined in the PEP override
+     <tt class="docutils literal">
+      __init__
+     </tt>
+     ,
+     <tt class="docutils literal">
+      __new__
+     </tt>
+     ,
+     <tt class="docutils literal">
+      __str__
+     </tt>
+     or
+     <tt class="docutils literal">
+      __repr__
+     </tt>
+     .  Defining a standard constructor
+signature would unnecessarily constrain custom container types, for
+example Patricia trees or gdbm files.  Defining a specific string
+representation for a collection is similarly left up to individual
+implementations.
+    </p>
+    <p>
+     <strong>
+      Note:
+     </strong>
+     There are no ABCs for ordering operations (
+     <tt class="docutils literal">
+      __lt__
+     </tt>
+     ,
+     <tt class="docutils literal">
+      __le__
+     </tt>
+     ,
+     <tt class="docutils literal">
+      __ge__
+     </tt>
+     ,
+     <tt class="docutils literal">
+      __gt__
+     </tt>
+     ).  Defining these in a base class
+(abstract or not) runs into problems with the accepted type for the
+second operand.  For example, if class
+     <tt class="docutils literal">
+      Ordering
+     </tt>
+     defined
+     <tt class="docutils literal">
+      __lt__
+     </tt>
+     , one would assume that for any
+     <tt class="docutils literal">
+      Ordering
+     </tt>
+     instances
+     <tt class="docutils literal">
+      x
+     </tt>
+     and
+     <tt class="docutils literal">
+      y
+     </tt>
+     ,
+     <tt class="docutils literal">
+      x &lt; y
+     </tt>
+     would be defined (even if it just defines a
+partial ordering).  But this cannot be the case: If both
+     <tt class="docutils literal">
+      list
+     </tt>
+     and
+     <tt class="docutils literal">
+      str
+     </tt>
+     derived from
+     <tt class="docutils literal">
+      Ordering
+     </tt>
+     , this would imply that
+     <tt class="docutils literal">
+      [1, 2] &lt;
+(1, 2)
+     </tt>
+     should be defined (and presumably return False), while in
+fact (in Python 3000!)  such "mixed-mode comparisons" operations are
+explicitly forbidden and raise
+     <tt class="docutils literal">
+      TypeError
+     </tt>
+     .  See
+     <a class="reference external" href="../pep-3100/index.html">
+      PEP 3100
+     </a>
+     and
+     <a class="footnote-reference" href="#id26" id="id8">
+      [14]
+     </a>
+     for more information.  (This is a special case of a more general issue
+with operations that take another argument of the same type).
+    </p>
+    <div class="section" id="one-trick-ponies">
+     <h3>
+      <a class="toc-backref" href="#id36">
+       One Trick Ponies
+      </a>
+     </h3>
+     <p>
+      These abstract classes represent single methods like
+      <tt class="docutils literal">
+       __iter__
+      </tt>
+      or
+      <tt class="docutils literal">
+       __len__
+      </tt>
+      .
+     </p>
+     <dl class="docutils">
+      <dt>
+       <tt class="docutils literal">
+        Hashable
+       </tt>
+      </dt>
+      <dd>
+       <p class="first">
+        The base class for classes defining
+        <tt class="docutils literal">
+         __hash__
+        </tt>
+        .  The
+        <tt class="docutils literal">
+         __hash__
+        </tt>
+        method should return an integer.  The abstract
+        <tt class="docutils literal">
+         __hash__
+        </tt>
+        method always returns 0, which is a valid (albeit
+inefficient) implementation.
+        <strong>
+         Invariant:
+        </strong>
+        If classes
+        <tt class="docutils literal">
+         C1
+        </tt>
+        and
+        <tt class="docutils literal">
+         C2
+        </tt>
+        both derive from
+        <tt class="docutils literal">
+         Hashable
+        </tt>
+        , the condition
+        <tt class="docutils literal">
+         o1 == o2
+        </tt>
+        must imply
+        <tt class="docutils literal">
+         hash(o1) == hash(o2)
+        </tt>
+        for all instances
+        <tt class="docutils literal">
+         o1
+        </tt>
+        of
+        <tt class="docutils literal">
+         C1
+        </tt>
+        and all instances
+        <tt class="docutils literal">
+         o2
+        </tt>
+        of
+        <tt class="docutils literal">
+         C2
+        </tt>
+        .  In other words, two
+objects should never compare equal if they have different hash
+values.
+       </p>
+       <p>
+        Another constraint is that hashable objects, once created, should
+never change their value (as compared by
+        <tt class="docutils literal">
+         ==
+        </tt>
+        ) or their hash
+value.  If a class cannot guarantee this, it should not derive
+from
+        <tt class="docutils literal">
+         Hashable
+        </tt>
+        ; if it cannot guarantee this for certain
+instances,
+        <tt class="docutils literal">
+         __hash__
+        </tt>
+        for those instances should raise a
+        <tt class="docutils literal">
+         TypeError
+        </tt>
+        exception.
+       </p>
+       <p class="last">
+        <strong>
+         Note:
+        </strong>
+        being an instance of this class does not imply that an
+object is immutable; e.g. a tuple containing a list as a member is
+not immutable; its
+        <tt class="docutils literal">
+         __hash__
+        </tt>
+        method raises
+        <tt class="docutils literal">
+         TypeError
+        </tt>
+        .
+(This is because it recursively tries to compute the hash of each
+member; if a member is unhashable it raises
+        <tt class="docutils literal">
+         TypeError
+        </tt>
+        .)
+       </p>
+      </dd>
+      <dt>
+       <tt class="docutils literal">
+        Iterable
+       </tt>
+      </dt>
+      <dd>
+       The base class for classes defining
+       <tt class="docutils literal">
+        __iter__
+       </tt>
+       .  The
+       <tt class="docutils literal">
+        __iter__
+       </tt>
+       method should always return an instance of
+       <tt class="docutils literal">
+        Iterator
+       </tt>
+       (see below).  The abstract
+       <tt class="docutils literal">
+        __iter__
+       </tt>
+       method
+returns an empty iterator.
+      </dd>
+      <dt>
+       <tt class="docutils literal">
+        Iterator
+       </tt>
+      </dt>
+      <dd>
+       The base class for classes defining
+       <tt class="docutils literal">
+        __next__
+       </tt>
+       .  This derives
+from
+       <tt class="docutils literal">
+        Iterable
+       </tt>
+       .  The abstract
+       <tt class="docutils literal">
+        __next__
+       </tt>
+       method raises
+       <tt class="docutils literal">
+        StopIteration
+       </tt>
+       .  The concrete
+       <tt class="docutils literal">
+        __iter__
+       </tt>
+       method returns
+       <tt class="docutils literal">
+        self
+       </tt>
+       .  Note the distinction between
+       <tt class="docutils literal">
+        Iterable
+       </tt>
+       and
+       <tt class="docutils literal">
+        Iterator
+       </tt>
+       : an
+       <tt class="docutils literal">
+        Iterable
+       </tt>
+       can be iterated over, i.e. supports
+the
+       <tt class="docutils literal">
+        __iter__
+       </tt>
+       methods; an
+       <tt class="docutils literal">
+        Iterator
+       </tt>
+       is what the built-in
+function
+       <tt class="docutils literal">
+        iter()
+       </tt>
+       returns, i.e. supports the
+       <tt class="docutils literal">
+        __next__
+       </tt>
+       method.
+      </dd>
+      <dt>
+       <tt class="docutils literal">
+        Sized
+       </tt>
+      </dt>
+      <dd>
+       The base class for classes defining
+       <tt class="docutils literal">
+        __len__
+       </tt>
+       .  The
+       <tt class="docutils literal">
+        __len__
+       </tt>
+       method should return an
+       <tt class="docutils literal">
+        Integer
+       </tt>
+       (see "Numbers" below) &gt;= 0.
+The abstract
+       <tt class="docutils literal">
+        __len__
+       </tt>
+       method returns 0.
+       <strong>
+        Invariant:
+       </strong>
+       If a
+class
+       <tt class="docutils literal">
+        C
+       </tt>
+       derives from
+       <tt class="docutils literal">
+        Sized
+       </tt>
+       as well as from
+       <tt class="docutils literal">
+        Iterable
+       </tt>
+       ,
+the invariant
+       <tt class="docutils literal">
+        sum(1 for x in c) == len(c)
+       </tt>
+       should hold for any
+instance
+       <tt class="docutils literal">
+        c
+       </tt>
+       of
+       <tt class="docutils literal">
+        C
+       </tt>
+       .
+      </dd>
+      <dt>
+       <tt class="docutils literal">
+        Container
+       </tt>
+      </dt>
+      <dd>
+       The base class for classes defining
+       <tt class="docutils literal">
+        __contains__
+       </tt>
+       .  The
+       <tt class="docutils literal">
+        __contains__
+       </tt>
+       method should return a
+       <tt class="docutils literal">
+        bool
+       </tt>
+       .  The abstract
+       <tt class="docutils literal">
+        __contains__
+       </tt>
+       method returns
+       <tt class="docutils literal">
+        False
+       </tt>
+       .
+       <strong>
+        Invariant:
+       </strong>
+       If a
+class
+       <tt class="docutils literal">
+        C
+       </tt>
+       derives from
+       <tt class="docutils literal">
+        Container
+       </tt>
+       as well as from
+       <tt class="docutils literal">
+        Iterable
+       </tt>
+       , then
+       <tt class="docutils literal">
+        (x in c for x in c)
+       </tt>
+       should be a generator
+yielding only True values for any instance
+       <tt class="docutils literal">
+        c
+       </tt>
+       of
+       <tt class="docutils literal">
+        C
+       </tt>
+       .
+      </dd>
+     </dl>
+     <p>
+      <strong>
+       Open issues:
+      </strong>
+      Conceivably, instead of using the ABCMeta metaclass,
+these classes could override
+      <tt class="docutils literal">
+       __instancecheck__
+      </tt>
+      and
+      <tt class="docutils literal">
+       __subclasscheck__
+      </tt>
+      to check for the presence of the applicable
+special method; for example:
+     </p>
+     <pre class="literal-block">
+class Sized(metaclass=ABCMeta):
+    @abstractmethod
+    def __hash__(self):
+        return 0
+    @classmethod
+    def __instancecheck__(cls, x):
+        return hasattr(x, "__len__")
+    @classmethod
+    def __subclasscheck__(cls, C):
+        return hasattr(C, "__bases__") and hasattr(C, "__len__")
+</pre>
+     <p>
+      This has the advantage of not requiring explicit registration.
+However, the semantics are hard to get exactly right given the confusing
+semantics of instance attributes vs. class attributes, and that a
+class is an instance of its metaclass; the check for
+      <tt class="docutils literal">
+       __bases__
+      </tt>
+      is
+only an approximation of the desired semantics.
+      <strong>
+       Strawman:
+      </strong>
+      Let's
+do it, but let's arrange it in such a way that the registration API
+also works.
+     </p>
+    </div>
+    <div class="section" id="sets">
+     <h3>
+      <a class="toc-backref" href="#id37">
+       Sets
+      </a>
+     </h3>
+     <p>
+      These abstract classes represent read-only sets and mutable sets.  The
+most fundamental set operation is the membership test, written as
+      <tt class="docutils literal">
+       x
+in s
+      </tt>
+      and implemented by
+      <tt class="docutils literal">
+       s.__contains__(x)
+      </tt>
+      .  This operation is
+already defined by the
+      <tt class="docutils literal">
+       Container
+      </tt>
+      class defined above.  Therefore,
+we define a set as a sized, iterable container for which certain
+invariants from mathematical set theory hold.
+     </p>
+     <p>
+      The built-in type
+      <tt class="docutils literal">
+       set
+      </tt>
+      derives from
+      <tt class="docutils literal">
+       MutableSet
+      </tt>
+      .  The built-in
+type
+      <tt class="docutils literal">
+       frozenset
+      </tt>
+      derives from
+      <tt class="docutils literal">
+       Set
+      </tt>
+      and
+      <tt class="docutils literal">
+       Hashable
+      </tt>
+      .
+     </p>
+     <dl class="docutils">
+      <dt>
+       <tt class="docutils literal">
+        Set
+       </tt>
+      </dt>
+      <dd>
+       <p class="first">
+        This is a sized, iterable container, i.e., a subclass of
+        <tt class="docutils literal">
+         Sized
+        </tt>
+        ,
+        <tt class="docutils literal">
+         Iterable
+        </tt>
+        and
+        <tt class="docutils literal">
+         Container
+        </tt>
+        .  Not every subclass of
+those three classes is a set though!  Sets have the additional
+invariant that each element occurs only once (as can be determined
+by iteration), and in addition sets define concrete operators that
+implement the inequality operations as subclass/superclass tests.
+In general, the invariants for finite sets in mathematics
+hold.
+        <a class="footnote-reference" href="#id23" id="id9">
+         [11]
+        </a>
+       </p>
+       <p>
+        Sets with different implementations can be compared safely,
+(usually) efficiently and correctly using the mathematical
+definitions of the subclass/superclass operations for finite sets.
+The ordering operations have concrete implementations; subclasses
+may override these for speed but should maintain the semantics.
+Because
+        <tt class="docutils literal">
+         Set
+        </tt>
+        derives from
+        <tt class="docutils literal">
+         Sized
+        </tt>
+        ,
+        <tt class="docutils literal">
+         __eq__
+        </tt>
+        may take a
+shortcut and return
+        <tt class="docutils literal">
+         False
+        </tt>
+        immediately if two sets of unequal
+length are compared.  Similarly,
+        <tt class="docutils literal">
+         __le__
+        </tt>
+        may return
+        <tt class="docutils literal">
+         False
+        </tt>
+        immediately if the first set has more members than the second set.
+Note that set inclusion implements only a partial ordering;
+e.g.
+        <tt class="docutils literal">
+         {1, 2}
+        </tt>
+        and
+        <tt class="docutils literal">
+         {1, 3}
+        </tt>
+        are not ordered (all three of
+        <tt class="docutils literal">
+         &lt;
+        </tt>
+        ,
+        <tt class="docutils literal">
+         ==
+        </tt>
+        and
+        <tt class="docutils literal">
+         &gt;
+        </tt>
+        return
+        <tt class="docutils literal">
+         False
+        </tt>
+        for these arguments).
+Sets cannot be ordered relative to mappings or sequences, but they
+can be compared to those for equality (and then they always
+compare unequal).
+       </p>
+       <p>
+        This class also defines concrete operators to compute union,
+intersection, symmetric and asymmetric difference, respectively
+        <tt class="docutils literal">
+         __or__
+        </tt>
+        ,
+        <tt class="docutils literal">
+         __and__
+        </tt>
+        ,
+        <tt class="docutils literal">
+         __xor__
+        </tt>
+        and
+        <tt class="docutils literal">
+         __sub__
+        </tt>
+        .  These
+operators should return instances of
+        <tt class="docutils literal">
+         Set
+        </tt>
+        .  The default
+implementations call the overridable class method
+        <tt class="docutils literal">
+         _from_iterable()
+        </tt>
+        with an iterable argument.  This factory
+method's default implementation returns a
+        <tt class="docutils literal">
+         frozenset
+        </tt>
+        instance;
+it may be overridden to return another appropriate
+        <tt class="docutils literal">
+         Set
+        </tt>
+        subclass.
+       </p>
+       <p>
+        Finally, this class defines a concrete method
+        <tt class="docutils literal">
+         _hash
+        </tt>
+        which
+computes the hash value from the elements.  Hashable subclasses of
+        <tt class="docutils literal">
+         Set
+        </tt>
+        can implement
+        <tt class="docutils literal">
+         __hash__
+        </tt>
+        by calling
+        <tt class="docutils literal">
+         _hash
+        </tt>
+        or they
+can reimplement the same algorithm more efficiently; but the
+algorithm implemented should be the same.  Currently the algorithm
+is fully specified only by the source code
+        <a class="footnote-reference" href="#id27" id="id10">
+         [15]
+        </a>
+        .
+       </p>
+       <p class="last">
+        <strong>
+         Note:
+        </strong>
+        the
+        <tt class="docutils literal">
+         issubset
+        </tt>
+        and
+        <tt class="docutils literal">
+         issuperset
+        </tt>
+        methods found on the
+set type in Python 2 are not supported, as these are mostly just
+aliases for
+        <tt class="docutils literal">
+         __le__
+        </tt>
+        and
+        <tt class="docutils literal">
+         __ge__
+        </tt>
+        .
+       </p>
+      </dd>
+      <dt>
+       <tt class="docutils literal">
+        MutableSet
+       </tt>
+      </dt>
+      <dd>
+       <p class="first">
+        This is a subclass of
+        <tt class="docutils literal">
+         Set
+        </tt>
+        implementing additional operations
+to add and remove elements.  The supported methods have the
+semantics known from the
+        <tt class="docutils literal">
+         set
+        </tt>
+        type in Python 2 (except for
+        <tt class="docutils literal">
+         discard
+        </tt>
+        , which is modeled after Java):
+       </p>
+       <dl class="docutils">
+        <dt>
+         <tt class="docutils literal">
+          .add(x)
+         </tt>
+        </dt>
+        <dd>
+         Abstract method returning a
+         <tt class="docutils literal">
+          bool
+         </tt>
+         that adds the element
+         <tt class="docutils literal">
+          x
+         </tt>
+         if it isn't already in the set.  It should return
+         <tt class="docutils literal">
+          True
+         </tt>
+         if
+         <tt class="docutils literal">
+          x
+         </tt>
+         was added,
+         <tt class="docutils literal">
+          False
+         </tt>
+         if it was already
+there. The abstract implementation raises
+         <tt class="docutils literal">
+          NotImplementedError
+         </tt>
+         .
+        </dd>
+        <dt>
+         <tt class="docutils literal">
+          .discard(x)
+         </tt>
+        </dt>
+        <dd>
+         Abstract method returning a
+         <tt class="docutils literal">
+          bool
+         </tt>
+         that removes the element
+         <tt class="docutils literal">
+          x
+         </tt>
+         if present.  It should return
+         <tt class="docutils literal">
+          True
+         </tt>
+         if the element
+was present and
+         <tt class="docutils literal">
+          False
+         </tt>
+         if it wasn't.  The abstract
+implementation raises
+         <tt class="docutils literal">
+          NotImplementedError
+         </tt>
+         .
+        </dd>
+        <dt>
+         <tt class="docutils literal">
+          .pop()
+         </tt>
+        </dt>
+        <dd>
+         Concrete method that removes and returns an arbitrary item.
+If the set is empty, it raises
+         <tt class="docutils literal">
+          KeyError
+         </tt>
+         .  The default
+implementation removes the first item returned by the set's
+iterator.
+        </dd>
+        <dt>
+         <tt class="docutils literal">
+          .toggle(x)
+         </tt>
+        </dt>
+        <dd>
+         Concrete method returning a
+         <tt class="docutils literal">
+          bool
+         </tt>
+         that adds x to the set if
+it wasn't there, but removes it if it was there.  It should
+return
+         <tt class="docutils literal">
+          True
+         </tt>
+         if
+         <tt class="docutils literal">
+          x
+         </tt>
+         was added,
+         <tt class="docutils literal">
+          False
+         </tt>
+         if it was
+removed.
+        </dd>
+        <dt>
+         <tt class="docutils literal">
+          .clear()
+         </tt>
+        </dt>
+        <dd>
+         Concrete method that empties the set.  The default
+implementation repeatedly calls
+         <tt class="docutils literal">
+          self.pop()
+         </tt>
+         until
+         <tt class="docutils literal">
+          KeyError
+         </tt>
+         is caught.  (
+         <strong>
+          Note:
+         </strong>
+         this is likely much slower
+than simply creating a new set, even if an implementation
+overrides it with a faster approach; but in some cases object
+identity is important.)
+        </dd>
+       </dl>
+       <p class="last">
+        This also supports the in-place mutating operations
+        <tt class="docutils literal">
+         |=
+        </tt>
+        ,
+        <tt class="docutils literal">
+         &amp;=
+        </tt>
+        ,
+        <tt class="docutils literal">
+         ^=
+        </tt>
+        ,
+        <tt class="docutils literal">
+         <span class="pre">
+          -=
+         </span>
+        </tt>
+        .  These are concrete methods whose right
+operand can be an arbitrary
+        <tt class="docutils literal">
+         Iterable
+        </tt>
+        , except for
+        <tt class="docutils literal">
+         &amp;=
+        </tt>
+        , whose
+right operand must be a
+        <tt class="docutils literal">
+         Container
+        </tt>
+        .  This ABC does not provide
+the named methods present on the built-in concrete
+        <tt class="docutils literal">
+         set
+        </tt>
+        type
+that perform (almost) the same operations.
+       </p>
+      </dd>
+     </dl>
+    </div>
+    <div class="section" id="mappings">
+     <h3>
+      <a class="toc-backref" href="#id38">
+       Mappings
+      </a>
+     </h3>
+     <p>
+      These abstract classes represent read-only mappings and mutable
+mappings.  The
+      <tt class="docutils literal">
+       Mapping
+      </tt>
+      class represents the most common read-only
+mapping API.
+     </p>
+     <p>
+      The built-in type
+      <tt class="docutils literal">
+       dict
+      </tt>
+      derives from
+      <tt class="docutils literal">
+       MutableMapping
+      </tt>
+      .
+     </p>
+     <dl class="docutils">
+      <dt>
+       <tt class="docutils literal">
+        Mapping
+       </tt>
+      </dt>
+      <dd>
+       <p class="first">
+        A subclass of
+        <tt class="docutils literal">
+         Container
+        </tt>
+        ,
+        <tt class="docutils literal">
+         Iterable
+        </tt>
+        and
+        <tt class="docutils literal">
+         Sized
+        </tt>
+        .  The keys
+of a mapping naturally form a set.  The (key, value) pairs (which
+must be tuples) are also referred to as items.  The items also
+form a set.  Methods:
+       </p>
+       <dl class="docutils">
+        <dt>
+         <tt class="docutils literal">
+          .__getitem__(key)
+         </tt>
+        </dt>
+        <dd>
+         Abstract method that returns the value corresponding to
+         <tt class="docutils literal">
+          key
+         </tt>
+         , or raises
+         <tt class="docutils literal">
+          KeyError
+         </tt>
+         .  The implementation always
+raises
+         <tt class="docutils literal">
+          KeyError
+         </tt>
+         .
+        </dd>
+        <dt>
+         <tt class="docutils literal">
+          .get(key, default=None)
+         </tt>
+        </dt>
+        <dd>
+         Concrete method returning
+         <tt class="docutils literal">
+          self[key]
+         </tt>
+         if this does not raise
+         <tt class="docutils literal">
+          KeyError
+         </tt>
+         , and the
+         <tt class="docutils literal">
+          default
+         </tt>
+         value if it does.
+        </dd>
+        <dt>
+         <tt class="docutils literal">
+          .__contains__(key)
+         </tt>
+        </dt>
+        <dd>
+         Concrete method returning
+         <tt class="docutils literal">
+          True
+         </tt>
+         if
+         <tt class="docutils literal">
+          self[key]
+         </tt>
+         does not
+raise
+         <tt class="docutils literal">
+          KeyError
+         </tt>
+         , and
+         <tt class="docutils literal">
+          False
+         </tt>
+         if it does.
+        </dd>
+        <dt>
+         <tt class="docutils literal">
+          .__len__()
+         </tt>
+        </dt>
+        <dd>
+         Abstract method returning the number of distinct keys (i.e.,
+the length of the key set).
+        </dd>
+        <dt>
+         <tt class="docutils literal">
+          .__iter__()
+         </tt>
+        </dt>
+        <dd>
+         Abstract method returning each key in the key set exactly once.
+        </dd>
+        <dt>
+         <tt class="docutils literal">
+          .keys()
+         </tt>
+        </dt>
+        <dd>
+         Concrete method returning the key set as a
+         <tt class="docutils literal">
+          Set
+         </tt>
+         .  The
+default concrete implementation returns a "view" on the key
+set (meaning if the underlying mapping is modified, the view's
+value changes correspondingly); subclasses are not required to
+return a view but they should return a
+         <tt class="docutils literal">
+          Set
+         </tt>
+         .
+        </dd>
+        <dt>
+         <tt class="docutils literal">
+          .items()
+         </tt>
+        </dt>
+        <dd>
+         Concrete method returning the items as a
+         <tt class="docutils literal">
+          Set
+         </tt>
+         .  The default
+concrete implementation returns a "view" on the item set;
+subclasses are not required to return a view but they should
+return a
+         <tt class="docutils literal">
+          Set
+         </tt>
+         .
+        </dd>
+        <dt>
+         <tt class="docutils literal">
+          .values()
+         </tt>
+        </dt>
+        <dd>
+         Concrete method returning the values as a sized, iterable
+container (not a set!).  The default concrete implementation
+returns a "view" on the values of the mapping; subclasses are
+not required to return a view but they should return a sized,
+iterable container.
+        </dd>
+       </dl>
+       <p>
+        The following invariants should hold for any mapping
+        <tt class="docutils literal">
+         m
+        </tt>
+        :
+       </p>
+       <pre class="literal-block">
+len(m.values()) == len(m.keys()) == len(m.items()) == len(m)
+[value for value in m.values()] == [m[key] for key in m.keys()]
+[item for item in m.items()] == [(key, m[key]) for key in m.keys()]
+</pre>
+       <p class="last">
+        i.e. iterating over the items, keys and values should return
+results in the same order.
+       </p>
+      </dd>
+      <dt>
+       <tt class="docutils literal">
+        MutableMapping
+       </tt>
+      </dt>
+      <dd>
+       A subclass of
+       <tt class="docutils literal">
+        Mapping
+       </tt>
+       that also implements some standard
+mutating methods.  Abstract methods include
+       <tt class="docutils literal">
+        __setitem__
+       </tt>
+       ,
+       <tt class="docutils literal">
+        __delitem__
+       </tt>
+       .  Concrete methods include
+       <tt class="docutils literal">
+        pop
+       </tt>
+       ,
+       <tt class="docutils literal">
+        popitem
+       </tt>
+       ,
+       <tt class="docutils literal">
+        clear
+       </tt>
+       ,
+       <tt class="docutils literal">
+        update
+       </tt>
+       .
+       <strong>
+        Note:
+       </strong>
+       <tt class="docutils literal">
+        setdefault
+       </tt>
+       is
+       <em>
+        not
+       </em>
+       included.
+       <strong>
+        Open issues:
+       </strong>
+       Write out the specs for the methods.
+      </dd>
+     </dl>
+    </div>
+    <div class="section" id="sequences">
+     <h3>
+      <a class="toc-backref" href="#id39">
+       Sequences
+      </a>
+     </h3>
+     <p>
+      These abstract classes represent read-only sequences and mutable
+sequences.
+     </p>
+     <p>
+      The built-in
+      <tt class="docutils literal">
+       list
+      </tt>
+      and
+      <tt class="docutils literal">
+       bytes
+      </tt>
+      types derive from
+      <tt class="docutils literal">
+       MutableSequence
+      </tt>
+      .  The built-in
+      <tt class="docutils literal">
+       tuple
+      </tt>
+      and
+      <tt class="docutils literal">
+       str
+      </tt>
+      types derive
+from
+      <tt class="docutils literal">
+       Sequence
+      </tt>
+      and
+      <tt class="docutils literal">
+       Hashable
+      </tt>
+      .
+     </p>
+     <dl class="docutils">
+      <dt>
+       <tt class="docutils literal">
+        Sequence
+       </tt>
+      </dt>
+      <dd>
+       <p class="first">
+        A subclass of
+        <tt class="docutils literal">
+         Iterable
+        </tt>
+        ,
+        <tt class="docutils literal">
+         Sized
+        </tt>
+        ,
+        <tt class="docutils literal">
+         Container
+        </tt>
+        .  It
+defines a new abstract method
+        <tt class="docutils literal">
+         __getitem__
+        </tt>
+        that has a somewhat
+complicated signature: when called with an integer, it returns an
+element of the sequence or raises
+        <tt class="docutils literal">
+         IndexError
+        </tt>
+        ; when called with
+a
+        <tt class="docutils literal">
+         slice
+        </tt>
+        object, it returns another
+        <tt class="docutils literal">
+         Sequence
+        </tt>
+        .  The concrete
+        <tt class="docutils literal">
+         __iter__
+        </tt>
+        method iterates over the elements using
+        <tt class="docutils literal">
+         __getitem__
+        </tt>
+        with integer arguments 0, 1, and so on, until
+        <tt class="docutils literal">
+         IndexError
+        </tt>
+        is raised.  The length should be equal to the
+number of values returned by the iterator.
+       </p>
+       <p class="last">
+        <strong>
+         Open issues:
+        </strong>
+        Other candidate methods, which can all have
+default concrete implementations that only depend on
+        <tt class="docutils literal">
+         __len__
+        </tt>
+        and
+        <tt class="docutils literal">
+         __getitem__
+        </tt>
+        with an integer argument:
+        <tt class="docutils literal">
+         __reversed__
+        </tt>
+        ,
+        <tt class="docutils literal">
+         index
+        </tt>
+        ,
+        <tt class="docutils literal">
+         count
+        </tt>
+        ,
+        <tt class="docutils literal">
+         __add__
+        </tt>
+        ,
+        <tt class="docutils literal">
+         __mul__
+        </tt>
+        .
+       </p>
+      </dd>
+      <dt>
+       <tt class="docutils literal">
+        MutableSequence
+       </tt>
+      </dt>
+      <dd>
+       A subclass of
+       <tt class="docutils literal">
+        Sequence
+       </tt>
+       adding some standard mutating methods.
+Abstract mutating methods:
+       <tt class="docutils literal">
+        __setitem__
+       </tt>
+       (for integer indices as
+well as slices),
+       <tt class="docutils literal">
+        __delitem__
+       </tt>
+       (ditto),
+       <tt class="docutils literal">
+        insert
+       </tt>
+       .  Concrete
+mutating methods:
+       <tt class="docutils literal">
+        append
+       </tt>
+       ,
+       <tt class="docutils literal">
+        reverse
+       </tt>
+       ,
+       <tt class="docutils literal">
+        extend
+       </tt>
+       ,
+       <tt class="docutils literal">
+        pop
+       </tt>
+       ,
+       <tt class="docutils literal">
+        remove
+       </tt>
+       .  Concrete mutating operators:
+       <tt class="docutils literal">
+        +=
+       </tt>
+       ,
+       <tt class="docutils literal">
+        *=
+       </tt>
+       (these
+mutate the object in place).
+       <strong>
+        Note:
+       </strong>
+       this does not define
+       <tt class="docutils literal">
+        sort()
+       </tt>
+       -- that is only required to exist on genuine
+       <tt class="docutils literal">
+        list
+       </tt>
+       instances.
+      </dd>
+     </dl>
+    </div>
+   </div>
+   <div class="section" id="strings">
+    <h2>
+     <a class="toc-backref" href="#id40">
+      Strings
+     </a>
+    </h2>
+    <p>
+     Python 3000 will likely have at least two built-in string types: byte
+strings (
+     <tt class="docutils literal">
+      bytes
+     </tt>
+     ), deriving from
+     <tt class="docutils literal">
+      MutableSequence
+     </tt>
+     , and (Unicode)
+character strings (
+     <tt class="docutils literal">
+      str
+     </tt>
+     ), deriving from
+     <tt class="docutils literal">
+      Sequence
+     </tt>
+     and
+     <tt class="docutils literal">
+      Hashable
+     </tt>
+     .
+    </p>
+    <p>
+     <strong>
+      Open issues:
+     </strong>
+     define the base interfaces for these so alternative
+implementations and subclasses know what they are in for.  This may be
+the subject of a new PEP or PEPs (
+     <a class="reference external" href="../pep-0358/index.html">
+      PEP 358
+     </a>
+     should be co-opted for the
+     <tt class="docutils literal">
+      bytes
+     </tt>
+     type).
+    </p>
+   </div>
+  </div>
+  <div class="section" id="abcs-vs-alternatives">
+   <h1>
+    <a class="toc-backref" href="#id41">
+     ABCs vs. Alternatives
+    </a>
+   </h1>
+   <p>
+    In this section I will attempt to compare and contrast ABCs to other
+approaches that have been proposed.
+   </p>
+   <div class="section" id="abcs-vs-duck-typing">
+    <h2>
+     <a class="toc-backref" href="#id42">
+      ABCs vs. Duck Typing
+     </a>
+    </h2>
+    <p>
+     Does the introduction of ABCs mean the end of Duck Typing?  I don't
+think so.  Python will not require that a class derives from
+     <tt class="docutils literal">
+      BasicMapping
+     </tt>
+     or
+     <tt class="docutils literal">
+      Sequence
+     </tt>
+     when it defines a
+     <tt class="docutils literal">
+      __getitem__
+     </tt>
+     method, nor will the
+     <tt class="docutils literal">
+      x[y]
+     </tt>
+     syntax require that
+     <tt class="docutils literal">
+      x
+     </tt>
+     is an instance
+of either ABC.  You will still be able to assign any "file-like"
+object to
+     <tt class="docutils literal">
+      sys.stdout
+     </tt>
+     , as long as it has a
+     <tt class="docutils literal">
+      write
+     </tt>
+     method.
+    </p>
+    <p>
+     Of course, there will be some carrots to encourage users to derive
+from the appropriate base classes; these vary from default
+implementations for certain functionality to an improved ability to
+distinguish between mappings and sequences.  But there are no sticks.
+If
+     <tt class="docutils literal">
+      hasattr(x, "__len__")
+     </tt>
+     works for you, great!  ABCs are intended to
+solve problems that don't have a good solution at all in Python 2,
+such as distinguishing between mappings and sequences.
+    </p>
+   </div>
+   <div class="section" id="abcs-vs-generic-functions">
+    <h2>
+     <a class="toc-backref" href="#id43">
+      ABCs vs. Generic Functions
+     </a>
+    </h2>
+    <p>
+     ABCs are compatible with Generic Functions (GFs).  For example, my own
+Generic Functions implementation
+     <a class="footnote-reference" href="#id16" id="id11">
+      [4]
+     </a>
+     uses the classes (types) of the
+arguments as the dispatch key, allowing derived classes to override
+base classes.  Since (from Python's perspective) ABCs are quite
+ordinary classes, using an ABC in the default implementation for a GF
+can be quite appropriate.  For example, if I have an overloaded
+     <tt class="docutils literal">
+      prettyprint
+     </tt>
+     function, it would make total sense to define
+pretty-printing of sets like this:
+    </p>
+    <pre class="literal-block">
+@prettyprint.register(Set)
+def pp_set(s):
+    return "{" + ... + "}"  # Details left as an exercise
+</pre>
+    <p>
+     and implementations for specific subclasses of Set could be added
+easily.
+    </p>
+    <p>
+     I believe ABCs also won't present any problems for RuleDispatch,
+Phillip Eby's GF implementation in PEAK
+     <a class="footnote-reference" href="#id17" id="id12">
+      [5]
+     </a>
+     .
+    </p>
+    <p>
+     Of course, GF proponents might claim that GFs (and concrete, or
+implementation, classes) are all you need.  But even they will not
+deny the usefulness of inheritance; and one can easily consider the
+ABCs proposed in this PEP as optional implementation base classes;
+there is no requirement that all user-defined mappings derive from
+     <tt class="docutils literal">
+      BasicMapping
+     </tt>
+     .
+    </p>
+   </div>
+   <div class="section" id="abcs-vs-interfaces">
+    <h2>
+     <a class="toc-backref" href="#id44">
+      ABCs vs. Interfaces
+     </a>
+    </h2>
+    <p>
+     ABCs are not intrinsically incompatible with Interfaces, but there is
+considerable overlap.  For now, I'll leave it to proponents of
+Interfaces to explain why Interfaces are better.  I expect that much
+of the work that went into e.g. defining the various shades of
+"mapping-ness" and the nomenclature could easily be adapted for a
+proposal to use Interfaces instead of ABCs.
+    </p>
+    <p>
+     "Interfaces" in this context refers to a set of proposals for
+additional metadata elements attached to a class which are not part of
+the regular class hierarchy, but do allow for certain types of
+inheritance testing.
+    </p>
+    <p>
+     Such metadata would be designed, at least in some proposals, so as to
+be easily mutable by an application, allowing application writers to
+override the normal classification of an object.
+    </p>
+    <p>
+     The drawback to this idea of attaching mutable metadata to a class is
+that classes are shared state, and mutating them may lead to conflicts
+of intent.  Additionally, the need to override the classification of
+an object can be done more cleanly using generic functions: In the
+simplest case, one can define a "category membership" generic function
+that simply returns False in the base implementation, and then provide
+overrides that return True for any classes of interest.
+    </p>
+   </div>
+  </div>
+  <div class="section" id="references">
+   <h1>
+    <a class="toc-backref" href="#id45">
+     References
+    </a>
+   </h1>
+   <table class="docutils footnote" frame="void" id="id13" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id1">
+        [1]
+       </a>
+      </td>
+      <td>
+       An Introduction to ABC's, by Talin
+(
+       <a class="reference external" href="http://mail.python.org/pipermail/python-3000/2007-April/006614.html">
+        http://mail.python.org/pipermail/python-3000/2007-April/006614.html
+       </a>
+       )
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id14" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       [2]
+      </td>
+      <td>
+       Incomplete implementation prototype, by GvR
+(
+       <a class="reference external" href="http://svn.python.org/view/sandbox/trunk/abc/">
+        http://svn.python.org/view/sandbox/trunk/abc/
+       </a>
+       )
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id15" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       [3]
+      </td>
+      <td>
+       Possible Python 3K Class Tree?, wiki page created by Bill Janssen
+(
+       <a class="reference external" href="http://wiki.python.org/moin/AbstractBaseClasses">
+        http://wiki.python.org/moin/AbstractBaseClasses
+       </a>
+       )
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id16" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id11">
+        [4]
+       </a>
+      </td>
+      <td>
+       Generic Functions implementation, by GvR
+(
+       <a class="reference external" href="http://svn.python.org/view/sandbox/trunk/overload/">
+        http://svn.python.org/view/sandbox/trunk/overload/
+       </a>
+       )
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id17" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id12">
+        [5]
+       </a>
+      </td>
+      <td>
+       Charming Python: Scaling a new PEAK, by David Mertz
+(
+       <a class="reference external" href="http://www-128.ibm.com/developerworks/library/l-cppeak2/">
+        http://www-128.ibm.com/developerworks/library/l-cppeak2/
+       </a>
+       )
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id18" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id5">
+        [6]
+       </a>
+      </td>
+      <td>
+       Implementation of @abstractmethod
+(
+       <a class="reference external" href="http://python.org/sf/1706989">
+        http://python.org/sf/1706989
+       </a>
+       )
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id19" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id6">
+        [7]
+       </a>
+      </td>
+      <td>
+       Unifying types and classes in Python 2.2, by GvR
+(
+       <a class="reference external" href="http://www.python.org/download/releases/2.2.3/descrintro/">
+        http://www.python.org/download/releases/2.2.3/descrintro/
+       </a>
+       )
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id20" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id7">
+        [8]
+       </a>
+      </td>
+      <td>
+       Putting Metaclasses to Work: A New Dimension in Object-Oriented
+Programming, by Ira R. Forman and Scott H. Danforth
+(
+       <a class="reference external" href="http://www.amazon.com/gp/product/0201433052">
+        http://www.amazon.com/gp/product/0201433052
+       </a>
+       )
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id21" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       [9]
+      </td>
+      <td>
+       Partial order, in Wikipedia
+(
+       <a class="reference external" href="http://en.wikipedia.org/wiki/Partial_order">
+        http://en.wikipedia.org/wiki/Partial_order
+       </a>
+       )
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id22" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       [10]
+      </td>
+      <td>
+       Total order, in Wikipedia
+(
+       <a class="reference external" href="http://en.wikipedia.org/wiki/Total_order">
+        http://en.wikipedia.org/wiki/Total_order
+       </a>
+       )
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id23" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id9">
+        [11]
+       </a>
+      </td>
+      <td>
+       Finite set, in Wikipedia
+(
+       <a class="reference external" href="http://en.wikipedia.org/wiki/Finite_set">
+        http://en.wikipedia.org/wiki/Finite_set
+       </a>
+       )
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id24" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id3">
+        [12]
+       </a>
+      </td>
+      <td>
+       Make isinstance/issubclass overloadable
+(
+       <a class="reference external" href="http://python.org/sf/1708353">
+        http://python.org/sf/1708353
+       </a>
+       )
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id25" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id4">
+        [13]
+       </a>
+      </td>
+      <td>
+       ABCMeta sample implementation
+(
+       <a class="reference external" href="http://svn.python.org/view/sandbox/trunk/abc/xyz.py">
+        http://svn.python.org/view/sandbox/trunk/abc/xyz.py
+       </a>
+       )
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id26" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id8">
+        [14]
+       </a>
+      </td>
+      <td>
+       python-dev email ("Comparing heterogeneous types")
+       <a class="reference external" href="http://mail.python.org/pipermail/python-dev/2004-June/045111.html">
+        http://mail.python.org/pipermail/python-dev/2004-June/045111.html
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id27" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id10">
+        [15]
+       </a>
+      </td>
+      <td>
+       Function
+       <tt class="docutils literal">
+        frozenset_hash()
+       </tt>
+       in Object/setobject.c
+(
+       <a class="reference external" href="http://svn.python.org/view/python/trunk/Objects/setobject.c">
+        http://svn.python.org/view/python/trunk/Objects/setobject.c
+       </a>
+       )
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id28" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id2">
+        [16]
+       </a>
+      </td>
+      <td>
+       Multiple interpreters in mod_python
+(
+       <a class="reference external" href="http://www.modpython.org/live/current/doc-html/pyapi-interps.html">
+        http://www.modpython.org/live/current/doc-html/pyapi-interps.html
+       </a>
+       )
+      </td>
+     </tr>
+    </tbody>
+   </table>
+  </div>
+  <div class="section" id="copyright">
+   <h1>
+    <a class="toc-backref" href="#id46">
+     Copyright
+    </a>
+   </h1>
+   <p>
+    This document has been placed in the public domain.
+   </p>
+   <!-- Local Variables:
+mode: indented-text
+indent-tabs-mode: nil
+sentence-end-double-space: t
+fill-column: 70
+coding: utf-8
+End: -->
+  </div>
+ </body>
+
+<!-- Mirrored from www.python.org/dev/peps/pep-3119/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 03 Sep 2015 04:35:23 GMT -->
+</html>Source: <a href="https://hg.python.org/peps/file/tip/pep-3119.txt">https://hg.python.org/peps/file/tip/pep-3119.txt</a>
+
+    </article>
+
+
+                </section>
+
+                
+
+
+<aside class="left-sidebar" role="secondary">
+
+    
+
+
+
+
+
+
+    
+
+
+
+
+
+        <div class="twitter-widget sidebar-widget">
+        <a class="twitter-timeline" data-dnt="true" href="https://twitter.com/ThePSF" data-widget-id="434113224703610882">Tweets by @ThePSF</a>
+        <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+    </div>
+
+    <div class="psf-sidebar-widget sidebar-widget">
+        <h3 class="widget-title">The PSF</h3>
+<p>The Python Software Foundation is the organization behind Python. Become a member of the PSF and help advance the software and our mission. </p>
+
+    </div>
+
+</aside>
+
+
+
+                
+                
+
+
+            </div><!-- end .container -->
+        </div><!-- end #content .content-wrapper -->
+
+        <!-- Footer and social media list -->
+        <footer id="site-map" class="main-footer" role="contentinfo">
+            <div class="main-footer-links">
+                <div class="container">
+
+                    
+                    <a id="back-to-top-1" class="jump-link" href="#python-network"><span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> Back to Top</a>
+
+                    
+
+<ul class="sitemap navigation menu do-not-print" role="tree" id="container">
+    
+    <li class="tier-1 element-1">
+        <a href="https://www.python.org/about/" >About</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/apps/" title="">Applications</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/quotes/" title="">Quotes</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/gettingstarted/" title="">Getting Started</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/help/" title="">Help</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-2">
+        <a href="https://www.python.org/downloads/" >Downloads</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/downloads/" title="">All releases</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/downloads/source/" title="">Source code</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/downloads/windows/" title="">Windows</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/downloads/mac-osx/" title="">Mac OS X</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/download/other/" title="">Other Platforms</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://docs.python.org/3/license.html" title="">License</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/download/alternatives" title="">Alternative Implementations</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-3">
+        <a href="https://www.python.org/doc/" >Documentation</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/doc/" title="">Docs</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/doc/av" title="">Audio/Visual Talks</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://wiki.python.org/moin/BeginnersGuide" title="">Beginner&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://docs.python.org/faq/" title="">FAQ</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="http://wiki.python.org/moin/Languages" title="">Non-English Docs</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="../index.html" title="">PEP Index</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://wiki.python.org/moin/PythonBooks" title="">Python Books</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-4">
+        <a href="https://www.python.org/community/" >Community</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/community/diversity/" title="">Diversity</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/community/irc/" title="">IRC</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/community/lists/" title="">Mailing Lists</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/workshops/" title="">Python Conferences</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/community/sigs/" title="">Special Interest Groups</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://wiki.python.org/moin/" title="">Python Wiki</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/community/logos/" title="">Python Logo</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://www.python.org/community/merchandise/" title="">Merchandise</a></li>
+    
+        <li class="tier-2 element-9" role="treeitem"><a href="https://www.python.org/community/awards" title="">Community Awards</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-5">
+        <a href="https://www.python.org/about/success/" title="success-stories">Success Stories</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/success/#arts" title="">Arts</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/success/#business" title="">Business</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/success/#education" title="">Education</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/success/#engineering" title="">Engineering</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/about/success/#government" title="">Government</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://www.python.org/about/success/#scientific" title="">Scientific</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/about/success/#software-development" title="">Software Development</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-6">
+        <a href="https://www.python.org/blogs/" title="News from around the Python world">News</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/blogs/" title="Python Insider Blog Posts">Python News</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://planetpython.org/" title="Planet Python">Community News</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="http://pyfound.blogspot.com/" title="PSF Blog">PSF News</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pycon.blogspot.com/" title="PyCon Blog">PyCon News</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-7">
+        <a href="https://www.python.org/events/" >Events</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/events/python-events/" title="">Python Events</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/events/python-user-group/" title="">User Group Events</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/events/python-events/past/" title="">Python Events Archive</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/events/python-user-group/past/" title="">User Group Events Archive</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://wiki.python.org/moin/PythonEventsCalendar#Submitting_an_Event" title="">Submit an Event</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-8">
+        <a href="https://www.python.org/dev/" >Contributing</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="http://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://bugs.python.org/" title="">Issue Tracker</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://mail.python.org/mailman/listinfo/python-dev" title="">python-dev list</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pythonmentors.com/" title="">Core Mentorship</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+</ul>
+
+
+                    <a id="back-to-top-2" class="jump-link" href="#python-network"><span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> Back to Top</a>
+                    
+
+                </div><!-- end .container -->
+            </div> <!-- end .main-footer-links -->
+
+            <div class="site-base">
+                <div class="container">
+                    
+                    <ul class="footer-links navigation menu do-not-print" role="tree">
+                        <li class="tier-1 element-1"><a href="https://www.python.org/about/help/">Help &amp; <span class="say-no-more">General</span> Contact</a></li>
+                        <li class="tier-1 element-2"><a href="https://www.python.org/community/diversity/">Diversity <span class="say-no-more">Initiatives</span></a></li>
+                        <li class="tier-1 element-3"><a href="https://github.com/python/pythondotorg/issues">Submit Website Bug</a></li>
+                        <!--<li class="tier-1 element-3"><a href="#"><span class="say-no-more">Website</span> Colophon</a></li>-->
+                    </ul>
+
+                    <div class="copyright">
+                        <p><small>
+                            <span class="pre">Copyright &copy;2001-2015.</span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/psf-landing/">Python Software Foundation</a></span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/about/legal/">Legal Statements</a></span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/privacy/">Privacy Policy</a></span>
+                        </small></p>
+                    </div>
+
+                </div><!-- end .container -->
+            </div><!-- end .site-base -->
+
+        </footer>
+
+    </div><!-- end #touchnav-wrapper -->
+
+    
+    <script src="../../../../ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="../../../static/js/libs/jquery-1.8.2.min.js"><\/script>')</script>
+
+    <script src="../../../static/js/libs/masonry.pkgd.min.js"></script>
+
+    <script type="text/javascript" src="../../../static/js/main-min.js" charset="utf-8"></script>
+    
+
+    <!--[if lte IE 7]>
+    <script type="text/javascript" src="/static/js/plugins/IE8-min.js" charset="utf-8"></script>
+    
+    
+    <![endif]-->
+
+    <!--[if lte IE 8]>
+    <script type="text/javascript" src="/static/js/plugins/getComputedStyle-min.js" charset="utf-8"></script>
+    
+    
+    <![endif]-->
+
+    
+
+    
+    
+
+</body>
+</html>

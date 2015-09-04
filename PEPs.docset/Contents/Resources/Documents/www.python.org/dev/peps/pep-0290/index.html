@@ -1,0 +1,2031 @@
+<!doctype html>
+<!--[if lt IE 7]>   <html class="no-js ie6 lt-ie7 lt-ie8 lt-ie9">   <![endif]-->
+<!--[if IE 7]>      <html class="no-js ie7 lt-ie8 lt-ie9">          <![endif]-->
+<!--[if IE 8]>      <html class="no-js ie8 lt-ie9">                 <![endif]-->
+<!--[if gt IE 8]><!--><html class="no-js" lang="en" dir="ltr">  <!--<![endif]-->
+
+
+<!-- Mirrored from www.python.org/dev/peps/pep-0290/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 03 Sep 2015 04:31:02 GMT -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <link rel="prefetch" href="../../../../ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js">
+
+    <meta name="application-name" content="Python.org">
+    <meta name="msapplication-tooltip" content="The official home of the Python Programming Language">
+    <meta name="apple-mobile-web-app-title" content="Python.org">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="format-detection" content="telephone=no">
+    <meta http-equiv="cleartype" content="on">
+    <meta http-equiv="imagetoolbar" content="false">
+
+    <script src="../../../static/js/libs/modernizr.js"></script>
+
+    <link href="../../../static/stylesheets/style.css" rel="stylesheet" type="text/css" title="default" />
+    <link href="../../../static/stylesheets/mq.css" rel="stylesheet" type="text/css" media="not print, braille, embossed, speech, tty" />
+    
+
+    <!--[if (lte IE 8)&(!IEMobile)]>
+    <link href="/static/stylesheets/no-mq.css" rel="stylesheet" type="text/css" media="screen" />
+    
+    
+    <![endif]-->
+
+    
+    <link rel="icon" type="image/x-icon" href="https://www.python.org/static/favicon.ico">
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="../../../static/apple-touch-icon-144x144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="../../../static/apple-touch-icon-114x114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="../../../static/apple-touch-icon-72x72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="../../../static/apple-touch-icon-precomposed.png">
+    <link rel="apple-touch-icon" href="../../../static/apple-touch-icon-precomposed.png">
+
+    
+    <meta name="msapplication-TileImage" content="/static/metro-icon-144x144-precomposed.png"><!-- white shape -->
+    <meta name="msapplication-TileColor" content="#3673a5"><!-- python blue -->
+    <meta name="msapplication-navbutton-color" content="#3673a5">
+
+    <meta property="og:site_name" content="Python.org">
+    <meta property="og:type" content="website">
+
+    <title>PEP 0290 -- Code Migration and Modernization | Python.org</title>
+    <meta property="og:title" content="Welcome to Python.org">
+
+    
+    <meta name="description" content="The official home of the Python Programming Language">
+    <meta name="og:description" content="The official home of the Python Programming Language">
+    <meta name="keywords" content="Python programming language object oriented web free open source software license documentation download community">
+    <meta property="og:tag" content="Python programming language object oriented web free open source software license documentation download community">
+    <meta property="og:published_time" content="">
+    <meta property="og:modified_time" content="">
+    <meta property="og:author" content="">
+    <meta property="og:section" content=""> 
+    <meta property="og:url" content="">
+    <meta property="og:image" content="">
+    <meta property="og:video" content="">
+
+    <link rel="author" href="https://www.python.org/static/humans.txt">
+
+    
+
+    
+    <script type="application/ld+json">
+     {
+       "@context": "http://schema.org",
+       "@type": "WebSite",
+       "url": "https://www.python.org/",
+       "potentialAction": {
+         "@type": "SearchAction",
+         "target": "https://www.python.org/search/?q={search_term_string}",
+         "query-input": "required name=search_term_string"
+       }
+     }
+    </script>
+
+    
+    <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-39055973-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+    </script>
+    
+</head>
+
+<body class="python pages pep-page">
+
+    <div id="touchnav-wrapper">
+
+        <div id="nojs" class="do-not-print">
+            <p><strong>Notice:</strong> While Javascript is not essential for this website, your interaction with the content will be limited. Please turn Javascript on for the full experience. </p>
+        </div>
+
+        <!--[if lt IE 8]>
+        <div id="oldie-warning" class="do-not-print">
+            <p><strong>Notice:</strong> Your browser is <em>ancient</em> and <a href="http://www.ie6countdown.com/">Microsoft agrees</a>. <a href="http://browsehappy.com/">Upgrade to a different browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to experience a better web.</p>
+        </div>
+        <![endif]-->
+
+        <!-- Sister Site Links -->
+        <div id="top" class="top-bar do-not-print">
+
+            <nav class="meta-navigation container" role="navigation">
+
+                
+                <div class="skip-link screen-reader-text">
+                    <a href="#content" title="Skip to content">Skip to content</a>
+                </div>
+
+                
+                <a id="close-python-network" class="jump-link" href="#python-network" aria-hidden="true">
+                    <span aria-hidden="true" class="icon-arrow-down"><span>&#9660;</span></span> Close
+                </a>
+
+                
+
+<ul class="menu" role="tree">
+    
+    <li class="python-meta ">
+        <a href="https://www.python.org/" title="The Python Programming Language" >Python</a>
+    </li>
+    
+    <li class="psf-meta ">
+        <a href="https://www.python.org/psf-landing/" title="The Python Software Foundation" >PSF</a>
+    </li>
+    
+    <li class="docs-meta ">
+        <a href="https://docs.python.org/" title="Python Documentation" >Docs</a>
+    </li>
+    
+    <li class="pypi-meta ">
+        <a href="https://pypi.python.org/" title="Python Package Index" >PyPI</a>
+    </li>
+    
+    <li class="jobs-meta ">
+        <a href="https://www.python.org/jobs/" title="Python Job Board" >Jobs</a>
+    </li>
+    
+    <li class="shop-meta ">
+        <a href="https://www.python.org/community/" title="Python Community" >Community</a>
+    </li>
+    
+</ul>
+
+
+                <a id="python-network" class="jump-link" href="#top" aria-hidden="true">
+                    <span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> The Python Network
+                </a>
+
+            </nav>
+
+        </div>
+
+        <!-- Header elements -->
+        <header class="main-header" role="banner">
+            <div class="container">
+
+                <h1 class="site-headline">
+                    <a href="https://www.python.org/"><img class="python-logo" src="../../../static/img/python-logo.png" alt="python&trade;"></a>
+                </h1>
+
+                <div class="options-bar do-not-print">
+
+                    
+                    <a id="site-map-link" class="jump-to-menu" href="#site-map"><span class="menu-icon">&equiv;</span> Menu</a><form class="search-the-site" action="https://www.python.org/search/" method="get">
+                        <fieldset title="Search Python.org">
+
+                            <span aria-hidden="true" class="icon-search"></span>
+
+                            <label class="screen-reader-text" for="id-search-field">Search This Site</label>
+                            <input id="id-search-field" name="q" type="search" role="textbox" class="search-field" placeholder="Search" value="" tabindex="1">
+
+                            <button type="submit" name="submit" id="submit" class="search-button" title="Submit this Search" tabindex="3">
+                                GO
+                            </button>
+
+                            
+                            <!--[if IE]><input type="text" style="display: none;" disabled="disabled" size="1" tabindex="4"><![endif]-->
+
+                        </fieldset>
+                    </form><span class="breaker"></span><div class="adjust-font-size" aria-hidden="true">
+                        <ul class="navigation menu" aria-label="Adjust Text Size on Page">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                <a href="#" class="action-trigger"><strong><small>A</small> A</strong></a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a class="text-shrink" title="Make Text Smaller" href="javascript:;">Smaller</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a class="text-grow" title="Make Text Larger" href="javascript:;">Larger</a></li>
+                                    <li class="tier-2 element-3" role="treeitem"><a class="text-reset" title="Reset any font size changes I have made" href="javascript:;">Reset</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div><div class="winkwink-nudgenudge">
+                        <ul class="navigation menu" aria-label="Social Media Navigation">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                <a href="#" class="action-trigger">Socialize</a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a href="http://plus.google.com/+Python"><span aria-hidden="true" class="icon-google-plus"></span>Google+</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a href="http://www.facebook.com/pythonlang?fref=ts"><span aria-hidden="true" class="icon-facebook"></span>Facebook</a></li>
+                                    <li class="tier-2 element-3" role="treeitem"><a href="http://twitter.com/ThePSF"><span aria-hidden="true" class="icon-twitter"></span>Twitter</a></li>
+                                    <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/irc/"><span aria-hidden="true" class="icon-freenode"></span>Chat on IRC</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div><div class="account-signin">
+                        <ul class="navigation menu" aria-label="Social Media Navigation">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                
+                                <a href="https://www.python.org/accounts/login/" title="Sign Up or Sign In to Python.org">Sign In</a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/accounts/signup/">Sign Up / Register</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/accounts/login/">Sign In</a></li>
+                                </ul>
+                                
+                            </li>
+                        </ul>
+                    </div>
+
+                </div><!-- end options-bar -->
+
+                <nav id="mainnav" class="python-navigation main-navigation do-not-print" role="navigation">
+                    
+                        
+<ul class="navigation menu" role="menubar" aria-label="Main Navigation">
+  
+    
+    
+    <li id="about" class="tier-1 element-1  " aria-haspopup="true">
+        <a href="https://www.python.org/about/" title="" class="">About</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/apps/" title="">Applications</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/quotes/" title="">Quotes</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/gettingstarted/" title="">Getting Started</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/help/" title="">Help</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="downloads" class="tier-1 element-2  " aria-haspopup="true">
+        <a href="https://www.python.org/downloads/" title="" class="">Downloads</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/downloads/" title="">All releases</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/downloads/source/" title="">Source code</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/downloads/windows/" title="">Windows</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/downloads/mac-osx/" title="">Mac OS X</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/download/other/" title="">Other Platforms</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://docs.python.org/3/license.html" title="">License</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/download/alternatives" title="">Alternative Implementations</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="documentation" class="tier-1 element-3  " aria-haspopup="true">
+        <a href="https://www.python.org/doc/" title="" class="">Documentation</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/doc/" title="">Docs</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/doc/av" title="">Audio/Visual Talks</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://wiki.python.org/moin/BeginnersGuide" title="">Beginner&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://docs.python.org/faq/" title="">FAQ</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="http://wiki.python.org/moin/Languages" title="">Non-English Docs</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="../index.html" title="">PEP Index</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://wiki.python.org/moin/PythonBooks" title="">Python Books</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="community" class="tier-1 element-4  " aria-haspopup="true">
+        <a href="https://www.python.org/community/" title="" class="">Community</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/community/diversity/" title="">Diversity</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/community/irc/" title="">IRC</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/community/lists/" title="">Mailing Lists</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/workshops/" title="">Python Conferences</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/community/sigs/" title="">Special Interest Groups</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://wiki.python.org/moin/" title="">Python Wiki</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/community/logos/" title="">Python Logo</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://www.python.org/community/merchandise/" title="">Merchandise</a></li>
+    
+        <li class="tier-2 element-9" role="treeitem"><a href="https://www.python.org/community/awards" title="">Community Awards</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="success-stories" class="tier-1 element-5  " aria-haspopup="true">
+        <a href="https://www.python.org/about/success/" title="success-stories" class="">Success Stories</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/success/#arts" title="">Arts</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/success/#business" title="">Business</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/success/#education" title="">Education</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/success/#engineering" title="">Engineering</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/about/success/#government" title="">Government</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://www.python.org/about/success/#scientific" title="">Scientific</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/about/success/#software-development" title="">Software Development</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="news" class="tier-1 element-6  " aria-haspopup="true">
+        <a href="https://www.python.org/blogs/" title="News from around the Python world" class="">News</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/blogs/" title="Python Insider Blog Posts">Python News</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://planetpython.org/" title="Planet Python">Community News</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="http://pyfound.blogspot.com/" title="PSF Blog">PSF News</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pycon.blogspot.com/" title="PyCon Blog">PyCon News</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="events" class="tier-1 element-7  " aria-haspopup="true">
+        <a href="https://www.python.org/events/" title="" class="">Events</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/events/python-events/" title="">Python Events</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/events/python-user-group/" title="">User Group Events</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/events/python-events/past/" title="">Python Events Archive</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/events/python-user-group/past/" title="">User Group Events Archive</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://wiki.python.org/moin/PythonEventsCalendar#Submitting_an_Event" title="">Submit an Event</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    
+  
+</ul>
+
+                    
+                </nav>
+
+                <div class="header-banner "> <!-- for optional "do-not-print" class -->
+                    
+                    
+                </div>
+
+                
+                
+
+             </div><!-- end .container -->
+        </header>
+
+        <div id="content" class="content-wrapper">
+            <!-- Main Content Column -->
+            <div class="container">
+
+                <section class="main-content with-left-sidebar" role="main">
+
+                    
+<ul class="breadcrumbs menu">
+    <li>
+        <a href="https://www.python.org/" title="The Python Programming Language">Python</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>
+        <a href="https://www.python.org/dev/">Python Developer's Guide</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>
+        <a href="../index.html">PEP Index</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>PEP 0290 -- Code Migration and Modernization</li>
+</ul>
+
+
+                    
+<style>
+   .pep-page pre {
+        padding: .5em;
+        background: inherit;
+        border-left: 0px;
+        -webkit-box-shadow: 0 0 0 0;
+        -moz-box-shadow: 0 0 0 0;
+        box-shadow: 0 0 0 0;
+   }
+</style>
+
+    
+    <article class="text">
+        
+
+        <header class="article-header">
+            <h1 class="page-title">PEP 0290 -- Code Migration and Modernization</h1>
+        </header>
+
+        <!--
+This HTML is auto-generated.  DO NOT EDIT THIS FILE!  If you are writing a new
+PEP, see http://www.python.org/dev/peps/pep-0001 for instructions and links
+to templates.  DO NOT USE THIS HTML FILE AS YOUR TEMPLATE!
+-->
+<html>
+ <body>
+  <table class="rfc2822 docutils field-list" frame="void" rules="none">
+   <col class="field-name">
+   </col>
+   <col class="field-body">
+   </col>
+   <tbody valign="top">
+    <tr class="field">
+     <th class="field-name">
+      PEP:
+     </th>
+     <td class="field-body">
+      290
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Title:
+     </th>
+     <td class="field-body">
+      Code Migration and Modernization
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Author:
+     </th>
+     <td class="field-body">
+      Raymond Hettinger &lt;python at rcn.com&gt;
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Status:
+     </th>
+     <td class="field-body">
+      Active
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Type:
+     </th>
+     <td class="field-body">
+      Informational
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Created:
+     </th>
+     <td class="field-body">
+      6-Jun-2002
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Post-History:
+     </th>
+     <td class="field-body">
+     </td>
+    </tr>
+   </tbody>
+  </table>
+  <hr/>
+  <div class="contents topic" id="contents">
+   <p class="topic-title first">
+    Contents
+   </p>
+   <ul class="simple">
+    <li>
+     <a class="reference internal" href="#abstract" id="id5">
+      Abstract
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#rationale" id="id6">
+      Rationale
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#guidelines-for-new-entries" id="id7">
+      Guidelines for New Entries
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#migration-issues" id="id8">
+      Migration Issues
+     </a>
+     <ul>
+      <li>
+       <a class="reference internal" href="#comparison-operators-not-a-shortcut-for-producing-0-or-1" id="id9">
+        Comparison Operators Not a Shortcut for Producing 0 or 1
+       </a>
+      </li>
+     </ul>
+    </li>
+    <li>
+     <a class="reference internal" href="#modernization-procedures" id="id10">
+      Modernization Procedures
+     </a>
+     <ul>
+      <li>
+       <a class="reference internal" href="#python-2-4-or-later" id="id11">
+        Python 2.4 or Later
+       </a>
+       <ul>
+        <li>
+         <a class="reference internal" href="#inserting-and-popping-at-the-beginning-of-lists" id="id12">
+          Inserting and Popping at the Beginning of Lists
+         </a>
+        </li>
+        <li>
+         <a class="reference internal" href="#simplifying-custom-sorts" id="id13">
+          Simplifying Custom Sorts
+         </a>
+        </li>
+        <li>
+         <a class="reference internal" href="#replacing-common-uses-of-lambda" id="id14">
+          Replacing Common Uses of Lambda
+         </a>
+        </li>
+        <li>
+         <a class="reference internal" href="#simplified-reverse-iteration" id="id15">
+          Simplified Reverse Iteration
+         </a>
+        </li>
+       </ul>
+      </li>
+      <li>
+       <a class="reference internal" href="#python-2-3-or-later" id="id16">
+        Python 2.3 or Later
+       </a>
+       <ul>
+        <li>
+         <a class="reference internal" href="#testing-string-membership" id="id17">
+          Testing String Membership
+         </a>
+        </li>
+        <li>
+         <a class="reference internal" href="#replace-apply-with-a-direct-function-call" id="id18">
+          Replace apply() with a Direct Function Call
+         </a>
+        </li>
+       </ul>
+      </li>
+      <li>
+       <a class="reference internal" href="#python-2-2-or-later" id="id19">
+        Python 2.2 or Later
+       </a>
+       <ul>
+        <li>
+         <a class="reference internal" href="#testing-dictionary-membership" id="id20">
+          Testing Dictionary Membership
+         </a>
+        </li>
+        <li>
+         <a class="reference internal" href="#looping-over-dictionaries" id="id21">
+          Looping Over Dictionaries
+         </a>
+        </li>
+        <li>
+         <a class="reference internal" href="#stat-methods" id="id22">
+          <tt class="docutils literal">
+           stat
+          </tt>
+          Methods
+         </a>
+        </li>
+        <li>
+         <a class="reference internal" href="#reduce-dependency-on-types-module" id="id23">
+          Reduce Dependency on
+          <tt class="docutils literal">
+           types
+          </tt>
+          Module
+         </a>
+        </li>
+        <li>
+         <a class="reference internal" href="#avoid-variable-names-that-clash-with-the-builtins-module" id="id24">
+          Avoid Variable Names that Clash with the
+          <tt class="docutils literal">
+           __builtins__
+          </tt>
+          Module
+         </a>
+        </li>
+       </ul>
+      </li>
+      <li>
+       <a class="reference internal" href="#python-2-1-or-later" id="id25">
+        Python 2.1 or Later
+       </a>
+       <ul>
+        <li>
+         <a class="reference internal" href="#whrandom-module-deprecated" id="id26">
+          <tt class="docutils literal">
+           whrandom
+          </tt>
+          Module Deprecated
+         </a>
+        </li>
+       </ul>
+      </li>
+      <li>
+       <a class="reference internal" href="#python-2-0-or-later" id="id27">
+        Python 2.0 or Later
+       </a>
+       <ul>
+        <li>
+         <a class="reference internal" href="#string-methods" id="id28">
+          String Methods
+         </a>
+        </li>
+        <li>
+         <a class="reference internal" href="#startswith-and-endswith-string-methods" id="id29">
+          <tt class="docutils literal">
+           startswith
+          </tt>
+          and
+          <tt class="docutils literal">
+           endswith
+          </tt>
+          String Methods
+         </a>
+        </li>
+        <li>
+         <a class="reference internal" href="#the-atexit-module" id="id30">
+          The
+          <tt class="docutils literal">
+           atexit
+          </tt>
+          Module
+         </a>
+        </li>
+       </ul>
+      </li>
+      <li>
+       <a class="reference internal" href="#python-1-5-or-later" id="id31">
+        Python 1.5 or Later
+       </a>
+       <ul>
+        <li>
+         <a class="reference internal" href="#class-based-exceptions" id="id32">
+          Class-Based Exceptions
+         </a>
+        </li>
+       </ul>
+      </li>
+      <li>
+       <a class="reference internal" href="#all-python-versions" id="id33">
+        All Python Versions
+       </a>
+       <ul>
+        <li>
+         <a class="reference internal" href="#testing-for-none" id="id34">
+          Testing for
+          <tt class="docutils literal">
+           None
+          </tt>
+         </a>
+        </li>
+       </ul>
+      </li>
+     </ul>
+    </li>
+    <li>
+     <a class="reference internal" href="#references" id="id35">
+      References
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#copyright" id="id36">
+      Copyright
+     </a>
+    </li>
+   </ul>
+  </div>
+  <div class="section" id="abstract">
+   <h1>
+    <a class="toc-backref" href="#id5">
+     Abstract
+    </a>
+   </h1>
+   <p>
+    This PEP is a collection of procedures and ideas for updating Python
+applications when newer versions of Python are installed.
+   </p>
+   <p>
+    The migration tips highlight possible areas of incompatibility and
+make suggestions on how to find and resolve those differences.  The
+modernization procedures show how older code can be updated to take
+advantage of new language features.
+   </p>
+  </div>
+  <div class="section" id="rationale">
+   <h1>
+    <a class="toc-backref" href="#id6">
+     Rationale
+    </a>
+   </h1>
+   <p>
+    This repository of procedures serves as a catalog or checklist of
+known migration issues and procedures for addressing those issues.
+   </p>
+   <p>
+    Migration issues can arise for several reasons.  Some obsolete
+features are slowly deprecated according to the guidelines in
+    <a class="reference external" href="../pep-0004/index.html">
+     PEP 4
+    </a>
+    <a class="footnote-reference" href="#id2" id="id1">
+     [1]
+    </a>
+    .  Also, some code relies on undocumented behaviors which are
+subject to change between versions.  Some code may rely on behavior
+which was subsequently shown to be a bug and that behavior changes
+when the bug is fixed.
+   </p>
+   <p>
+    Modernization options arise when new versions of Python add features
+that allow improved clarity or higher performance than previously
+available.
+   </p>
+  </div>
+  <div class="section" id="guidelines-for-new-entries">
+   <h1>
+    <a class="toc-backref" href="#id7">
+     Guidelines for New Entries
+    </a>
+   </h1>
+   <p>
+    Developers with commit access may update this PEP directly.  Others
+can send their ideas to a developer for possible inclusion.
+   </p>
+   <p>
+    While a consistent format makes the repository easier to use, feel
+free to add or subtract sections to improve clarity.
+   </p>
+   <p>
+    Grep patterns may be supplied as tool to help maintainers locate code
+for possible updates.  However, fully automated search/replace style
+regular expressions are not recommended.  Instead, each code fragment
+should be evaluated individually.
+   </p>
+   <p>
+    The contra-indications section is the most important part of a new
+entry.  It lists known situations where the update SHOULD NOT be
+applied.
+   </p>
+  </div>
+  <div class="section" id="migration-issues">
+   <h1>
+    <a class="toc-backref" href="#id8">
+     Migration Issues
+    </a>
+   </h1>
+   <div class="section" id="comparison-operators-not-a-shortcut-for-producing-0-or-1">
+    <h2>
+     <a class="toc-backref" href="#id9">
+      Comparison Operators Not a Shortcut for Producing 0 or 1
+     </a>
+    </h2>
+    <p>
+     Prior to Python 2.3, comparison operations returned 0 or 1 rather
+than True or False.  Some code may have used this as a shortcut for
+producing zero or one in places where their boolean counterparts are
+not appropriate.  For example:
+    </p>
+    <pre class="literal-block">
+def identity(m=1):
+    """Create and m-by-m identity matrix"""
+    return [[i==j for i in range(m)] for j in range(m)]
+</pre>
+    <p>
+     In Python 2.2, a call to identity(2) would produce:
+    </p>
+    <pre class="literal-block">
+[[1, 0], [0, 1]]
+</pre>
+    <p>
+     In Python 2.3, the same call would produce:
+    </p>
+    <pre class="literal-block">
+[[True, False], [False, True]]
+</pre>
+    <p>
+     Since booleans are a subclass of integers, the matrix would continue
+to calculate normally, but it will not print as expected.  The list
+comprehension should be changed to read:
+    </p>
+    <pre class="literal-block">
+return [[int(i==j) for i in range(m)] for j in range(m)]
+</pre>
+    <p>
+     There are similiar concerns when storing data to be used by other
+applications which may expect a number instead of True or False.
+    </p>
+   </div>
+  </div>
+  <div class="section" id="modernization-procedures">
+   <h1>
+    <a class="toc-backref" href="#id10">
+     Modernization Procedures
+    </a>
+   </h1>
+   <p>
+    Procedures are grouped by the Python version required to be able to
+take advantage of the modernization.
+   </p>
+   <div class="section" id="python-2-4-or-later">
+    <h2>
+     <a class="toc-backref" href="#id11">
+      Python 2.4 or Later
+     </a>
+    </h2>
+    <div class="section" id="inserting-and-popping-at-the-beginning-of-lists">
+     <h3>
+      <a class="toc-backref" href="#id12">
+       Inserting and Popping at the Beginning of Lists
+      </a>
+     </h3>
+     <p>
+      Python's lists are implemented to perform best with appends and pops on
+the right.  Use of
+      <tt class="docutils literal">
+       pop(0)
+      </tt>
+      or
+      <tt class="docutils literal">
+       insert(0, x)
+      </tt>
+      triggers O(n) data
+movement for the entire list.  To help address this need, Python 2.4
+introduces a new container,
+      <tt class="docutils literal">
+       collections.deque()
+      </tt>
+      which has efficient
+append and pop operations on the both the left and right (the trade-off
+is much slower getitem/setitem access).  The new container is especially
+helpful for implementing data queues:
+     </p>
+     <p>
+      Pattern:
+     </p>
+     <pre class="literal-block">
+c = list(data)   --&gt;   c = collections.deque(data)
+c.pop(0)         --&gt;   c.popleft()
+c.insert(0, x)   --&gt;   c.appendleft()
+</pre>
+     <p>
+      Locating:
+     </p>
+     <pre class="literal-block">
+grep pop(0 or
+grep insert(0
+</pre>
+    </div>
+    <div class="section" id="simplifying-custom-sorts">
+     <h3>
+      <a class="toc-backref" href="#id13">
+       Simplifying Custom Sorts
+      </a>
+     </h3>
+     <p>
+      In Python 2.4, the
+      <tt class="docutils literal">
+       sort
+      </tt>
+      method for lists and the new
+      <tt class="docutils literal">
+       sorted
+      </tt>
+      built-in function both accept a
+      <tt class="docutils literal">
+       key
+      </tt>
+      function for computing sort
+keys.  Unlike the
+      <tt class="docutils literal">
+       cmp
+      </tt>
+      function which gets applied to every
+comparison, the key function gets applied only once to each record.
+It is much faster than cmp and typically more readable while using
+less code.  The key function also maintains the stability of the
+sort (records with the same key are left in their original order.
+     </p>
+     <p>
+      Original code using a comparison function:
+     </p>
+     <pre class="literal-block">
+names.sort(lambda x,y: cmp(x.lower(), y.lower()))
+</pre>
+     <p>
+      Alternative original code with explicit decoration:
+     </p>
+     <pre class="literal-block">
+tempnames = [(n.lower(), n) for n in names]
+tempnames.sort()
+names = [original for decorated, original in tempnames]
+</pre>
+     <p>
+      Revised code using a key function:
+     </p>
+     <pre class="literal-block">
+names.sort(key=str.lower)       # case-insensitive sort
+</pre>
+     <p>
+      Locating:
+      <tt class="docutils literal">
+       grep sort *.py
+      </tt>
+     </p>
+    </div>
+    <div class="section" id="replacing-common-uses-of-lambda">
+     <h3>
+      <a class="toc-backref" href="#id14">
+       Replacing Common Uses of Lambda
+      </a>
+     </h3>
+     <p>
+      In Python 2.4, the
+      <tt class="docutils literal">
+       operator
+      </tt>
+      module gained two new functions,
+itemgetter() and attrgetter() that can replace common uses of
+the
+      <tt class="docutils literal">
+       lambda
+      </tt>
+      keyword.  The new functions run faster and
+are considered by some to improve readability.
+     </p>
+     <p>
+      Pattern:
+     </p>
+     <pre class="literal-block">
+lambda r: r[2]      --&gt;  itemgetter(2)
+lambda r: r.myattr  --&gt;  attrgetter('myattr')
+</pre>
+     <p>
+      Typical contexts:
+     </p>
+     <pre class="literal-block">
+sort(studentrecords, key=attrgetter('gpa'))   # set a sort field
+map(attrgetter('lastname'), studentrecords)   # extract a field
+</pre>
+     <p>
+      Locating:
+      <tt class="docutils literal">
+       grep lambda *.py
+      </tt>
+     </p>
+    </div>
+    <div class="section" id="simplified-reverse-iteration">
+     <h3>
+      <a class="toc-backref" href="#id15">
+       Simplified Reverse Iteration
+      </a>
+     </h3>
+     <p>
+      Python 2.4 introduced the
+      <tt class="docutils literal">
+       reversed
+      </tt>
+      builtin function for reverse
+iteration.  The existing approaches to reverse iteration suffered
+from wordiness, performance issues (speed and memory consumption),
+and/or lack of clarity.  A preferred style is to express the
+sequence in a forwards direction, apply
+      <tt class="docutils literal">
+       reversed
+      </tt>
+      to the result,
+and then loop over the resulting fast, memory friendly iterator.
+     </p>
+     <p>
+      Original code expressed with half-open intervals:
+     </p>
+     <pre class="literal-block">
+for i in range(n-1, -1, -1):
+    print seqn[i]
+</pre>
+     <p>
+      Alternative original code reversed in multiple steps:
+     </p>
+     <pre class="literal-block">
+rseqn = list(seqn)
+rseqn.reverse()
+for value in rseqn:
+    print value
+</pre>
+     <p>
+      Alternative original code expressed with extending slicing:
+     </p>
+     <pre class="literal-block">
+for value in seqn[::-1]:
+    print value
+</pre>
+     <p>
+      Revised code using the
+      <tt class="docutils literal">
+       reversed
+      </tt>
+      function:
+     </p>
+     <pre class="literal-block">
+for value in reversed(seqn):
+    print value
+</pre>
+    </div>
+   </div>
+   <div class="section" id="python-2-3-or-later">
+    <h2>
+     <a class="toc-backref" href="#id16">
+      Python 2.3 or Later
+     </a>
+    </h2>
+    <div class="section" id="testing-string-membership">
+     <h3>
+      <a class="toc-backref" href="#id17">
+       Testing String Membership
+      </a>
+     </h3>
+     <p>
+      In Python 2.3, for
+      <tt class="docutils literal">
+       string2 in string1
+      </tt>
+      , the length restriction on
+      <tt class="docutils literal">
+       string2
+      </tt>
+      is lifted; it can now be a string of any length.  When
+searching for a substring, where you don't care about the position of
+the substring in the original string, using the
+      <tt class="docutils literal">
+       in
+      </tt>
+      operator makes
+the meaning clear.
+     </p>
+     <p>
+      Pattern:
+     </p>
+     <pre class="literal-block">
+string1.find(string2) &gt;= 0   --&gt;  string2 in string1
+string1.find(string2) != -1  --&gt;  string2 in string1
+</pre>
+    </div>
+    <div class="section" id="replace-apply-with-a-direct-function-call">
+     <h3>
+      <a class="toc-backref" href="#id18">
+       Replace apply() with a Direct Function Call
+      </a>
+     </h3>
+     <p>
+      In Python 2.3, apply() was marked for Pending Deprecation because it
+was made obsolete by Python 1.6's introduction of * and ** in
+function calls.  Using a direct function call was always a little
+faster than apply() because it saved the lookup for the builtin.
+Now, apply() is even slower due to its use of the warnings module.
+     </p>
+     <p>
+      Pattern:
+     </p>
+     <pre class="literal-block">
+apply(f, args, kwds)  --&gt;  f(*args, **kwds)
+</pre>
+     <p>
+      Note: The Pending Deprecation was removed from apply() in Python 2.3.3
+since it creates pain for people who need to maintain code that works
+with Python versions as far back as 1.5.2, where there was no
+alternative to apply().  The function remains deprecated, however.
+     </p>
+    </div>
+   </div>
+   <div class="section" id="python-2-2-or-later">
+    <h2>
+     <a class="toc-backref" href="#id19">
+      Python 2.2 or Later
+     </a>
+    </h2>
+    <div class="section" id="testing-dictionary-membership">
+     <h3>
+      <a class="toc-backref" href="#id20">
+       Testing Dictionary Membership
+      </a>
+     </h3>
+     <p>
+      For testing dictionary membership, use the 'in' keyword instead of the
+'has_key()' method.  The result is shorter and more readable.  The
+style becomes consistent with tests for membership in lists.  The
+result is slightly faster because
+      <tt class="docutils literal">
+       has_key
+      </tt>
+      requires an attribute
+search and uses a relatively expensive function call.
+     </p>
+     <p>
+      Pattern:
+     </p>
+     <pre class="literal-block">
+if d.has_key(k):  --&gt;  if k in d:
+</pre>
+     <p>
+      Contra-indications:
+     </p>
+     <ol class="arabic">
+      <li>
+       <p class="first">
+        Some dictionary-like objects may not define a
+        <tt class="docutils literal">
+         __contains__()
+        </tt>
+        method:
+       </p>
+       <pre class="literal-block">
+if dictlike.has_key(k)
+</pre>
+      </li>
+     </ol>
+     <p>
+      Locating:
+      <tt class="docutils literal">
+       grep has_key
+      </tt>
+     </p>
+    </div>
+    <div class="section" id="looping-over-dictionaries">
+     <h3>
+      <a class="toc-backref" href="#id21">
+       Looping Over Dictionaries
+      </a>
+     </h3>
+     <p>
+      Use the new
+      <tt class="docutils literal">
+       iter
+      </tt>
+      methods for looping over dictionaries.  The
+      <tt class="docutils literal">
+       iter
+      </tt>
+      methods are faster because they do not have to create a new
+list object with a complete copy of all of the keys, values, or items.
+Selecting only keys, values, or items (key/value pairs) as needed
+saves the time for creating throwaway object references and, in the
+case of items, saves a second hash look-up of the key.
+     </p>
+     <p>
+      Pattern:
+     </p>
+     <pre class="literal-block">
+for key in d.keys():      --&gt;  for key in d:
+for value in d.values():  --&gt;  for value in d.itervalues():
+for key, value in d.items():
+                          --&gt;  for key, value in d.iteritems():
+</pre>
+     <p>
+      Contra-indications:
+     </p>
+     <ol class="arabic">
+      <li>
+       <p class="first">
+        If you need a list, do not change the return type:
+       </p>
+       <pre class="literal-block">
+def getids():  return d.keys()
+</pre>
+      </li>
+      <li>
+       <p class="first">
+        Some dictionary-like objects may not define
+        <tt class="docutils literal">
+         iter
+        </tt>
+        methods:
+       </p>
+       <pre class="literal-block">
+for k in dictlike.keys():
+</pre>
+      </li>
+      <li>
+       <p class="first">
+        Iterators do not support slicing, sorting or other operations:
+       </p>
+       <pre class="literal-block">
+k = d.keys(); j = k[:]
+</pre>
+      </li>
+      <li>
+       <p class="first">
+        Dictionary iterators prohibit modifying the dictionary:
+       </p>
+       <pre class="literal-block">
+for k in d.keys(): del[k]
+</pre>
+      </li>
+     </ol>
+    </div>
+    <div class="section" id="stat-methods">
+     <h3>
+      <a class="toc-backref" href="#id22">
+       <tt class="docutils literal">
+        stat
+       </tt>
+       Methods
+      </a>
+     </h3>
+     <p>
+      Replace
+      <tt class="docutils literal">
+       stat
+      </tt>
+      constants or indices with new
+      <tt class="docutils literal">
+       os.stat
+      </tt>
+      attributes
+and methods.  The
+      <tt class="docutils literal">
+       os.stat
+      </tt>
+      attributes and methods are not
+order-dependent and do not require an import of the
+      <tt class="docutils literal">
+       stat
+      </tt>
+      module.
+     </p>
+     <p>
+      Pattern:
+     </p>
+     <pre class="literal-block">
+os.stat("foo")[stat.ST_MTIME]  --&gt;  os.stat("foo").st_mtime
+os.stat("foo")[stat.ST_MTIME]  --&gt;  os.path.getmtime("foo")
+</pre>
+     <p>
+      Locating:
+      <tt class="docutils literal">
+       grep os.stat
+      </tt>
+      or
+      <tt class="docutils literal">
+       grep stat.S
+      </tt>
+     </p>
+    </div>
+    <div class="section" id="reduce-dependency-on-types-module">
+     <h3>
+      <a class="toc-backref" href="#id23">
+       Reduce Dependency on
+       <tt class="docutils literal">
+        types
+       </tt>
+       Module
+      </a>
+     </h3>
+     <p>
+      The
+      <tt class="docutils literal">
+       types
+      </tt>
+      module is likely to be deprecated in the future.  Use
+built-in constructor functions instead.  They may be slightly faster.
+     </p>
+     <p>
+      Pattern:
+     </p>
+     <pre class="literal-block">
+isinstance(v, types.IntType)      --&gt;  isinstance(v, int)
+isinstance(s, types.StringTypes)  --&gt;  isinstance(s, basestring)
+</pre>
+     <p>
+      Full use of this technique requires Python 2.3 or later
+(
+      <tt class="docutils literal">
+       basestring
+      </tt>
+      was introduced in Python 2.3), but Python 2.2 is
+sufficient for most uses.
+     </p>
+     <p>
+      Locating:
+      <tt class="docutils literal">
+       grep types *.py | grep import
+      </tt>
+     </p>
+    </div>
+    <div class="section" id="avoid-variable-names-that-clash-with-the-builtins-module">
+     <h3>
+      <a class="toc-backref" href="#id24">
+       Avoid Variable Names that Clash with the
+       <tt class="docutils literal">
+        __builtins__
+       </tt>
+       Module
+      </a>
+     </h3>
+     <p>
+      In Python 2.2, new built-in types were added for
+      <tt class="docutils literal">
+       dict
+      </tt>
+      and
+      <tt class="docutils literal">
+       file
+      </tt>
+      .
+Scripts should avoid assigning variable names that mask those types.
+The same advice also applies to existing builtins like
+      <tt class="docutils literal">
+       list
+      </tt>
+      .
+     </p>
+     <p>
+      Pattern:
+     </p>
+     <pre class="literal-block">
+file = open('myfile.txt') --&gt; f = open('myfile.txt')
+dict = obj.__dict__ --&gt; d = obj.__dict__
+</pre>
+     <p>
+      Locating:
+      <tt class="docutils literal">
+       grep 'file ' *.py
+      </tt>
+     </p>
+    </div>
+   </div>
+   <div class="section" id="python-2-1-or-later">
+    <h2>
+     <a class="toc-backref" href="#id25">
+      Python 2.1 or Later
+     </a>
+    </h2>
+    <div class="section" id="whrandom-module-deprecated">
+     <h3>
+      <a class="toc-backref" href="#id26">
+       <tt class="docutils literal">
+        whrandom
+       </tt>
+       Module Deprecated
+      </a>
+     </h3>
+     <p>
+      All random-related methods have been collected in one place, the
+      <tt class="docutils literal">
+       random
+      </tt>
+      module.
+     </p>
+     <p>
+      Pattern:
+     </p>
+     <pre class="literal-block">
+import whrandom --&gt; import random
+</pre>
+     <p>
+      Locating:
+      <tt class="docutils literal">
+       grep whrandom
+      </tt>
+     </p>
+    </div>
+   </div>
+   <div class="section" id="python-2-0-or-later">
+    <h2>
+     <a class="toc-backref" href="#id27">
+      Python 2.0 or Later
+     </a>
+    </h2>
+    <div class="section" id="string-methods">
+     <h3>
+      <a class="toc-backref" href="#id28">
+       String Methods
+      </a>
+     </h3>
+     <p>
+      The string module is likely to be deprecated in the future.  Use
+string methods instead.  They're faster too.
+     </p>
+     <p>
+      Pattern:
+     </p>
+     <pre class="literal-block">
+import string ; string.method(s, ...)  --&gt;  s.method(...)
+c in string.whitespace                 --&gt;  c.isspace()
+</pre>
+     <p>
+      Locating:
+      <tt class="docutils literal">
+       grep string *.py | grep import
+      </tt>
+     </p>
+    </div>
+    <div class="section" id="startswith-and-endswith-string-methods">
+     <h3>
+      <a class="toc-backref" href="#id29">
+       <tt class="docutils literal">
+        startswith
+       </tt>
+       and
+       <tt class="docutils literal">
+        endswith
+       </tt>
+       String Methods
+      </a>
+     </h3>
+     <p>
+      Use these string methods instead of slicing.  No slice has to be
+created and there's no risk of miscounting.
+     </p>
+     <p>
+      Pattern:
+     </p>
+     <pre class="literal-block">
+"foobar"[:3] == "foo"   --&gt;  "foobar".startswith("foo")
+"foobar"[-3:] == "bar"  --&gt;  "foobar".endswith("bar")
+</pre>
+    </div>
+    <div class="section" id="the-atexit-module">
+     <h3>
+      <a class="toc-backref" href="#id30">
+       The
+       <tt class="docutils literal">
+        atexit
+       </tt>
+       Module
+      </a>
+     </h3>
+     <p>
+      The atexit module supports multiple functions to be executed upon
+program termination.  Also, it supports parameterized functions.
+Unfortunately, its implementation conflicts with the sys.exitfunc
+attribute which only supports a single exit function.  Code relying
+on sys.exitfunc may interfere with other modules (including library
+modules) that elect to use the newer and more versatile atexit module.
+     </p>
+     <p>
+      Pattern:
+     </p>
+     <pre class="literal-block">
+sys.exitfunc = myfunc  --&gt;  atexit.register(myfunc)
+</pre>
+    </div>
+   </div>
+   <div class="section" id="python-1-5-or-later">
+    <h2>
+     <a class="toc-backref" href="#id31">
+      Python 1.5 or Later
+     </a>
+    </h2>
+    <div class="section" id="class-based-exceptions">
+     <h3>
+      <a class="toc-backref" href="#id32">
+       Class-Based Exceptions
+      </a>
+     </h3>
+     <p>
+      String exceptions are deprecated, so derive from the
+      <tt class="docutils literal">
+       Exception
+      </tt>
+      base class.  Unlike the obsolete string exceptions, class exceptions
+all derive from another exception or the
+      <tt class="docutils literal">
+       Exception
+      </tt>
+      base class.
+This allows meaningful groupings of exceptions.  It also allows an
+"
+      <tt class="docutils literal">
+       except Exception
+      </tt>
+      " clause to catch all exceptions.
+     </p>
+     <p>
+      Pattern:
+     </p>
+     <pre class="literal-block">
+NewError = 'NewError'  --&gt;  class NewError(Exception): pass
+</pre>
+     <p>
+      Locating: Use
+      <a class="reference external" href="http://pychecker.sourceforge.net/">
+       PyChecker
+      </a>
+      <a class="footnote-reference" href="#id3" id="id4">
+       [2]
+      </a>
+      .
+     </p>
+    </div>
+   </div>
+   <div class="section" id="all-python-versions">
+    <h2>
+     <a class="toc-backref" href="#id33">
+      All Python Versions
+     </a>
+    </h2>
+    <div class="section" id="testing-for-none">
+     <h3>
+      <a class="toc-backref" href="#id34">
+       Testing for
+       <tt class="docutils literal">
+        None
+       </tt>
+      </a>
+     </h3>
+     <p>
+      Since there is only one
+      <tt class="docutils literal">
+       None
+      </tt>
+      object, equality can be tested with
+identity.  Identity tests are slightly faster than equality tests.
+Also, some object types may overload comparison, so equality testing
+may be much slower.
+     </p>
+     <p>
+      Pattern:
+     </p>
+     <pre class="literal-block">
+if v == None  --&gt;  if v is None:
+if v != None  --&gt;  if v is not None:
+</pre>
+     <p>
+      Locating:
+      <tt class="docutils literal">
+       grep '== None'
+      </tt>
+      or
+      <tt class="docutils literal">
+       grep '!= None'
+      </tt>
+     </p>
+    </div>
+   </div>
+  </div>
+  <div class="section" id="references">
+   <h1>
+    <a class="toc-backref" href="#id35">
+     References
+    </a>
+   </h1>
+   <table class="docutils footnote" frame="void" id="id2" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id1">
+        [1]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="../pep-0004/index.html">
+        PEP 4
+       </a>
+       , Deprecation of Standard Modules, von Loewis
+(
+       <a class="reference external" href="../pep-0004/index.html">
+        http://www.python.org/dev/peps/pep-0004/
+       </a>
+       )
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id3" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id4">
+        [2]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="http://pychecker.sourceforge.net/">
+        http://pychecker.sourceforge.net/
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+  </div>
+  <div class="section" id="copyright">
+   <h1>
+    <a class="toc-backref" href="#id36">
+     Copyright
+    </a>
+   </h1>
+   <p>
+    This document has been placed in the public domain.
+   </p>
+   <!-- Local Variables:
+mode: indented-text
+indent-tabs-mode: nil
+sentence-end-double-space: t
+fill-column: 70
+End: -->
+  </div>
+ </body>
+
+<!-- Mirrored from www.python.org/dev/peps/pep-0290/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 03 Sep 2015 04:31:04 GMT -->
+</html>Source: <a href="https://hg.python.org/peps/file/tip/pep-0290.txt">https://hg.python.org/peps/file/tip/pep-0290.txt</a>
+
+    </article>
+
+
+                </section>
+
+                
+
+
+<aside class="left-sidebar" role="secondary">
+
+    
+
+
+
+
+
+
+    
+
+
+
+
+
+        <div class="twitter-widget sidebar-widget">
+        <a class="twitter-timeline" data-dnt="true" href="https://twitter.com/ThePSF" data-widget-id="434113224703610882">Tweets by @ThePSF</a>
+        <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+    </div>
+
+    <div class="psf-sidebar-widget sidebar-widget">
+        <h3 class="widget-title">The PSF</h3>
+<p>The Python Software Foundation is the organization behind Python. Become a member of the PSF and help advance the software and our mission. </p>
+
+    </div>
+
+</aside>
+
+
+
+                
+                
+
+
+            </div><!-- end .container -->
+        </div><!-- end #content .content-wrapper -->
+
+        <!-- Footer and social media list -->
+        <footer id="site-map" class="main-footer" role="contentinfo">
+            <div class="main-footer-links">
+                <div class="container">
+
+                    
+                    <a id="back-to-top-1" class="jump-link" href="#python-network"><span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> Back to Top</a>
+
+                    
+
+<ul class="sitemap navigation menu do-not-print" role="tree" id="container">
+    
+    <li class="tier-1 element-1">
+        <a href="https://www.python.org/about/" >About</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/apps/" title="">Applications</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/quotes/" title="">Quotes</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/gettingstarted/" title="">Getting Started</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/help/" title="">Help</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-2">
+        <a href="https://www.python.org/downloads/" >Downloads</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/downloads/" title="">All releases</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/downloads/source/" title="">Source code</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/downloads/windows/" title="">Windows</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/downloads/mac-osx/" title="">Mac OS X</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/download/other/" title="">Other Platforms</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://docs.python.org/3/license.html" title="">License</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/download/alternatives" title="">Alternative Implementations</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-3">
+        <a href="https://www.python.org/doc/" >Documentation</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/doc/" title="">Docs</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/doc/av" title="">Audio/Visual Talks</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://wiki.python.org/moin/BeginnersGuide" title="">Beginner&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://docs.python.org/faq/" title="">FAQ</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="http://wiki.python.org/moin/Languages" title="">Non-English Docs</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="../index.html" title="">PEP Index</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://wiki.python.org/moin/PythonBooks" title="">Python Books</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-4">
+        <a href="https://www.python.org/community/" >Community</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/community/diversity/" title="">Diversity</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/community/irc/" title="">IRC</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/community/lists/" title="">Mailing Lists</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/workshops/" title="">Python Conferences</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/community/sigs/" title="">Special Interest Groups</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://wiki.python.org/moin/" title="">Python Wiki</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/community/logos/" title="">Python Logo</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://www.python.org/community/merchandise/" title="">Merchandise</a></li>
+    
+        <li class="tier-2 element-9" role="treeitem"><a href="https://www.python.org/community/awards" title="">Community Awards</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-5">
+        <a href="https://www.python.org/about/success/" title="success-stories">Success Stories</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/success/#arts" title="">Arts</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/success/#business" title="">Business</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/success/#education" title="">Education</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/success/#engineering" title="">Engineering</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/about/success/#government" title="">Government</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://www.python.org/about/success/#scientific" title="">Scientific</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/about/success/#software-development" title="">Software Development</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-6">
+        <a href="https://www.python.org/blogs/" title="News from around the Python world">News</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/blogs/" title="Python Insider Blog Posts">Python News</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://planetpython.org/" title="Planet Python">Community News</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="http://pyfound.blogspot.com/" title="PSF Blog">PSF News</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pycon.blogspot.com/" title="PyCon Blog">PyCon News</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-7">
+        <a href="https://www.python.org/events/" >Events</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/events/python-events/" title="">Python Events</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/events/python-user-group/" title="">User Group Events</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/events/python-events/past/" title="">Python Events Archive</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/events/python-user-group/past/" title="">User Group Events Archive</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://wiki.python.org/moin/PythonEventsCalendar#Submitting_an_Event" title="">Submit an Event</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-8">
+        <a href="https://www.python.org/dev/" >Contributing</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="http://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://bugs.python.org/" title="">Issue Tracker</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://mail.python.org/mailman/listinfo/python-dev" title="">python-dev list</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pythonmentors.com/" title="">Core Mentorship</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+</ul>
+
+
+                    <a id="back-to-top-2" class="jump-link" href="#python-network"><span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> Back to Top</a>
+                    
+
+                </div><!-- end .container -->
+            </div> <!-- end .main-footer-links -->
+
+            <div class="site-base">
+                <div class="container">
+                    
+                    <ul class="footer-links navigation menu do-not-print" role="tree">
+                        <li class="tier-1 element-1"><a href="https://www.python.org/about/help/">Help &amp; <span class="say-no-more">General</span> Contact</a></li>
+                        <li class="tier-1 element-2"><a href="https://www.python.org/community/diversity/">Diversity <span class="say-no-more">Initiatives</span></a></li>
+                        <li class="tier-1 element-3"><a href="https://github.com/python/pythondotorg/issues">Submit Website Bug</a></li>
+                        <!--<li class="tier-1 element-3"><a href="#"><span class="say-no-more">Website</span> Colophon</a></li>-->
+                    </ul>
+
+                    <div class="copyright">
+                        <p><small>
+                            <span class="pre">Copyright &copy;2001-2015.</span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/psf-landing/">Python Software Foundation</a></span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/about/legal/">Legal Statements</a></span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/privacy/">Privacy Policy</a></span>
+                        </small></p>
+                    </div>
+
+                </div><!-- end .container -->
+            </div><!-- end .site-base -->
+
+        </footer>
+
+    </div><!-- end #touchnav-wrapper -->
+
+    
+    <script src="../../../../ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="../../../static/js/libs/jquery-1.8.2.min.js"><\/script>')</script>
+
+    <script src="../../../static/js/libs/masonry.pkgd.min.js"></script>
+
+    <script type="text/javascript" src="../../../static/js/main-min.js" charset="utf-8"></script>
+    
+
+    <!--[if lte IE 7]>
+    <script type="text/javascript" src="/static/js/plugins/IE8-min.js" charset="utf-8"></script>
+    
+    
+    <![endif]-->
+
+    <!--[if lte IE 8]>
+    <script type="text/javascript" src="/static/js/plugins/getComputedStyle-min.js" charset="utf-8"></script>
+    
+    
+    <![endif]-->
+
+    
+
+    
+    
+
+</body>
+</html>

@@ -1,0 +1,1618 @@
+<!doctype html>
+<!--[if lt IE 7]>   <html class="no-js ie6 lt-ie7 lt-ie8 lt-ie9">   <![endif]-->
+<!--[if IE 7]>      <html class="no-js ie7 lt-ie8 lt-ie9">          <![endif]-->
+<!--[if IE 8]>      <html class="no-js ie8 lt-ie9">                 <![endif]-->
+<!--[if gt IE 8]><!--><html class="no-js" lang="en" dir="ltr">  <!--<![endif]-->
+
+
+<!-- Mirrored from www.python.org/dev/peps/pep-3113/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 03 Sep 2015 04:35:18 GMT -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <link rel="prefetch" href="../../../../ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js">
+
+    <meta name="application-name" content="Python.org">
+    <meta name="msapplication-tooltip" content="The official home of the Python Programming Language">
+    <meta name="apple-mobile-web-app-title" content="Python.org">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="format-detection" content="telephone=no">
+    <meta http-equiv="cleartype" content="on">
+    <meta http-equiv="imagetoolbar" content="false">
+
+    <script src="../../../static/js/libs/modernizr.js"></script>
+
+    <link href="../../../static/stylesheets/style.css" rel="stylesheet" type="text/css" title="default" />
+    <link href="../../../static/stylesheets/mq.css" rel="stylesheet" type="text/css" media="not print, braille, embossed, speech, tty" />
+    
+
+    <!--[if (lte IE 8)&(!IEMobile)]>
+    <link href="/static/stylesheets/no-mq.css" rel="stylesheet" type="text/css" media="screen" />
+    
+    
+    <![endif]-->
+
+    
+    <link rel="icon" type="image/x-icon" href="https://www.python.org/static/favicon.ico">
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="../../../static/apple-touch-icon-144x144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="../../../static/apple-touch-icon-114x114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="../../../static/apple-touch-icon-72x72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="../../../static/apple-touch-icon-precomposed.png">
+    <link rel="apple-touch-icon" href="../../../static/apple-touch-icon-precomposed.png">
+
+    
+    <meta name="msapplication-TileImage" content="/static/metro-icon-144x144-precomposed.png"><!-- white shape -->
+    <meta name="msapplication-TileColor" content="#3673a5"><!-- python blue -->
+    <meta name="msapplication-navbutton-color" content="#3673a5">
+
+    <meta property="og:site_name" content="Python.org">
+    <meta property="og:type" content="website">
+
+    <title>PEP 3113 -- Removal of Tuple Parameter Unpacking | Python.org</title>
+    <meta property="og:title" content="Welcome to Python.org">
+
+    
+    <meta name="description" content="The official home of the Python Programming Language">
+    <meta name="og:description" content="The official home of the Python Programming Language">
+    <meta name="keywords" content="Python programming language object oriented web free open source software license documentation download community">
+    <meta property="og:tag" content="Python programming language object oriented web free open source software license documentation download community">
+    <meta property="og:published_time" content="">
+    <meta property="og:modified_time" content="">
+    <meta property="og:author" content="">
+    <meta property="og:section" content=""> 
+    <meta property="og:url" content="">
+    <meta property="og:image" content="">
+    <meta property="og:video" content="">
+
+    <link rel="author" href="https://www.python.org/static/humans.txt">
+
+    
+
+    
+    <script type="application/ld+json">
+     {
+       "@context": "http://schema.org",
+       "@type": "WebSite",
+       "url": "https://www.python.org/",
+       "potentialAction": {
+         "@type": "SearchAction",
+         "target": "https://www.python.org/search/?q={search_term_string}",
+         "query-input": "required name=search_term_string"
+       }
+     }
+    </script>
+
+    
+    <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-39055973-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+    </script>
+    
+</head>
+
+<body class="python pages pep-page">
+
+    <div id="touchnav-wrapper">
+
+        <div id="nojs" class="do-not-print">
+            <p><strong>Notice:</strong> While Javascript is not essential for this website, your interaction with the content will be limited. Please turn Javascript on for the full experience. </p>
+        </div>
+
+        <!--[if lt IE 8]>
+        <div id="oldie-warning" class="do-not-print">
+            <p><strong>Notice:</strong> Your browser is <em>ancient</em> and <a href="http://www.ie6countdown.com/">Microsoft agrees</a>. <a href="http://browsehappy.com/">Upgrade to a different browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to experience a better web.</p>
+        </div>
+        <![endif]-->
+
+        <!-- Sister Site Links -->
+        <div id="top" class="top-bar do-not-print">
+
+            <nav class="meta-navigation container" role="navigation">
+
+                
+                <div class="skip-link screen-reader-text">
+                    <a href="#content" title="Skip to content">Skip to content</a>
+                </div>
+
+                
+                <a id="close-python-network" class="jump-link" href="#python-network" aria-hidden="true">
+                    <span aria-hidden="true" class="icon-arrow-down"><span>&#9660;</span></span> Close
+                </a>
+
+                
+
+<ul class="menu" role="tree">
+    
+    <li class="python-meta ">
+        <a href="https://www.python.org/" title="The Python Programming Language" >Python</a>
+    </li>
+    
+    <li class="psf-meta ">
+        <a href="https://www.python.org/psf-landing/" title="The Python Software Foundation" >PSF</a>
+    </li>
+    
+    <li class="docs-meta ">
+        <a href="https://docs.python.org/" title="Python Documentation" >Docs</a>
+    </li>
+    
+    <li class="pypi-meta ">
+        <a href="https://pypi.python.org/" title="Python Package Index" >PyPI</a>
+    </li>
+    
+    <li class="jobs-meta ">
+        <a href="https://www.python.org/jobs/" title="Python Job Board" >Jobs</a>
+    </li>
+    
+    <li class="shop-meta ">
+        <a href="https://www.python.org/community/" title="Python Community" >Community</a>
+    </li>
+    
+</ul>
+
+
+                <a id="python-network" class="jump-link" href="#top" aria-hidden="true">
+                    <span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> The Python Network
+                </a>
+
+            </nav>
+
+        </div>
+
+        <!-- Header elements -->
+        <header class="main-header" role="banner">
+            <div class="container">
+
+                <h1 class="site-headline">
+                    <a href="https://www.python.org/"><img class="python-logo" src="../../../static/img/python-logo.png" alt="python&trade;"></a>
+                </h1>
+
+                <div class="options-bar do-not-print">
+
+                    
+                    <a id="site-map-link" class="jump-to-menu" href="#site-map"><span class="menu-icon">&equiv;</span> Menu</a><form class="search-the-site" action="https://www.python.org/search/" method="get">
+                        <fieldset title="Search Python.org">
+
+                            <span aria-hidden="true" class="icon-search"></span>
+
+                            <label class="screen-reader-text" for="id-search-field">Search This Site</label>
+                            <input id="id-search-field" name="q" type="search" role="textbox" class="search-field" placeholder="Search" value="" tabindex="1">
+
+                            <button type="submit" name="submit" id="submit" class="search-button" title="Submit this Search" tabindex="3">
+                                GO
+                            </button>
+
+                            
+                            <!--[if IE]><input type="text" style="display: none;" disabled="disabled" size="1" tabindex="4"><![endif]-->
+
+                        </fieldset>
+                    </form><span class="breaker"></span><div class="adjust-font-size" aria-hidden="true">
+                        <ul class="navigation menu" aria-label="Adjust Text Size on Page">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                <a href="#" class="action-trigger"><strong><small>A</small> A</strong></a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a class="text-shrink" title="Make Text Smaller" href="javascript:;">Smaller</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a class="text-grow" title="Make Text Larger" href="javascript:;">Larger</a></li>
+                                    <li class="tier-2 element-3" role="treeitem"><a class="text-reset" title="Reset any font size changes I have made" href="javascript:;">Reset</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div><div class="winkwink-nudgenudge">
+                        <ul class="navigation menu" aria-label="Social Media Navigation">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                <a href="#" class="action-trigger">Socialize</a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a href="http://plus.google.com/+Python"><span aria-hidden="true" class="icon-google-plus"></span>Google+</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a href="http://www.facebook.com/pythonlang?fref=ts"><span aria-hidden="true" class="icon-facebook"></span>Facebook</a></li>
+                                    <li class="tier-2 element-3" role="treeitem"><a href="http://twitter.com/ThePSF"><span aria-hidden="true" class="icon-twitter"></span>Twitter</a></li>
+                                    <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/irc/"><span aria-hidden="true" class="icon-freenode"></span>Chat on IRC</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div><div class="account-signin">
+                        <ul class="navigation menu" aria-label="Social Media Navigation">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                
+                                <a href="https://www.python.org/accounts/login/" title="Sign Up or Sign In to Python.org">Sign In</a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/accounts/signup/">Sign Up / Register</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/accounts/login/">Sign In</a></li>
+                                </ul>
+                                
+                            </li>
+                        </ul>
+                    </div>
+
+                </div><!-- end options-bar -->
+
+                <nav id="mainnav" class="python-navigation main-navigation do-not-print" role="navigation">
+                    
+                        
+<ul class="navigation menu" role="menubar" aria-label="Main Navigation">
+  
+    
+    
+    <li id="about" class="tier-1 element-1  " aria-haspopup="true">
+        <a href="https://www.python.org/about/" title="" class="">About</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/apps/" title="">Applications</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/quotes/" title="">Quotes</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/gettingstarted/" title="">Getting Started</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/help/" title="">Help</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="downloads" class="tier-1 element-2  " aria-haspopup="true">
+        <a href="https://www.python.org/downloads/" title="" class="">Downloads</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/downloads/" title="">All releases</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/downloads/source/" title="">Source code</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/downloads/windows/" title="">Windows</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/downloads/mac-osx/" title="">Mac OS X</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/download/other/" title="">Other Platforms</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://docs.python.org/3/license.html" title="">License</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/download/alternatives" title="">Alternative Implementations</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="documentation" class="tier-1 element-3  " aria-haspopup="true">
+        <a href="https://www.python.org/doc/" title="" class="">Documentation</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/doc/" title="">Docs</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/doc/av" title="">Audio/Visual Talks</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://wiki.python.org/moin/BeginnersGuide" title="">Beginner&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://docs.python.org/faq/" title="">FAQ</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="http://wiki.python.org/moin/Languages" title="">Non-English Docs</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="../index.html" title="">PEP Index</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://wiki.python.org/moin/PythonBooks" title="">Python Books</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="community" class="tier-1 element-4  " aria-haspopup="true">
+        <a href="https://www.python.org/community/" title="" class="">Community</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/community/diversity/" title="">Diversity</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/community/irc/" title="">IRC</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/community/lists/" title="">Mailing Lists</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/workshops/" title="">Python Conferences</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/community/sigs/" title="">Special Interest Groups</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://wiki.python.org/moin/" title="">Python Wiki</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/community/logos/" title="">Python Logo</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://www.python.org/community/merchandise/" title="">Merchandise</a></li>
+    
+        <li class="tier-2 element-9" role="treeitem"><a href="https://www.python.org/community/awards" title="">Community Awards</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="success-stories" class="tier-1 element-5  " aria-haspopup="true">
+        <a href="https://www.python.org/about/success/" title="success-stories" class="">Success Stories</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/success/#arts" title="">Arts</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/success/#business" title="">Business</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/success/#education" title="">Education</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/success/#engineering" title="">Engineering</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/about/success/#government" title="">Government</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://www.python.org/about/success/#scientific" title="">Scientific</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/about/success/#software-development" title="">Software Development</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="news" class="tier-1 element-6  " aria-haspopup="true">
+        <a href="https://www.python.org/blogs/" title="News from around the Python world" class="">News</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/blogs/" title="Python Insider Blog Posts">Python News</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://planetpython.org/" title="Planet Python">Community News</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="http://pyfound.blogspot.com/" title="PSF Blog">PSF News</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pycon.blogspot.com/" title="PyCon Blog">PyCon News</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="events" class="tier-1 element-7  " aria-haspopup="true">
+        <a href="https://www.python.org/events/" title="" class="">Events</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/events/python-events/" title="">Python Events</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/events/python-user-group/" title="">User Group Events</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/events/python-events/past/" title="">Python Events Archive</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/events/python-user-group/past/" title="">User Group Events Archive</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://wiki.python.org/moin/PythonEventsCalendar#Submitting_an_Event" title="">Submit an Event</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    
+  
+</ul>
+
+                    
+                </nav>
+
+                <div class="header-banner "> <!-- for optional "do-not-print" class -->
+                    
+                    
+                </div>
+
+                
+                
+
+             </div><!-- end .container -->
+        </header>
+
+        <div id="content" class="content-wrapper">
+            <!-- Main Content Column -->
+            <div class="container">
+
+                <section class="main-content with-left-sidebar" role="main">
+
+                    
+<ul class="breadcrumbs menu">
+    <li>
+        <a href="https://www.python.org/" title="The Python Programming Language">Python</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>
+        <a href="https://www.python.org/dev/">Python Developer's Guide</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>
+        <a href="../index.html">PEP Index</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>PEP 3113 -- Removal of Tuple Parameter Unpacking</li>
+</ul>
+
+
+                    
+<style>
+   .pep-page pre {
+        padding: .5em;
+        background: inherit;
+        border-left: 0px;
+        -webkit-box-shadow: 0 0 0 0;
+        -moz-box-shadow: 0 0 0 0;
+        box-shadow: 0 0 0 0;
+   }
+</style>
+
+    
+    <article class="text">
+        
+
+        <header class="article-header">
+            <h1 class="page-title">PEP 3113 -- Removal of Tuple Parameter Unpacking</h1>
+        </header>
+
+        <!--
+This HTML is auto-generated.  DO NOT EDIT THIS FILE!  If you are writing a new
+PEP, see http://www.python.org/dev/peps/pep-0001 for instructions and links
+to templates.  DO NOT USE THIS HTML FILE AS YOUR TEMPLATE!
+-->
+<html>
+ <body>
+  <table class="rfc2822 docutils field-list" frame="void" rules="none">
+   <col class="field-name">
+   </col>
+   <col class="field-body">
+   </col>
+   <tbody valign="top">
+    <tr class="field">
+     <th class="field-name">
+      PEP:
+     </th>
+     <td class="field-body">
+      3113
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Title:
+     </th>
+     <td class="field-body">
+      Removal of Tuple Parameter Unpacking
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Author:
+     </th>
+     <td class="field-body">
+      Brett Cannon &lt;brett at python.org&gt;
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Status:
+     </th>
+     <td class="field-body">
+      Final
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Type:
+     </th>
+     <td class="field-body">
+      Standards Track
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Created:
+     </th>
+     <td class="field-body">
+      02-Mar-2007
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Python-Version:
+     </th>
+     <td class="field-body">
+      3.0
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Post-History:
+     </th>
+     <td class="field-body">
+     </td>
+    </tr>
+   </tbody>
+  </table>
+  <hr/>
+  <div class="contents topic" id="contents">
+   <p class="topic-title first">
+    Contents
+   </p>
+   <ul class="simple">
+    <li>
+     <a class="reference internal" href="#abstract" id="id7">
+      Abstract
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#why-they-should-go" id="id8">
+      Why They Should Go
+     </a>
+     <ul>
+      <li>
+       <a class="reference internal" href="#introspection-issues" id="id9">
+        Introspection Issues
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#no-loss-of-abilities-if-removed" id="id10">
+        No Loss of Abilities If Removed
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#exception-to-the-rule" id="id11">
+        Exception To The Rule
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#uninformative-error-messages" id="id12">
+        Uninformative Error Messages
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#little-usage" id="id13">
+        Little Usage
+       </a>
+      </li>
+     </ul>
+    </li>
+    <li>
+     <a class="reference internal" href="#why-they-should-supposedly-stay" id="id14">
+      Why They Should (Supposedly) Stay
+     </a>
+     <ul>
+      <li>
+       <a class="reference internal" href="#practical-use" id="id15">
+        Practical Use
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#self-documentation-for-parameters" id="id16">
+        Self-Documentation For Parameters
+       </a>
+      </li>
+     </ul>
+    </li>
+    <li>
+     <a class="reference internal" href="#transition-plan" id="id17">
+      Transition Plan
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#references" id="id18">
+      References
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#copyright" id="id19">
+      Copyright
+     </a>
+    </li>
+   </ul>
+  </div>
+  <div class="section" id="abstract">
+   <h1>
+    <a class="toc-backref" href="#id7">
+     Abstract
+    </a>
+   </h1>
+   <p>
+    Tuple parameter unpacking is the use of a tuple as a parameter in a
+function signature so as to have a sequence argument automatically
+unpacked.  An example is:
+   </p>
+   <pre class="literal-block">
+def fxn(a, (b, c), d):
+    pass
+</pre>
+   <p>
+    The use of
+    <tt class="docutils literal">
+     (b, c)
+    </tt>
+    in the signature requires that the second
+argument to the function be a sequence of length two (e.g.,
+    <tt class="docutils literal">
+     [42,
+     <span class="pre">
+      -13]
+     </span>
+    </tt>
+    ).  When such a sequence is passed it is unpacked and
+has its values assigned to the parameters, just as if the statement
+    <tt class="docutils literal">
+     b, c = [42,
+     <span class="pre">
+      -13]
+     </span>
+    </tt>
+    had been executed in the parameter.
+   </p>
+   <p>
+    Unfortunately this feature of Python's rich function signature
+abilities, while handy in some situations, causes more issues than
+they are worth.  Thus this PEP proposes their removal from the
+language in Python 3.0.
+   </p>
+  </div>
+  <div class="section" id="why-they-should-go">
+   <h1>
+    <a class="toc-backref" href="#id8">
+     Why They Should Go
+    </a>
+   </h1>
+   <div class="section" id="introspection-issues">
+    <h2>
+     <a class="toc-backref" href="#id9">
+      Introspection Issues
+     </a>
+    </h2>
+    <p>
+     Python has very powerful introspection capabilities.  These extend to
+function signatures.  There are no hidden details as to what a
+function's call signature is.  In general it is fairly easy to figure
+out various details about a function's signature by viewing the
+function object and various attributes on it (including the function's
+     <tt class="docutils literal">
+      func_code
+     </tt>
+     attribute).
+    </p>
+    <p>
+     But there is great difficulty when it comes to tuple parameters.  The
+existence of a tuple parameter is denoted by its name being made of a
+     <tt class="docutils literal">
+      .
+     </tt>
+     and a number in the
+     <tt class="docutils literal">
+      co_varnames
+     </tt>
+     attribute of the function's
+code object.  This allows the tuple argument to be bound to a name
+that only the bytecode is aware of and cannot be typed in Python
+source.  But this does not specify the format of the tuple: its
+length, whether there are nested tuples, etc.
+    </p>
+    <p>
+     In order to get all of the details about the tuple from the function
+one must analyse the bytecode of the function.  This is because the
+first bytecode in the function literally translates into the tuple
+argument being unpacked.  Assuming the tuple parameter is
+named
+     <tt class="docutils literal">
+      .1
+     </tt>
+     and is expected to unpack to variables
+     <tt class="docutils literal">
+      spam
+     </tt>
+     and
+     <tt class="docutils literal">
+      monty
+     </tt>
+     (meaning it is the tuple
+     <tt class="docutils literal">
+      (spam, monty)
+     </tt>
+     ), the first
+bytecode in the function will be for the statement
+     <tt class="docutils literal">
+      spam, monty = .1
+     </tt>
+     .  This means that to know all of the details of
+the tuple parameter one must look at the initial bytecode of the
+function to detect tuple unpacking for parameters formatted as
+     <tt class="docutils literal">
+      <span class="pre">
+       \.\d+
+      </span>
+     </tt>
+     and deduce any and all information about the expected
+argument.  Bytecode analysis is how the
+     <tt class="docutils literal">
+      inspect.getargspec
+     </tt>
+     function is able to provide information on tuple parameters.  This is
+not easy to do and is burdensome on introspection tools as they must
+know how Python bytecode works (an otherwise unneeded burden as all
+other types of parameters do not require knowledge of Python
+bytecode).
+    </p>
+    <p>
+     The difficulty of analysing bytecode not withstanding, there is
+another issue with the dependency on using Python bytecode.
+IronPython
+     <a class="footnote-reference" href="#ironpython" id="id1">
+      [3]
+     </a>
+     does not use Python's bytecode.  Because it
+is based on the .NET framework it instead stores MSIL
+     <a class="footnote-reference" href="#msil" id="id2">
+      [4]
+     </a>
+     in
+     <tt class="docutils literal">
+      func_code.co_code
+     </tt>
+     attribute of the function.  This fact prevents
+the
+     <tt class="docutils literal">
+      inspect.getargspec
+     </tt>
+     function from working when run under
+IronPython.  It is unknown whether other Python implementations are
+affected but is reasonable to assume if the implementation is not just
+a re-implementation of the Python virtual machine.
+    </p>
+   </div>
+   <div class="section" id="no-loss-of-abilities-if-removed">
+    <h2>
+     <a class="toc-backref" href="#id10">
+      No Loss of Abilities If Removed
+     </a>
+    </h2>
+    <p>
+     As mentioned in
+     <a class="reference internal" href="#introspection-issues">
+      Introspection Issues
+     </a>
+     , to handle tuple parameters
+the function's bytecode starts with the bytecode required to unpack
+the argument into the proper parameter names.  This means that there
+is no special support required to implement tuple parameters and thus
+there is no loss of abilities if they were to be removed, only a
+possible convenience (which is addressed in
+     <a class="reference internal" href="#why-they-should-supposedly-stay">
+      Why They Should (Supposedly) Stay
+     </a>
+     ).
+    </p>
+    <p>
+     The example function at the beginning of this PEP could easily be
+rewritten as:
+    </p>
+    <pre class="literal-block">
+def fxn(a, b_c, d):
+    b, c = b_c
+    pass
+</pre>
+    <p>
+     and in no way lose functionality.
+    </p>
+   </div>
+   <div class="section" id="exception-to-the-rule">
+    <h2>
+     <a class="toc-backref" href="#id11">
+      Exception To The Rule
+     </a>
+    </h2>
+    <p>
+     When looking at the various types of parameters that a Python function
+can have, one will notice that tuple parameters tend to be an
+exception rather than the rule.
+    </p>
+    <p>
+     Consider
+     <a class="reference external" href="../pep-3102/index.html">
+      PEP 3102
+     </a>
+     (keyword-only arguments) and
+     <a class="reference external" href="../pep-3107/index.html">
+      PEP 3107
+     </a>
+     (function
+annotations)
+     <a class="footnote-reference" href="#pep-3102" id="id3">
+      [5]
+     </a>
+     <a class="footnote-reference" href="#pep-3107" id="id4">
+      [6]
+     </a>
+     .  Both PEPs have been accepted and
+introduce new functionality within a function's signature.  And yet
+for both PEPs the new feature cannot be applied to tuple parameters as
+a whole.
+     <a class="reference external" href="../pep-3102/index.html">
+      PEP 3102
+     </a>
+     has no support for tuple parameters at all (which
+makes sense as there is no way to reference a tuple parameter by
+name).
+     <a class="reference external" href="../pep-3107/index.html">
+      PEP 3107
+     </a>
+     allows annotations for each item within the tuple
+(e.g.,
+     <tt class="docutils literal">
+      (x:int, y:int)
+     </tt>
+     ), but not the whole tuple (e.g.,
+     <tt class="docutils literal">
+      (x,
+      <span class="pre">
+       y):int
+      </span>
+     </tt>
+     ).
+    </p>
+    <p>
+     The existence of tuple parameters also places sequence objects
+separately from mapping objects in a function signature.  There is no
+way to pass in a mapping object (e.g., a dict) as a parameter and have
+it unpack in the same fashion as a sequence does into a tuple
+parameter.
+    </p>
+   </div>
+   <div class="section" id="uninformative-error-messages">
+    <h2>
+     <a class="toc-backref" href="#id12">
+      Uninformative Error Messages
+     </a>
+    </h2>
+    <p>
+     Consider the following function:
+    </p>
+    <pre class="literal-block">
+def fxn((a, b), (c, d)):
+    pass
+</pre>
+    <p>
+     If called as
+     <tt class="docutils literal">
+      fxn(1, (2, 3))
+     </tt>
+     one is given the error message
+     <tt class="docutils literal">
+      TypeError: unpack
+      <span class="pre">
+       non-sequence
+      </span>
+     </tt>
+     .  This error message in no way
+tells you which tuple was not unpacked properly.  There is also no
+indication that this was a result that occurred because of the
+arguments.  Other error messages regarding arguments to functions
+explicitly state its relation to the signature:
+     <tt class="docutils literal">
+      TypeError: fxn() takes exactly 2 arguments (0 given)
+     </tt>
+     , etc.
+    </p>
+   </div>
+   <div class="section" id="little-usage">
+    <h2>
+     <a class="toc-backref" href="#id13">
+      Little Usage
+     </a>
+    </h2>
+    <p>
+     While an informal poll of the handful of Python programmers I know
+personally and from the PyCon 2007 sprint indicates a huge majority of
+people do not know of this feature and the rest just do not use it,
+some hard numbers is needed to back up the claim that the feature is
+not heavily used.
+    </p>
+    <p>
+     Iterating over every line in Python's code repository in the
+     <tt class="docutils literal">
+      Lib/
+     </tt>
+     directory using the regular expression
+     <tt class="docutils literal">
+      <span class="pre">
+       ^\s*def\s*\w+\s*\(
+      </span>
+     </tt>
+     to
+detect function and method definitions there were 22,252 matches in
+the trunk.
+    </p>
+    <p>
+     Tacking on
+     <tt class="docutils literal">
+      <span class="pre">
+       .*,\s*\(
+      </span>
+     </tt>
+     to find
+     <tt class="docutils literal">
+      def
+     </tt>
+     statements that contained a
+tuple parameter, only 41 matches were found.  This means that for
+     <tt class="docutils literal">
+      def
+     </tt>
+     statements, only 0.18% of them seem to use a tuple parameter.
+    </p>
+   </div>
+  </div>
+  <div class="section" id="why-they-should-supposedly-stay">
+   <h1>
+    <a class="toc-backref" href="#id14">
+     Why They Should (Supposedly) Stay
+    </a>
+   </h1>
+   <div class="section" id="practical-use">
+    <h2>
+     <a class="toc-backref" href="#id15">
+      Practical Use
+     </a>
+    </h2>
+    <p>
+     In certain instances tuple parameters can be useful.  A common example
+is code that expects a two-item tuple that represents a Cartesian
+point.  While true it is nice to be able to have the unpacking of the
+x and y coordinates for you, the argument is that this small amount of
+practical usefulness is heavily outweighed by other issues pertaining
+to tuple parameters.  And as shown in
+     <a class="reference internal" href="#no-loss-of-abilities-if-removed">
+      No Loss Of Abilities If Removed
+     </a>
+     , their use is purely practical and
+in no way provide a unique ability that cannot be handled in other
+ways very easily.
+    </p>
+   </div>
+   <div class="section" id="self-documentation-for-parameters">
+    <h2>
+     <a class="toc-backref" href="#id16">
+      Self-Documentation For Parameters
+     </a>
+    </h2>
+    <p>
+     It has been argued that tuple parameters provide a way of
+self-documentation for parameters that are expected to be of a certain
+sequence format.  Using our Cartesian point example from
+     <a class="reference internal" href="#practical-use">
+      Practical Use
+     </a>
+     , seeing
+     <tt class="docutils literal">
+      (x, y)
+     </tt>
+     as a parameter in a function makes
+it obvious that a tuple of length two is expected as an argument for
+that parameter.
+    </p>
+    <p>
+     But Python provides several other ways to document what parameters are
+for.  Documentation strings are meant to provide enough information
+needed to explain what arguments are expected.  Tuple parameters might
+tell you the expected length of a sequence argument, it does not tell
+you what that data will be used for.  One must also read the docstring
+to know what other arguments are expected if not all parameters are
+tuple parameters.
+    </p>
+    <p>
+     Function annotations (which do not work with tuple parameters) can
+also supply documentation.  Because annotations can be of any form,
+what was once a tuple parameter can be a single argument parameter
+with an annotation of
+     <tt class="docutils literal">
+      tuple
+     </tt>
+     ,
+     <tt class="docutils literal">
+      tuple(2)
+     </tt>
+     ,
+     <tt class="docutils literal">
+      Cartesian point
+     </tt>
+     ,
+     <tt class="docutils literal">
+      (x, y)
+     </tt>
+     , etc.  Annotations provide great flexibility for
+documenting what an argument is expected to be for a parameter,
+including being a sequence of a certain length.
+    </p>
+   </div>
+  </div>
+  <div class="section" id="transition-plan">
+   <h1>
+    <a class="toc-backref" href="#id17">
+     Transition Plan
+    </a>
+   </h1>
+   <p>
+    To transition Python 2.x code to 3.x where tuple parameters are
+removed, two steps are suggested.  First, the proper warning is to be
+emitted when Python's compiler comes across a tuple parameter in
+Python 2.6.  This will be treated like any other syntactic change that
+is to occur in Python 3.0 compared to Python 2.6.
+   </p>
+   <p>
+    Second, the 2to3 refactoring tool
+    <a class="footnote-reference" href="#to3" id="id5">
+     [1]
+    </a>
+    will gain a fixer
+    <a class="footnote-reference" href="#fixer" id="id6">
+     [2]
+    </a>
+    for translating tuple parameters to being a single parameter
+that is unpacked as the first statement in the function.  The name of
+the new parameter will be changed.  The new parameter will then be
+unpacked into the names originally used in the tuple parameter.  This
+means that the following function:
+   </p>
+   <pre class="literal-block">
+def fxn((a, (b, c))):
+    pass
+</pre>
+   <p>
+    will be translated into:
+   </p>
+   <pre class="literal-block">
+def fxn(a_b_c):
+    (a, (b, c)) = a_b_c
+    pass
+</pre>
+   <p>
+    As tuple parameters are used by lambdas because of the single
+expression limitation, they must also be supported.  This is done by
+having the expected sequence argument bound to a single parameter and
+then indexing on that parameter:
+   </p>
+   <pre class="literal-block">
+lambda (x, y): x + y
+</pre>
+   <p>
+    will be translated into:
+   </p>
+   <pre class="literal-block">
+lambda x_y: x_y[0] + x_y[1]
+</pre>
+  </div>
+  <div class="section" id="references">
+   <h1>
+    <a class="toc-backref" href="#id18">
+     References
+    </a>
+   </h1>
+   <table class="docutils footnote" frame="void" id="to3" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id5">
+        [1]
+       </a>
+      </td>
+      <td>
+       2to3 refactoring tool
+(
+       <a class="reference external" href="http://svn.python.org/view/sandbox/trunk/2to3/">
+        http://svn.python.org/view/sandbox/trunk/2to3/
+       </a>
+       )
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="fixer" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id6">
+        [2]
+       </a>
+      </td>
+      <td>
+       2to3 fixer
+(
+       <a class="reference external" href="http://svn.python.org/view/sandbox/trunk/2to3/fixes/fix_tuple_params.py">
+        http://svn.python.org/view/sandbox/trunk/2to3/fixes/fix_tuple_params.py
+       </a>
+       )
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="ironpython" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id1">
+        [3]
+       </a>
+      </td>
+      <td>
+       IronPython
+(
+       <a class="reference external" href="http://www.codeplex.com/Wiki/View.aspx?ProjectName=IronPython">
+        http://www.codeplex.com/Wiki/View.aspx?ProjectName=IronPython
+       </a>
+       )
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="msil" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id2">
+        [4]
+       </a>
+      </td>
+      <td>
+       Microsoft Intermediate Language
+(
+       <a class="reference external" href="http://msdn.microsoft.com/library/en-us/cpguide/html/cpconmicrosoftintermediatelanguagemsil.asp?frame=true">
+        http://msdn.microsoft.com/library/en-us/cpguide/html/cpconmicrosoftintermediatelanguagemsil.asp?frame=true
+       </a>
+       )
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="pep-3102" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id3">
+        [5]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="../pep-3102/index.html">
+        PEP 3102
+       </a>
+       (Keyword-Only Arguments)
+(
+       <a class="reference external" href="../pep-3102/index.html">
+        http://www.python.org/dev/peps/pep-3102/
+       </a>
+       )
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="pep-3107" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id4">
+        [6]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="../pep-3107/index.html">
+        PEP 3107
+       </a>
+       (Function Annotations)
+(
+       <a class="reference external" href="../pep-3107/index.html">
+        http://www.python.org/dev/peps/pep-3107/
+       </a>
+       )
+      </td>
+     </tr>
+    </tbody>
+   </table>
+  </div>
+  <div class="section" id="copyright">
+   <h1>
+    <a class="toc-backref" href="#id19">
+     Copyright
+    </a>
+   </h1>
+   <p>
+    This document has been placed in the public domain.
+   </p>
+   <!-- Local Variables:
+mode: indented-text
+indent-tabs-mode: nil
+sentence-end-double-space: t
+fill-column: 70
+coding: utf-8
+End: -->
+  </div>
+ </body>
+
+<!-- Mirrored from www.python.org/dev/peps/pep-3113/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 03 Sep 2015 04:35:20 GMT -->
+</html>Source: <a href="https://hg.python.org/peps/file/tip/pep-3113.txt">https://hg.python.org/peps/file/tip/pep-3113.txt</a>
+
+    </article>
+
+
+                </section>
+
+                
+
+
+<aside class="left-sidebar" role="secondary">
+
+    
+
+
+
+
+
+
+    
+
+
+
+
+
+        <div class="twitter-widget sidebar-widget">
+        <a class="twitter-timeline" data-dnt="true" href="https://twitter.com/ThePSF" data-widget-id="434113224703610882">Tweets by @ThePSF</a>
+        <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+    </div>
+
+    <div class="psf-sidebar-widget sidebar-widget">
+        <h3 class="widget-title">The PSF</h3>
+<p>The Python Software Foundation is the organization behind Python. Become a member of the PSF and help advance the software and our mission. </p>
+
+    </div>
+
+</aside>
+
+
+
+                
+                
+
+
+            </div><!-- end .container -->
+        </div><!-- end #content .content-wrapper -->
+
+        <!-- Footer and social media list -->
+        <footer id="site-map" class="main-footer" role="contentinfo">
+            <div class="main-footer-links">
+                <div class="container">
+
+                    
+                    <a id="back-to-top-1" class="jump-link" href="#python-network"><span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> Back to Top</a>
+
+                    
+
+<ul class="sitemap navigation menu do-not-print" role="tree" id="container">
+    
+    <li class="tier-1 element-1">
+        <a href="https://www.python.org/about/" >About</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/apps/" title="">Applications</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/quotes/" title="">Quotes</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/gettingstarted/" title="">Getting Started</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/help/" title="">Help</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-2">
+        <a href="https://www.python.org/downloads/" >Downloads</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/downloads/" title="">All releases</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/downloads/source/" title="">Source code</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/downloads/windows/" title="">Windows</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/downloads/mac-osx/" title="">Mac OS X</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/download/other/" title="">Other Platforms</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://docs.python.org/3/license.html" title="">License</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/download/alternatives" title="">Alternative Implementations</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-3">
+        <a href="https://www.python.org/doc/" >Documentation</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/doc/" title="">Docs</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/doc/av" title="">Audio/Visual Talks</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://wiki.python.org/moin/BeginnersGuide" title="">Beginner&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://docs.python.org/faq/" title="">FAQ</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="http://wiki.python.org/moin/Languages" title="">Non-English Docs</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="../index.html" title="">PEP Index</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://wiki.python.org/moin/PythonBooks" title="">Python Books</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-4">
+        <a href="https://www.python.org/community/" >Community</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/community/diversity/" title="">Diversity</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/community/irc/" title="">IRC</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/community/lists/" title="">Mailing Lists</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/workshops/" title="">Python Conferences</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/community/sigs/" title="">Special Interest Groups</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://wiki.python.org/moin/" title="">Python Wiki</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/community/logos/" title="">Python Logo</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://www.python.org/community/merchandise/" title="">Merchandise</a></li>
+    
+        <li class="tier-2 element-9" role="treeitem"><a href="https://www.python.org/community/awards" title="">Community Awards</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-5">
+        <a href="https://www.python.org/about/success/" title="success-stories">Success Stories</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/success/#arts" title="">Arts</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/success/#business" title="">Business</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/success/#education" title="">Education</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/success/#engineering" title="">Engineering</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/about/success/#government" title="">Government</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://www.python.org/about/success/#scientific" title="">Scientific</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/about/success/#software-development" title="">Software Development</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-6">
+        <a href="https://www.python.org/blogs/" title="News from around the Python world">News</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/blogs/" title="Python Insider Blog Posts">Python News</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://planetpython.org/" title="Planet Python">Community News</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="http://pyfound.blogspot.com/" title="PSF Blog">PSF News</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pycon.blogspot.com/" title="PyCon Blog">PyCon News</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-7">
+        <a href="https://www.python.org/events/" >Events</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/events/python-events/" title="">Python Events</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/events/python-user-group/" title="">User Group Events</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/events/python-events/past/" title="">Python Events Archive</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/events/python-user-group/past/" title="">User Group Events Archive</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://wiki.python.org/moin/PythonEventsCalendar#Submitting_an_Event" title="">Submit an Event</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-8">
+        <a href="https://www.python.org/dev/" >Contributing</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="http://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://bugs.python.org/" title="">Issue Tracker</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://mail.python.org/mailman/listinfo/python-dev" title="">python-dev list</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pythonmentors.com/" title="">Core Mentorship</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+</ul>
+
+
+                    <a id="back-to-top-2" class="jump-link" href="#python-network"><span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> Back to Top</a>
+                    
+
+                </div><!-- end .container -->
+            </div> <!-- end .main-footer-links -->
+
+            <div class="site-base">
+                <div class="container">
+                    
+                    <ul class="footer-links navigation menu do-not-print" role="tree">
+                        <li class="tier-1 element-1"><a href="https://www.python.org/about/help/">Help &amp; <span class="say-no-more">General</span> Contact</a></li>
+                        <li class="tier-1 element-2"><a href="https://www.python.org/community/diversity/">Diversity <span class="say-no-more">Initiatives</span></a></li>
+                        <li class="tier-1 element-3"><a href="https://github.com/python/pythondotorg/issues">Submit Website Bug</a></li>
+                        <!--<li class="tier-1 element-3"><a href="#"><span class="say-no-more">Website</span> Colophon</a></li>-->
+                    </ul>
+
+                    <div class="copyright">
+                        <p><small>
+                            <span class="pre">Copyright &copy;2001-2015.</span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/psf-landing/">Python Software Foundation</a></span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/about/legal/">Legal Statements</a></span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/privacy/">Privacy Policy</a></span>
+                        </small></p>
+                    </div>
+
+                </div><!-- end .container -->
+            </div><!-- end .site-base -->
+
+        </footer>
+
+    </div><!-- end #touchnav-wrapper -->
+
+    
+    <script src="../../../../ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="../../../static/js/libs/jquery-1.8.2.min.js"><\/script>')</script>
+
+    <script src="../../../static/js/libs/masonry.pkgd.min.js"></script>
+
+    <script type="text/javascript" src="../../../static/js/main-min.js" charset="utf-8"></script>
+    
+
+    <!--[if lte IE 7]>
+    <script type="text/javascript" src="/static/js/plugins/IE8-min.js" charset="utf-8"></script>
+    
+    
+    <![endif]-->
+
+    <!--[if lte IE 8]>
+    <script type="text/javascript" src="/static/js/plugins/getComputedStyle-min.js" charset="utf-8"></script>
+    
+    
+    <![endif]-->
+
+    
+
+    
+    
+
+</body>
+</html>

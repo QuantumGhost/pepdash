@@ -1,0 +1,1722 @@
+<!doctype html>
+<!--[if lt IE 7]>   <html class="no-js ie6 lt-ie7 lt-ie8 lt-ie9">   <![endif]-->
+<!--[if IE 7]>      <html class="no-js ie7 lt-ie8 lt-ie9">          <![endif]-->
+<!--[if IE 8]>      <html class="no-js ie8 lt-ie9">                 <![endif]-->
+<!--[if gt IE 8]><!--><html class="no-js" lang="en" dir="ltr">  <!--<![endif]-->
+
+
+<!-- Mirrored from www.python.org/dev/peps/pep-3137/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 03 Sep 2015 04:35:29 GMT -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <link rel="prefetch" href="../../../../ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js">
+
+    <meta name="application-name" content="Python.org">
+    <meta name="msapplication-tooltip" content="The official home of the Python Programming Language">
+    <meta name="apple-mobile-web-app-title" content="Python.org">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="format-detection" content="telephone=no">
+    <meta http-equiv="cleartype" content="on">
+    <meta http-equiv="imagetoolbar" content="false">
+
+    <script src="../../../static/js/libs/modernizr.js"></script>
+
+    <link href="../../../static/stylesheets/style.css" rel="stylesheet" type="text/css" title="default" />
+    <link href="../../../static/stylesheets/mq.css" rel="stylesheet" type="text/css" media="not print, braille, embossed, speech, tty" />
+    
+
+    <!--[if (lte IE 8)&(!IEMobile)]>
+    <link href="/static/stylesheets/no-mq.css" rel="stylesheet" type="text/css" media="screen" />
+    
+    
+    <![endif]-->
+
+    
+    <link rel="icon" type="image/x-icon" href="https://www.python.org/static/favicon.ico">
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="../../../static/apple-touch-icon-144x144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="../../../static/apple-touch-icon-114x114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="../../../static/apple-touch-icon-72x72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="../../../static/apple-touch-icon-precomposed.png">
+    <link rel="apple-touch-icon" href="../../../static/apple-touch-icon-precomposed.png">
+
+    
+    <meta name="msapplication-TileImage" content="/static/metro-icon-144x144-precomposed.png"><!-- white shape -->
+    <meta name="msapplication-TileColor" content="#3673a5"><!-- python blue -->
+    <meta name="msapplication-navbutton-color" content="#3673a5">
+
+    <meta property="og:site_name" content="Python.org">
+    <meta property="og:type" content="website">
+
+    <title>PEP 3137 -- Immutable Bytes and Mutable Buffer | Python.org</title>
+    <meta property="og:title" content="Welcome to Python.org">
+
+    
+    <meta name="description" content="The official home of the Python Programming Language">
+    <meta name="og:description" content="The official home of the Python Programming Language">
+    <meta name="keywords" content="Python programming language object oriented web free open source software license documentation download community">
+    <meta property="og:tag" content="Python programming language object oriented web free open source software license documentation download community">
+    <meta property="og:published_time" content="">
+    <meta property="og:modified_time" content="">
+    <meta property="og:author" content="">
+    <meta property="og:section" content=""> 
+    <meta property="og:url" content="">
+    <meta property="og:image" content="">
+    <meta property="og:video" content="">
+
+    <link rel="author" href="https://www.python.org/static/humans.txt">
+
+    
+
+    
+    <script type="application/ld+json">
+     {
+       "@context": "http://schema.org",
+       "@type": "WebSite",
+       "url": "https://www.python.org/",
+       "potentialAction": {
+         "@type": "SearchAction",
+         "target": "https://www.python.org/search/?q={search_term_string}",
+         "query-input": "required name=search_term_string"
+       }
+     }
+    </script>
+
+    
+    <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-39055973-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+    </script>
+    
+</head>
+
+<body class="python pages pep-page">
+
+    <div id="touchnav-wrapper">
+
+        <div id="nojs" class="do-not-print">
+            <p><strong>Notice:</strong> While Javascript is not essential for this website, your interaction with the content will be limited. Please turn Javascript on for the full experience. </p>
+        </div>
+
+        <!--[if lt IE 8]>
+        <div id="oldie-warning" class="do-not-print">
+            <p><strong>Notice:</strong> Your browser is <em>ancient</em> and <a href="http://www.ie6countdown.com/">Microsoft agrees</a>. <a href="http://browsehappy.com/">Upgrade to a different browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to experience a better web.</p>
+        </div>
+        <![endif]-->
+
+        <!-- Sister Site Links -->
+        <div id="top" class="top-bar do-not-print">
+
+            <nav class="meta-navigation container" role="navigation">
+
+                
+                <div class="skip-link screen-reader-text">
+                    <a href="#content" title="Skip to content">Skip to content</a>
+                </div>
+
+                
+                <a id="close-python-network" class="jump-link" href="#python-network" aria-hidden="true">
+                    <span aria-hidden="true" class="icon-arrow-down"><span>&#9660;</span></span> Close
+                </a>
+
+                
+
+<ul class="menu" role="tree">
+    
+    <li class="python-meta ">
+        <a href="https://www.python.org/" title="The Python Programming Language" >Python</a>
+    </li>
+    
+    <li class="psf-meta ">
+        <a href="https://www.python.org/psf-landing/" title="The Python Software Foundation" >PSF</a>
+    </li>
+    
+    <li class="docs-meta ">
+        <a href="https://docs.python.org/" title="Python Documentation" >Docs</a>
+    </li>
+    
+    <li class="pypi-meta ">
+        <a href="https://pypi.python.org/" title="Python Package Index" >PyPI</a>
+    </li>
+    
+    <li class="jobs-meta ">
+        <a href="https://www.python.org/jobs/" title="Python Job Board" >Jobs</a>
+    </li>
+    
+    <li class="shop-meta ">
+        <a href="https://www.python.org/community/" title="Python Community" >Community</a>
+    </li>
+    
+</ul>
+
+
+                <a id="python-network" class="jump-link" href="#top" aria-hidden="true">
+                    <span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> The Python Network
+                </a>
+
+            </nav>
+
+        </div>
+
+        <!-- Header elements -->
+        <header class="main-header" role="banner">
+            <div class="container">
+
+                <h1 class="site-headline">
+                    <a href="https://www.python.org/"><img class="python-logo" src="../../../static/img/python-logo.png" alt="python&trade;"></a>
+                </h1>
+
+                <div class="options-bar do-not-print">
+
+                    
+                    <a id="site-map-link" class="jump-to-menu" href="#site-map"><span class="menu-icon">&equiv;</span> Menu</a><form class="search-the-site" action="https://www.python.org/search/" method="get">
+                        <fieldset title="Search Python.org">
+
+                            <span aria-hidden="true" class="icon-search"></span>
+
+                            <label class="screen-reader-text" for="id-search-field">Search This Site</label>
+                            <input id="id-search-field" name="q" type="search" role="textbox" class="search-field" placeholder="Search" value="" tabindex="1">
+
+                            <button type="submit" name="submit" id="submit" class="search-button" title="Submit this Search" tabindex="3">
+                                GO
+                            </button>
+
+                            
+                            <!--[if IE]><input type="text" style="display: none;" disabled="disabled" size="1" tabindex="4"><![endif]-->
+
+                        </fieldset>
+                    </form><span class="breaker"></span><div class="adjust-font-size" aria-hidden="true">
+                        <ul class="navigation menu" aria-label="Adjust Text Size on Page">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                <a href="#" class="action-trigger"><strong><small>A</small> A</strong></a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a class="text-shrink" title="Make Text Smaller" href="javascript:;">Smaller</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a class="text-grow" title="Make Text Larger" href="javascript:;">Larger</a></li>
+                                    <li class="tier-2 element-3" role="treeitem"><a class="text-reset" title="Reset any font size changes I have made" href="javascript:;">Reset</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div><div class="winkwink-nudgenudge">
+                        <ul class="navigation menu" aria-label="Social Media Navigation">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                <a href="#" class="action-trigger">Socialize</a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a href="http://plus.google.com/+Python"><span aria-hidden="true" class="icon-google-plus"></span>Google+</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a href="http://www.facebook.com/pythonlang?fref=ts"><span aria-hidden="true" class="icon-facebook"></span>Facebook</a></li>
+                                    <li class="tier-2 element-3" role="treeitem"><a href="http://twitter.com/ThePSF"><span aria-hidden="true" class="icon-twitter"></span>Twitter</a></li>
+                                    <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/irc/"><span aria-hidden="true" class="icon-freenode"></span>Chat on IRC</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div><div class="account-signin">
+                        <ul class="navigation menu" aria-label="Social Media Navigation">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                
+                                <a href="https://www.python.org/accounts/login/" title="Sign Up or Sign In to Python.org">Sign In</a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/accounts/signup/">Sign Up / Register</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/accounts/login/">Sign In</a></li>
+                                </ul>
+                                
+                            </li>
+                        </ul>
+                    </div>
+
+                </div><!-- end options-bar -->
+
+                <nav id="mainnav" class="python-navigation main-navigation do-not-print" role="navigation">
+                    
+                        
+<ul class="navigation menu" role="menubar" aria-label="Main Navigation">
+  
+    
+    
+    <li id="about" class="tier-1 element-1  " aria-haspopup="true">
+        <a href="https://www.python.org/about/" title="" class="">About</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/apps/" title="">Applications</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/quotes/" title="">Quotes</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/gettingstarted/" title="">Getting Started</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/help/" title="">Help</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="downloads" class="tier-1 element-2  " aria-haspopup="true">
+        <a href="https://www.python.org/downloads/" title="" class="">Downloads</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/downloads/" title="">All releases</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/downloads/source/" title="">Source code</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/downloads/windows/" title="">Windows</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/downloads/mac-osx/" title="">Mac OS X</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/download/other/" title="">Other Platforms</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://docs.python.org/3/license.html" title="">License</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/download/alternatives" title="">Alternative Implementations</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="documentation" class="tier-1 element-3  " aria-haspopup="true">
+        <a href="https://www.python.org/doc/" title="" class="">Documentation</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/doc/" title="">Docs</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/doc/av" title="">Audio/Visual Talks</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://wiki.python.org/moin/BeginnersGuide" title="">Beginner&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://docs.python.org/faq/" title="">FAQ</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="http://wiki.python.org/moin/Languages" title="">Non-English Docs</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="../index.html" title="">PEP Index</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://wiki.python.org/moin/PythonBooks" title="">Python Books</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="community" class="tier-1 element-4  " aria-haspopup="true">
+        <a href="https://www.python.org/community/" title="" class="">Community</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/community/diversity/" title="">Diversity</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/community/irc/" title="">IRC</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/community/lists/" title="">Mailing Lists</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/workshops/" title="">Python Conferences</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/community/sigs/" title="">Special Interest Groups</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://wiki.python.org/moin/" title="">Python Wiki</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/community/logos/" title="">Python Logo</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://www.python.org/community/merchandise/" title="">Merchandise</a></li>
+    
+        <li class="tier-2 element-9" role="treeitem"><a href="https://www.python.org/community/awards" title="">Community Awards</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="success-stories" class="tier-1 element-5  " aria-haspopup="true">
+        <a href="https://www.python.org/about/success/" title="success-stories" class="">Success Stories</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/success/#arts" title="">Arts</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/success/#business" title="">Business</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/success/#education" title="">Education</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/success/#engineering" title="">Engineering</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/about/success/#government" title="">Government</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://www.python.org/about/success/#scientific" title="">Scientific</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/about/success/#software-development" title="">Software Development</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="news" class="tier-1 element-6  " aria-haspopup="true">
+        <a href="https://www.python.org/blogs/" title="News from around the Python world" class="">News</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/blogs/" title="Python Insider Blog Posts">Python News</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://planetpython.org/" title="Planet Python">Community News</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="http://pyfound.blogspot.com/" title="PSF Blog">PSF News</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pycon.blogspot.com/" title="PyCon Blog">PyCon News</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="events" class="tier-1 element-7  " aria-haspopup="true">
+        <a href="https://www.python.org/events/" title="" class="">Events</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/events/python-events/" title="">Python Events</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/events/python-user-group/" title="">User Group Events</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/events/python-events/past/" title="">Python Events Archive</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/events/python-user-group/past/" title="">User Group Events Archive</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://wiki.python.org/moin/PythonEventsCalendar#Submitting_an_Event" title="">Submit an Event</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    
+  
+</ul>
+
+                    
+                </nav>
+
+                <div class="header-banner "> <!-- for optional "do-not-print" class -->
+                    
+                    
+                </div>
+
+                
+                
+
+             </div><!-- end .container -->
+        </header>
+
+        <div id="content" class="content-wrapper">
+            <!-- Main Content Column -->
+            <div class="container">
+
+                <section class="main-content with-left-sidebar" role="main">
+
+                    
+<ul class="breadcrumbs menu">
+    <li>
+        <a href="https://www.python.org/" title="The Python Programming Language">Python</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>
+        <a href="https://www.python.org/dev/">Python Developer's Guide</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>
+        <a href="../index.html">PEP Index</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>PEP 3137 -- Immutable Bytes and Mutable Buffer</li>
+</ul>
+
+
+                    
+<style>
+   .pep-page pre {
+        padding: .5em;
+        background: inherit;
+        border-left: 0px;
+        -webkit-box-shadow: 0 0 0 0;
+        -moz-box-shadow: 0 0 0 0;
+        box-shadow: 0 0 0 0;
+   }
+</style>
+
+    
+    <article class="text">
+        
+
+        <header class="article-header">
+            <h1 class="page-title">PEP 3137 -- Immutable Bytes and Mutable Buffer</h1>
+        </header>
+
+        <!--
+This HTML is auto-generated.  DO NOT EDIT THIS FILE!  If you are writing a new
+PEP, see http://www.python.org/dev/peps/pep-0001 for instructions and links
+to templates.  DO NOT USE THIS HTML FILE AS YOUR TEMPLATE!
+-->
+<html>
+ <body>
+  <table class="rfc2822 docutils field-list" frame="void" rules="none">
+   <col class="field-name">
+   </col>
+   <col class="field-body">
+   </col>
+   <tbody valign="top">
+    <tr class="field">
+     <th class="field-name">
+      PEP:
+     </th>
+     <td class="field-body">
+      3137
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Title:
+     </th>
+     <td class="field-body">
+      Immutable Bytes and Mutable Buffer
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Author:
+     </th>
+     <td class="field-body">
+      Guido van Rossum &lt;guido at python.org&gt;
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Status:
+     </th>
+     <td class="field-body">
+      Final
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Type:
+     </th>
+     <td class="field-body">
+      Standards Track
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Created:
+     </th>
+     <td class="field-body">
+      26-Sep-2007
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Python-Version:
+     </th>
+     <td class="field-body">
+      3.0
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Post-History:
+     </th>
+     <td class="field-body">
+      26-Sep-2007, 30-Sep-2007
+     </td>
+    </tr>
+   </tbody>
+  </table>
+  <hr/>
+  <div class="contents topic" id="contents">
+   <p class="topic-title first">
+    Contents
+   </p>
+   <ul class="simple">
+    <li>
+     <a class="reference internal" href="#introduction" id="id2">
+      Introduction
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#advantages" id="id3">
+      Advantages
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#naming" id="id4">
+      Naming
+     </a>
+     <ul>
+      <li>
+       <a class="reference internal" href="#summary" id="id5">
+        Summary
+       </a>
+      </li>
+     </ul>
+    </li>
+    <li>
+     <a class="reference internal" href="#literal-notations" id="id6">
+      Literal Notations
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#functionality" id="id7">
+      Functionality
+     </a>
+     <ul>
+      <li>
+       <a class="reference internal" href="#pep-3118-buffer-api" id="id8">
+        PEP 3118 Buffer API
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#constructors" id="id9">
+        Constructors
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#comparisons" id="id10">
+        Comparisons
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#slicing" id="id11">
+        Slicing
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#indexing" id="id12">
+        Indexing
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#str-and-repr" id="id13">
+        Str() and Repr()
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#operators" id="id14">
+        Operators
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#methods" id="id15">
+        Methods
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#bytes-and-the-str-type" id="id16">
+        Bytes and the Str Type
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#the-basestring-type" id="id17">
+        The
+        <tt class="docutils literal">
+         basestring
+        </tt>
+        Type
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#pickling" id="id18">
+        Pickling
+       </a>
+      </li>
+     </ul>
+    </li>
+    <li>
+     <a class="reference internal" href="#copyright" id="id19">
+      Copyright
+     </a>
+    </li>
+   </ul>
+  </div>
+  <div class="section" id="introduction">
+   <h1>
+    <a class="toc-backref" href="#id2">
+     Introduction
+    </a>
+   </h1>
+   <p>
+    After releasing Python 3.0a1 with a mutable bytes type, pressure
+mounted to add a way to represent immutable bytes.  Gregory P. Smith
+proposed a patch that would allow making a bytes object temporarily
+immutable by requesting that the data be locked using the new buffer
+API from
+    <a class="reference external" href="../pep-3118/index.html">
+     PEP 3118
+    </a>
+    .  This did not seem the right approach to me.
+   </p>
+   <p>
+    Jeffrey Yasskin, with the help of Adam Hupp, then prepared a patch to
+make the bytes type immutable (by crudely removing all mutating APIs)
+and fix the fall-out in the test suite.  This showed that there aren't
+all that many places that depend on the mutability of bytes, with the
+exception of code that builds up a return value from small pieces.
+   </p>
+   <p>
+    Thinking through the consequences, and noticing that using the array
+module as an ersatz mutable bytes type is far from ideal, and
+recalling a proposal put forward earlier by Talin, I floated the
+suggestion to have both a mutable and an immutable bytes type.  (This
+had been brought up before, but until seeing the evidence of Jeffrey's
+patch I wasn't open to the suggestion.)
+   </p>
+   <p>
+    Moreover, a possible implementation strategy became clear: use the old
+PyString implementation, stripped down to remove locale support and
+implicit conversions to/from Unicode, for the immutable bytes type,
+and keep the new PyBytes implementation as the mutable bytes type.
+   </p>
+   <p>
+    The ensuing discussion made it clear that the idea is welcome but
+needs to be specified more precisely.  Hence this PEP.
+   </p>
+  </div>
+  <div class="section" id="advantages">
+   <h1>
+    <a class="toc-backref" href="#id3">
+     Advantages
+    </a>
+   </h1>
+   <p>
+    One advantage of having an immutable bytes type is that code objects
+can use these.  It also makes it possible to efficiently create hash
+tables using bytes for keys; this may be useful when parsing protocols
+like HTTP or SMTP which are based on bytes representing text.
+   </p>
+   <p>
+    Porting code that manipulates binary data (or encoded text) in Python
+2.x will be easier using the new design than using the original 3.0
+design with mutable bytes; simply replace
+    <tt class="docutils literal">
+     str
+    </tt>
+    with
+    <tt class="docutils literal">
+     bytes
+    </tt>
+    and
+change '...' literals into b'...' literals.
+   </p>
+  </div>
+  <div class="section" id="naming">
+   <h1>
+    <a class="toc-backref" href="#id4">
+     Naming
+    </a>
+   </h1>
+   <p>
+    I propose the following type names at the Python level:
+   </p>
+   <blockquote>
+    <ul class="simple">
+     <li>
+      <tt class="docutils literal">
+       bytes
+      </tt>
+      is an immutable array of bytes (PyString)
+     </li>
+     <li>
+      <tt class="docutils literal">
+       bytearray
+      </tt>
+      is a mutable array of bytes (PyBytes)
+     </li>
+     <li>
+      <tt class="docutils literal">
+       memoryview
+      </tt>
+      is a bytes view on another object (PyMemory)
+     </li>
+    </ul>
+   </blockquote>
+   <p>
+    The old type named
+    <tt class="docutils literal">
+     buffer
+    </tt>
+    is so similar to the new type
+    <tt class="docutils literal">
+     memoryview
+    </tt>
+    , introduce by
+    <a class="reference external" href="../pep-3118/index.html">
+     PEP 3118
+    </a>
+    , that it is redundant.  The rest
+of this PEP doesn't discuss the functionality of
+    <tt class="docutils literal">
+     memoryview
+    </tt>
+    ; it is
+just mentioned here to justify getting rid of the old
+    <tt class="docutils literal">
+     buffer
+    </tt>
+    type.
+(An earlier version of this PEP proposed
+    <tt class="docutils literal">
+     buffer
+    </tt>
+    as the new name
+for PyBytes; in the end this name was deemed to confusing given the
+many other uses of the word buffer.)
+   </p>
+   <p>
+    While eventually it makes sense to change the C API names, this PEP
+maintains the old C API names, which should be familiar to all.
+   </p>
+   <div class="section" id="summary">
+    <h2>
+     <a class="toc-backref" href="#id5">
+      Summary
+     </a>
+    </h2>
+    <p>
+     Here's a simple ASCII-art table summarizing the type names in various
+Python versions:
+    </p>
+    <pre class="literal-block">
++--------------+-------------+------------+--------------------------+
+| C name       | 2.x    repr | 3.0a1 repr | 3.0a2               repr |
++--------------+-------------+------------+--------------------------+
+| PyUnicode    | unicode u'' | str     '' | str                   '' |
+| PyString     | str      '' | str8   s'' | bytes                b'' |
+| PyBytes      | N/A         | bytes  b'' | bytearray bytearray(b'') |
+| PyBuffer     | buffer      | buffer     | N/A                      |
+| PyMemoryView | N/A         | memoryview | memoryview         &lt;...&gt; |
++--------------+-------------+------------+--------------------------+
+</pre>
+   </div>
+  </div>
+  <div class="section" id="literal-notations">
+   <h1>
+    <a class="toc-backref" href="#id6">
+     Literal Notations
+    </a>
+   </h1>
+   <p>
+    The b'...' notation introduced in Python 3.0a1 returns an immutable
+bytes object, whatever variation is used.  To create a mutable array
+of bytes, use bytearray(b'...') or bytearray([...]).  The latter form
+takes a list of integers in range(256).
+   </p>
+  </div>
+  <div class="section" id="functionality">
+   <h1>
+    <a class="toc-backref" href="#id7">
+     Functionality
+    </a>
+   </h1>
+   <div class="section" id="pep-3118-buffer-api">
+    <h2>
+     <a class="reference external" href="../pep-3118/index.html">
+      PEP 3118
+     </a>
+     Buffer API
+    </h2>
+    <p>
+     Both bytes and bytearray implement the
+     <a class="reference external" href="../pep-3118/index.html">
+      PEP 3118
+     </a>
+     buffer API.  The bytes
+type only implements read-only requests; the bytearray type allows
+writable and data-locked requests as well.  The element data type is
+always 'B' (i.e. unsigned byte).
+    </p>
+   </div>
+   <div class="section" id="constructors">
+    <h2>
+     <a class="toc-backref" href="#id9">
+      Constructors
+     </a>
+    </h2>
+    <p>
+     There are four forms of constructors, applicable to both bytes and
+bytearray:
+    </p>
+    <blockquote>
+     <ul class="simple">
+      <li>
+       <tt class="docutils literal">
+        <span class="pre">
+         bytes(&lt;bytes&gt;)
+        </span>
+       </tt>
+       ,
+       <tt class="docutils literal">
+        <span class="pre">
+         bytes(&lt;bytearray&gt;)
+        </span>
+       </tt>
+       ,
+       <tt class="docutils literal">
+        <span class="pre">
+         bytearray(&lt;bytes&gt;)
+        </span>
+       </tt>
+       ,
+       <tt class="docutils literal">
+        <span class="pre">
+         bytearray(&lt;bytearray&gt;)
+        </span>
+       </tt>
+       : simple copying constructors, with the
+note that
+       <tt class="docutils literal">
+        <span class="pre">
+         bytes(&lt;bytes&gt;)
+        </span>
+       </tt>
+       might return its (immutable)
+argument, but
+       <tt class="docutils literal">
+        <span class="pre">
+         bytearray(&lt;bytearray&gt;)
+        </span>
+       </tt>
+       always makes a copy.
+      </li>
+      <li>
+       <tt class="docutils literal">
+        <span class="pre">
+         bytes(&lt;str&gt;,
+        </span>
+        <span class="pre">
+         &lt;encoding&gt;[,
+        </span>
+        <span class="pre">
+         &lt;errors&gt;])
+        </span>
+       </tt>
+       ,
+       <tt class="docutils literal">
+        <span class="pre">
+         bytearray(&lt;str&gt;,
+        </span>
+        <span class="pre">
+         &lt;encoding&gt;[,
+        </span>
+        <span class="pre">
+         &lt;errors&gt;])
+        </span>
+       </tt>
+       : encode a text string.  Note that the
+       <tt class="docutils literal">
+        str.encode()
+       </tt>
+       method returns an
+       <em>
+        immutable
+       </em>
+       bytes object.  The
+&lt;encoding&gt; argument is mandatory; &lt;errors&gt; is optional.
+&lt;encoding&gt; and &lt;errrors&gt;, if given, must be
+       <tt class="docutils literal">
+        str
+       </tt>
+       instances.
+      </li>
+      <li>
+       <tt class="docutils literal">
+        <span class="pre">
+         bytes(&lt;memory
+        </span>
+        view&gt;)
+       </tt>
+       ,
+       <tt class="docutils literal">
+        <span class="pre">
+         bytearray(&lt;memory
+        </span>
+        view&gt;)
+       </tt>
+       : construct
+a bytes or bytearray object from anything that implements the
+       <a class="reference external" href="../pep-3118/index.html">
+        PEP
+3118
+       </a>
+       buffer API.
+      </li>
+      <li>
+       <tt class="docutils literal">
+        <span class="pre">
+         bytes(&lt;iterable
+        </span>
+        of ints&gt;)
+       </tt>
+       ,
+       <tt class="docutils literal">
+        <span class="pre">
+         bytearray(&lt;iterable
+        </span>
+        of ints&gt;)
+       </tt>
+       :
+construct a bytes or bytearray object from a stream of integers in
+range(256).
+      </li>
+      <li>
+       <tt class="docutils literal">
+        <span class="pre">
+         bytes(&lt;int&gt;)
+        </span>
+       </tt>
+       ,
+       <tt class="docutils literal">
+        <span class="pre">
+         bytearray(&lt;int&gt;)
+        </span>
+       </tt>
+       : construct a
+zero-initialized bytes or bytearray object of a given length.
+      </li>
+     </ul>
+    </blockquote>
+   </div>
+   <div class="section" id="comparisons">
+    <h2>
+     <a class="toc-backref" href="#id10">
+      Comparisons
+     </a>
+    </h2>
+    <p>
+     The bytes and bytearray types are comparable with each other and
+orderable, so that e.g. b'abc' == bytearray(b'abc') &lt; b'abd'.
+    </p>
+    <p>
+     Comparing either type to a str object for equality returns False
+regardless of the contents of either operand.  Ordering comparisons
+with str raise TypeError.  This is all conformant to the standard
+rules for comparison and ordering between objects of incompatible
+types.
+    </p>
+    <p>
+     (
+     <strong>
+      Note:
+     </strong>
+     in Python 3.0a1, comparing a bytes instance with a str
+instance would raise TypeError, on the premise that this would catch
+the occasional mistake quicker, especially in code ported from Python
+2.x.  However, a long discussion on the python-3000 list pointed out
+so many problems with this that it is clearly a bad idea, to be rolled
+back in 3.0a2 regardless of the fate of the rest of this PEP.)
+    </p>
+   </div>
+   <div class="section" id="slicing">
+    <h2>
+     <a class="toc-backref" href="#id11">
+      Slicing
+     </a>
+    </h2>
+    <p>
+     Slicing a bytes object returns a bytes object.  Slicing a bytearray
+object returns a bytearray object.
+    </p>
+    <p>
+     Slice assignment to a bytearray object accepts anything that
+implements the
+     <a class="reference external" href="../pep-3118/index.html">
+      PEP 3118
+     </a>
+     buffer API, or an iterable of integers in
+range(256).
+    </p>
+   </div>
+   <div class="section" id="indexing">
+    <h2>
+     <a class="toc-backref" href="#id12">
+      Indexing
+     </a>
+    </h2>
+    <p>
+     Indexing bytes and bytearray returns small ints (like the bytes type in
+3.0a1, and like lists or array.array('B')).
+    </p>
+    <p>
+     Assignment to an item of a bytearray object accepts an int in
+range(256).  (To assign from a bytes sequence, use a slice
+assignment.)
+    </p>
+   </div>
+   <div class="section" id="str-and-repr">
+    <h2>
+     <a class="toc-backref" href="#id13">
+      Str() and Repr()
+     </a>
+    </h2>
+    <p>
+     The str() and repr() functions return the same thing for these
+objects.  The repr() of a bytes object returns a b'...' style literal.
+The repr() of a bytearray returns a string of the form "bytearray(b'...')".
+    </p>
+   </div>
+   <div class="section" id="operators">
+    <h2>
+     <a class="toc-backref" href="#id14">
+      Operators
+     </a>
+    </h2>
+    <p>
+     The following operators are implemented by the bytes and bytearray
+types, except where mentioned:
+    </p>
+    <blockquote>
+     <ul class="simple">
+      <li>
+       <tt class="docutils literal">
+        b1 + b2
+       </tt>
+       : concatenation.  With mixed bytes/bytearray operands,
+the return type is that of the first argument (this seems arbitrary
+until you consider how
+       <tt class="docutils literal">
+        +=
+       </tt>
+       works).
+      </li>
+      <li>
+       <tt class="docutils literal">
+        b1 += b2
+       </tt>
+       : mutates b1 if it is a bytearray object.
+      </li>
+      <li>
+       <tt class="docutils literal">
+        b * n
+       </tt>
+       ,
+       <tt class="docutils literal">
+        n * b
+       </tt>
+       : repetition; n must be an integer.
+      </li>
+      <li>
+       <tt class="docutils literal">
+        b *= n
+       </tt>
+       : mutates b if it is a bytearray object.
+      </li>
+      <li>
+       <tt class="docutils literal">
+        b1 in b2
+       </tt>
+       ,
+       <tt class="docutils literal">
+        b1 not in b2
+       </tt>
+       : substring test; b1 can be any
+object implementing the
+       <a class="reference external" href="../pep-3118/index.html">
+        PEP 3118
+       </a>
+       buffer API.
+      </li>
+      <li>
+       <tt class="docutils literal">
+        i in b
+       </tt>
+       ,
+       <tt class="docutils literal">
+        i not in b
+       </tt>
+       : single-byte membership test; i must
+be an integer (if it is a length-1 bytes array, it is considered
+to be a substring test, with the same outcome).
+      </li>
+      <li>
+       <tt class="docutils literal">
+        len(b)
+       </tt>
+       : the number of bytes.
+      </li>
+      <li>
+       <tt class="docutils literal">
+        hash(b)
+       </tt>
+       : the hash value; only implemented by the bytes type.
+      </li>
+     </ul>
+    </blockquote>
+    <p>
+     Note that the % operator is
+     <em>
+      not
+     </em>
+     implemented.  It does not appear
+worth the complexity.
+    </p>
+   </div>
+   <div class="section" id="methods">
+    <h2>
+     <a class="toc-backref" href="#id15">
+      Methods
+     </a>
+    </h2>
+    <p>
+     The following methods are implemented by bytes as well as bytearray, with
+similar semantics.  They accept anything that implements the
+     <a class="reference external" href="../pep-3118/index.html">
+      PEP 3118
+     </a>
+     buffer API for bytes arguments, and return the same type as the object
+whose method is called ("self"):
+    </p>
+    <pre class="literal-block">
+.capitalize(), .center(), .count(), .decode(), .endswith(),
+.expandtabs(), .find(), .index(), .isalnum(), .isalpha(), .isdigit(),
+.islower(), .isspace(), .istitle(), .isupper(), .join(), .ljust(),
+.lower(), .lstrip(), .partition(), .replace(), .rfind(), .rindex(),
+.rjust(), .rpartition(), .rsplit(), .rstrip(), .split(),
+.splitlines(), .startswith(), .strip(), .swapcase(), .title(),
+.translate(), .upper(), .zfill()
+</pre>
+    <p>
+     This is exactly the set of methods present on the str type in Python
+2.x, with the exclusion of .encode().  The signatures and semantics
+are the same too.  However, whenever character classes like letter,
+whitespace, lower case are used, the ASCII definitions of these
+classes are used.  (The Python 2.x str type uses the definitions from
+the current locale, settable through the locale module.)  The
+.encode() method is left out because of the more strict definitions of
+encoding and decoding in Python 3000: encoding always takes a Unicode
+string and returns a bytes sequence, and decoding always takes a bytes
+sequence and returns a Unicode string.
+    </p>
+    <p>
+     In addition, both types implement the class method
+     <tt class="docutils literal">
+      .fromhex()
+     </tt>
+     ,
+which constructs an object from a string containing hexadecimal values
+(with or without spaces between the bytes).
+    </p>
+    <p>
+     The bytearray type implements these additional methods from the
+MutableSequence ABC (see
+     <a class="reference external" href="../pep-3119/index.html">
+      PEP 3119
+     </a>
+     ):
+    </p>
+    <blockquote>
+     .extend(), .insert(), .append(), .reverse(), .pop(), .remove().
+    </blockquote>
+   </div>
+   <div class="section" id="bytes-and-the-str-type">
+    <h2>
+     <a class="toc-backref" href="#id16">
+      Bytes and the Str Type
+     </a>
+    </h2>
+    <p>
+     Like the bytes type in Python 3.0a1, and unlike the relationship
+between str and unicode in Python 2.x, attempts to mix bytes (or
+bytearray) objects and str objects without specifying an encoding will
+raise a TypeError exception.  (However, comparing bytes/bytearray and
+str objects for equality will simply return False; see the section on
+Comparisons above.)
+    </p>
+    <p>
+     Conversions between bytes or bytearray objects and str objects must
+always be explicit, using an encoding.  There are two equivalent APIs:
+     <tt class="docutils literal">
+      str(b,
+      <span class="pre">
+       &lt;encoding&gt;[,
+      </span>
+      <span class="pre">
+       &lt;errors&gt;])
+      </span>
+     </tt>
+     is equivalent to
+     <tt class="docutils literal">
+      <span class="pre">
+       b.decode(&lt;encoding&gt;[,
+      </span>
+      <span class="pre">
+       &lt;errors&gt;])
+      </span>
+     </tt>
+     , and
+     <tt class="docutils literal">
+      bytes(s,
+      <span class="pre">
+       &lt;encoding&gt;[,
+      </span>
+      <span class="pre">
+       &lt;errors&gt;])
+      </span>
+     </tt>
+     is equivalent to
+     <tt class="docutils literal">
+      <span class="pre">
+       s.encode(&lt;encoding&gt;[,
+      </span>
+      <span class="pre">
+       &lt;errors&gt;])
+      </span>
+     </tt>
+     .
+    </p>
+    <p>
+     There is one exception: we can convert from bytes (or bytearray) to str
+without specifying an encoding by writing
+     <tt class="docutils literal">
+      str(b)
+     </tt>
+     .  This produces
+the same result as
+     <tt class="docutils literal">
+      repr(b)
+     </tt>
+     .  This exception is necessary because
+of the general promise that
+     <em>
+      any
+     </em>
+     object can be printed, and printing
+is just a special case of conversion to str.  There is however no
+promise that printing a bytes object interprets the individual bytes
+as characters (unlike in Python 2.x).
+    </p>
+    <p>
+     The str type currently implements the
+     <a class="reference external" href="../pep-3118/index.html">
+      PEP 3118
+     </a>
+     buffer API.  While this
+is perhaps occasionally convenient, it is also potentially confusing,
+because the bytes accessed via the buffer API represent a
+platform-depending encoding: depending on the platform byte order and
+a compile-time configuration option, the encoding could be UTF-16-BE,
+UTF-16-LE, UTF-32-BE, or UTF-32-LE.  Worse, a different implementation
+of the str type might completely change the bytes representation,
+e.g. to UTF-8, or even make it impossible to access the data as a
+contiguous array of bytes at all.  Therefore, the
+     <a class="reference external" href="../pep-3118/index.html">
+      PEP 3118
+     </a>
+     buffer API
+will be removed from the str type.
+    </p>
+   </div>
+   <div class="section" id="the-basestring-type">
+    <h2>
+     <a class="toc-backref" href="#id17">
+      The
+      <tt class="docutils literal">
+       basestring
+      </tt>
+      Type
+     </a>
+    </h2>
+    <p>
+     The
+     <tt class="docutils literal">
+      basestring
+     </tt>
+     type will be removed from the language.  Code that
+used to say
+     <tt class="docutils literal">
+      isinstance(x, basestring)
+     </tt>
+     should be changed to use
+     <tt class="docutils literal">
+      isinstance(x, str)
+     </tt>
+     instead.
+    </p>
+   </div>
+   <div class="section" id="pickling">
+    <h2>
+     <a class="toc-backref" href="#id18">
+      Pickling
+     </a>
+    </h2>
+    <p>
+     Left as an exercise for the reader.
+    </p>
+   </div>
+  </div>
+  <div class="section" id="copyright">
+   <h1>
+    <a class="toc-backref" href="#id19">
+     Copyright
+    </a>
+   </h1>
+   <p>
+    This document has been placed in the public domain.
+   </p>
+   <!-- Local Variables:
+mode: indented-text
+indent-tabs-mode: nil
+sentence-end-double-space: t
+fill-column: 70
+coding: utf-8
+End: -->
+  </div>
+ </body>
+
+<!-- Mirrored from www.python.org/dev/peps/pep-3137/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 03 Sep 2015 04:35:32 GMT -->
+</html>Source: <a href="https://hg.python.org/peps/file/tip/pep-3137.txt">https://hg.python.org/peps/file/tip/pep-3137.txt</a>
+
+    </article>
+
+
+                </section>
+
+                
+
+
+<aside class="left-sidebar" role="secondary">
+
+    
+
+
+
+
+
+
+    
+
+
+
+
+
+        <div class="twitter-widget sidebar-widget">
+        <a class="twitter-timeline" data-dnt="true" href="https://twitter.com/ThePSF" data-widget-id="434113224703610882">Tweets by @ThePSF</a>
+        <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+    </div>
+
+    <div class="psf-sidebar-widget sidebar-widget">
+        <h3 class="widget-title">The PSF</h3>
+<p>The Python Software Foundation is the organization behind Python. Become a member of the PSF and help advance the software and our mission. </p>
+
+    </div>
+
+</aside>
+
+
+
+                
+                
+
+
+            </div><!-- end .container -->
+        </div><!-- end #content .content-wrapper -->
+
+        <!-- Footer and social media list -->
+        <footer id="site-map" class="main-footer" role="contentinfo">
+            <div class="main-footer-links">
+                <div class="container">
+
+                    
+                    <a id="back-to-top-1" class="jump-link" href="#python-network"><span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> Back to Top</a>
+
+                    
+
+<ul class="sitemap navigation menu do-not-print" role="tree" id="container">
+    
+    <li class="tier-1 element-1">
+        <a href="https://www.python.org/about/" >About</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/apps/" title="">Applications</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/quotes/" title="">Quotes</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/gettingstarted/" title="">Getting Started</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/help/" title="">Help</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-2">
+        <a href="https://www.python.org/downloads/" >Downloads</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/downloads/" title="">All releases</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/downloads/source/" title="">Source code</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/downloads/windows/" title="">Windows</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/downloads/mac-osx/" title="">Mac OS X</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/download/other/" title="">Other Platforms</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://docs.python.org/3/license.html" title="">License</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/download/alternatives" title="">Alternative Implementations</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-3">
+        <a href="https://www.python.org/doc/" >Documentation</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/doc/" title="">Docs</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/doc/av" title="">Audio/Visual Talks</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://wiki.python.org/moin/BeginnersGuide" title="">Beginner&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://docs.python.org/faq/" title="">FAQ</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="http://wiki.python.org/moin/Languages" title="">Non-English Docs</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="../index.html" title="">PEP Index</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://wiki.python.org/moin/PythonBooks" title="">Python Books</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-4">
+        <a href="https://www.python.org/community/" >Community</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/community/diversity/" title="">Diversity</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/community/irc/" title="">IRC</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/community/lists/" title="">Mailing Lists</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/workshops/" title="">Python Conferences</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/community/sigs/" title="">Special Interest Groups</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://wiki.python.org/moin/" title="">Python Wiki</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/community/logos/" title="">Python Logo</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://www.python.org/community/merchandise/" title="">Merchandise</a></li>
+    
+        <li class="tier-2 element-9" role="treeitem"><a href="https://www.python.org/community/awards" title="">Community Awards</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-5">
+        <a href="https://www.python.org/about/success/" title="success-stories">Success Stories</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/success/#arts" title="">Arts</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/success/#business" title="">Business</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/success/#education" title="">Education</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/success/#engineering" title="">Engineering</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/about/success/#government" title="">Government</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://www.python.org/about/success/#scientific" title="">Scientific</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/about/success/#software-development" title="">Software Development</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-6">
+        <a href="https://www.python.org/blogs/" title="News from around the Python world">News</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/blogs/" title="Python Insider Blog Posts">Python News</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://planetpython.org/" title="Planet Python">Community News</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="http://pyfound.blogspot.com/" title="PSF Blog">PSF News</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pycon.blogspot.com/" title="PyCon Blog">PyCon News</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-7">
+        <a href="https://www.python.org/events/" >Events</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/events/python-events/" title="">Python Events</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/events/python-user-group/" title="">User Group Events</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/events/python-events/past/" title="">Python Events Archive</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/events/python-user-group/past/" title="">User Group Events Archive</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://wiki.python.org/moin/PythonEventsCalendar#Submitting_an_Event" title="">Submit an Event</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-8">
+        <a href="https://www.python.org/dev/" >Contributing</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="http://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://bugs.python.org/" title="">Issue Tracker</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://mail.python.org/mailman/listinfo/python-dev" title="">python-dev list</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pythonmentors.com/" title="">Core Mentorship</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+</ul>
+
+
+                    <a id="back-to-top-2" class="jump-link" href="#python-network"><span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> Back to Top</a>
+                    
+
+                </div><!-- end .container -->
+            </div> <!-- end .main-footer-links -->
+
+            <div class="site-base">
+                <div class="container">
+                    
+                    <ul class="footer-links navigation menu do-not-print" role="tree">
+                        <li class="tier-1 element-1"><a href="https://www.python.org/about/help/">Help &amp; <span class="say-no-more">General</span> Contact</a></li>
+                        <li class="tier-1 element-2"><a href="https://www.python.org/community/diversity/">Diversity <span class="say-no-more">Initiatives</span></a></li>
+                        <li class="tier-1 element-3"><a href="https://github.com/python/pythondotorg/issues">Submit Website Bug</a></li>
+                        <!--<li class="tier-1 element-3"><a href="#"><span class="say-no-more">Website</span> Colophon</a></li>-->
+                    </ul>
+
+                    <div class="copyright">
+                        <p><small>
+                            <span class="pre">Copyright &copy;2001-2015.</span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/psf-landing/">Python Software Foundation</a></span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/about/legal/">Legal Statements</a></span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/privacy/">Privacy Policy</a></span>
+                        </small></p>
+                    </div>
+
+                </div><!-- end .container -->
+            </div><!-- end .site-base -->
+
+        </footer>
+
+    </div><!-- end #touchnav-wrapper -->
+
+    
+    <script src="../../../../ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="../../../static/js/libs/jquery-1.8.2.min.js"><\/script>')</script>
+
+    <script src="../../../static/js/libs/masonry.pkgd.min.js"></script>
+
+    <script type="text/javascript" src="../../../static/js/main-min.js" charset="utf-8"></script>
+    
+
+    <!--[if lte IE 7]>
+    <script type="text/javascript" src="/static/js/plugins/IE8-min.js" charset="utf-8"></script>
+    
+    
+    <![endif]-->
+
+    <!--[if lte IE 8]>
+    <script type="text/javascript" src="/static/js/plugins/getComputedStyle-min.js" charset="utf-8"></script>
+    
+    
+    <![endif]-->
+
+    
+
+    
+    
+
+</body>
+</html>

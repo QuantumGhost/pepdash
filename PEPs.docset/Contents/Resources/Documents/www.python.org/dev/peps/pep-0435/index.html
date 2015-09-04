@@ -1,0 +1,2436 @@
+<!doctype html>
+<!--[if lt IE 7]>   <html class="no-js ie6 lt-ie7 lt-ie8 lt-ie9">   <![endif]-->
+<!--[if IE 7]>      <html class="no-js ie7 lt-ie8 lt-ie9">          <![endif]-->
+<!--[if IE 8]>      <html class="no-js ie8 lt-ie9">                 <![endif]-->
+<!--[if gt IE 8]><!--><html class="no-js" lang="en" dir="ltr">  <!--<![endif]-->
+
+
+<!-- Mirrored from www.python.org/dev/peps/pep-0435/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 03 Sep 2015 04:34:40 GMT -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <link rel="prefetch" href="../../../../ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js">
+
+    <meta name="application-name" content="Python.org">
+    <meta name="msapplication-tooltip" content="The official home of the Python Programming Language">
+    <meta name="apple-mobile-web-app-title" content="Python.org">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="format-detection" content="telephone=no">
+    <meta http-equiv="cleartype" content="on">
+    <meta http-equiv="imagetoolbar" content="false">
+
+    <script src="../../../static/js/libs/modernizr.js"></script>
+
+    <link href="../../../static/stylesheets/style.css" rel="stylesheet" type="text/css" title="default" />
+    <link href="../../../static/stylesheets/mq.css" rel="stylesheet" type="text/css" media="not print, braille, embossed, speech, tty" />
+    
+
+    <!--[if (lte IE 8)&(!IEMobile)]>
+    <link href="/static/stylesheets/no-mq.css" rel="stylesheet" type="text/css" media="screen" />
+    
+    
+    <![endif]-->
+
+    
+    <link rel="icon" type="image/x-icon" href="https://www.python.org/static/favicon.ico">
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="../../../static/apple-touch-icon-144x144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="../../../static/apple-touch-icon-114x114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="../../../static/apple-touch-icon-72x72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="../../../static/apple-touch-icon-precomposed.png">
+    <link rel="apple-touch-icon" href="../../../static/apple-touch-icon-precomposed.png">
+
+    
+    <meta name="msapplication-TileImage" content="/static/metro-icon-144x144-precomposed.png"><!-- white shape -->
+    <meta name="msapplication-TileColor" content="#3673a5"><!-- python blue -->
+    <meta name="msapplication-navbutton-color" content="#3673a5">
+
+    <meta property="og:site_name" content="Python.org">
+    <meta property="og:type" content="website">
+
+    <title>PEP 0435 -- Adding an Enum type to the Python standard library | Python.org</title>
+    <meta property="og:title" content="Welcome to Python.org">
+
+    
+    <meta name="description" content="The official home of the Python Programming Language">
+    <meta name="og:description" content="The official home of the Python Programming Language">
+    <meta name="keywords" content="Python programming language object oriented web free open source software license documentation download community">
+    <meta property="og:tag" content="Python programming language object oriented web free open source software license documentation download community">
+    <meta property="og:published_time" content="">
+    <meta property="og:modified_time" content="">
+    <meta property="og:author" content="">
+    <meta property="og:section" content=""> 
+    <meta property="og:url" content="">
+    <meta property="og:image" content="">
+    <meta property="og:video" content="">
+
+    <link rel="author" href="https://www.python.org/static/humans.txt">
+
+    
+
+    
+    <script type="application/ld+json">
+     {
+       "@context": "http://schema.org",
+       "@type": "WebSite",
+       "url": "https://www.python.org/",
+       "potentialAction": {
+         "@type": "SearchAction",
+         "target": "https://www.python.org/search/?q={search_term_string}",
+         "query-input": "required name=search_term_string"
+       }
+     }
+    </script>
+
+    
+    <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-39055973-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+    </script>
+    
+</head>
+
+<body class="python pages pep-page">
+
+    <div id="touchnav-wrapper">
+
+        <div id="nojs" class="do-not-print">
+            <p><strong>Notice:</strong> While Javascript is not essential for this website, your interaction with the content will be limited. Please turn Javascript on for the full experience. </p>
+        </div>
+
+        <!--[if lt IE 8]>
+        <div id="oldie-warning" class="do-not-print">
+            <p><strong>Notice:</strong> Your browser is <em>ancient</em> and <a href="http://www.ie6countdown.com/">Microsoft agrees</a>. <a href="http://browsehappy.com/">Upgrade to a different browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to experience a better web.</p>
+        </div>
+        <![endif]-->
+
+        <!-- Sister Site Links -->
+        <div id="top" class="top-bar do-not-print">
+
+            <nav class="meta-navigation container" role="navigation">
+
+                
+                <div class="skip-link screen-reader-text">
+                    <a href="#content" title="Skip to content">Skip to content</a>
+                </div>
+
+                
+                <a id="close-python-network" class="jump-link" href="#python-network" aria-hidden="true">
+                    <span aria-hidden="true" class="icon-arrow-down"><span>&#9660;</span></span> Close
+                </a>
+
+                
+
+<ul class="menu" role="tree">
+    
+    <li class="python-meta ">
+        <a href="https://www.python.org/" title="The Python Programming Language" >Python</a>
+    </li>
+    
+    <li class="psf-meta ">
+        <a href="https://www.python.org/psf-landing/" title="The Python Software Foundation" >PSF</a>
+    </li>
+    
+    <li class="docs-meta ">
+        <a href="https://docs.python.org/" title="Python Documentation" >Docs</a>
+    </li>
+    
+    <li class="pypi-meta ">
+        <a href="https://pypi.python.org/" title="Python Package Index" >PyPI</a>
+    </li>
+    
+    <li class="jobs-meta ">
+        <a href="https://www.python.org/jobs/" title="Python Job Board" >Jobs</a>
+    </li>
+    
+    <li class="shop-meta ">
+        <a href="https://www.python.org/community/" title="Python Community" >Community</a>
+    </li>
+    
+</ul>
+
+
+                <a id="python-network" class="jump-link" href="#top" aria-hidden="true">
+                    <span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> The Python Network
+                </a>
+
+            </nav>
+
+        </div>
+
+        <!-- Header elements -->
+        <header class="main-header" role="banner">
+            <div class="container">
+
+                <h1 class="site-headline">
+                    <a href="https://www.python.org/"><img class="python-logo" src="../../../static/img/python-logo.png" alt="python&trade;"></a>
+                </h1>
+
+                <div class="options-bar do-not-print">
+
+                    
+                    <a id="site-map-link" class="jump-to-menu" href="#site-map"><span class="menu-icon">&equiv;</span> Menu</a><form class="search-the-site" action="https://www.python.org/search/" method="get">
+                        <fieldset title="Search Python.org">
+
+                            <span aria-hidden="true" class="icon-search"></span>
+
+                            <label class="screen-reader-text" for="id-search-field">Search This Site</label>
+                            <input id="id-search-field" name="q" type="search" role="textbox" class="search-field" placeholder="Search" value="" tabindex="1">
+
+                            <button type="submit" name="submit" id="submit" class="search-button" title="Submit this Search" tabindex="3">
+                                GO
+                            </button>
+
+                            
+                            <!--[if IE]><input type="text" style="display: none;" disabled="disabled" size="1" tabindex="4"><![endif]-->
+
+                        </fieldset>
+                    </form><span class="breaker"></span><div class="adjust-font-size" aria-hidden="true">
+                        <ul class="navigation menu" aria-label="Adjust Text Size on Page">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                <a href="#" class="action-trigger"><strong><small>A</small> A</strong></a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a class="text-shrink" title="Make Text Smaller" href="javascript:;">Smaller</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a class="text-grow" title="Make Text Larger" href="javascript:;">Larger</a></li>
+                                    <li class="tier-2 element-3" role="treeitem"><a class="text-reset" title="Reset any font size changes I have made" href="javascript:;">Reset</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div><div class="winkwink-nudgenudge">
+                        <ul class="navigation menu" aria-label="Social Media Navigation">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                <a href="#" class="action-trigger">Socialize</a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a href="http://plus.google.com/+Python"><span aria-hidden="true" class="icon-google-plus"></span>Google+</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a href="http://www.facebook.com/pythonlang?fref=ts"><span aria-hidden="true" class="icon-facebook"></span>Facebook</a></li>
+                                    <li class="tier-2 element-3" role="treeitem"><a href="http://twitter.com/ThePSF"><span aria-hidden="true" class="icon-twitter"></span>Twitter</a></li>
+                                    <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/irc/"><span aria-hidden="true" class="icon-freenode"></span>Chat on IRC</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div><div class="account-signin">
+                        <ul class="navigation menu" aria-label="Social Media Navigation">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                
+                                <a href="https://www.python.org/accounts/login/" title="Sign Up or Sign In to Python.org">Sign In</a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/accounts/signup/">Sign Up / Register</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/accounts/login/">Sign In</a></li>
+                                </ul>
+                                
+                            </li>
+                        </ul>
+                    </div>
+
+                </div><!-- end options-bar -->
+
+                <nav id="mainnav" class="python-navigation main-navigation do-not-print" role="navigation">
+                    
+                        
+<ul class="navigation menu" role="menubar" aria-label="Main Navigation">
+  
+    
+    
+    <li id="about" class="tier-1 element-1  " aria-haspopup="true">
+        <a href="https://www.python.org/about/" title="" class="">About</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/apps/" title="">Applications</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/quotes/" title="">Quotes</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/gettingstarted/" title="">Getting Started</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/help/" title="">Help</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="downloads" class="tier-1 element-2  " aria-haspopup="true">
+        <a href="https://www.python.org/downloads/" title="" class="">Downloads</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/downloads/" title="">All releases</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/downloads/source/" title="">Source code</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/downloads/windows/" title="">Windows</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/downloads/mac-osx/" title="">Mac OS X</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/download/other/" title="">Other Platforms</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://docs.python.org/3/license.html" title="">License</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/download/alternatives" title="">Alternative Implementations</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="documentation" class="tier-1 element-3  " aria-haspopup="true">
+        <a href="https://www.python.org/doc/" title="" class="">Documentation</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/doc/" title="">Docs</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/doc/av" title="">Audio/Visual Talks</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://wiki.python.org/moin/BeginnersGuide" title="">Beginner&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://docs.python.org/faq/" title="">FAQ</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="http://wiki.python.org/moin/Languages" title="">Non-English Docs</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="../index.html" title="">PEP Index</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://wiki.python.org/moin/PythonBooks" title="">Python Books</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="community" class="tier-1 element-4  " aria-haspopup="true">
+        <a href="https://www.python.org/community/" title="" class="">Community</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/community/diversity/" title="">Diversity</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/community/irc/" title="">IRC</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/community/lists/" title="">Mailing Lists</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/workshops/" title="">Python Conferences</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/community/sigs/" title="">Special Interest Groups</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://wiki.python.org/moin/" title="">Python Wiki</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/community/logos/" title="">Python Logo</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://www.python.org/community/merchandise/" title="">Merchandise</a></li>
+    
+        <li class="tier-2 element-9" role="treeitem"><a href="https://www.python.org/community/awards" title="">Community Awards</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="success-stories" class="tier-1 element-5  " aria-haspopup="true">
+        <a href="https://www.python.org/about/success/" title="success-stories" class="">Success Stories</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/success/#arts" title="">Arts</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/success/#business" title="">Business</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/success/#education" title="">Education</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/success/#engineering" title="">Engineering</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/about/success/#government" title="">Government</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://www.python.org/about/success/#scientific" title="">Scientific</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/about/success/#software-development" title="">Software Development</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="news" class="tier-1 element-6  " aria-haspopup="true">
+        <a href="https://www.python.org/blogs/" title="News from around the Python world" class="">News</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/blogs/" title="Python Insider Blog Posts">Python News</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://planetpython.org/" title="Planet Python">Community News</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="http://pyfound.blogspot.com/" title="PSF Blog">PSF News</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pycon.blogspot.com/" title="PyCon Blog">PyCon News</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="events" class="tier-1 element-7  " aria-haspopup="true">
+        <a href="https://www.python.org/events/" title="" class="">Events</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/events/python-events/" title="">Python Events</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/events/python-user-group/" title="">User Group Events</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/events/python-events/past/" title="">Python Events Archive</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/events/python-user-group/past/" title="">User Group Events Archive</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://wiki.python.org/moin/PythonEventsCalendar#Submitting_an_Event" title="">Submit an Event</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    
+  
+</ul>
+
+                    
+                </nav>
+
+                <div class="header-banner "> <!-- for optional "do-not-print" class -->
+                    
+                    
+                </div>
+
+                
+                
+
+             </div><!-- end .container -->
+        </header>
+
+        <div id="content" class="content-wrapper">
+            <!-- Main Content Column -->
+            <div class="container">
+
+                <section class="main-content with-left-sidebar" role="main">
+
+                    
+<ul class="breadcrumbs menu">
+    <li>
+        <a href="https://www.python.org/" title="The Python Programming Language">Python</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>
+        <a href="https://www.python.org/dev/">Python Developer's Guide</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>
+        <a href="../index.html">PEP Index</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>PEP 0435 -- Adding an Enum type to the Python standard library</li>
+</ul>
+
+
+                    
+<style>
+   .pep-page pre {
+        padding: .5em;
+        background: inherit;
+        border-left: 0px;
+        -webkit-box-shadow: 0 0 0 0;
+        -moz-box-shadow: 0 0 0 0;
+        box-shadow: 0 0 0 0;
+   }
+</style>
+
+    
+    <article class="text">
+        
+
+        <header class="article-header">
+            <h1 class="page-title">PEP 0435 -- Adding an Enum type to the Python standard library</h1>
+        </header>
+
+        <!--
+This HTML is auto-generated.  DO NOT EDIT THIS FILE!  If you are writing a new
+PEP, see http://www.python.org/dev/peps/pep-0001 for instructions and links
+to templates.  DO NOT USE THIS HTML FILE AS YOUR TEMPLATE!
+-->
+<html>
+ <body>
+  <table class="rfc2822 docutils field-list" frame="void" rules="none">
+   <col class="field-name">
+   </col>
+   <col class="field-body">
+   </col>
+   <tbody valign="top">
+    <tr class="field">
+     <th class="field-name">
+      PEP:
+     </th>
+     <td class="field-body">
+      435
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Title:
+     </th>
+     <td class="field-body">
+      Adding an Enum type to the Python standard library
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Author:
+     </th>
+     <td class="field-body">
+      Barry Warsaw &lt;barry at python.org&gt;,
+Eli Bendersky &lt;eliben at gmail.com&gt;,
+Ethan Furman &lt;ethan at stoneleaf.us&gt;
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Status:
+     </th>
+     <td class="field-body">
+      Final
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Type:
+     </th>
+     <td class="field-body">
+      Standards Track
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Created:
+     </th>
+     <td class="field-body">
+      2013-02-23
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Python-Version:
+     </th>
+     <td class="field-body">
+      3.4
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Post-History:
+     </th>
+     <td class="field-body">
+      2013-02-23, 2013-05-02
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Resolution:
+     </th>
+     <td class="field-body">
+      <a class="reference external" href="http://mail.python.org/pipermail/python-dev/2013-May/126112.html">
+       http://mail.python.org/pipermail/python-dev/2013-May/126112.html
+      </a>
+     </td>
+    </tr>
+   </tbody>
+  </table>
+  <hr/>
+  <div class="contents topic" id="contents">
+   <p class="topic-title first">
+    Contents
+   </p>
+   <ul class="simple">
+    <li>
+     <a class="reference internal" href="#abstract" id="id21">
+      Abstract
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#status-of-discussions" id="id22">
+      Status of discussions
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#motivation" id="id23">
+      Motivation
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#module-and-type-name" id="id24">
+      Module and type name
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#proposed-semantics-for-the-new-enumeration-type" id="id25">
+      Proposed semantics for the new enumeration type
+     </a>
+     <ul>
+      <li>
+       <a class="reference internal" href="#creating-an-enum" id="id26">
+        Creating an Enum
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#programmatic-access-to-enumeration-members" id="id27">
+        Programmatic access to enumeration members
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#duplicating-enum-members-and-values" id="id28">
+        Duplicating enum members and values
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#comparisons" id="id29">
+        Comparisons
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#allowed-members-and-attributes-of-enumerations" id="id30">
+        Allowed members and attributes of enumerations
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#restricted-subclassing-of-enumerations" id="id31">
+        Restricted subclassing of enumerations
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#intenum" id="id32">
+        IntEnum
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#other-derived-enumerations" id="id33">
+        Other derived enumerations
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#pickling" id="id34">
+        Pickling
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#functional-api" id="id35">
+        Functional API
+       </a>
+      </li>
+     </ul>
+    </li>
+    <li>
+     <a class="reference internal" href="#proposed-variations" id="id36">
+      Proposed variations
+     </a>
+     <ul>
+      <li>
+       <a class="reference internal" href="#flufl-enum" id="id37">
+        flufl.enum
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#not-having-to-specify-values-for-enums" id="id38">
+        Not having to specify values for enums
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#using-special-names-or-forms-to-auto-assign-enum-values" id="id39">
+        Using special names or forms to auto-assign enum values
+       </a>
+      </li>
+     </ul>
+    </li>
+    <li>
+     <a class="reference internal" href="#use-cases-in-the-standard-library" id="id40">
+      Use-cases in the standard library
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#acknowledgments" id="id41">
+      Acknowledgments
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#references" id="id42">
+      References
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#copyright" id="id43">
+      Copyright
+     </a>
+    </li>
+   </ul>
+  </div>
+  <div class="section" id="abstract">
+   <h1>
+    <a class="toc-backref" href="#id21">
+     Abstract
+    </a>
+   </h1>
+   <p>
+    This PEP proposes adding an enumeration type to the Python standard library.
+   </p>
+   <p>
+    An enumeration is a set of symbolic names bound to unique, constant values.
+Within an enumeration, the values can be compared by identity, and the
+enumeration itself can be iterated over.
+   </p>
+  </div>
+  <div class="section" id="status-of-discussions">
+   <h1>
+    <a class="toc-backref" href="#id22">
+     Status of discussions
+    </a>
+   </h1>
+   <p>
+    The idea of adding an enum type to Python is not new -
+    <a class="reference external" href="../pep-0354/index.html">
+     PEP 354
+    </a>
+    <a class="footnote-reference" href="#id12" id="id1">
+     [2]
+    </a>
+    is a
+previous attempt that was rejected in 2005.  Recently a new set of discussions
+was initiated
+    <a class="footnote-reference" href="#id13" id="id2">
+     [3]
+    </a>
+    on the
+    <tt class="docutils literal">
+     <span class="pre">
+      python-ideas
+     </span>
+    </tt>
+    mailing list.  Many new ideas were
+proposed in several threads; after a lengthy discussion Guido proposed adding
+    <tt class="docutils literal">
+     flufl.enum
+    </tt>
+    to the standard library
+    <a class="footnote-reference" href="#id14" id="id3">
+     [4]
+    </a>
+    .  During the PyCon 2013 language
+summit the issue was discussed further.  It became clear that many developers
+want to see an enum that subclasses
+    <tt class="docutils literal">
+     int
+    </tt>
+    , which can allow us to replace
+many integer constants in the standard library by enums with friendly string
+representations, without ceding backwards compatibility.  An additional
+discussion among several interested core developers led to the proposal of
+having
+    <tt class="docutils literal">
+     IntEnum
+    </tt>
+    as a special case of
+    <tt class="docutils literal">
+     Enum
+    </tt>
+    .
+   </p>
+   <p>
+    The key dividing issue between
+    <tt class="docutils literal">
+     Enum
+    </tt>
+    and
+    <tt class="docutils literal">
+     IntEnum
+    </tt>
+    is whether comparing
+to integers is semantically meaningful.  For most uses of enumerations, it's
+a
+    <strong>
+     feature
+    </strong>
+    to reject comparison to integers; enums that compare to integers
+lead, through transitivity, to comparisons between enums of unrelated types,
+which isn't desirable in most cases.  For some uses, however, greater
+interoperatiliby with integers is desired. For instance, this is the case for
+replacing existing standard library constants (such as
+    <tt class="docutils literal">
+     socket.AF_INET
+    </tt>
+    )
+with enumerations.
+   </p>
+   <p>
+    Further discussion in late April 2013 led to the conclusion that enumeration
+members should belong to the type of their enum:
+    <tt class="docutils literal">
+     type(Color.red) == Color
+    </tt>
+    .
+Guido has pronounced a decision on this issue
+    <a class="footnote-reference" href="#id15" id="id4">
+     [5]
+    </a>
+    , as well as related issues
+of not allowing to subclass enums
+    <a class="footnote-reference" href="#id16" id="id5">
+     [6]
+    </a>
+    , unless they define no enumeration
+members
+    <a class="footnote-reference" href="#id17" id="id6">
+     [7]
+    </a>
+    .
+   </p>
+   <p>
+    The PEP was accepted by Guido on May 10th, 2013
+    <a class="footnote-reference" href="#id11" id="id7">
+     [1]
+    </a>
+    .
+   </p>
+  </div>
+  <div class="section" id="motivation">
+   <h1>
+    <a class="toc-backref" href="#id23">
+     Motivation
+    </a>
+   </h1>
+   <p>
+    <em>
+     [Based partly on the Motivation stated in PEP 354]
+    </em>
+   </p>
+   <p>
+    The properties of an enumeration are useful for defining an immutable, related
+set of constant values that may or may not have a semantic meaning.  Classic
+examples are days of the week (Sunday through Saturday) and school assessment
+grades ('A' through 'D', and 'F').  Other examples include error status values
+and states within a defined process.
+   </p>
+   <p>
+    It is possible to simply define a sequence of values of some other basic type,
+such as
+    <tt class="docutils literal">
+     int
+    </tt>
+    or
+    <tt class="docutils literal">
+     str
+    </tt>
+    , to represent discrete arbitrary values.  However,
+an enumeration ensures that such values are distinct from any others including,
+importantly, values within other enumerations, and that operations without
+meaning ("Wednesday times two") are not defined for these values.  It also
+provides a convenient printable representation of enum values without requiring
+tedious repetition while defining them (i.e. no
+    <tt class="docutils literal">
+     GREEN = 'green'
+    </tt>
+    ).
+   </p>
+  </div>
+  <div class="section" id="module-and-type-name">
+   <h1>
+    <a class="toc-backref" href="#id24">
+     Module and type name
+    </a>
+   </h1>
+   <p>
+    We propose to add a module named
+    <tt class="docutils literal">
+     enum
+    </tt>
+    to the standard library.  The main
+type exposed by this module is
+    <tt class="docutils literal">
+     Enum
+    </tt>
+    .  Hence, to import the
+    <tt class="docutils literal">
+     Enum
+    </tt>
+    type
+user code will run:
+   </p>
+   <pre class="literal-block">
+&gt;&gt;&gt; from enum import Enum
+</pre>
+  </div>
+  <div class="section" id="proposed-semantics-for-the-new-enumeration-type">
+   <h1>
+    <a class="toc-backref" href="#id25">
+     Proposed semantics for the new enumeration type
+    </a>
+   </h1>
+   <div class="section" id="creating-an-enum">
+    <h2>
+     <a class="toc-backref" href="#id26">
+      Creating an Enum
+     </a>
+    </h2>
+    <p>
+     Enumerations are created using the class syntax, which makes them easy to read
+and write.  An alternative creation method is described in
+     <a class="reference internal" href="#functional-api">
+      Functional API
+     </a>
+     .
+To define an enumeration, subclass
+     <tt class="docutils literal">
+      Enum
+     </tt>
+     as follows:
+    </p>
+    <pre class="literal-block">
+&gt;&gt;&gt; from enum import Enum
+&gt;&gt;&gt; class Color(Enum):
+...     red = 1
+...     green = 2
+...     blue = 3
+</pre>
+    <p>
+     <strong>
+      A note on nomenclature
+     </strong>
+     : we call
+     <tt class="docutils literal">
+      Color
+     </tt>
+     an
+     <em>
+      enumeration
+     </em>
+     (or
+     <em>
+      enum
+     </em>
+     )
+and
+     <tt class="docutils literal">
+      Color.red
+     </tt>
+     ,
+     <tt class="docutils literal">
+      Color.green
+     </tt>
+     are
+     <em>
+      enumeration members
+     </em>
+     (or
+     <em>
+      enum members
+     </em>
+     ).  Enumeration members also have
+     <em>
+      values
+     </em>
+     (the value of
+     <tt class="docutils literal">
+      Color.red
+     </tt>
+     is
+     <tt class="docutils literal">
+      1
+     </tt>
+     , etc.)
+    </p>
+    <p>
+     Enumeration members have human readable string representations:
+    </p>
+    <pre class="literal-block">
+&gt;&gt;&gt; print(Color.red)
+Color.red
+</pre>
+    <p>
+     ...while their
+     <tt class="docutils literal">
+      repr
+     </tt>
+     has more information:
+    </p>
+    <pre class="literal-block">
+&gt;&gt;&gt; print(repr(Color.red))
+&lt;Color.red: 1&gt;
+</pre>
+    <p>
+     The
+     <em>
+      type
+     </em>
+     of an enumeration member is the enumeration it belongs to:
+    </p>
+    <pre class="literal-block">
+&gt;&gt;&gt; type(Color.red)
+&lt;Enum 'Color'&gt;
+&gt;&gt;&gt; isinstance(Color.green, Color)
+True
+&gt;&gt;&gt;
+</pre>
+    <p>
+     Enums also have a property that contains just their item name:
+    </p>
+    <pre class="literal-block">
+&gt;&gt;&gt; print(Color.red.name)
+red
+</pre>
+    <p>
+     Enumerations support iteration, in definition order:
+    </p>
+    <pre class="literal-block">
+&gt;&gt;&gt; class Shake(Enum):
+...   vanilla = 7
+...   chocolate = 4
+...   cookies = 9
+...   mint = 3
+...
+&gt;&gt;&gt; for shake in Shake:
+...   print(shake)
+...
+Shake.vanilla
+Shake.chocolate
+Shake.cookies
+Shake.mint
+</pre>
+    <p>
+     Enumeration members are hashable, so they can be used in dictionaries and sets:
+    </p>
+    <pre class="literal-block">
+&gt;&gt;&gt; apples = {}
+&gt;&gt;&gt; apples[Color.red] = 'red delicious'
+&gt;&gt;&gt; apples[Color.green] = 'granny smith'
+&gt;&gt;&gt; apples
+{&lt;Color.red: 1&gt;: 'red delicious', &lt;Color.green: 2&gt;: 'granny smith'}
+</pre>
+   </div>
+   <div class="section" id="programmatic-access-to-enumeration-members">
+    <h2>
+     <a class="toc-backref" href="#id27">
+      Programmatic access to enumeration members
+     </a>
+    </h2>
+    <p>
+     Sometimes it's useful to access members in enumerations programmatically (i.e.
+situations where
+     <tt class="docutils literal">
+      Color.red
+     </tt>
+     won't do because the exact color is not known
+at program-writing time).
+     <tt class="docutils literal">
+      Enum
+     </tt>
+     allows such access:
+    </p>
+    <pre class="literal-block">
+&gt;&gt;&gt; Color(1)
+&lt;Color.red: 1&gt;
+&gt;&gt;&gt; Color(3)
+&lt;Color.blue: 3&gt;
+</pre>
+    <p>
+     If you want to access enum members by
+     <em>
+      name
+     </em>
+     , use item access:
+    </p>
+    <pre class="literal-block">
+&gt;&gt;&gt; Color['red']
+&lt;Color.red: 1&gt;
+&gt;&gt;&gt; Color['green']
+&lt;Color.green: 2&gt;
+</pre>
+   </div>
+   <div class="section" id="duplicating-enum-members-and-values">
+    <h2>
+     <a class="toc-backref" href="#id28">
+      Duplicating enum members and values
+     </a>
+    </h2>
+    <p>
+     Having two enum members with the same name is invalid:
+    </p>
+    <pre class="literal-block">
+&gt;&gt;&gt; class Shape(Enum):
+...   square = 2
+...   square = 3
+...
+Traceback (most recent call last):
+...
+TypeError: Attempted to reuse key: square
+</pre>
+    <p>
+     However, two enum members are allowed to have the same value.  Given two members
+A and B with the same value (and A defined first), B is an alias to A.  By-value
+lookup of the value of A and B will return A.  By-name lookup of B will also
+return A:
+    </p>
+    <pre class="literal-block">
+&gt;&gt;&gt; class Shape(Enum):
+...   square = 2
+...   diamond = 1
+...   circle = 3
+...   alias_for_square = 2
+...
+&gt;&gt;&gt; Shape.square
+&lt;Shape.square: 2&gt;
+&gt;&gt;&gt; Shape.alias_for_square
+&lt;Shape.square: 2&gt;
+&gt;&gt;&gt; Shape(2)
+&lt;Shape.square: 2&gt;
+</pre>
+    <p>
+     Iterating over the members of an enum does not provide the aliases:
+    </p>
+    <pre class="literal-block">
+&gt;&gt;&gt; list(Shape)
+[&lt;Shape.square: 2&gt;, &lt;Shape.diamond: 1&gt;, &lt;Shape.circle: 3&gt;]
+</pre>
+    <p>
+     The special attribute
+     <tt class="docutils literal">
+      __members__
+     </tt>
+     is an ordered dictionary mapping names
+to members.  It includes all names defined in the enumeration, including the
+aliases:
+    </p>
+    <pre class="literal-block">
+&gt;&gt;&gt; for name, member in Shape.__members__.items():
+...   name, member
+...
+('square', &lt;Shape.square: 2&gt;)
+('diamond', &lt;Shape.diamond: 1&gt;)
+('circle', &lt;Shape.circle: 3&gt;)
+('alias_for_square', &lt;Shape.square: 2&gt;)
+</pre>
+    <p>
+     The
+     <tt class="docutils literal">
+      __members__
+     </tt>
+     attribute can be used for detailed programmatic access to
+the enumeration members.  For example, finding all the aliases:
+    </p>
+    <pre class="literal-block">
+&gt;&gt;&gt; [name for name, member in Shape.__members__.items() if member.name != name]
+['alias_for_square']
+</pre>
+   </div>
+   <div class="section" id="comparisons">
+    <h2>
+     <a class="toc-backref" href="#id29">
+      Comparisons
+     </a>
+    </h2>
+    <p>
+     Enumeration members are compared by identity:
+    </p>
+    <pre class="literal-block">
+&gt;&gt;&gt; Color.red is Color.red
+True
+&gt;&gt;&gt; Color.red is Color.blue
+False
+&gt;&gt;&gt; Color.red is not Color.blue
+True
+</pre>
+    <p>
+     Ordered comparisons between enumeration values are
+     <em>
+      not
+     </em>
+     supported.  Enums are
+not integers (but see
+     <a class="reference internal" href="#intenum">
+      IntEnum
+     </a>
+     below):
+    </p>
+    <pre class="literal-block">
+&gt;&gt;&gt; Color.red &lt; Color.blue
+Traceback (most recent call last):
+  File "&lt;stdin&gt;", line 1, in &lt;module&gt;
+TypeError: unorderable types: Color() &lt; Color()
+</pre>
+    <p>
+     Equality comparisons are defined though:
+    </p>
+    <pre class="literal-block">
+&gt;&gt;&gt; Color.blue == Color.red
+False
+&gt;&gt;&gt; Color.blue != Color.red
+True
+&gt;&gt;&gt; Color.blue == Color.blue
+True
+</pre>
+    <p>
+     Comparisons against non-enumeration values will always compare not equal
+(again,
+     <tt class="docutils literal">
+      IntEnum
+     </tt>
+     was explicitly designed to behave differently, see
+below):
+    </p>
+    <pre class="literal-block">
+&gt;&gt;&gt; Color.blue == 2
+False
+</pre>
+   </div>
+   <div class="section" id="allowed-members-and-attributes-of-enumerations">
+    <h2>
+     <a class="toc-backref" href="#id30">
+      Allowed members and attributes of enumerations
+     </a>
+    </h2>
+    <p>
+     The examples above use integers for enumeration values.  Using integers is
+short and handy (and provided by default by the
+     <a class="reference internal" href="#functional-api">
+      Functional API
+     </a>
+     ), but not
+strictly enforced.  In the vast majority of use-cases, one doesn't care what
+the actual value of an enumeration is.  But if the value
+     <em>
+      is
+     </em>
+     important,
+enumerations can have arbitrary values.
+    </p>
+    <p>
+     Enumerations are Python classes, and can have methods and special methods as
+usual.  If we have this enumeration:
+    </p>
+    <pre class="literal-block">
+class Mood(Enum):
+  funky = 1
+  happy = 3
+
+  def describe(self):
+    # self is the member here
+    return self.name, self.value
+
+  def __str__(self):
+    return 'my custom str! {0}'.format(self.value)
+
+  @classmethod
+  def favorite_mood(cls):
+    # cls here is the enumeration
+    return cls.happy
+</pre>
+    <p>
+     Then:
+    </p>
+    <pre class="literal-block">
+&gt;&gt;&gt; Mood.favorite_mood()
+&lt;Mood.happy: 3&gt;
+&gt;&gt;&gt; Mood.happy.describe()
+('happy', 3)
+&gt;&gt;&gt; str(Mood.funky)
+'my custom str! 1'
+</pre>
+    <p>
+     The rules for what is allowed are as follows: all attributes defined within an
+enumeration will become members of this enumeration, with the exception of
+     <em>
+      __dunder__
+     </em>
+     names and descriptors
+     <a class="footnote-reference" href="#id20" id="id8">
+      [9]
+     </a>
+     ; methods are descriptors too.
+    </p>
+   </div>
+   <div class="section" id="restricted-subclassing-of-enumerations">
+    <h2>
+     <a class="toc-backref" href="#id31">
+      Restricted subclassing of enumerations
+     </a>
+    </h2>
+    <p>
+     Subclassing an enumeration is allowed only if the enumeration does not define
+any members.  So this is forbidden:
+    </p>
+    <pre class="literal-block">
+&gt;&gt;&gt; class MoreColor(Color):
+...   pink = 17
+...
+TypeError: Cannot extend enumerations
+</pre>
+    <p>
+     But this is allowed:
+    </p>
+    <pre class="literal-block">
+&gt;&gt;&gt; class Foo(Enum):
+...   def some_behavior(self):
+...     pass
+...
+&gt;&gt;&gt; class Bar(Foo):
+...   happy = 1
+...   sad = 2
+...
+</pre>
+    <p>
+     The rationale for this decision was given by Guido in
+     <a class="footnote-reference" href="#id16" id="id9">
+      [6]
+     </a>
+     .  Allowing to
+subclass enums that define members would lead to a violation of some
+important invariants of types and instances.  On the other hand, it
+makes sense to allow sharing some common behavior between a group of
+enumerations, and subclassing empty enumerations is also used to implement
+     <tt class="docutils literal">
+      IntEnum
+     </tt>
+     .
+    </p>
+   </div>
+   <div class="section" id="intenum">
+    <h2>
+     <a class="toc-backref" href="#id32">
+      IntEnum
+     </a>
+    </h2>
+    <p>
+     A variation of
+     <tt class="docutils literal">
+      Enum
+     </tt>
+     is proposed which is also a subclass of
+     <tt class="docutils literal">
+      int
+     </tt>
+     .
+Members of an
+     <tt class="docutils literal">
+      IntEnum
+     </tt>
+     can be compared to integers; by extension,
+integer enumerations of different types can also be compared to each other:
+    </p>
+    <pre class="literal-block">
+&gt;&gt;&gt; from enum import IntEnum
+&gt;&gt;&gt; class Shape(IntEnum):
+...   circle = 1
+...   square = 2
+...
+&gt;&gt;&gt; class Request(IntEnum):
+...   post = 1
+...   get = 2
+...
+&gt;&gt;&gt; Shape == 1
+False
+&gt;&gt;&gt; Shape.circle == 1
+True
+&gt;&gt;&gt; Shape.circle == Request.post
+True
+</pre>
+    <p>
+     However they still can't be compared to
+     <tt class="docutils literal">
+      Enum
+     </tt>
+     :
+    </p>
+    <pre class="literal-block">
+&gt;&gt;&gt; class Shape(IntEnum):
+...   circle = 1
+...   square = 2
+...
+&gt;&gt;&gt; class Color(Enum):
+...   red = 1
+...   green = 2
+...
+&gt;&gt;&gt; Shape.circle == Color.red
+False
+</pre>
+    <p>
+     <tt class="docutils literal">
+      IntEnum
+     </tt>
+     values behave like integers in other ways you'd expect:
+    </p>
+    <pre class="literal-block">
+&gt;&gt;&gt; int(Shape.circle)
+1
+&gt;&gt;&gt; ['a', 'b', 'c'][Shape.circle]
+'b'
+&gt;&gt;&gt; [i for i in range(Shape.square)]
+[0, 1]
+</pre>
+    <p>
+     For the vast majority of code,
+     <tt class="docutils literal">
+      Enum
+     </tt>
+     is strongly recommended,
+since
+     <tt class="docutils literal">
+      IntEnum
+     </tt>
+     breaks some semantic promises of an enumeration (by
+being comparable to integers, and thus by transitivity to other
+unrelated enumerations). It should be used only in special cases where
+there's no other choice; for example, when integer constants are
+replaced with enumerations and backwards compatibility is required
+with code that still expects integers.
+    </p>
+   </div>
+   <div class="section" id="other-derived-enumerations">
+    <h2>
+     <a class="toc-backref" href="#id33">
+      Other derived enumerations
+     </a>
+    </h2>
+    <p>
+     <tt class="docutils literal">
+      IntEnum
+     </tt>
+     will be part of the
+     <tt class="docutils literal">
+      enum
+     </tt>
+     module.  However, it would be very
+simple to implement independently:
+    </p>
+    <pre class="literal-block">
+class IntEnum(int, Enum):
+    pass
+</pre>
+    <p>
+     This demonstrates how similar derived enumerations can be defined, for example
+a
+     <tt class="docutils literal">
+      StrEnum
+     </tt>
+     that mixes in
+     <tt class="docutils literal">
+      str
+     </tt>
+     instead of
+     <tt class="docutils literal">
+      int
+     </tt>
+     .
+    </p>
+    <p>
+     Some rules:
+    </p>
+    <ol class="arabic simple">
+     <li>
+      When subclassing Enum, mix-in types must appear before Enum itself in the
+sequence of bases, as in the
+      <tt class="docutils literal">
+       IntEnum
+      </tt>
+      example above.
+     </li>
+     <li>
+      While Enum can have members of any type, once you mix in an additional
+type, all the members must have values of that type, e.g.
+      <tt class="docutils literal">
+       int
+      </tt>
+      above.
+This restriction does not apply to mix-ins which only add methods
+and don't specify another data type such as
+      <tt class="docutils literal">
+       int
+      </tt>
+      or
+      <tt class="docutils literal">
+       str
+      </tt>
+      .
+     </li>
+    </ol>
+   </div>
+   <div class="section" id="pickling">
+    <h2>
+     <a class="toc-backref" href="#id34">
+      Pickling
+     </a>
+    </h2>
+    <p>
+     Enumerations can be pickled and unpickled:
+    </p>
+    <pre class="literal-block">
+&gt;&gt;&gt; from enum.tests.fruit import Fruit
+&gt;&gt;&gt; from pickle import dumps, loads
+&gt;&gt;&gt; Fruit.tomato is loads(dumps(Fruit.tomato))
+True
+</pre>
+    <p>
+     The usual restrictions for pickling apply: picklable enums must be defined in
+the top level of a module, since unpickling requires them to be importable
+from that module.
+    </p>
+   </div>
+   <div class="section" id="functional-api">
+    <h2>
+     <a class="toc-backref" href="#id35">
+      Functional API
+     </a>
+    </h2>
+    <p>
+     The
+     <tt class="docutils literal">
+      Enum
+     </tt>
+     class is callable, providing the following functional API:
+    </p>
+    <pre class="literal-block">
+&gt;&gt;&gt; Animal = Enum('Animal', 'ant bee cat dog')
+&gt;&gt;&gt; Animal
+&lt;Enum 'Animal'&gt;
+&gt;&gt;&gt; Animal.ant
+&lt;Animal.ant: 1&gt;
+&gt;&gt;&gt; Animal.ant.value
+1
+&gt;&gt;&gt; list(Animal)
+[&lt;Animal.ant: 1&gt;, &lt;Animal.bee: 2&gt;, &lt;Animal.cat: 3&gt;, &lt;Animal.dog: 4&gt;]
+</pre>
+    <p>
+     The semantics of this API resemble
+     <tt class="docutils literal">
+      namedtuple
+     </tt>
+     . The first argument
+of the call to
+     <tt class="docutils literal">
+      Enum
+     </tt>
+     is the name of the enumeration.  Pickling enums
+created with the functional API will work on CPython and PyPy, but for
+IronPython and Jython you may need to specify the module name explicitly
+as follows:
+    </p>
+    <pre class="literal-block">
+&gt;&gt;&gt; Animals = Enum('Animals', 'ant bee cat dog', module=__name__)
+</pre>
+    <p>
+     The second argument is the
+     <em>
+      source
+     </em>
+     of enumeration member names.  It can be a
+whitespace-separated string of names, a sequence of names, a sequence of
+2-tuples with key/value pairs, or a mapping (e.g. dictionary) of names to
+values.  The last two options enable assigning arbitrary values to
+enumerations; the others auto-assign increasing integers starting with 1.  A
+new class derived from
+     <tt class="docutils literal">
+      Enum
+     </tt>
+     is returned.  In other words, the above
+assignment to
+     <tt class="docutils literal">
+      Animal
+     </tt>
+     is equivalent to:
+    </p>
+    <pre class="literal-block">
+&gt;&gt;&gt; class Animals(Enum):
+...   ant = 1
+...   bee = 2
+...   cat = 3
+...   dog = 4
+</pre>
+    <p>
+     The reason for defaulting to
+     <tt class="docutils literal">
+      1
+     </tt>
+     as the starting number and not
+     <tt class="docutils literal">
+      0
+     </tt>
+     is
+that
+     <tt class="docutils literal">
+      0
+     </tt>
+     is
+     <tt class="docutils literal">
+      False
+     </tt>
+     in a boolean sense, but enum members all evaluate
+to
+     <tt class="docutils literal">
+      True
+     </tt>
+     .
+    </p>
+   </div>
+  </div>
+  <div class="section" id="proposed-variations">
+   <h1>
+    <a class="toc-backref" href="#id36">
+     Proposed variations
+    </a>
+   </h1>
+   <p>
+    Some variations were proposed during the discussions in the mailing list.
+Here's some of the more popular ones.
+   </p>
+   <div class="section" id="flufl-enum">
+    <h2>
+     <a class="toc-backref" href="#id37">
+      flufl.enum
+     </a>
+    </h2>
+    <p>
+     <tt class="docutils literal">
+      flufl.enum
+     </tt>
+     was the reference implementation upon which this PEP was
+originally based.  Eventually, it was decided against the inclusion of
+     <tt class="docutils literal">
+      flufl.enum
+     </tt>
+     because its design separated enumeration members from
+enumerations, so the former are not instances of the latter.  Its design
+also explicitly permits subclassing enumerations for extending them with
+more members (due to the member/enum separation, the type invariants are not
+violated in
+     <tt class="docutils literal">
+      flufl.enum
+     </tt>
+     with such a scheme).
+    </p>
+   </div>
+   <div class="section" id="not-having-to-specify-values-for-enums">
+    <h2>
+     <a class="toc-backref" href="#id38">
+      Not having to specify values for enums
+     </a>
+    </h2>
+    <p>
+     Michael Foord proposed (and Tim Delaney provided a proof-of-concept
+implementation) to use metaclass magic that makes this possible:
+    </p>
+    <pre class="literal-block">
+class Color(Enum):
+    red, green, blue
+</pre>
+    <p>
+     The values get actually assigned only when first looked up.
+    </p>
+    <p>
+     Pros: cleaner syntax that requires less typing for a very common task (just
+listing enumeration names without caring about the values).
+    </p>
+    <p>
+     Cons: involves much magic in the implementation, which makes even the
+definition of such enums baffling when first seen.  Besides, explicit is
+better than implicit.
+    </p>
+   </div>
+   <div class="section" id="using-special-names-or-forms-to-auto-assign-enum-values">
+    <h2>
+     <a class="toc-backref" href="#id39">
+      Using special names or forms to auto-assign enum values
+     </a>
+    </h2>
+    <p>
+     A different approach to avoid specifying enum values is to use a special name
+or form to auto assign them.  For example:
+    </p>
+    <pre class="literal-block">
+class Color(Enum):
+    red = None          # auto-assigned to 0
+    green = None        # auto-assigned to 1
+    blue = None         # auto-assigned to 2
+</pre>
+    <p>
+     More flexibly:
+    </p>
+    <pre class="literal-block">
+class Color(Enum):
+    red = 7
+    green = None        # auto-assigned to 8
+    blue = 19
+    purple = None       # auto-assigned to 20
+</pre>
+    <p>
+     Some variations on this theme:
+    </p>
+    <ol class="arabic simple">
+     <li>
+      A special name
+      <tt class="docutils literal">
+       auto
+      </tt>
+      imported from the enum package.
+     </li>
+     <li>
+      Georg Brandl proposed ellipsis (
+      <tt class="docutils literal">
+       ...
+      </tt>
+      ) instead of
+      <tt class="docutils literal">
+       None
+      </tt>
+      to achieve the
+same effect.
+     </li>
+    </ol>
+    <p>
+     Pros: no need to manually enter values. Makes it easier to change the enum and
+extend it, especially for large enumerations.
+    </p>
+    <p>
+     Cons: actually longer to type in many simple cases.  The argument of explicit
+vs. implicit applies here as well.
+    </p>
+   </div>
+  </div>
+  <div class="section" id="use-cases-in-the-standard-library">
+   <h1>
+    <a class="toc-backref" href="#id40">
+     Use-cases in the standard library
+    </a>
+   </h1>
+   <p>
+    The Python standard library has many places where the usage of enums would be
+beneficial to replace other idioms currently used to represent them.  Such
+usages can be divided to two categories: user-code facing constants, and
+internal constants.
+   </p>
+   <p>
+    User-code facing constants like
+    <tt class="docutils literal">
+     os.SEEK_*
+    </tt>
+    ,
+    <tt class="docutils literal">
+     socket
+    </tt>
+    module constants,
+decimal rounding modes and HTML error codes could require backwards
+compatibility since user code may expect integers.
+    <tt class="docutils literal">
+     IntEnum
+    </tt>
+    as described
+above provides the required semantics; being a subclass of
+    <tt class="docutils literal">
+     int
+    </tt>
+    , it does not
+affect user code that expects integers, while on the other hand allowing
+printable representations for enumeration values:
+   </p>
+   <pre class="literal-block">
+&gt;&gt;&gt; import socket
+&gt;&gt;&gt; family = socket.AF_INET
+&gt;&gt;&gt; family == 2
+True
+&gt;&gt;&gt; print(family)
+SocketFamily.AF_INET
+</pre>
+   <p>
+    Internal constants are not seen by user code but are employed internally by
+stdlib modules.  These can be implemented with
+    <tt class="docutils literal">
+     Enum
+    </tt>
+    .  Some examples
+uncovered by a very partial skim through the stdlib:
+    <tt class="docutils literal">
+     binhex
+    </tt>
+    ,
+    <tt class="docutils literal">
+     imaplib
+    </tt>
+    ,
+    <tt class="docutils literal">
+     http/client
+    </tt>
+    ,
+    <tt class="docutils literal">
+     urllib/robotparser
+    </tt>
+    ,
+    <tt class="docutils literal">
+     idlelib
+    </tt>
+    ,
+    <tt class="docutils literal">
+     concurrent.futures
+    </tt>
+    ,
+    <tt class="docutils literal">
+     turtledemo
+    </tt>
+    .
+   </p>
+   <p>
+    In addition, looking at the code of the Twisted library, there are many use
+cases for replacing internal state constants with enums.  The same can be said
+about a lot of networking code (especially implementation of protocols) and
+can be seen in test protocols written with the Tulip library as well.
+   </p>
+  </div>
+  <div class="section" id="acknowledgments">
+   <h1>
+    <a class="toc-backref" href="#id41">
+     Acknowledgments
+    </a>
+   </h1>
+   <p>
+    This PEP was initially proposing including the
+    <tt class="docutils literal">
+     flufl.enum
+    </tt>
+    package
+    <a class="footnote-reference" href="#id19" id="id10">
+     [8]
+    </a>
+    by Barry Warsaw into the stdlib, and is inspired in large parts by it.
+Ben Finney is the author of the earlier enumeration
+    <a class="reference external" href="../pep-0354/index.html">
+     PEP 354
+    </a>
+    .
+   </p>
+  </div>
+  <div class="section" id="references">
+   <h1>
+    <a class="toc-backref" href="#id42">
+     References
+    </a>
+   </h1>
+   <table class="docutils footnote" frame="void" id="id11" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id7">
+        [1]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="http://mail.python.org/pipermail/python-dev/2013-May/126112.html">
+        http://mail.python.org/pipermail/python-dev/2013-May/126112.html
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id12" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id1">
+        [2]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="../pep-0354/index.html">
+        http://www.python.org/dev/peps/pep-0354/
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id13" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id2">
+        [3]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="http://mail.python.org/pipermail/python-ideas/2013-January/019003.html">
+        http://mail.python.org/pipermail/python-ideas/2013-January/019003.html
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id14" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id3">
+        [4]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="http://mail.python.org/pipermail/python-ideas/2013-February/019373.html">
+        http://mail.python.org/pipermail/python-ideas/2013-February/019373.html
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id15" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id4">
+        [5]
+       </a>
+      </td>
+      <td>
+       To make enums behave similarly to Python classes like bool, and
+behave in a more intuitive way.  It would be surprising if the type of
+       <tt class="docutils literal">
+        Color.red
+       </tt>
+       would not be
+       <tt class="docutils literal">
+        Color
+       </tt>
+       . (Discussion in
+       <a class="reference external" href="http://mail.python.org/pipermail/python-dev/2013-April/125687.html">
+        http://mail.python.org/pipermail/python-dev/2013-April/125687.html
+       </a>
+       )
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id16" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       [6]
+      </td>
+      <td>
+       <em>
+        (
+        <a class="fn-backref" href="#id5">
+         1
+        </a>
+        ,
+        <a class="fn-backref" href="#id9">
+         2
+        </a>
+        ,
+        <a class="fn-backref" href="#id18">
+         3
+        </a>
+        )
+       </em>
+       Subclassing enums and adding new members creates an unresolvable
+situation; on one hand
+       <tt class="docutils literal">
+        MoreColor.red
+       </tt>
+       and
+       <tt class="docutils literal">
+        Color.red
+       </tt>
+       should
+not be the same object, and on the other
+       <tt class="docutils literal">
+        isinstance
+       </tt>
+       checks become
+confusing if they are not.  The discussion also links to Stack Overflow
+discussions that make additional arguments.
+(
+       <a class="reference external" href="http://mail.python.org/pipermail/python-dev/2013-April/125716.html">
+        http://mail.python.org/pipermail/python-dev/2013-April/125716.html
+       </a>
+       )
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id17" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id6">
+        [7]
+       </a>
+      </td>
+      <td>
+       It may be useful to have a class defining some behavior (methods, with
+no actual enumeration members) mixed into an enum, and this would not
+create the problem discussed in
+       <a class="footnote-reference" href="#id16" id="id18">
+        [6]
+       </a>
+       .  (Discussion in
+       <a class="reference external" href="http://mail.python.org/pipermail/python-dev/2013-May/125859.html">
+        http://mail.python.org/pipermail/python-dev/2013-May/125859.html
+       </a>
+       )
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id19" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id10">
+        [8]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="http://pythonhosted.org/flufl.enum/">
+        http://pythonhosted.org/flufl.enum/
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id20" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id8">
+        [9]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="http://docs.python.org/3/howto/descriptor.html">
+        http://docs.python.org/3/howto/descriptor.html
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+  </div>
+  <div class="section" id="copyright">
+   <h1>
+    <a class="toc-backref" href="#id43">
+     Copyright
+    </a>
+   </h1>
+   <p>
+    This document has been placed in the public domain.
+   </p>
+   <!-- Local Variables:
+mode: indented-text
+indent-tabs-mode: nil
+sentence-end-double-space: t
+fill-column: 70
+coding: utf-8
+End: -->
+  </div>
+ </body>
+
+<!-- Mirrored from www.python.org/dev/peps/pep-0435/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 03 Sep 2015 04:34:41 GMT -->
+</html>Source: <a href="https://hg.python.org/peps/file/tip/pep-0435.txt">https://hg.python.org/peps/file/tip/pep-0435.txt</a>
+
+    </article>
+
+
+                </section>
+
+                
+
+
+<aside class="left-sidebar" role="secondary">
+
+    
+
+
+
+
+
+
+    
+
+
+
+
+
+        <div class="twitter-widget sidebar-widget">
+        <a class="twitter-timeline" data-dnt="true" href="https://twitter.com/ThePSF" data-widget-id="434113224703610882">Tweets by @ThePSF</a>
+        <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+    </div>
+
+    <div class="psf-sidebar-widget sidebar-widget">
+        <h3 class="widget-title">The PSF</h3>
+<p>The Python Software Foundation is the organization behind Python. Become a member of the PSF and help advance the software and our mission. </p>
+
+    </div>
+
+</aside>
+
+
+
+                
+                
+
+
+            </div><!-- end .container -->
+        </div><!-- end #content .content-wrapper -->
+
+        <!-- Footer and social media list -->
+        <footer id="site-map" class="main-footer" role="contentinfo">
+            <div class="main-footer-links">
+                <div class="container">
+
+                    
+                    <a id="back-to-top-1" class="jump-link" href="#python-network"><span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> Back to Top</a>
+
+                    
+
+<ul class="sitemap navigation menu do-not-print" role="tree" id="container">
+    
+    <li class="tier-1 element-1">
+        <a href="https://www.python.org/about/" >About</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/apps/" title="">Applications</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/quotes/" title="">Quotes</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/gettingstarted/" title="">Getting Started</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/help/" title="">Help</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-2">
+        <a href="https://www.python.org/downloads/" >Downloads</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/downloads/" title="">All releases</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/downloads/source/" title="">Source code</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/downloads/windows/" title="">Windows</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/downloads/mac-osx/" title="">Mac OS X</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/download/other/" title="">Other Platforms</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://docs.python.org/3/license.html" title="">License</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/download/alternatives" title="">Alternative Implementations</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-3">
+        <a href="https://www.python.org/doc/" >Documentation</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/doc/" title="">Docs</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/doc/av" title="">Audio/Visual Talks</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://wiki.python.org/moin/BeginnersGuide" title="">Beginner&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://docs.python.org/faq/" title="">FAQ</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="http://wiki.python.org/moin/Languages" title="">Non-English Docs</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="../index.html" title="">PEP Index</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://wiki.python.org/moin/PythonBooks" title="">Python Books</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-4">
+        <a href="https://www.python.org/community/" >Community</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/community/diversity/" title="">Diversity</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/community/irc/" title="">IRC</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/community/lists/" title="">Mailing Lists</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/workshops/" title="">Python Conferences</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/community/sigs/" title="">Special Interest Groups</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://wiki.python.org/moin/" title="">Python Wiki</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/community/logos/" title="">Python Logo</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://www.python.org/community/merchandise/" title="">Merchandise</a></li>
+    
+        <li class="tier-2 element-9" role="treeitem"><a href="https://www.python.org/community/awards" title="">Community Awards</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-5">
+        <a href="https://www.python.org/about/success/" title="success-stories">Success Stories</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/success/#arts" title="">Arts</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/success/#business" title="">Business</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/success/#education" title="">Education</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/success/#engineering" title="">Engineering</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/about/success/#government" title="">Government</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://www.python.org/about/success/#scientific" title="">Scientific</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/about/success/#software-development" title="">Software Development</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-6">
+        <a href="https://www.python.org/blogs/" title="News from around the Python world">News</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/blogs/" title="Python Insider Blog Posts">Python News</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://planetpython.org/" title="Planet Python">Community News</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="http://pyfound.blogspot.com/" title="PSF Blog">PSF News</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pycon.blogspot.com/" title="PyCon Blog">PyCon News</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-7">
+        <a href="https://www.python.org/events/" >Events</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/events/python-events/" title="">Python Events</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/events/python-user-group/" title="">User Group Events</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/events/python-events/past/" title="">Python Events Archive</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/events/python-user-group/past/" title="">User Group Events Archive</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://wiki.python.org/moin/PythonEventsCalendar#Submitting_an_Event" title="">Submit an Event</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-8">
+        <a href="https://www.python.org/dev/" >Contributing</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="http://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://bugs.python.org/" title="">Issue Tracker</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://mail.python.org/mailman/listinfo/python-dev" title="">python-dev list</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pythonmentors.com/" title="">Core Mentorship</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+</ul>
+
+
+                    <a id="back-to-top-2" class="jump-link" href="#python-network"><span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> Back to Top</a>
+                    
+
+                </div><!-- end .container -->
+            </div> <!-- end .main-footer-links -->
+
+            <div class="site-base">
+                <div class="container">
+                    
+                    <ul class="footer-links navigation menu do-not-print" role="tree">
+                        <li class="tier-1 element-1"><a href="https://www.python.org/about/help/">Help &amp; <span class="say-no-more">General</span> Contact</a></li>
+                        <li class="tier-1 element-2"><a href="https://www.python.org/community/diversity/">Diversity <span class="say-no-more">Initiatives</span></a></li>
+                        <li class="tier-1 element-3"><a href="https://github.com/python/pythondotorg/issues">Submit Website Bug</a></li>
+                        <!--<li class="tier-1 element-3"><a href="#"><span class="say-no-more">Website</span> Colophon</a></li>-->
+                    </ul>
+
+                    <div class="copyright">
+                        <p><small>
+                            <span class="pre">Copyright &copy;2001-2015.</span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/psf-landing/">Python Software Foundation</a></span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/about/legal/">Legal Statements</a></span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/privacy/">Privacy Policy</a></span>
+                        </small></p>
+                    </div>
+
+                </div><!-- end .container -->
+            </div><!-- end .site-base -->
+
+        </footer>
+
+    </div><!-- end #touchnav-wrapper -->
+
+    
+    <script src="../../../../ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="../../../static/js/libs/jquery-1.8.2.min.js"><\/script>')</script>
+
+    <script src="../../../static/js/libs/masonry.pkgd.min.js"></script>
+
+    <script type="text/javascript" src="../../../static/js/main-min.js" charset="utf-8"></script>
+    
+
+    <!--[if lte IE 7]>
+    <script type="text/javascript" src="/static/js/plugins/IE8-min.js" charset="utf-8"></script>
+    
+    
+    <![endif]-->
+
+    <!--[if lte IE 8]>
+    <script type="text/javascript" src="/static/js/plugins/getComputedStyle-min.js" charset="utf-8"></script>
+    
+    
+    <![endif]-->
+
+    
+
+    
+    
+
+</body>
+</html>

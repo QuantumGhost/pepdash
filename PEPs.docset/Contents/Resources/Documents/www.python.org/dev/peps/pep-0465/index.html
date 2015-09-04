@@ -1,0 +1,4624 @@
+<!doctype html>
+<!--[if lt IE 7]>   <html class="no-js ie6 lt-ie7 lt-ie8 lt-ie9">   <![endif]-->
+<!--[if IE 7]>      <html class="no-js ie7 lt-ie8 lt-ie9">          <![endif]-->
+<!--[if IE 8]>      <html class="no-js ie8 lt-ie9">                 <![endif]-->
+<!--[if gt IE 8]><!--><html class="no-js" lang="en" dir="ltr">  <!--<![endif]-->
+
+
+<!-- Mirrored from www.python.org/dev/peps/pep-0465/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 03 Sep 2015 04:34:50 GMT -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <link rel="prefetch" href="../../../../ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js">
+
+    <meta name="application-name" content="Python.org">
+    <meta name="msapplication-tooltip" content="The official home of the Python Programming Language">
+    <meta name="apple-mobile-web-app-title" content="Python.org">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="format-detection" content="telephone=no">
+    <meta http-equiv="cleartype" content="on">
+    <meta http-equiv="imagetoolbar" content="false">
+
+    <script src="../../../static/js/libs/modernizr.js"></script>
+
+    <link href="../../../static/stylesheets/style.css" rel="stylesheet" type="text/css" title="default" />
+    <link href="../../../static/stylesheets/mq.css" rel="stylesheet" type="text/css" media="not print, braille, embossed, speech, tty" />
+    
+
+    <!--[if (lte IE 8)&(!IEMobile)]>
+    <link href="/static/stylesheets/no-mq.css" rel="stylesheet" type="text/css" media="screen" />
+    
+    
+    <![endif]-->
+
+    
+    <link rel="icon" type="image/x-icon" href="https://www.python.org/static/favicon.ico">
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="../../../static/apple-touch-icon-144x144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="../../../static/apple-touch-icon-114x114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="../../../static/apple-touch-icon-72x72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="../../../static/apple-touch-icon-precomposed.png">
+    <link rel="apple-touch-icon" href="../../../static/apple-touch-icon-precomposed.png">
+
+    
+    <meta name="msapplication-TileImage" content="/static/metro-icon-144x144-precomposed.png"><!-- white shape -->
+    <meta name="msapplication-TileColor" content="#3673a5"><!-- python blue -->
+    <meta name="msapplication-navbutton-color" content="#3673a5">
+
+    <meta property="og:site_name" content="Python.org">
+    <meta property="og:type" content="website">
+
+    <title>PEP 0465 -- A dedicated infix operator for matrix multiplication | Python.org</title>
+    <meta property="og:title" content="Welcome to Python.org">
+
+    
+    <meta name="description" content="The official home of the Python Programming Language">
+    <meta name="og:description" content="The official home of the Python Programming Language">
+    <meta name="keywords" content="Python programming language object oriented web free open source software license documentation download community">
+    <meta property="og:tag" content="Python programming language object oriented web free open source software license documentation download community">
+    <meta property="og:published_time" content="">
+    <meta property="og:modified_time" content="">
+    <meta property="og:author" content="">
+    <meta property="og:section" content=""> 
+    <meta property="og:url" content="">
+    <meta property="og:image" content="">
+    <meta property="og:video" content="">
+
+    <link rel="author" href="https://www.python.org/static/humans.txt">
+
+    
+
+    
+    <script type="application/ld+json">
+     {
+       "@context": "http://schema.org",
+       "@type": "WebSite",
+       "url": "https://www.python.org/",
+       "potentialAction": {
+         "@type": "SearchAction",
+         "target": "https://www.python.org/search/?q={search_term_string}",
+         "query-input": "required name=search_term_string"
+       }
+     }
+    </script>
+
+    
+    <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-39055973-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+    </script>
+    
+</head>
+
+<body class="python pages pep-page">
+
+    <div id="touchnav-wrapper">
+
+        <div id="nojs" class="do-not-print">
+            <p><strong>Notice:</strong> While Javascript is not essential for this website, your interaction with the content will be limited. Please turn Javascript on for the full experience. </p>
+        </div>
+
+        <!--[if lt IE 8]>
+        <div id="oldie-warning" class="do-not-print">
+            <p><strong>Notice:</strong> Your browser is <em>ancient</em> and <a href="http://www.ie6countdown.com/">Microsoft agrees</a>. <a href="http://browsehappy.com/">Upgrade to a different browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to experience a better web.</p>
+        </div>
+        <![endif]-->
+
+        <!-- Sister Site Links -->
+        <div id="top" class="top-bar do-not-print">
+
+            <nav class="meta-navigation container" role="navigation">
+
+                
+                <div class="skip-link screen-reader-text">
+                    <a href="#content" title="Skip to content">Skip to content</a>
+                </div>
+
+                
+                <a id="close-python-network" class="jump-link" href="#python-network" aria-hidden="true">
+                    <span aria-hidden="true" class="icon-arrow-down"><span>&#9660;</span></span> Close
+                </a>
+
+                
+
+<ul class="menu" role="tree">
+    
+    <li class="python-meta ">
+        <a href="https://www.python.org/" title="The Python Programming Language" >Python</a>
+    </li>
+    
+    <li class="psf-meta ">
+        <a href="https://www.python.org/psf-landing/" title="The Python Software Foundation" >PSF</a>
+    </li>
+    
+    <li class="docs-meta ">
+        <a href="https://docs.python.org/" title="Python Documentation" >Docs</a>
+    </li>
+    
+    <li class="pypi-meta ">
+        <a href="https://pypi.python.org/" title="Python Package Index" >PyPI</a>
+    </li>
+    
+    <li class="jobs-meta ">
+        <a href="https://www.python.org/jobs/" title="Python Job Board" >Jobs</a>
+    </li>
+    
+    <li class="shop-meta ">
+        <a href="https://www.python.org/community/" title="Python Community" >Community</a>
+    </li>
+    
+</ul>
+
+
+                <a id="python-network" class="jump-link" href="#top" aria-hidden="true">
+                    <span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> The Python Network
+                </a>
+
+            </nav>
+
+        </div>
+
+        <!-- Header elements -->
+        <header class="main-header" role="banner">
+            <div class="container">
+
+                <h1 class="site-headline">
+                    <a href="https://www.python.org/"><img class="python-logo" src="../../../static/img/python-logo.png" alt="python&trade;"></a>
+                </h1>
+
+                <div class="options-bar do-not-print">
+
+                    
+                    <a id="site-map-link" class="jump-to-menu" href="#site-map"><span class="menu-icon">&equiv;</span> Menu</a><form class="search-the-site" action="https://www.python.org/search/" method="get">
+                        <fieldset title="Search Python.org">
+
+                            <span aria-hidden="true" class="icon-search"></span>
+
+                            <label class="screen-reader-text" for="id-search-field">Search This Site</label>
+                            <input id="id-search-field" name="q" type="search" role="textbox" class="search-field" placeholder="Search" value="" tabindex="1">
+
+                            <button type="submit" name="submit" id="submit" class="search-button" title="Submit this Search" tabindex="3">
+                                GO
+                            </button>
+
+                            
+                            <!--[if IE]><input type="text" style="display: none;" disabled="disabled" size="1" tabindex="4"><![endif]-->
+
+                        </fieldset>
+                    </form><span class="breaker"></span><div class="adjust-font-size" aria-hidden="true">
+                        <ul class="navigation menu" aria-label="Adjust Text Size on Page">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                <a href="#" class="action-trigger"><strong><small>A</small> A</strong></a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a class="text-shrink" title="Make Text Smaller" href="javascript:;">Smaller</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a class="text-grow" title="Make Text Larger" href="javascript:;">Larger</a></li>
+                                    <li class="tier-2 element-3" role="treeitem"><a class="text-reset" title="Reset any font size changes I have made" href="javascript:;">Reset</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div><div class="winkwink-nudgenudge">
+                        <ul class="navigation menu" aria-label="Social Media Navigation">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                <a href="#" class="action-trigger">Socialize</a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a href="http://plus.google.com/+Python"><span aria-hidden="true" class="icon-google-plus"></span>Google+</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a href="http://www.facebook.com/pythonlang?fref=ts"><span aria-hidden="true" class="icon-facebook"></span>Facebook</a></li>
+                                    <li class="tier-2 element-3" role="treeitem"><a href="http://twitter.com/ThePSF"><span aria-hidden="true" class="icon-twitter"></span>Twitter</a></li>
+                                    <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/irc/"><span aria-hidden="true" class="icon-freenode"></span>Chat on IRC</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div><div class="account-signin">
+                        <ul class="navigation menu" aria-label="Social Media Navigation">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                
+                                <a href="https://www.python.org/accounts/login/" title="Sign Up or Sign In to Python.org">Sign In</a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/accounts/signup/">Sign Up / Register</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/accounts/login/">Sign In</a></li>
+                                </ul>
+                                
+                            </li>
+                        </ul>
+                    </div>
+
+                </div><!-- end options-bar -->
+
+                <nav id="mainnav" class="python-navigation main-navigation do-not-print" role="navigation">
+                    
+                        
+<ul class="navigation menu" role="menubar" aria-label="Main Navigation">
+  
+    
+    
+    <li id="about" class="tier-1 element-1  " aria-haspopup="true">
+        <a href="https://www.python.org/about/" title="" class="">About</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/apps/" title="">Applications</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/quotes/" title="">Quotes</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/gettingstarted/" title="">Getting Started</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/help/" title="">Help</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="downloads" class="tier-1 element-2  " aria-haspopup="true">
+        <a href="https://www.python.org/downloads/" title="" class="">Downloads</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/downloads/" title="">All releases</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/downloads/source/" title="">Source code</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/downloads/windows/" title="">Windows</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/downloads/mac-osx/" title="">Mac OS X</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/download/other/" title="">Other Platforms</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://docs.python.org/3/license.html" title="">License</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/download/alternatives" title="">Alternative Implementations</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="documentation" class="tier-1 element-3  " aria-haspopup="true">
+        <a href="https://www.python.org/doc/" title="" class="">Documentation</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/doc/" title="">Docs</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/doc/av" title="">Audio/Visual Talks</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://wiki.python.org/moin/BeginnersGuide" title="">Beginner&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://docs.python.org/faq/" title="">FAQ</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="http://wiki.python.org/moin/Languages" title="">Non-English Docs</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="../index.html" title="">PEP Index</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://wiki.python.org/moin/PythonBooks" title="">Python Books</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="community" class="tier-1 element-4  " aria-haspopup="true">
+        <a href="https://www.python.org/community/" title="" class="">Community</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/community/diversity/" title="">Diversity</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/community/irc/" title="">IRC</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/community/lists/" title="">Mailing Lists</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/workshops/" title="">Python Conferences</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/community/sigs/" title="">Special Interest Groups</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://wiki.python.org/moin/" title="">Python Wiki</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/community/logos/" title="">Python Logo</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://www.python.org/community/merchandise/" title="">Merchandise</a></li>
+    
+        <li class="tier-2 element-9" role="treeitem"><a href="https://www.python.org/community/awards" title="">Community Awards</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="success-stories" class="tier-1 element-5  " aria-haspopup="true">
+        <a href="https://www.python.org/about/success/" title="success-stories" class="">Success Stories</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/success/#arts" title="">Arts</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/success/#business" title="">Business</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/success/#education" title="">Education</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/success/#engineering" title="">Engineering</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/about/success/#government" title="">Government</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://www.python.org/about/success/#scientific" title="">Scientific</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/about/success/#software-development" title="">Software Development</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="news" class="tier-1 element-6  " aria-haspopup="true">
+        <a href="https://www.python.org/blogs/" title="News from around the Python world" class="">News</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/blogs/" title="Python Insider Blog Posts">Python News</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://planetpython.org/" title="Planet Python">Community News</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="http://pyfound.blogspot.com/" title="PSF Blog">PSF News</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pycon.blogspot.com/" title="PyCon Blog">PyCon News</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="events" class="tier-1 element-7  " aria-haspopup="true">
+        <a href="https://www.python.org/events/" title="" class="">Events</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/events/python-events/" title="">Python Events</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/events/python-user-group/" title="">User Group Events</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/events/python-events/past/" title="">Python Events Archive</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/events/python-user-group/past/" title="">User Group Events Archive</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://wiki.python.org/moin/PythonEventsCalendar#Submitting_an_Event" title="">Submit an Event</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    
+  
+</ul>
+
+                    
+                </nav>
+
+                <div class="header-banner "> <!-- for optional "do-not-print" class -->
+                    
+                    
+                </div>
+
+                
+                
+
+             </div><!-- end .container -->
+        </header>
+
+        <div id="content" class="content-wrapper">
+            <!-- Main Content Column -->
+            <div class="container">
+
+                <section class="main-content with-left-sidebar" role="main">
+
+                    
+<ul class="breadcrumbs menu">
+    <li>
+        <a href="https://www.python.org/" title="The Python Programming Language">Python</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>
+        <a href="https://www.python.org/dev/">Python Developer's Guide</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>
+        <a href="../index.html">PEP Index</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>PEP 0465 -- A dedicated infix operator for matrix multiplication</li>
+</ul>
+
+
+                    
+<style>
+   .pep-page pre {
+        padding: .5em;
+        background: inherit;
+        border-left: 0px;
+        -webkit-box-shadow: 0 0 0 0;
+        -moz-box-shadow: 0 0 0 0;
+        box-shadow: 0 0 0 0;
+   }
+</style>
+
+    
+    <article class="text">
+        
+
+        <header class="article-header">
+            <h1 class="page-title">PEP 0465 -- A dedicated infix operator for matrix multiplication</h1>
+        </header>
+
+        <!--
+This HTML is auto-generated.  DO NOT EDIT THIS FILE!  If you are writing a new
+PEP, see http://www.python.org/dev/peps/pep-0001 for instructions and links
+to templates.  DO NOT USE THIS HTML FILE AS YOUR TEMPLATE!
+-->
+<html>
+ <body>
+  <table class="rfc2822 docutils field-list" frame="void" rules="none">
+   <col class="field-name">
+   </col>
+   <col class="field-body">
+   </col>
+   <tbody valign="top">
+    <tr class="field">
+     <th class="field-name">
+      PEP:
+     </th>
+     <td class="field-body">
+      465
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Title:
+     </th>
+     <td class="field-body">
+      A dedicated infix operator for matrix multiplication
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Author:
+     </th>
+     <td class="field-body">
+      Nathaniel J. Smith &lt;njs at pobox.com&gt;
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Status:
+     </th>
+     <td class="field-body">
+      Final
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Type:
+     </th>
+     <td class="field-body">
+      Standards Track
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Created:
+     </th>
+     <td class="field-body">
+      20-Feb-2014
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Python-Version:
+     </th>
+     <td class="field-body">
+      3.5
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Post-History:
+     </th>
+     <td class="field-body">
+      13-Mar-2014
+     </td>
+    </tr>
+   </tbody>
+  </table>
+  <hr/>
+  <div class="contents topic" id="contents">
+   <p class="topic-title first">
+    Contents
+   </p>
+   <ul class="simple">
+    <li>
+     <a class="reference internal" href="#abstract" id="id23">
+      Abstract
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#specification" id="id24">
+      Specification
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#motivation" id="id25">
+      Motivation
+     </a>
+     <ul>
+      <li>
+       <a class="reference internal" href="#executive-summary" id="id26">
+        Executive summary
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#background-what-s-wrong-with-the-status-quo" id="id27">
+        Background: What's wrong with the status quo?
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#why-should-matrix-multiplication-be-infix" id="id28">
+        Why should matrix multiplication be infix?
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#transparent-syntax-is-especially-crucial-for-non-expert-programmers" id="id29">
+        Transparent syntax is especially crucial for non-expert programmers
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#but-isn-t-matrix-multiplication-a-pretty-niche-requirement" id="id30">
+        But isn't matrix multiplication a pretty niche requirement?
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#so-is-good-for-matrix-formulas-but-how-common-are-those-really" id="id31">
+        So
+        <tt class="docutils literal">
+         @
+        </tt>
+        is good for matrix formulas, but how common are those really?
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#but-isn-t-it-weird-to-add-an-operator-with-no-stdlib-uses" id="id32">
+        But isn't it weird to add an operator with no stdlib uses?
+       </a>
+      </li>
+     </ul>
+    </li>
+    <li>
+     <a class="reference internal" href="#compatibility-considerations" id="id33">
+      Compatibility considerations
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#intended-usage-details" id="id34">
+      Intended usage details
+     </a>
+     <ul>
+      <li>
+       <a class="reference internal" href="#semantics" id="id35">
+        Semantics
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#adoption" id="id36">
+        Adoption
+       </a>
+      </li>
+     </ul>
+    </li>
+    <li>
+     <a class="reference internal" href="#implementation-details" id="id37">
+      Implementation details
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#rationale-for-specification-details" id="id38">
+      Rationale for specification details
+     </a>
+     <ul>
+      <li>
+       <a class="reference internal" href="#choice-of-operator" id="id39">
+        Choice of operator
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#precedence-and-associativity" id="id40">
+        Precedence and associativity
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#non-definitions-for-built-in-types" id="id41">
+        (Non)-Definitions for built-in types
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#non-definition-of-matrix-power" id="id42">
+        Non-definition of matrix power
+       </a>
+      </li>
+     </ul>
+    </li>
+    <li>
+     <a class="reference internal" href="#rejected-alternatives-to-adding-a-new-operator" id="id43">
+      Rejected alternatives to adding a new operator
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#discussions-of-this-pep" id="id44">
+      Discussions of this PEP
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#references" id="id45">
+      References
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#copyright" id="id46">
+      Copyright
+     </a>
+    </li>
+   </ul>
+  </div>
+  <div class="section" id="abstract">
+   <h1>
+    <a class="toc-backref" href="#id23">
+     Abstract
+    </a>
+   </h1>
+   <p>
+    This PEP proposes a new binary operator to be used for matrix
+multiplication, called
+    <tt class="docutils literal">
+     @
+    </tt>
+    .  (Mnemonic:
+    <tt class="docutils literal">
+     @
+    </tt>
+    is
+    <tt class="docutils literal">
+     *
+    </tt>
+    for
+mATrices.)
+   </p>
+  </div>
+  <div class="section" id="specification">
+   <h1>
+    <a class="toc-backref" href="#id24">
+     Specification
+    </a>
+   </h1>
+   <p>
+    A new binary operator is added to the Python language, together
+with the corresponding in-place version:
+   </p>
+   <table border="1" class="docutils">
+    <colgroup>
+     <col width="11%">
+     </col>
+     <col width="40%">
+     </col>
+     <col width="49%">
+     </col>
+    </colgroup>
+    <thead valign="bottom">
+     <tr>
+      <th class="head">
+       Op
+      </th>
+      <th class="head">
+       Precedence/associativity
+      </th>
+      <th class="head">
+       Methods
+      </th>
+     </tr>
+    </thead>
+    <tbody valign="top">
+     <tr>
+      <td>
+       <tt class="docutils literal">
+        @
+       </tt>
+      </td>
+      <td>
+       Same as
+       <tt class="docutils literal">
+        *
+       </tt>
+      </td>
+      <td>
+       <tt class="docutils literal">
+        __matmul__
+       </tt>
+       ,
+       <tt class="docutils literal">
+        __rmatmul__
+       </tt>
+      </td>
+     </tr>
+     <tr>
+      <td>
+       <tt class="docutils literal">
+        @=
+       </tt>
+      </td>
+      <td>
+       n/a
+      </td>
+      <td>
+       <tt class="docutils literal">
+        __imatmul__
+       </tt>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <p>
+    No implementations of these methods are added to the builtin or
+standard library types.  However, a number of projects have reached
+consensus on the recommended semantics for these operations; see
+    <a class="reference internal" href="#intended-usage-details">
+     Intended usage details
+    </a>
+    below for details.
+   </p>
+   <p>
+    For details on how this operator will be implemented in CPython, see
+    <a class="reference internal" href="#implementation-details">
+     Implementation details
+    </a>
+    .
+   </p>
+  </div>
+  <div class="section" id="motivation">
+   <h1>
+    <a class="toc-backref" href="#id25">
+     Motivation
+    </a>
+   </h1>
+   <div class="section" id="executive-summary">
+    <h2>
+     <a class="toc-backref" href="#id26">
+      Executive summary
+     </a>
+    </h2>
+    <p>
+     In numerical code, there are two important operations which compete
+for use of Python's
+     <tt class="docutils literal">
+      *
+     </tt>
+     operator: elementwise multiplication, and
+matrix multiplication.  In the nearly twenty years since the Numeric
+library was first proposed, there have been many attempts to resolve
+this tension
+     <a class="footnote-reference" href="#hugunin" id="id1">
+      [13]
+     </a>
+     ; none have been really satisfactory.
+Currently, most numerical Python code uses
+     <tt class="docutils literal">
+      *
+     </tt>
+     for elementwise
+multiplication, and function/method syntax for matrix multiplication;
+however, this leads to ugly and unreadable code in common
+circumstances.  The problem is bad enough that significant amounts of
+code continue to use the opposite convention (which has the virtue of
+producing ugly and unreadable code in
+     <em>
+      different
+     </em>
+     circumstances), and
+this API fragmentation across codebases then creates yet more
+problems.  There does not seem to be any
+     <em>
+      good
+     </em>
+     solution to the
+problem of designing a numerical API within current Python syntax --
+only a landscape of options that are bad in different ways.  The
+minimal change to Python syntax which is sufficient to resolve these
+problems is the addition of a single new infix operator for matrix
+multiplication.
+    </p>
+    <p>
+     Matrix multiplication has a singular combination of features which
+distinguish it from other binary operations, which together provide a
+uniquely compelling case for the addition of a dedicated infix
+operator:
+    </p>
+    <ul class="simple">
+     <li>
+      Just as for the existing numerical operators, there exists a vast
+body of prior art supporting the use of infix notation for matrix
+multiplication across all fields of mathematics, science, and
+engineering;
+      <tt class="docutils literal">
+       @
+      </tt>
+      harmoniously fills a hole in Python's existing
+operator system.
+     </li>
+     <li>
+      <tt class="docutils literal">
+       @
+      </tt>
+      greatly clarifies real-world code.
+     </li>
+     <li>
+      <tt class="docutils literal">
+       @
+      </tt>
+      provides a smoother onramp for less experienced users, who are
+particularly harmed by hard-to-read code and API fragmentation.
+     </li>
+     <li>
+      <tt class="docutils literal">
+       @
+      </tt>
+      benefits a substantial and growing portion of the Python user
+community.
+     </li>
+     <li>
+      <tt class="docutils literal">
+       @
+      </tt>
+      will be used frequently -- in fact, evidence suggests it may
+be used more frequently than
+      <tt class="docutils literal">
+       //
+      </tt>
+      or the bitwise operators.
+     </li>
+     <li>
+      <tt class="docutils literal">
+       @
+      </tt>
+      allows the Python numerical community to reduce fragmentation,
+and finally standardize on a single consensus duck type for all
+numerical array objects.
+     </li>
+    </ul>
+   </div>
+   <div class="section" id="background-what-s-wrong-with-the-status-quo">
+    <h2>
+     <a class="toc-backref" href="#id27">
+      Background: What's wrong with the status quo?
+     </a>
+    </h2>
+    <p>
+     When we crunch numbers on a computer, we usually have lots and lots of
+numbers to deal with.  Trying to deal with them one at a time is
+cumbersome and slow -- especially when using an interpreted language.
+Instead, we want the ability to write down simple operations that
+apply to large collections of numbers all at once.  The
+     <em>
+      n-dimensional
+array
+     </em>
+     is the basic object that all popular numeric computing
+environments use to make this possible.  Python has several libraries
+that provide such arrays, with numpy being at present the most
+prominent.
+    </p>
+    <p>
+     When working with n-dimensional arrays, there are two different ways
+we might want to define multiplication.  One is elementwise
+multiplication:
+    </p>
+    <pre class="literal-block">
+[[1, 2],     [[11, 12],     [[1 * 11, 2 * 12],
+ [3, 4]]  x   [13, 14]]  =   [3 * 13, 4 * 14]]
+</pre>
+    <p>
+     and the other is
+     <a class="reference external" href="https://en.wikipedia.org/wiki/Matrix_multiplication">
+      matrix multiplication
+     </a>
+     <a class="footnote-reference" href="#id19" id="id20">
+      [19]
+     </a>
+     :
+    </p>
+    <pre class="literal-block">
+[[1, 2],     [[11, 12],     [[1 * 11 + 2 * 13, 1 * 12 + 2 * 14],
+ [3, 4]]  x   [13, 14]]  =   [3 * 11 + 4 * 13, 3 * 12 + 4 * 14]]
+</pre>
+    <p>
+     Elementwise multiplication is useful because it lets us easily and
+quickly perform many multiplications on a large collection of values,
+without writing a slow and cumbersome
+     <tt class="docutils literal">
+      for
+     </tt>
+     loop.  And this works as
+part of a very general schema: when using the array objects provided
+by numpy or other numerical libraries, all Python operators work
+elementwise on arrays of all dimensionalities.  The result is that one
+can write functions using straightforward code like
+     <tt class="docutils literal">
+      a * b + c / d
+     </tt>
+     ,
+treating the variables as if they were simple values, but then
+immediately use this function to efficiently perform this calculation
+on large collections of values, while keeping them organized using
+whatever arbitrarily complex array layout works best for the problem
+at hand.
+    </p>
+    <p>
+     Matrix multiplication is more of a special case.  It's only defined on
+2d arrays (also known as "matrices"), and multiplication is the only
+operation that has an important "matrix" version -- "matrix addition"
+is the same as elementwise addition; there is no such thing as "matrix
+bitwise-or" or "matrix floordiv"; "matrix division" and "matrix
+to-the-power-of" can be defined but are not very useful, etc.
+However, matrix multiplication is still used very heavily across all
+numerical application areas; mathematically, it's one of the most
+fundamental operations there is.
+    </p>
+    <p>
+     Because Python syntax currently allows for only a single
+multiplication operator
+     <tt class="docutils literal">
+      *
+     </tt>
+     , libraries providing array-like objects
+must decide: either use
+     <tt class="docutils literal">
+      *
+     </tt>
+     for elementwise multiplication, or use
+     <tt class="docutils literal">
+      *
+     </tt>
+     for matrix multiplication.  And, unfortunately, it turns out
+that when doing general-purpose number crunching, both operations are
+used frequently, and there are major advantages to using infix rather
+than function call syntax in both cases.  Thus it is not at all clear
+which convention is optimal, or even acceptable; often it varies on a
+case-by-case basis.
+    </p>
+    <p>
+     Nonetheless, network effects mean that it is very important that we
+pick
+     <em>
+      just one
+     </em>
+     convention.  In numpy, for example, it is technically
+possible to switch between the conventions, because numpy provides two
+different types with different
+     <tt class="docutils literal">
+      __mul__
+     </tt>
+     methods.  For
+     <tt class="docutils literal">
+      numpy.ndarray
+     </tt>
+     objects,
+     <tt class="docutils literal">
+      *
+     </tt>
+     performs elementwise multiplication,
+and matrix multiplication must use a function call (
+     <tt class="docutils literal">
+      numpy.dot
+     </tt>
+     ).
+For
+     <tt class="docutils literal">
+      numpy.matrix
+     </tt>
+     objects,
+     <tt class="docutils literal">
+      *
+     </tt>
+     performs matrix multiplication,
+and elementwise multiplication requires function syntax.  Writing code
+using
+     <tt class="docutils literal">
+      numpy.ndarray
+     </tt>
+     works fine.  Writing code using
+     <tt class="docutils literal">
+      numpy.matrix
+     </tt>
+     also works fine.  But trouble begins as soon as we
+try to integrate these two pieces of code together.  Code that expects
+an
+     <tt class="docutils literal">
+      ndarray
+     </tt>
+     and gets a
+     <tt class="docutils literal">
+      matrix
+     </tt>
+     , or vice-versa, may crash or
+return incorrect results.  Keeping track of which functions expect
+which types as inputs, and return which types as outputs, and then
+converting back and forth all the time, is incredibly cumbersome and
+impossible to get right at any scale.  Functions that defensively try
+to handle both types as input and DTRT, find themselves floundering
+into a swamp of
+     <tt class="docutils literal">
+      isinstance
+     </tt>
+     and
+     <tt class="docutils literal">
+      if
+     </tt>
+     statements.
+    </p>
+    <p>
+     <a class="reference external" href="../pep-0238/index.html">
+      PEP 238
+     </a>
+     split
+     <tt class="docutils literal">
+      /
+     </tt>
+     into two operators:
+     <tt class="docutils literal">
+      /
+     </tt>
+     and
+     <tt class="docutils literal">
+      //
+     </tt>
+     .  Imagine the
+chaos that would have resulted if it had instead split
+     <tt class="docutils literal">
+      int
+     </tt>
+     into
+two types:
+     <tt class="docutils literal">
+      classic_int
+     </tt>
+     , whose
+     <tt class="docutils literal">
+      __div__
+     </tt>
+     implemented floor
+division, and
+     <tt class="docutils literal">
+      new_int
+     </tt>
+     , whose
+     <tt class="docutils literal">
+      __div__
+     </tt>
+     implemented true
+division.  This, in a more limited way, is the situation that Python
+number-crunchers currently find themselves in.
+    </p>
+    <p>
+     In practice, the vast majority of projects have settled on the
+convention of using
+     <tt class="docutils literal">
+      *
+     </tt>
+     for elementwise multiplication, and function
+call syntax for matrix multiplication (e.g., using
+     <tt class="docutils literal">
+      numpy.ndarray
+     </tt>
+     instead of
+     <tt class="docutils literal">
+      numpy.matrix
+     </tt>
+     ).  This reduces the problems caused by API
+fragmentation, but it doesn't eliminate them.  The strong desire to
+use infix notation for matrix multiplication has caused a number of
+specialized array libraries to continue to use the opposing convention
+(e.g., scipy.sparse, pyoperators, pyviennacl) despite the problems
+this causes, and
+     <tt class="docutils literal">
+      numpy.matrix
+     </tt>
+     itself still gets used in
+introductory programming courses, often appears in StackOverflow
+answers, and so forth.  Well-written libraries thus must continue to
+be prepared to deal with both types of objects, and, of course, are
+also stuck using unpleasant funcall syntax for matrix multiplication.
+After nearly two decades of trying, the numerical community has still
+not found any way to resolve these problems within the constraints of
+current Python syntax (see
+     <a class="reference internal" href="#rejected-alternatives-to-adding-a-new-operator">
+      Rejected alternatives to adding a new
+operator
+     </a>
+     below).
+    </p>
+    <p>
+     This PEP proposes the minimum effective change to Python syntax that
+will allow us to drain this swamp.  It splits
+     <tt class="docutils literal">
+      *
+     </tt>
+     into two
+operators, just as was done for
+     <tt class="docutils literal">
+      /
+     </tt>
+     :
+     <tt class="docutils literal">
+      *
+     </tt>
+     for elementwise
+multiplication, and
+     <tt class="docutils literal">
+      @
+     </tt>
+     for matrix multiplication.  (Why not the
+reverse?  Because this way is compatible with the existing consensus,
+and because it gives us a consistent rule that all the built-in
+numeric operators also apply in an elementwise manner to arrays; the
+reverse convention would lead to more special cases.)
+    </p>
+    <p>
+     So that's why matrix multiplication doesn't and can't just use
+     <tt class="docutils literal">
+      *
+     </tt>
+     .
+Now, in the the rest of this section, we'll explain why it nonetheless
+meets the high bar for adding a new operator.
+    </p>
+   </div>
+   <div class="section" id="why-should-matrix-multiplication-be-infix">
+    <h2>
+     <a class="toc-backref" href="#id28">
+      Why should matrix multiplication be infix?
+     </a>
+    </h2>
+    <p>
+     Right now, most numerical code in Python uses syntax like
+     <tt class="docutils literal">
+      numpy.dot(a, b)
+     </tt>
+     or
+     <tt class="docutils literal">
+      a.dot(b)
+     </tt>
+     to perform matrix multiplication.
+This obviously works, so why do people make such a fuss about it, even
+to the point of creating API fragmentation and compatibility swamps?
+    </p>
+    <p>
+     Matrix multiplication shares two features with ordinary arithmetic
+operations like addition and multiplication on numbers: (a) it is used
+very heavily in numerical programs -- often multiple times per line of
+code -- and (b) it has an ancient and universally adopted tradition of
+being written using infix syntax.  This is because, for typical
+formulas, this notation is dramatically more readable than any
+function call syntax.  Here's an example to demonstrate:
+    </p>
+    <p>
+     One of the most useful tools for testing a statistical hypothesis is
+the linear hypothesis test for OLS regression models.  It doesn't
+really matter what all those words I just said mean; if we find
+ourselves having to implement this thing, what we'll do is look up
+some textbook or paper on it, and encounter many mathematical formulas
+that look like:
+    </p>
+    <div class="formula">
+     <i>
+      S
+     </i>
+     = (
+     <i>
+      H
+     </i>
+     <i>
+      β
+     </i>
+     −
+     <i>
+      r
+     </i>
+     )
+     <sup>
+      <i>
+       T
+      </i>
+     </sup>
+     (
+     <i>
+      H
+     </i>
+     <i>
+      V
+     </i>
+     <i>
+      H
+     </i>
+     <sup>
+      <i>
+       T
+      </i>
+     </sup>
+     )
+     <sup>
+      − 1
+     </sup>
+     (
+     <i>
+      H
+     </i>
+     <i>
+      β
+     </i>
+     −
+     <i>
+      r
+     </i>
+     )
+    </div>
+    <p>
+     Here the various variables are all vectors or matrices (details for
+the curious:
+     <a class="footnote-reference" href="#lht" id="id2">
+      [5]
+     </a>
+     ).
+    </p>
+    <p>
+     Now we need to write code to perform this calculation. In current
+numpy, matrix multiplication can be performed using either the
+function or method call syntax. Neither provides a particularly
+readable translation of the formula:
+    </p>
+    <pre class="literal-block">
+import numpy as np
+from numpy.linalg import inv, solve
+
+# Using dot function:
+S = np.dot((np.dot(H, beta) - r).T,
+           np.dot(inv(np.dot(np.dot(H, V), H.T)), np.dot(H, beta) - r))
+
+# Using dot method:
+S = (H.dot(beta) - r).T.dot(inv(H.dot(V).dot(H.T))).dot(H.dot(beta) - r)
+</pre>
+    <p>
+     With the
+     <tt class="docutils literal">
+      @
+     </tt>
+     operator, the direct translation of the above formula
+becomes:
+    </p>
+    <pre class="literal-block">
+S = (H @ beta - r).T @ inv(H @ V @ H.T) @ (H @ beta - r)
+</pre>
+    <p>
+     Notice that there is now a transparent, 1-to-1 mapping between the
+symbols in the original formula and the code that implements it.
+    </p>
+    <p>
+     Of course, an experienced programmer will probably notice that this is
+not the best way to compute this expression.  The repeated computation
+of
+     <span class="formula">
+      <i>
+       H
+      </i>
+      <i>
+       β
+      </i>
+      −
+      <i>
+       r
+      </i>
+     </span>
+     should perhaps be factored out; and,
+expressions of the form
+     <tt class="docutils literal">
+      dot(inv(A), B)
+     </tt>
+     should almost always be
+replaced by the more numerically stable
+     <tt class="docutils literal">
+      solve(A, B)
+     </tt>
+     .  When using
+     <tt class="docutils literal">
+      @
+     </tt>
+     , performing these two refactorings gives us:
+    </p>
+    <pre class="literal-block">
+# Version 1 (as above)
+S = (H @ beta - r).T @ inv(H @ V @ H.T) @ (H @ beta - r)
+
+# Version 2
+trans_coef = H @ beta - r
+S = trans_coef.T @ inv(H @ V @ H.T) @ trans_coef
+
+# Version 3
+S = trans_coef.T @ solve(H @ V @ H.T, trans_coef)
+</pre>
+    <p>
+     Notice that when comparing between each pair of steps, it's very easy
+to see exactly what was changed.  If we apply the equivalent
+transformations to the code using the .dot method, then the changes
+are much harder to read out or verify for correctness:
+    </p>
+    <pre class="literal-block">
+# Version 1 (as above)
+S = (H.dot(beta) - r).T.dot(inv(H.dot(V).dot(H.T))).dot(H.dot(beta) - r)
+
+# Version 2
+trans_coef = H.dot(beta) - r
+S = trans_coef.T.dot(inv(H.dot(V).dot(H.T))).dot(trans_coef)
+
+# Version 3
+S = trans_coef.T.dot(solve(H.dot(V).dot(H.T)), trans_coef)
+</pre>
+    <p>
+     Readability counts!  The statements using
+     <tt class="docutils literal">
+      @
+     </tt>
+     are shorter, contain
+more whitespace, can be directly and easily compared both to each
+other and to the textbook formula, and contain only meaningful
+parentheses.  This last point is particularly important for
+readability: when using function-call syntax, the required parentheses
+on every operation create visual clutter that makes it very difficult
+to parse out the overall structure of the formula by eye, even for a
+relatively simple formula like this one.  Eyes are terrible at parsing
+non-regular languages.  I made and caught many errors while trying to
+write out the 'dot' formulas above.  I know they still contain at
+least one error, maybe more.  (Exercise: find it.  Or them.)  The
+     <tt class="docutils literal">
+      @
+     </tt>
+     examples, by contrast, are not only correct, they're obviously
+correct at a glance.
+    </p>
+    <p>
+     If we are even more sophisticated programmers, and writing code that
+we expect to be reused, then considerations of speed or numerical
+accuracy might lead us to prefer some particular order of evaluation.
+Because
+     <tt class="docutils literal">
+      @
+     </tt>
+     makes it possible to omit irrelevant parentheses, we can
+be certain that if we
+     <em>
+      do
+     </em>
+     write something like
+     <tt class="docutils literal">
+      (H @ V) @ H.T
+     </tt>
+     ,
+then our readers will know that the parentheses must have been added
+intentionally to accomplish some meaningful purpose.  In the
+     <tt class="docutils literal">
+      dot
+     </tt>
+     examples, it's impossible to know which nesting decisions are
+important, and which are arbitrary.
+    </p>
+    <p>
+     Infix
+     <tt class="docutils literal">
+      @
+     </tt>
+     dramatically improves matrix code usability at all stages
+of programmer interaction.
+    </p>
+   </div>
+   <div class="section" id="transparent-syntax-is-especially-crucial-for-non-expert-programmers">
+    <h2>
+     <a class="toc-backref" href="#id29">
+      Transparent syntax is especially crucial for non-expert programmers
+     </a>
+    </h2>
+    <p>
+     A large proportion of scientific code is written by people who are
+experts in their domain, but are not experts in programming.  And
+there are many university courses run each year with titles like "Data
+analysis for social scientists" which assume no programming
+background, and teach some combination of mathematical techniques,
+introduction to programming, and the use of programming to implement
+these mathematical techniques, all within a 10-15 week period.  These
+courses are more and more often being taught in Python rather than
+special-purpose languages like R or Matlab.
+    </p>
+    <p>
+     For these kinds of users, whose programming knowledge is fragile, the
+existence of a transparent mapping between formulas and code often
+means the difference between succeeding and failing to write that code
+at all.  This is so important that such classes often use the
+     <tt class="docutils literal">
+      numpy.matrix
+     </tt>
+     type which defines
+     <tt class="docutils literal">
+      *
+     </tt>
+     to mean matrix
+multiplication, even though this type is buggy and heavily
+disrecommended by the rest of the numpy community for the
+fragmentation that it causes.  This pedagogical use case is, in fact,
+the
+     <em>
+      only
+     </em>
+     reason
+     <tt class="docutils literal">
+      numpy.matrix
+     </tt>
+     remains a supported part of numpy.
+Adding
+     <tt class="docutils literal">
+      @
+     </tt>
+     will benefit both beginning and advanced users with
+better syntax; and furthermore, it will allow both groups to
+standardize on the same notation from the start, providing a smoother
+on-ramp to expertise.
+    </p>
+   </div>
+   <div class="section" id="but-isn-t-matrix-multiplication-a-pretty-niche-requirement">
+    <h2>
+     <a class="toc-backref" href="#id30">
+      But isn't matrix multiplication a pretty niche requirement?
+     </a>
+    </h2>
+    <p>
+     The world is full of continuous data, and computers are increasingly
+called upon to work with it in sophisticated ways.  Arrays are the
+lingua franca of finance, machine learning, 3d graphics, computer
+vision, robotics, operations research, econometrics, meteorology,
+computational linguistics, recommendation systems, neuroscience,
+astronomy, bioinformatics (including genetics, cancer research, drug
+discovery, etc.), physics engines, quantum mechanics, geophysics,
+network analysis, and many other application areas.  In most or all of
+these areas, Python is rapidly becoming a dominant player, in large
+part because of its ability to elegantly mix traditional discrete data
+structures (hash tables, strings, etc.) on an equal footing with
+modern numerical data types and algorithms.
+    </p>
+    <p>
+     We all live in our own little sub-communities, so some Python users
+may be surprised to realize the sheer extent to which Python is used
+for number crunching -- especially since much of this particular
+sub-community's activity occurs outside of traditional Python/FOSS
+channels.  So, to give some rough idea of just how many numerical
+Python programmers are actually out there, here are two numbers: In
+2013, there were 7 international conferences organized specifically on
+numerical Python
+     <a class="footnote-reference" href="#scipy-conf" id="id3">
+      [3]
+     </a>
+     <a class="footnote-reference" href="#pydata-conf" id="id4">
+      [4]
+     </a>
+     .  At PyCon 2014, ~20%
+of the tutorials appear to involve the use of matrices
+     <a class="footnote-reference" href="#pycon-tutorials" id="id5">
+      [6]
+     </a>
+     .
+    </p>
+    <p>
+     To quantify this further, we used Github's "search" function to look
+at what modules are actually imported across a wide range of
+real-world code (i.e., all the code on Github).  We checked for
+imports of several popular stdlib modules, a variety of numerically
+oriented modules, and various other extremely high-profile modules
+like django and lxml (the latter of which is the #1 most downloaded
+package on PyPI).  Starred lines indicate packages which export array-
+or matrix-like objects which will adopt
+     <tt class="docutils literal">
+      @
+     </tt>
+     if this PEP is
+approved:
+    </p>
+    <pre class="literal-block">
+Count of Python source files on Github matching given search terms
+                 (as of 2014-04-10, ~21:00 UTC)
+================ ==========  ===============  =======  ===========
+module           "import X"  "from X import"    total  total/numpy
+================ ==========  ===============  =======  ===========
+sys                 2374638            63301  2437939         5.85
+os                  1971515            37571  2009086         4.82
+re                  1294651             8358  1303009         3.12
+numpy ************** 337916 ********** 79065 * 416981 ******* 1.00
+warnings             298195            73150   371345         0.89
+subprocess           281290            63644   344934         0.83
+django                62795           219302   282097         0.68
+math                 200084            81903   281987         0.68
+threading            212302            45423   257725         0.62
+pickle+cPickle       215349            22672   238021         0.57
+matplotlib           119054            27859   146913         0.35
+sqlalchemy            29842            82850   112692         0.27
+pylab *************** 36754 ********** 41063 ** 77817 ******* 0.19
+scipy *************** 40829 ********** 28263 ** 69092 ******* 0.17
+lxml                  19026            38061    57087         0.14
+zlib                  40486             6623    47109         0.11
+multiprocessing       25247            19850    45097         0.11
+requests              30896              560    31456         0.08
+jinja2                 8057            24047    32104         0.08
+twisted               13858             6404    20262         0.05
+gevent                11309             8529    19838         0.05
+pandas ************** 14923 *********** 4005 ** 18928 ******* 0.05
+sympy                  2779             9537    12316         0.03
+theano *************** 3654 *********** 1828 *** 5482 ******* 0.01
+================ ==========  ===============  =======  ===========
+</pre>
+    <p>
+     These numbers should be taken with several grains of salt (see
+footnote for discussion:
+     <a class="footnote-reference" href="#github-details" id="id6">
+      [12]
+     </a>
+     ), but, to the extent they
+can be trusted, they suggest that
+     <tt class="docutils literal">
+      numpy
+     </tt>
+     might be the single
+most-imported non-stdlib module in the entire Pythonverse; it's even
+more-imported than such stdlib stalwarts as
+     <tt class="docutils literal">
+      subprocess
+     </tt>
+     ,
+     <tt class="docutils literal">
+      math
+     </tt>
+     ,
+     <tt class="docutils literal">
+      pickle
+     </tt>
+     , and
+     <tt class="docutils literal">
+      threading
+     </tt>
+     .  And numpy users represent only a
+subset of the broader numerical community that will benefit from the
+     <tt class="docutils literal">
+      @
+     </tt>
+     operator.  Matrices may once have been a niche data type
+restricted to Fortran programs running in university labs and military
+clusters, but those days are long gone.  Number crunching is a
+mainstream part of modern Python usage.
+    </p>
+    <p>
+     In addition, there is some precedence for adding an infix operator to
+handle a more-specialized arithmetic operation: the floor division
+operator
+     <tt class="docutils literal">
+      //
+     </tt>
+     , like the bitwise operators, is very useful under
+certain circumstances when performing exact calculations on discrete
+values.  But it seems likely that there are many Python programmers
+who have never had reason to use
+     <tt class="docutils literal">
+      //
+     </tt>
+     (or, for that matter, the
+bitwise operators).
+     <tt class="docutils literal">
+      @
+     </tt>
+     is no more niche than
+     <tt class="docutils literal">
+      //
+     </tt>
+     .
+    </p>
+   </div>
+   <div class="section" id="so-is-good-for-matrix-formulas-but-how-common-are-those-really">
+    <h2>
+     <a class="toc-backref" href="#id31">
+      So
+      <tt class="docutils literal">
+       @
+      </tt>
+      is good for matrix formulas, but how common are those really?
+     </a>
+    </h2>
+    <p>
+     We've seen that
+     <tt class="docutils literal">
+      @
+     </tt>
+     makes matrix formulas dramatically easier to
+work with for both experts and non-experts, that matrix formulas
+appear in many important applications, and that numerical libraries
+like numpy are used by a substantial proportion of Python's user base.
+But numerical libraries aren't just about matrix formulas, and being
+important doesn't necessarily mean taking up a lot of code: if matrix
+formulas only occured in one or two places in the average
+numerically-oriented project, then it still wouldn't be worth adding a
+new operator.  So how common is matrix multiplication, really?
+    </p>
+    <p>
+     When the going gets tough, the tough get empirical.  To get a rough
+estimate of how useful the
+     <tt class="docutils literal">
+      @
+     </tt>
+     operator will be, the table below
+shows the rate at which different Python operators are actually used
+in the stdlib, and also in two high-profile numerical packages -- the
+scikit-learn machine learning library, and the nipy neuroimaging
+library -- normalized by source lines of code (SLOC).  Rows are sorted
+by the 'combined' column, which pools all three code bases together.
+The combined column is thus strongly weighted towards the stdlib,
+which is much larger than both projects put together (stdlib: 411575
+SLOC, scikit-learn: 50924 SLOC, nipy: 37078 SLOC).
+     <a class="footnote-reference" href="#sloc-details" id="id7">
+      [7]
+     </a>
+    </p>
+    <p>
+     The
+     <tt class="docutils literal">
+      dot
+     </tt>
+     row (marked
+     <tt class="docutils literal">
+      <span class="pre">
+       ******
+      </span>
+     </tt>
+     ) counts how common matrix multiply
+operations are in each codebase.
+    </p>
+    <pre class="literal-block">
+====  ======  ============  ====  ========
+  op  stdlib  scikit-learn  nipy  combined
+====  ======  ============  ====  ========
+   =    2969          5536  4932      3376 / 10,000 SLOC
+   -     218           444   496       261
+   +     224           201   348       231
+  ==     177           248   334       196
+   *     156           284   465       192
+   %     121           114   107       119
+  **      59           111   118        68
+  !=      40            56    74        44
+   /      18           121   183        41
+   &gt;      29            70   110        39
+  +=      34            61    67        39
+   &lt;      32            62    76        38
+  &gt;=      19            17    17        18
+  &lt;=      18            27    12        18
+ dot ***** 0 ********** 99 ** 74 ****** 16
+   |      18             1     2        15
+   &amp;      14             0     6        12
+  &lt;&lt;      10             1     1         8
+  //       9             9     1         8
+  -=       5            21    14         8
+  *=       2            19    22         5
+  /=       0            23    16         4
+  &gt;&gt;       4             0     0         3
+   ^       3             0     0         3
+   ~       2             4     5         2
+  |=       3             0     0         2
+  &amp;=       1             0     0         1
+ //=       1             0     0         1
+  ^=       1             0     0         0
+ **=       0             2     0         0
+  %=       0             0     0         0
+ &lt;&lt;=       0             0     0         0
+ &gt;&gt;=       0             0     0         0
+====  ======  ============  ====  ========
+</pre>
+    <p>
+     These two numerical packages alone contain ~780 uses of matrix
+multiplication.  Within these packages, matrix multiplication is used
+more heavily than most comparison operators (
+     <tt class="docutils literal">
+      &lt;
+     </tt>
+     <tt class="docutils literal">
+      !=
+     </tt>
+     <tt class="docutils literal">
+      &lt;=
+     </tt>
+     <tt class="docutils literal">
+      &gt;=
+     </tt>
+     ).  Even when we dilute these counts by including the stdlib
+into our comparisons, matrix multiplication is still used more often
+in total than any of the bitwise operators, and 2x as often as
+     <tt class="docutils literal">
+      //
+     </tt>
+     .
+This is true even though the stdlib, which contains a fair amount of
+integer arithmetic and no matrix operations, makes up more than 80% of
+the combined code base.
+    </p>
+    <p>
+     By coincidence, the numeric libraries make up approximately the same
+proportion of the 'combined' codebase as numeric tutorials make up of
+PyCon 2014's tutorial schedule, which suggests that the 'combined'
+column may not be
+     <em>
+      wildly
+     </em>
+     unrepresentative of new Python code in
+general.  While it's impossible to know for certain, from this data it
+seems entirely possible that across all Python code currently being
+written, matrix multiplication is already used more often than
+     <tt class="docutils literal">
+      //
+     </tt>
+     and the bitwise operations.
+    </p>
+   </div>
+   <div class="section" id="but-isn-t-it-weird-to-add-an-operator-with-no-stdlib-uses">
+    <h2>
+     <a class="toc-backref" href="#id32">
+      But isn't it weird to add an operator with no stdlib uses?
+     </a>
+    </h2>
+    <p>
+     It's certainly unusual (though extended slicing existed for some time
+builtin types gained support for it,
+     <tt class="docutils literal">
+      Ellipsis
+     </tt>
+     is still unused
+within the stdlib, etc.).  But the important thing is whether a change
+will benefit users, not where the software is being downloaded from.
+It's clear from the above that
+     <tt class="docutils literal">
+      @
+     </tt>
+     will be used, and used heavily.
+And this PEP provides the critical piece that will allow the Python
+numerical community to finally reach consensus on a standard duck type
+for all array-like objects, which is a necessary precondition to ever
+adding a numerical array type to the stdlib.
+    </p>
+   </div>
+  </div>
+  <div class="section" id="compatibility-considerations">
+   <h1>
+    <a class="toc-backref" href="#id33">
+     Compatibility considerations
+    </a>
+   </h1>
+   <p>
+    Currently, the only legal use of the
+    <tt class="docutils literal">
+     @
+    </tt>
+    token in Python code is at
+statement beginning in decorators.  The new operators are both infix;
+the one place they can never occur is at statement beginning.
+Therefore, no existing code will be broken by the addition of these
+operators, and there is no possible parsing ambiguity between
+decorator-@ and the new operators.
+   </p>
+   <p>
+    Another important kind of compatibility is the mental cost paid by
+users to update their understanding of the Python language after this
+change, particularly for users who do not work with matrices and thus
+do not benefit.  Here again,
+    <tt class="docutils literal">
+     @
+    </tt>
+    has minimal impact: even
+comprehensive tutorials and references will only need to add a
+sentence or two to fully document this PEP's changes for a
+non-numerical audience.
+   </p>
+  </div>
+  <div class="section" id="intended-usage-details">
+   <h1>
+    <a class="toc-backref" href="#id34">
+     Intended usage details
+    </a>
+   </h1>
+   <p>
+    This section is informative, rather than normative -- it documents the
+consensus of a number of libraries that provide array- or matrix-like
+objects on how
+    <tt class="docutils literal">
+     @
+    </tt>
+    will be implemented.
+   </p>
+   <p>
+    This section uses the numpy terminology for describing arbitrary
+multidimensional arrays of data, because it is a superset of all other
+commonly used models.  In this model, the
+    <em>
+     shape
+    </em>
+    of any array is
+represented by a tuple of integers.  Because matrices are
+two-dimensional, they have len(shape) == 2, while 1d vectors have
+len(shape) == 1, and scalars have shape == (), i.e., they are "0
+dimensional".  Any array contains prod(shape) total entries.  Notice
+that
+    <a class="reference external" href="https://en.wikipedia.org/wiki/Empty_product">
+     prod(()) == 1
+    </a>
+    <a class="footnote-reference" href="#id21" id="id22">
+     [20]
+    </a>
+    (for the same reason that sum(()) == 0); scalars
+are just an ordinary kind of array, not a special case.  Notice also
+that we distinguish between a single scalar value (shape == (),
+analogous to
+    <tt class="docutils literal">
+     1
+    </tt>
+    ), a vector containing only a single entry (shape ==
+(1,), analogous to
+    <tt class="docutils literal">
+     [1]
+    </tt>
+    ), a matrix containing only a single entry
+(shape == (1, 1), analogous to
+    <tt class="docutils literal">
+     [[1]]
+    </tt>
+    ), etc., so the dimensionality
+of any array is always well-defined.  Other libraries with more
+restricted representations (e.g., those that support 2d arrays only)
+might implement only a subset of the functionality described here.
+   </p>
+   <div class="section" id="semantics">
+    <h2>
+     <a class="toc-backref" href="#id35">
+      Semantics
+     </a>
+    </h2>
+    <p>
+     The recommended semantics for
+     <tt class="docutils literal">
+      @
+     </tt>
+     for different inputs are:
+    </p>
+    <ul>
+     <li>
+      <p class="first">
+       2d inputs are conventional matrices, and so the semantics are
+obvious: we apply conventional matrix multiplication.  If we write
+       <tt class="docutils literal">
+        arr(2, 3)
+       </tt>
+       to represent an arbitrary 2x3 array, then
+       <tt class="docutils literal">
+        arr(2, 3)
+@ arr(3, 4)
+       </tt>
+       returns an array with shape (2, 4).
+      </p>
+     </li>
+     <li>
+      <p class="first">
+       1d vector inputs are promoted to 2d by prepending or appending a '1'
+to the shape, the operation is performed, and then the added
+dimension is removed from the output.  The 1 is always added on the
+"outside" of the shape: prepended for left arguments, and appended
+for right arguments.  The result is that matrix @ vector and vector
+@ matrix are both legal (assuming compatible shapes), and both
+return 1d vectors; vector @ vector returns a scalar.  This is
+clearer with examples.
+      </p>
+      <ul class="simple">
+       <li>
+        <tt class="docutils literal">
+         arr(2, 3) @ arr(3, 1)
+        </tt>
+        is a regular matrix product, and returns
+an array with shape (2, 1), i.e., a column vector.
+       </li>
+       <li>
+        <tt class="docutils literal">
+         arr(2, 3) @ arr(3)
+        </tt>
+        performs the same computation as the
+previous (i.e., treats the 1d vector as a matrix containing a
+single
+        <em>
+         column
+        </em>
+        , shape = (3, 1)), but returns the result with
+shape (2,), i.e., a 1d vector.
+       </li>
+       <li>
+        <tt class="docutils literal">
+         arr(1, 3) @ arr(3, 2)
+        </tt>
+        is a regular matrix product, and returns
+an array with shape (1, 2), i.e., a row vector.
+       </li>
+       <li>
+        <tt class="docutils literal">
+         arr(3) @ arr(3, 2)
+        </tt>
+        performs the same computation as the
+previous (i.e., treats the 1d vector as a matrix containing a
+single
+        <em>
+         row
+        </em>
+        , shape = (1, 3)), but returns the result with shape
+(2,), i.e., a 1d vector.
+       </li>
+       <li>
+        <tt class="docutils literal">
+         arr(1, 3) @ arr(3, 1)
+        </tt>
+        is a regular matrix product, and returns
+an array with shape (1, 1), i.e., a single value in matrix form.
+       </li>
+       <li>
+        <tt class="docutils literal">
+         arr(3) @ arr(3)
+        </tt>
+        performs the same computation as the
+previous, but returns the result with shape (), i.e., a single
+scalar value, not in matrix form.  So this is the standard inner
+product on vectors.
+       </li>
+      </ul>
+      <p>
+       An infelicity of this definition for 1d vectors is that it makes
+       <tt class="docutils literal">
+        @
+       </tt>
+       non-associative in some cases (
+       <tt class="docutils literal">
+        (Mat1 @ vec) @ Mat2
+       </tt>
+       !=
+       <tt class="docutils literal">
+        Mat1 @ (vec @ Mat2)
+       </tt>
+       ).  But this seems to be a case where
+practicality beats purity: non-associativity only arises for strange
+expressions that would never be written in practice; if they are
+written anyway then there is a consistent rule for understanding
+what will happen (
+       <tt class="docutils literal">
+        Mat1 @ vec @ Mat2
+       </tt>
+       is parsed as
+       <tt class="docutils literal">
+        (Mat1 @ vec)
+@ Mat2
+       </tt>
+       , just like
+       <tt class="docutils literal">
+        a - b - c
+       </tt>
+       ); and, not supporting 1d vectors
+would rule out many important use cases that do arise very commonly
+in practice.  No-one wants to explain to new users why to solve the
+simplest linear system in the obvious way, they have to type
+       <tt class="docutils literal">
+        (inv(A) @
+        <span class="pre">
+         b[:,
+        </span>
+        <span class="pre">
+         np.newaxis]).flatten()
+        </span>
+       </tt>
+       instead of
+       <tt class="docutils literal">
+        inv(A) @ b
+       </tt>
+       ,
+or perform an ordinary least-squares regression by typing
+       <tt class="docutils literal">
+        solve(X.T @ X, X @
+        <span class="pre">
+         y[:,
+        </span>
+        <span class="pre">
+         np.newaxis]).flatten()
+        </span>
+       </tt>
+       instead of
+       <tt class="docutils literal">
+        solve(X.T @ X, X @ y)
+       </tt>
+       .  No-one wants to type
+       <tt class="docutils literal">
+        (a[np.newaxis, :]
+@
+        <span class="pre">
+         b[:,
+        </span>
+        <span class="pre">
+         np.newaxis])[0,
+        </span>
+        0]
+       </tt>
+       instead of
+       <tt class="docutils literal">
+        a @ b
+       </tt>
+       every time they
+compute an inner product, or
+       <tt class="docutils literal">
+        (a[np.newaxis, :] @ Mat @
+        <span class="pre">
+         b[:,
+        </span>
+        <span class="pre">
+         np.newaxis])[0,
+        </span>
+        0]
+       </tt>
+       for general quadratic forms instead of
+       <tt class="docutils literal">
+        a @
+Mat @ b
+       </tt>
+       .  In addition, sage and sympy (see below) use these
+non-associative semantics with an infix matrix multiplication
+operator (they use
+       <tt class="docutils literal">
+        *
+       </tt>
+       ), and they report that they haven't
+experienced any problems caused by it.
+      </p>
+     </li>
+     <li>
+      <p class="first">
+       For inputs with more than 2 dimensions, we treat the last two
+dimensions as being the dimensions of the matrices to multiply, and
+'broadcast' across the other dimensions.  This provides a convenient
+way to quickly compute many matrix products in a single operation.
+For example,
+       <tt class="docutils literal">
+        arr(10, 2, 3) @ arr(10, 3, 4)
+       </tt>
+       performs 10 separate
+matrix multiplies, each of which multiplies a 2x3 and a 3x4 matrix
+to produce a 2x4 matrix, and then returns the 10 resulting matrices
+together in an array with shape (10, 2, 4).  The intuition here is
+that we treat these 3d arrays of numbers as if they were 1d arrays
+       <em>
+        of matrices
+       </em>
+       , and then apply matrix multiplication in an
+elementwise manner, where now each 'element' is a whole matrix.
+Note that broadcasting is not limited to perfectly aligned arrays;
+in more complicated cases, it allows several simple but powerful
+tricks for controlling how arrays are aligned with each other; see
+       <a class="footnote-reference" href="#broadcasting" id="id8">
+        [10]
+       </a>
+       for details.  (In particular, it turns out that
+when broadcasting is taken into account, the standard scalar *
+matrix product is a special case of the elementwise multiplication
+operator
+       <tt class="docutils literal">
+        *
+       </tt>
+       .)
+      </p>
+      <p>
+       If one operand is &gt;2d, and another operand is 1d, then the above
+rules apply unchanged, with 1d-&gt;2d promotion performed before
+broadcasting.  E.g.,
+       <tt class="docutils literal">
+        arr(10, 2, 3) @ arr(3)
+       </tt>
+       first promotes to
+       <tt class="docutils literal">
+        arr(10, 2, 3) @ arr(3, 1)
+       </tt>
+       , then broadcasts the right argument to
+create the aligned operation
+       <tt class="docutils literal">
+        arr(10, 2, 3) @ arr(10, 3, 1)
+       </tt>
+       ,
+multiplies to get an array with shape (10, 2, 1), and finally
+removes the added dimension, returning an array with shape (10, 2).
+Similarly,
+       <tt class="docutils literal">
+        arr(2) @ arr(10, 2, 3)
+       </tt>
+       produces an intermediate array
+with shape (10, 1, 3), and a final array with shape (10, 3).
+      </p>
+     </li>
+     <li>
+      <p class="first">
+       0d (scalar) inputs raise an error.  Scalar * matrix multiplication
+is a mathematically and algorithmically distinct operation from
+matrix @ matrix multiplication, and is already covered by the
+elementwise
+       <tt class="docutils literal">
+        *
+       </tt>
+       operator.  Allowing scalar @ matrix would thus
+both require an unnecessary special case, and violate TOOWTDI.
+      </p>
+     </li>
+    </ul>
+   </div>
+   <div class="section" id="adoption">
+    <h2>
+     <a class="toc-backref" href="#id36">
+      Adoption
+     </a>
+    </h2>
+    <p>
+     We group existing Python projects which provide array- or matrix-like
+types based on what API they currently use for elementwise and matrix
+multiplication.
+    </p>
+    <p>
+     <strong>
+      Projects which currently use * for elementwise multiplication, and
+function/method calls for matrix multiplication:
+     </strong>
+    </p>
+    <p>
+     The developers of the following projects have expressed an intention
+to implement
+     <tt class="docutils literal">
+      @
+     </tt>
+     on their array-like types using the above
+semantics:
+    </p>
+    <ul class="simple">
+     <li>
+      numpy
+     </li>
+     <li>
+      pandas
+     </li>
+     <li>
+      blaze
+     </li>
+     <li>
+      theano
+     </li>
+    </ul>
+    <p>
+     The following projects have been alerted to the existence of the PEP,
+but it's not yet known what they plan to do if it's accepted.  We
+don't anticipate that they'll have any objections, though, since
+everything proposed here is consistent with how they already do
+things:
+    </p>
+    <ul class="simple">
+     <li>
+      pycuda
+     </li>
+     <li>
+      panda3d
+     </li>
+    </ul>
+    <p>
+     <strong>
+      Projects which currently use * for matrix multiplication, and
+function/method calls for elementwise multiplication:
+     </strong>
+    </p>
+    <p>
+     The following projects have expressed an intention, if this PEP is
+accepted, to migrate from their current API to the elementwise-
+     <tt class="docutils literal">
+      *
+     </tt>
+     ,
+matmul-
+     <tt class="docutils literal">
+      @
+     </tt>
+     convention (i.e., this is a list of projects whose API
+fragmentation will probably be eliminated if this PEP is accepted):
+    </p>
+    <ul class="simple">
+     <li>
+      numpy (
+      <tt class="docutils literal">
+       numpy.matrix
+      </tt>
+      )
+     </li>
+     <li>
+      scipy.sparse
+     </li>
+     <li>
+      pyoperators
+     </li>
+     <li>
+      pyviennacl
+     </li>
+    </ul>
+    <p>
+     The following projects have been alerted to the existence of the PEP,
+but it's not known what they plan to do if it's accepted (i.e., this
+is a list of projects whose API fragmentation may or may not be
+eliminated if this PEP is accepted):
+    </p>
+    <ul class="simple">
+     <li>
+      cvxopt
+     </li>
+    </ul>
+    <p>
+     <strong>
+      Projects which currently use * for matrix multiplication, and which
+don't really care about elementwise multiplication of matrices:
+     </strong>
+    </p>
+    <p>
+     There are several projects which implement matrix types, but from a
+very different perspective than the numerical libraries discussed
+above.  These projects focus on computational methods for analyzing
+matrices in the sense of abstract mathematical objects (i.e., linear
+maps over free modules over rings), rather than as big bags full of
+numbers that need crunching.  And it turns out that from the abstract
+math point of view, there isn't much use for elementwise operations in
+the first place; as discussed in the Background section above,
+elementwise operations are motivated by the bag-of-numbers approach.
+So these projects don't encounter the basic problem that this PEP
+exists to address, making it mostly irrelevant to them; while they
+appear superficially similar to projects like numpy, they're actually
+doing something quite different.  They use
+     <tt class="docutils literal">
+      *
+     </tt>
+     for matrix
+multiplication (and for group actions, and so forth), and if this PEP
+is accepted, their expressed intention is to continue doing so, while
+perhaps adding
+     <tt class="docutils literal">
+      @
+     </tt>
+     as an alias.  These projects include:
+    </p>
+    <ul class="simple">
+     <li>
+      sympy
+     </li>
+     <li>
+      sage
+     </li>
+    </ul>
+   </div>
+  </div>
+  <div class="section" id="implementation-details">
+   <h1>
+    <a class="toc-backref" href="#id37">
+     Implementation details
+    </a>
+   </h1>
+   <p>
+    New functions
+    <tt class="docutils literal">
+     operator.matmul
+    </tt>
+    and
+    <tt class="docutils literal">
+     operator.__matmul__
+    </tt>
+    are
+added to the standard library, with the usual semantics.
+   </p>
+   <p>
+    A corresponding function
+    <tt class="docutils literal">
+     PyObject* PyObject_MatrixMultiply(PyObject
+*o1, PyObject *o2)
+    </tt>
+    is added to the C API.
+   </p>
+   <p>
+    A new AST node is added named
+    <tt class="docutils literal">
+     MatMult
+    </tt>
+    , along with a new token
+    <tt class="docutils literal">
+     ATEQUAL
+    </tt>
+    and new bytecode opcodes
+    <tt class="docutils literal">
+     BINARY_MATRIX_MULTIPLY
+    </tt>
+    and
+    <tt class="docutils literal">
+     INPLACE_MATRIX_MULTIPLY
+    </tt>
+    .
+   </p>
+   <p>
+    Two new type slots are added; whether this is to
+    <tt class="docutils literal">
+     PyNumberMethods
+    </tt>
+    or a new
+    <tt class="docutils literal">
+     PyMatrixMethods
+    </tt>
+    struct remains to be determined.
+   </p>
+  </div>
+  <div class="section" id="rationale-for-specification-details">
+   <h1>
+    <a class="toc-backref" href="#id38">
+     Rationale for specification details
+    </a>
+   </h1>
+   <div class="section" id="choice-of-operator">
+    <h2>
+     <a class="toc-backref" href="#id39">
+      Choice of operator
+     </a>
+    </h2>
+    <p>
+     Why
+     <tt class="docutils literal">
+      @
+     </tt>
+     instead of some other spelling?  There isn't any consensus
+across other programming languages about how this operator should be
+named
+     <a class="footnote-reference" href="#matmul-other-langs" id="id9">
+      [11]
+     </a>
+     ; here we discuss the various options.
+    </p>
+    <p>
+     Restricting ourselves only to symbols present on US English keyboards,
+the punctuation characters that don't already have a meaning in Python
+expression context are:
+     <tt class="docutils literal">
+      @
+     </tt>
+     , backtick,
+     <tt class="docutils literal">
+      $
+     </tt>
+     ,
+     <tt class="docutils literal">
+      !
+     </tt>
+     , and
+     <tt class="docutils literal">
+      ?
+     </tt>
+     .  Of
+these options,
+     <tt class="docutils literal">
+      @
+     </tt>
+     is clearly the best;
+     <tt class="docutils literal">
+      !
+     </tt>
+     and
+     <tt class="docutils literal">
+      ?
+     </tt>
+     are already
+heavily freighted with inapplicable meanings in the programming
+context, backtick has been banned from Python by BDFL pronouncement
+(see
+     <a class="reference external" href="../pep-3099/index.html">
+      PEP 3099
+     </a>
+     ), and
+     <tt class="docutils literal">
+      $
+     </tt>
+     is uglier, even more dissimilar to
+     <tt class="docutils literal">
+      *
+     </tt>
+     and
+     <span class="formula">
+      ⋅
+     </span>
+     , and has Perl/PHP baggage.
+     <tt class="docutils literal">
+      $
+     </tt>
+     is probably the
+second-best option of these, though.
+    </p>
+    <p>
+     Symbols which are not present on US English keyboards start at a
+significant disadvantage (having to spend 5 minutes at the beginning
+of every numeric Python tutorial just going over keyboard layouts is
+not a hassle anyone really wants).  Plus, even if we somehow overcame
+the typing problem, it's not clear there are any that are actually
+better than
+     <tt class="docutils literal">
+      @
+     </tt>
+     .  Some options that have been suggested include:
+    </p>
+    <ul class="simple">
+     <li>
+      U+00D7 MULTIPLICATION SIGN:
+      <tt class="docutils literal">
+       A × B
+      </tt>
+     </li>
+     <li>
+      U+22C5 DOT OPERATOR:
+      <tt class="docutils literal">
+       A ⋅ B
+      </tt>
+     </li>
+     <li>
+      U+2297 CIRCLED TIMES:
+      <tt class="docutils literal">
+       A ⊗ B
+      </tt>
+     </li>
+     <li>
+      U+00B0 DEGREE:
+      <tt class="docutils literal">
+       A ° B
+      </tt>
+     </li>
+    </ul>
+    <p>
+     What we need, though, is an operator that means "matrix
+multiplication, as opposed to scalar/elementwise multiplication".
+There is no conventional symbol with this meaning in either
+programming or mathematics, where these operations are usually
+distinguished by context.  (And U+2297 CIRCLED TIMES is actually used
+conventionally to mean exactly the wrong things: elementwise
+multiplication -- the "Hadamard product" -- or outer product, rather
+than matrix/inner product like our operator).
+     <tt class="docutils literal">
+      @
+     </tt>
+     at least has the
+virtue that it
+     <em>
+      looks
+     </em>
+     like a funny non-commutative operator; a naive
+user who knows maths but not programming couldn't look at
+     <tt class="docutils literal">
+      A * B
+     </tt>
+     versus
+     <tt class="docutils literal">
+      A × B
+     </tt>
+     , or
+     <tt class="docutils literal">
+      A * B
+     </tt>
+     versus
+     <tt class="docutils literal">
+      A ⋅ B
+     </tt>
+     , or
+     <tt class="docutils literal">
+      A * B
+     </tt>
+     versus
+     <tt class="docutils literal">
+      A ° B
+     </tt>
+     and guess which one is the usual multiplication, and which
+one is the special case.
+    </p>
+    <p>
+     Finally, there is the option of using multi-character tokens.  Some
+options:
+    </p>
+    <ul class="simple">
+     <li>
+      Matlab and Julia use a
+      <tt class="docutils literal">
+       .*
+      </tt>
+      operator.  Aside from being visually
+confusable with
+      <tt class="docutils literal">
+       *
+      </tt>
+      , this would be a terrible choice for us
+because in Matlab and Julia,
+      <tt class="docutils literal">
+       *
+      </tt>
+      means matrix multiplication and
+      <tt class="docutils literal">
+       .*
+      </tt>
+      means elementwise multiplication, so using
+      <tt class="docutils literal">
+       .*
+      </tt>
+      for matrix
+multiplication would make us exactly backwards from what Matlab and
+Julia users expect.
+     </li>
+     <li>
+      APL apparently used
+      <tt class="docutils literal">
+       +.×
+      </tt>
+      , which by combining a multi-character
+token, confusing attribute-access-like . syntax, and a unicode
+character, ranks somewhere below U+2603 SNOWMAN on our candidate
+list.  If we like the idea of combining addition and multiplication
+operators as being evocative of how matrix multiplication actually
+works, then something like
+      <tt class="docutils literal">
+       +*
+      </tt>
+      could be used -- though this may
+be too easy to confuse with
+      <tt class="docutils literal">
+       *+
+      </tt>
+      , which is just multiplication
+combined with the unary
+      <tt class="docutils literal">
+       +
+      </tt>
+      operator.
+     </li>
+     <li>
+      <a class="reference external" href="../pep-0211/index.html">
+       PEP 211
+      </a>
+      suggested
+      <tt class="docutils literal">
+       ~*
+      </tt>
+      .  This has the downside that it sort of
+suggests that there is a unary
+      <tt class="docutils literal">
+       *
+      </tt>
+      operator that is being combined
+with unary
+      <tt class="docutils literal">
+       ~
+      </tt>
+      , but it could work.
+     </li>
+     <li>
+      R uses
+      <tt class="docutils literal">
+       %*%
+      </tt>
+      for matrix multiplication.  In R this forms part of a
+general extensible infix system in which all tokens of the form
+      <tt class="docutils literal">
+       %foo%
+      </tt>
+      are user-defined binary operators.  We could steal the
+token without stealing the system.
+     </li>
+     <li>
+      Some other plausible candidates that have been suggested:
+      <tt class="docutils literal">
+       &gt;&lt;
+      </tt>
+      (=
+ascii drawing of the multiplication sign ×); the footnote operator
+      <tt class="docutils literal">
+       [*]
+      </tt>
+      or
+      <tt class="docutils literal">
+       |*|
+      </tt>
+      (but when used in context, the use of vertical
+grouping symbols tends to recreate the nested parentheses visual
+clutter that was noted as one of the major downsides of the function
+syntax we're trying to get away from);
+      <tt class="docutils literal">
+       ^*
+      </tt>
+      .
+     </li>
+    </ul>
+    <p>
+     So, it doesn't matter much, but
+     <tt class="docutils literal">
+      @
+     </tt>
+     seems as good or better than any
+of the alternatives:
+    </p>
+    <ul class="simple">
+     <li>
+      It's a friendly character that Pythoneers are already used to typing
+in decorators, but the decorator usage and the math expression
+usage are sufficiently dissimilar that it would be hard to confuse
+them in practice.
+     </li>
+     <li>
+      It's widely accessible across keyboard layouts (and thanks to its
+use in email addresses, this is true even of weird keyboards like
+those in phones).
+     </li>
+     <li>
+      It's round like
+      <tt class="docutils literal">
+       *
+      </tt>
+      and
+      <span class="formula">
+       ⋅
+      </span>
+      .
+     </li>
+     <li>
+      The mATrices mnemonic is cute.
+     </li>
+     <li>
+      The swirly shape is reminiscent of the simultaneous sweeps over rows
+and columns that define matrix multiplication
+     </li>
+     <li>
+      Its asymmetry is evocative of its non-commutative nature.
+     </li>
+     <li>
+      Whatever, we have to pick something.
+     </li>
+    </ul>
+   </div>
+   <div class="section" id="precedence-and-associativity">
+    <h2>
+     <a class="toc-backref" href="#id40">
+      Precedence and associativity
+     </a>
+    </h2>
+    <p>
+     There was a long discussion
+     <a class="footnote-reference" href="#associativity-discussions" id="id10">
+      [15]
+     </a>
+     about
+whether
+     <tt class="docutils literal">
+      @
+     </tt>
+     should be right- or left-associative (or even something
+more exotic
+     <a class="footnote-reference" href="#group-associativity" id="id11">
+      [18]
+     </a>
+     ). Almost all Python operators are
+left-associative, so following this convention would be the simplest
+approach, but there were two arguments that suggested matrix
+multiplication might be worth making right-associative as a special
+case:
+    </p>
+    <p>
+     First, matrix multiplication has a tight conceptual association with
+function application/composition, so many mathematically sophisticated
+users have an intuition that an expression like
+     <span class="formula">
+      <i>
+       R
+      </i>
+      <i>
+       S
+      </i>
+      <i>
+       x
+      </i>
+     </span>
+     proceeds
+from right-to-left, with first
+     <span class="formula">
+      <i>
+       S
+      </i>
+     </span>
+     transforming the vector
+     <span class="formula">
+      <i>
+       x
+      </i>
+     </span>
+     , and then
+     <span class="formula">
+      <i>
+       R
+      </i>
+     </span>
+     transforming the result. This isn't
+universally agreed (and not all number-crunchers are steeped in the
+pure-math conceptual framework that motivates this intuition
+     <a class="footnote-reference" href="#oil-industry-versus-right-associativity" id="id12">
+      [16]
+     </a>
+     ), but at the least this
+intuition is more common than for other operations like
+     <span class="formula">
+      2⋅3⋅4
+     </span>
+     which everyone reads as going from left-to-right.
+    </p>
+    <p>
+     Second, if expressions like
+     <tt class="docutils literal">
+      Mat @ Mat @ vec
+     </tt>
+     appear often in code,
+then programs will run faster (and efficiency-minded programmers will
+be able to use fewer parentheses) if this is evaluated as
+     <tt class="docutils literal">
+      Mat @ (Mat
+@ vec)
+     </tt>
+     then if it is evaluated like
+     <tt class="docutils literal">
+      (Mat @ Mat) @ vec
+     </tt>
+     .
+    </p>
+    <p>
+     However, weighing against these arguments are the following:
+    </p>
+    <p>
+     Regarding the efficiency argument, empirically, we were unable to find
+any evidence that
+     <tt class="docutils literal">
+      Mat @ Mat @ vec
+     </tt>
+     type expressions actually
+dominate in real-life code. Parsing a number of large projects that
+use numpy, we found that when forced by numpy's current funcall syntax
+to choose an order of operations for nested calls to
+     <tt class="docutils literal">
+      dot
+     </tt>
+     , people
+actually use left-associative nesting slightly
+     <em>
+      more
+     </em>
+     often than
+right-associative nesting
+     <a class="footnote-reference" href="#numpy-associativity-counts" id="id13">
+      [17]
+     </a>
+     .  And anyway,
+writing parentheses isn't so bad -- if an efficiency-minded programmer
+is going to take the trouble to think through the best way to evaluate
+some expression, they probably
+     <em>
+      should
+     </em>
+     write down the parentheses
+regardless of whether they're needed, just to make it obvious to the
+next reader that they order of operations matter.
+    </p>
+    <p>
+     In addition, it turns out that other languages, including those with
+much more of a focus on linear algebra, overwhelmingly make their
+matmul operators left-associative. Specifically, the
+     <tt class="docutils literal">
+      @
+     </tt>
+     equivalent
+is left-associative in R, Matlab, Julia, IDL, and Gauss. The only
+exceptions we found are Mathematica, in which
+     <tt class="docutils literal">
+      a @ b @ c
+     </tt>
+     would be
+parsed non-associatively as
+     <tt class="docutils literal">
+      dot(a, b, c)
+     </tt>
+     , and APL, in which all
+operators are right-associative. There do not seem to exist any
+languages that make
+     <tt class="docutils literal">
+      @
+     </tt>
+     right-associative and
+     <tt class="docutils literal">
+      *
+     </tt>
+     left-associative. And these decisions don't seem to be controversial
+-- I've never seen anyone complaining about this particular aspect of
+any of these other languages, and the left-associativity of
+     <tt class="docutils literal">
+      *
+     </tt>
+     doesn't seem to bother users of the existing Python libraries that use
+     <tt class="docutils literal">
+      *
+     </tt>
+     for matrix multiplication. So, at the least we can conclude from
+this that making
+     <tt class="docutils literal">
+      @
+     </tt>
+     left-associative will certainly not cause any
+disasters. Making
+     <tt class="docutils literal">
+      @
+     </tt>
+     right-associative, OTOH, would be exploring
+new and uncertain ground.
+    </p>
+    <p>
+     And another advantage of left-associativity is that it is much easier
+to learn and remember that
+     <tt class="docutils literal">
+      @
+     </tt>
+     acts like
+     <tt class="docutils literal">
+      *
+     </tt>
+     , than it is to
+remember first that
+     <tt class="docutils literal">
+      @
+     </tt>
+     is unlike other Python operators by being
+right-associative, and then on top of this, also have to remember
+whether it is more tightly or more loosely binding than
+     <tt class="docutils literal">
+      *
+     </tt>
+     . (Right-associativity forces us to choose a precedence, and
+intuitions were about equally split on which precedence made more
+sense. So this suggests that no matter which choice we made, no-one
+would be able to guess or remember it.)
+    </p>
+    <p>
+     On net, therefore, the general consensus of the numerical community is
+that while matrix multiplication is something of a special case, it's
+not special enough to break the rules, and
+     <tt class="docutils literal">
+      @
+     </tt>
+     should parse like
+     <tt class="docutils literal">
+      *
+     </tt>
+     does.
+    </p>
+   </div>
+   <div class="section" id="non-definitions-for-built-in-types">
+    <h2>
+     <a class="toc-backref" href="#id41">
+      (Non)-Definitions for built-in types
+     </a>
+    </h2>
+    <p>
+     No
+     <tt class="docutils literal">
+      __matmul__
+     </tt>
+     or
+     <tt class="docutils literal">
+      __matpow__
+     </tt>
+     are defined for builtin numeric
+types (
+     <tt class="docutils literal">
+      float
+     </tt>
+     ,
+     <tt class="docutils literal">
+      int
+     </tt>
+     , etc.) or for the
+     <tt class="docutils literal">
+      numbers.Number
+     </tt>
+     hierarchy, because these types represent scalars, and the consensus
+semantics for
+     <tt class="docutils literal">
+      @
+     </tt>
+     are that it should raise an error on scalars.
+    </p>
+    <p>
+     We do not -- for now -- define a
+     <tt class="docutils literal">
+      __matmul__
+     </tt>
+     method on the standard
+     <tt class="docutils literal">
+      memoryview
+     </tt>
+     or
+     <tt class="docutils literal">
+      array.array
+     </tt>
+     objects, for several reasons.  Of
+course this could be added if someone wants it, but these types would
+require quite a bit of additional work beyond
+     <tt class="docutils literal">
+      __matmul__
+     </tt>
+     before
+they could be used for numeric work -- e.g., they have no way to do
+addition or scalar multiplication either! -- and adding such
+functionality is beyond the scope of this PEP.  In addition, providing
+a quality implementation of matrix multiplication is highly
+non-trivial.  Naive nested loop implementations are very slow and
+shipping such an implementation in CPython would just create a trap
+for users.  But the alternative -- providing a modern, competitive
+matrix multiply -- would require that CPython link to a BLAS library,
+which brings a set of new complications.  In particular, several
+popular BLAS libraries (including the one that ships by default on
+OS X) currently break the use of
+     <tt class="docutils literal">
+      multiprocessing
+     </tt>
+     <a class="footnote-reference" href="#blas-fork" id="id14">
+      [8]
+     </a>
+     .
+Together, these considerations mean that the cost/benefit of adding
+     <tt class="docutils literal">
+      __matmul__
+     </tt>
+     to these types just isn't there, so for now we'll
+continue to delegate these problems to numpy and friends, and defer a
+more systematic solution to a future proposal.
+    </p>
+    <p>
+     There are also non-numeric Python builtins which define
+     <tt class="docutils literal">
+      __mul__
+     </tt>
+     (
+     <tt class="docutils literal">
+      str
+     </tt>
+     ,
+     <tt class="docutils literal">
+      list
+     </tt>
+     , ...).  We do not define
+     <tt class="docutils literal">
+      __matmul__
+     </tt>
+     for these
+types either, because why would we even do that.
+    </p>
+   </div>
+   <div class="section" id="non-definition-of-matrix-power">
+    <h2>
+     <a class="toc-backref" href="#id42">
+      Non-definition of matrix power
+     </a>
+    </h2>
+    <p>
+     Earlier versions of this PEP also proposed a matrix power operator,
+     <tt class="docutils literal">
+      @@
+     </tt>
+     , analogous to
+     <tt class="docutils literal">
+      **
+     </tt>
+     .  But on further consideration, it was
+decided that the utility of this was sufficiently unclear that it
+would be better to leave it out for now, and only revisit the issue if
+-- once we have more experience with
+     <tt class="docutils literal">
+      @
+     </tt>
+     -- it turns out that
+     <tt class="docutils literal">
+      @@
+     </tt>
+     is truly missed.
+     <a class="footnote-reference" href="#atat-discussion" id="id15">
+      [14]
+     </a>
+    </p>
+   </div>
+  </div>
+  <div class="section" id="rejected-alternatives-to-adding-a-new-operator">
+   <h1>
+    <a class="toc-backref" href="#id43">
+     Rejected alternatives to adding a new operator
+    </a>
+   </h1>
+   <p>
+    Over the past few decades, the Python numeric community has explored a
+variety of ways to resolve the tension between matrix and elementwise
+multiplication operations.
+    <a class="reference external" href="../pep-0211/index.html">
+     PEP 211
+    </a>
+    and
+    <a class="reference external" href="../pep-0225/index.html">
+     PEP 225
+    </a>
+    , both proposed in 2000
+and last seriously discussed in 2008
+    <a class="footnote-reference" href="#threads-2008" id="id16">
+     [9]
+    </a>
+    , were early
+attempts to add new operators to solve this problem, but suffered from
+serious flaws; in particular, at that time the Python numerical
+community had not yet reached consensus on the proper API for array
+objects, or on what operators might be needed or useful (e.g.,
+    <a class="reference external" href="../pep-0225/index.html">
+     PEP 225
+    </a>
+    proposes 6 new operators with unspecified semantics).  Experience
+since then has now led to consensus that the best solution, for both
+numeric Python and core Python, is to add a single infix operator for
+matrix multiply (together with the other new operators this implies
+like
+    <tt class="docutils literal">
+     @=
+    </tt>
+    ).
+   </p>
+   <p>
+    We review some of the rejected alternatives here.
+   </p>
+   <p>
+    <strong>
+     Use a second type that defines __mul__ as matrix multiplication:
+    </strong>
+    As discussed above (
+    <a class="reference internal" href="#background-what-s-wrong-with-the-status-quo">
+     Background: What's wrong with the status quo?
+    </a>
+    ),
+this has been tried this for many years via the
+    <tt class="docutils literal">
+     numpy.matrix
+    </tt>
+    type
+(and its predecessors in Numeric and numarray).  The result is a
+strong consensus among both numpy developers and developers of
+downstream packages that
+    <tt class="docutils literal">
+     numpy.matrix
+    </tt>
+    should essentially never be
+used, because of the problems caused by having conflicting duck types
+for arrays.  (Of course one could then argue we should
+    <em>
+     only
+    </em>
+    define
+    <tt class="docutils literal">
+     __mul__
+    </tt>
+    to be matrix multiplication, but then we'd have the same
+problem with elementwise multiplication.)  There have been several
+pushes to remove
+    <tt class="docutils literal">
+     numpy.matrix
+    </tt>
+    entirely; the only counter-arguments
+have come from educators who find that its problems are outweighed by
+the need to provide a simple and clear mapping between mathematical
+notation and code for novices (see
+    <a class="reference internal" href="#transparent-syntax-is-especially-crucial-for-non-expert-programmers">
+     Transparent syntax is especially
+crucial for non-expert programmers
+    </a>
+    ).  But, of course, starting out
+newbies with a dispreferred syntax and then expecting them to
+transition later causes its own problems.  The two-type solution is
+worse than the disease.
+   </p>
+   <p>
+    <strong>
+     Add lots of new operators, or add a new generic syntax for defining
+infix operators:
+    </strong>
+    In addition to being generally un-Pythonic and
+repeatedly rejected by BDFL fiat, this would be using a sledgehammer
+to smash a fly.  The scientific python community has consensus that
+adding one operator for matrix multiplication is enough to fix the one
+otherwise unfixable pain point. (In retrospect, we all think
+    <a class="reference external" href="../pep-0225/index.html">
+     PEP 225
+    </a>
+    was a bad idea too -- or at least far more complex than it needed to
+be.)
+   </p>
+   <p>
+    <strong>
+     Add a new @ (or whatever) operator that has some other meaning in
+general Python, and then overload it in numeric code:
+    </strong>
+    This was the
+approach taken by
+    <a class="reference external" href="../pep-0211/index.html">
+     PEP 211
+    </a>
+    , which proposed defining
+    <tt class="docutils literal">
+     @
+    </tt>
+    to be the
+equivalent of
+    <tt class="docutils literal">
+     itertools.product
+    </tt>
+    .  The problem with this is that
+when taken on its own terms, it's pretty clear that
+    <tt class="docutils literal">
+     itertools.product
+    </tt>
+    doesn't actually need a dedicated operator.  It
+hasn't even been deemed worth of a builtin.  (During discussions of
+this PEP, a similar suggestion was made to define
+    <tt class="docutils literal">
+     @
+    </tt>
+    as a general
+purpose function composition operator, and this suffers from the same
+problem;
+    <tt class="docutils literal">
+     functools.compose
+    </tt>
+    isn't even useful enough to exist.)
+Matrix multiplication has a uniquely strong rationale for inclusion as
+an infix operator.  There almost certainly don't exist any other
+binary operations that will ever justify adding any other infix
+operators to Python.
+   </p>
+   <p>
+    <strong>
+     Add a .dot method to array types so as to allow "pseudo-infix"
+A.dot(B) syntax:
+    </strong>
+    This has been in numpy for some years, and in many
+cases it's better than dot(A, B).  But it's still much less readable
+than real infix notation, and in particular still suffers from an
+extreme overabundance of parentheses.  See
+    <a class="reference internal" href="#why-should-matrix-multiplication-be-infix">
+     Why should matrix
+multiplication be infix?
+    </a>
+    above.
+   </p>
+   <p>
+    <strong>
+     Use a 'with' block to toggle the meaning of * within a single code
+block
+    </strong>
+    : E.g., numpy could define a special context object so that
+we'd have:
+   </p>
+   <pre class="literal-block">
+c = a * b   # element-wise multiplication
+with numpy.mul_as_dot:
+    c = a * b  # matrix multiplication
+</pre>
+   <p>
+    However, this has two serious problems: first, it requires that every
+array-like type's
+    <tt class="docutils literal">
+     __mul__
+    </tt>
+    method know how to check some global
+state (
+    <tt class="docutils literal">
+     numpy.mul_is_currently_dot
+    </tt>
+    or whatever).  This is fine if
+    <tt class="docutils literal">
+     a
+    </tt>
+    and
+    <tt class="docutils literal">
+     b
+    </tt>
+    are numpy objects, but the world contains many
+non-numpy array-like objects.  So this either requires non-local
+coupling -- every numpy competitor library has to import numpy and
+then check
+    <tt class="docutils literal">
+     numpy.mul_is_currently_dot
+    </tt>
+    on every operation -- or
+else it breaks duck-typing, with the above code doing radically
+different things depending on whether
+    <tt class="docutils literal">
+     a
+    </tt>
+    and
+    <tt class="docutils literal">
+     b
+    </tt>
+    are numpy
+objects or some other sort of object.  Second, and worse,
+    <tt class="docutils literal">
+     with
+    </tt>
+    blocks are dynamically scoped, not lexically scoped; i.e., any
+function that gets called inside the
+    <tt class="docutils literal">
+     with
+    </tt>
+    block will suddenly find
+itself executing inside the mul_as_dot world, and crash and burn
+horribly -- if you're lucky.  So this is a construct that could only
+be used safely in rather limited cases (no function calls), and which
+would make it very easy to shoot yourself in the foot without warning.
+   </p>
+   <p>
+    <strong>
+     Use a language preprocessor that adds extra numerically-oriented
+operators and perhaps other syntax:
+    </strong>
+    (As per recent BDFL suggestion:
+    <a class="footnote-reference" href="#preprocessor" id="id17">
+     [1]
+    </a>
+    ) This suggestion seems based on the idea that
+numerical code needs a wide variety of syntax additions.  In fact,
+given
+    <tt class="docutils literal">
+     @
+    </tt>
+    , most numerical users don't need any other operators or
+syntax; it solves the one really painful problem that cannot be solved
+by other means, and that causes painful reverberations through the
+larger ecosystem.  Defining a new language (presumably with its own
+parser which would have to be kept in sync with Python's, etc.), just
+to support a single binary operator, is neither practical nor
+desireable.  In the numerical context, Python's competition is
+special-purpose numerical languages (Matlab, R, IDL, etc.).  Compared
+to these, Python's killer feature is exactly that one can mix
+specialized numerical code with code for XML parsing, web page
+generation, database access, network programming, GUI libraries, and
+so forth, and we also gain major benefits from the huge variety of
+tutorials, reference material, introductory classes, etc., which use
+Python.  Fragmenting "numerical Python" from "real Python" would be a
+major source of confusion.  A major motivation for this PEP is to
+    <em>
+     reduce
+    </em>
+    fragmentation.  Having to set up a preprocessor would be an
+especially prohibitive complication for unsophisticated users.  And we
+use Python because we like Python!  We don't want
+almost-but-not-quite-Python.
+   </p>
+   <p>
+    <strong>
+     Use overloading hacks to define a "new infix operator" like *dot*,
+as in a well-known Python recipe:
+    </strong>
+    (See:
+    <a class="footnote-reference" href="#infix-hack" id="id18">
+     [2]
+    </a>
+    ) Beautiful is
+better than ugly.  This is... not beautiful.  And not Pythonic.  And
+especially unfriendly to beginners, who are just trying to wrap their
+heads around the idea that there's a coherent underlying system behind
+these magic incantations that they're learning, when along comes an
+evil hack like this that violates that system, creates bizarre error
+messages when accidentally misused, and whose underlying mechanisms
+can't be understood without deep knowledge of how object oriented
+systems work.
+   </p>
+   <p>
+    <strong>
+     Use a special "facade" type to support syntax like arr.M * arr:
+    </strong>
+    This is very similar to the previous proposal, in that the
+    <tt class="docutils literal">
+     .M
+    </tt>
+    attribute would basically return the same object as
+    <tt class="docutils literal">
+     arr *dot` would,
+and thus suffers the same objections about 'magicalness'.  This
+approach also has some
+     <span class="pre">
+      non-obvious
+     </span>
+     complexities: for example, while
+``arr.M * arr
+    </tt>
+    must return an array,
+    <tt class="docutils literal">
+     arr.M * arr.M
+    </tt>
+    and
+    <tt class="docutils literal">
+     arr *
+arr.M
+    </tt>
+    must return facade objects, or else
+    <tt class="docutils literal">
+     arr.M * arr.M * arr
+    </tt>
+    and
+    <tt class="docutils literal">
+     arr * arr.M * arr
+    </tt>
+    will not work.  But this means that facade
+objects must be able to recognize both other array objects and other
+facade objects (which creates additional complexity for writing
+interoperating array types from different libraries who must now
+recognize both each other's array types and their facade types).  It
+also creates pitfalls for users who may easily type
+    <tt class="docutils literal">
+     arr * arr.M
+    </tt>
+    or
+    <tt class="docutils literal">
+     arr.M * arr.M
+    </tt>
+    and expect to get back an array object; instead,
+they will get a mysterious object that throws errors when they attempt
+to use it.  Basically with this approach users must be careful to
+think of
+    <tt class="docutils literal">
+     .M*
+    </tt>
+    as an indivisible unit that acts as an infix operator
+-- and as infix-operator-like token strings go, at least
+    <tt class="docutils literal">
+     *dot*
+    </tt>
+    is prettier looking (look at its cute little ears!).
+   </p>
+  </div>
+  <div class="section" id="discussions-of-this-pep">
+   <h1>
+    <a class="toc-backref" href="#id44">
+     Discussions of this PEP
+    </a>
+   </h1>
+   <p>
+    Collected here for reference:
+   </p>
+   <ul class="simple">
+    <li>
+     Github pull request containing much of the original discussion and
+drafting:
+     <a class="reference external" href="https://github.com/numpy/numpy/pull/4351">
+      https://github.com/numpy/numpy/pull/4351
+     </a>
+    </li>
+    <li>
+     sympy mailing list discussions of an early draft:
+     <ul>
+      <li>
+       <a class="reference external" href="https://groups.google.com/forum/#!topic/sympy/22w9ONLa7qo">
+        https://groups.google.com/forum/#!topic/sympy/22w9ONLa7qo
+       </a>
+      </li>
+      <li>
+       <a class="reference external" href="https://groups.google.com/forum/#!topic/sympy/4tGlBGTggZY">
+        https://groups.google.com/forum/#!topic/sympy/4tGlBGTggZY
+       </a>
+      </li>
+     </ul>
+    </li>
+    <li>
+     sage-devel mailing list discussions of an early draft:
+     <a class="reference external" href="https://groups.google.com/forum/#!topic/sage-devel/YxEktGu8DeM">
+      https://groups.google.com/forum/#!topic/sage-devel/YxEktGu8DeM
+     </a>
+    </li>
+    <li>
+     13-Mar-2014 python-ideas thread:
+     <a class="reference external" href="https://mail.python.org/pipermail/python-ideas/2014-March/027053.html">
+      https://mail.python.org/pipermail/python-ideas/2014-March/027053.html
+     </a>
+    </li>
+    <li>
+     numpy-discussion thread on whether to keep
+     <tt class="docutils literal">
+      @@
+     </tt>
+     :
+     <a class="reference external" href="http://mail.scipy.org/pipermail/numpy-discussion/2014-March/069448.html">
+      http://mail.scipy.org/pipermail/numpy-discussion/2014-March/069448.html
+     </a>
+    </li>
+    <li>
+     numpy-discussion threads on precedence/associativity of
+     <tt class="docutils literal">
+      @
+     </tt>
+     :
+*
+     <a class="reference external" href="http://mail.scipy.org/pipermail/numpy-discussion/2014-March/069444.html">
+      http://mail.scipy.org/pipermail/numpy-discussion/2014-March/069444.html
+     </a>
+     *
+     <a class="reference external" href="http://mail.scipy.org/pipermail/numpy-discussion/2014-March/069605.html">
+      http://mail.scipy.org/pipermail/numpy-discussion/2014-March/069605.html
+     </a>
+    </li>
+   </ul>
+  </div>
+  <div class="section" id="references">
+   <h1>
+    <a class="toc-backref" href="#id45">
+     References
+    </a>
+   </h1>
+   <table class="docutils footnote" frame="void" id="preprocessor" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id17">
+        [1]
+       </a>
+      </td>
+      <td>
+       From a comment by GvR on a G+ post by GvR; the
+comment itself does not seem to be directly linkable:
+       <a class="reference external" href="https://plus.google.com/115212051037621986145/posts/hZVVtJ9bK3u">
+        https://plus.google.com/115212051037621986145/posts/hZVVtJ9bK3u
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="infix-hack" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id18">
+        [2]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="http://code.activestate.com/recipes/384122-infix-operators/">
+        http://code.activestate.com/recipes/384122-infix-operators/
+       </a>
+       <a class="reference external" href="http://www.sagemath.org/doc/reference/misc/sage/misc/decorators.html#sage.misc.decorators.infix_operator">
+        http://www.sagemath.org/doc/reference/misc/sage/misc/decorators.html#sage.misc.decorators.infix_operator
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="scipy-conf" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id3">
+        [3]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="http://conference.scipy.org/past.html">
+        http://conference.scipy.org/past.html
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="pydata-conf" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id4">
+        [4]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="http://pydata.org/events/">
+        http://pydata.org/events/
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="lht" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id2">
+        [5]
+       </a>
+      </td>
+      <td>
+       <p class="first">
+        In this formula,
+        <span class="formula">
+         <i>
+          β
+         </i>
+        </span>
+        is a vector or matrix of
+regression coefficients,
+        <span class="formula">
+         <i>
+          V
+         </i>
+        </span>
+        is the estimated
+variance/covariance matrix for these coefficients, and we want to
+test the null hypothesis that
+        <span class="formula">
+         <i>
+          H
+         </i>
+         <i>
+          β
+         </i>
+         =
+         <i>
+          r
+         </i>
+        </span>
+        ; a large
+        <span class="formula">
+         <i>
+          S
+         </i>
+        </span>
+        then indicates that this hypothesis is unlikely to be true. For
+example, in an analysis of human height, the vector
+        <span class="formula">
+         <i>
+          β
+         </i>
+        </span>
+        might contain one value which was the the average height of the
+measured men, and another value which was the average height of the
+measured women, and then setting
+        <span class="formula">
+         <i>
+          H
+         </i>
+         = [1,  − 1],
+         <i>
+          r
+         </i>
+         = 0
+        </span>
+        would
+let us test whether men and women are the same height on
+average. Compare to eq. 2.139 in
+        <a class="reference external" href="http://sfb649.wiwi.hu-berlin.de/fedc_homepage/xplore/tutorials/xegbohtmlnode17.html">
+         http://sfb649.wiwi.hu-berlin.de/fedc_homepage/xplore/tutorials/xegbohtmlnode17.html
+        </a>
+       </p>
+       <p class="last">
+        Example code is adapted from
+        <a class="reference external" href="https://github.com/rerpy/rerpy/blob/0d274f85e14c3b1625acb22aed1efa85d122ecb7/rerpy/incremental_ls.py#L202">
+         https://github.com/rerpy/rerpy/blob/0d274f85e14c3b1625acb22aed1efa85d122ecb7/rerpy/incremental_ls.py#L202
+        </a>
+       </p>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="pycon-tutorials" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id5">
+        [6]
+       </a>
+      </td>
+      <td>
+       <p class="first">
+        Out of the 36 tutorials scheduled for PyCon 2014
+(
+        <a class="reference external" href="https://us.pycon.org/2014/schedule/tutorials/">
+         https://us.pycon.org/2014/schedule/tutorials/
+        </a>
+        ), we guess that the
+8 below will almost certainly deal with matrices:
+       </p>
+       <ul class="simple">
+        <li>
+         Dynamics and control with Python
+        </li>
+        <li>
+         Exploring machine learning with Scikit-learn
+        </li>
+        <li>
+         How to formulate a (science) problem and analyze it using Python
+code
+        </li>
+        <li>
+         Diving deeper into Machine Learning with Scikit-learn
+        </li>
+        <li>
+         Data Wrangling for Kaggle Data Science Competitions – An etude
+        </li>
+        <li>
+         Hands-on with Pydata: how to build a minimal recommendation
+engine.
+        </li>
+        <li>
+         Python for Social Scientists
+        </li>
+        <li>
+         Bayesian statistics made simple
+        </li>
+       </ul>
+       <p>
+        In addition, the following tutorials could easily involve matrices:
+       </p>
+       <ul class="simple">
+        <li>
+         Introduction to game programming
+        </li>
+        <li>
+         mrjob: Snakes on a Hadoop
+         <em>
+          ("We'll introduce some data science
+concepts, such as user-user similarity, and show how to calculate
+these metrics...")
+         </em>
+        </li>
+        <li>
+         Mining Social Web APIs with IPython Notebook
+        </li>
+        <li>
+         Beyond Defaults: Creating Polished Visualizations Using Matplotlib
+        </li>
+       </ul>
+       <p class="last">
+        This gives an estimated range of 8 to 12 / 36 = 22% to 33% of
+tutorials dealing with matrices; saying ~20% then gives us some
+wiggle room in case our estimates are high.
+       </p>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="sloc-details" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id7">
+        [7]
+       </a>
+      </td>
+      <td>
+       <p class="first">
+        SLOCs were defined as physical lines which contain
+at least one token that is not a COMMENT, NEWLINE, ENCODING,
+INDENT, or DEDENT.  Counts were made by using
+        <tt class="docutils literal">
+         tokenize
+        </tt>
+        module
+from Python 3.2.3 to examine the tokens in all files ending
+        <tt class="docutils literal">
+         .py
+        </tt>
+        underneath some directory.  Only tokens which occur at least once
+in the source trees are included in the table.  The counting script
+is available
+        <a class="reference external" href="http://hg.python.org/peps/file/tip/pep-0465/scan-ops.py">
+         in the PEP repository
+        </a>
+        .
+       </p>
+       <p>
+        Matrix multiply counts were estimated by counting how often certain
+tokens which are used as matrix multiply function names occurred in
+each package.  This creates a small number of false positives for
+scikit-learn, because we also count instances of the wrappers
+around
+        <tt class="docutils literal">
+         dot
+        </tt>
+        that this package uses, and so there are a few dozen
+tokens which actually occur in
+        <tt class="docutils literal">
+         import
+        </tt>
+        or
+        <tt class="docutils literal">
+         def
+        </tt>
+        statements.
+       </p>
+       <p>
+        All counts were made using the latest development version of each
+project as of 21 Feb 2014.
+       </p>
+       <p>
+        'stdlib' is the contents of the Lib/ directory in commit
+d6aa3fa646e2 to the cpython hg repository, and treats the following
+tokens as indicating matrix multiply: n/a.
+       </p>
+       <p>
+        'scikit-learn' is the contents of the sklearn/ directory in commit
+69b71623273ccfc1181ea83d8fb9e05ae96f57c7 to the scikit-learn
+repository (
+        <a class="reference external" href="https://github.com/scikit-learn/scikit-learn">
+         https://github.com/scikit-learn/scikit-learn
+        </a>
+        ), and
+treats the following tokens as indicating matrix multiply:
+        <tt class="docutils literal">
+         dot
+        </tt>
+        ,
+        <tt class="docutils literal">
+         fast_dot
+        </tt>
+        ,
+        <tt class="docutils literal">
+         safe_sparse_dot
+        </tt>
+        .
+       </p>
+       <p class="last">
+        'nipy' is the contents of the nipy/ directory in commit
+5419911e99546401b5a13bd8ccc3ad97f0d31037 to the nipy repository
+(
+        <a class="reference external" href="https://github.com/nipy/nipy/">
+         https://github.com/nipy/nipy/
+        </a>
+        ), and treats the following tokens as
+indicating matrix multiply:
+        <tt class="docutils literal">
+         dot
+        </tt>
+        .
+       </p>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="blas-fork" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id14">
+        [8]
+       </a>
+      </td>
+      <td>
+       BLAS libraries have a habit of secretly spawning
+threads, even when used from single-threaded programs.  And threads
+play very poorly with
+       <tt class="docutils literal">
+        fork()
+       </tt>
+       ; the usual symptom is that
+attempting to perform linear algebra in a child process causes an
+immediate deadlock.
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="threads-2008" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id16">
+        [9]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="http://fperez.org/py4science/numpy-pep225/numpy-pep225.html">
+        http://fperez.org/py4science/numpy-pep225/numpy-pep225.html
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="broadcasting" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id8">
+        [10]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="http://docs.scipy.org/doc/numpy/user/basics.broadcasting.html">
+        http://docs.scipy.org/doc/numpy/user/basics.broadcasting.html
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="matmul-other-langs" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id9">
+        [11]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="http://mail.scipy.org/pipermail/scipy-user/2014-February/035499.html">
+        http://mail.scipy.org/pipermail/scipy-user/2014-February/035499.html
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="github-details" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id6">
+        [12]
+       </a>
+      </td>
+      <td>
+       <p class="first">
+        Counts were produced by manually entering the
+string
+        <tt class="docutils literal">
+         "import foo"
+        </tt>
+        or
+        <tt class="docutils literal">
+         "from foo import"
+        </tt>
+        (with quotes) into
+the Github code search page, e.g.:
+        <a class="reference external" href="https://github.com/search?q=%22import+numpy%22&amp;ref=simplesearch&amp;type=Code">
+         https://github.com/search?q=%22import+numpy%22&amp;ref=simplesearch&amp;type=Code
+        </a>
+        on 2014-04-10 at ~21:00 UTC.  The reported values are the numbers
+given in the "Languages" box on the lower-left corner, next to
+"Python".  This also causes some undercounting (e.g., leaving out
+Cython code, and possibly one should also count HTML docs and so
+forth), but these effects are negligible (e.g., only ~1% of numpy
+usage appears to occur in Cython code, and probably even less for
+the other modules listed).  The use of this box is crucial,
+however, because these counts appear to be stable, while the
+"overall" counts listed at the top of the page ("We've found ___
+code results") are highly variable even for a single search --
+simply reloading the page can cause this number to vary by a factor
+of 2 (!!).  (They do seem to settle down if one reloads the page
+repeatedly, but nonetheless this is spooky enough that it seemed
+better to avoid these numbers.)
+       </p>
+       <p>
+        These numbers should of course be taken with multiple grains of
+salt; it's not clear how representative Github is of Python code in
+general, and limitations of the search tool make it impossible to
+get precise counts.  AFAIK this is the best data set currently
+available, but it'd be nice if it were better.  In particular:
+       </p>
+       <ul class="simple">
+        <li>
+         Lines like
+         <tt class="docutils literal">
+          import sys, os
+         </tt>
+         will only be counted in the
+         <tt class="docutils literal">
+          sys
+         </tt>
+         row.
+        </li>
+        <li>
+         A file containing both
+         <tt class="docutils literal">
+          import X
+         </tt>
+         and
+         <tt class="docutils literal">
+          from X import
+         </tt>
+         will be
+counted twice
+        </li>
+        <li>
+         Imports of the form
+         <tt class="docutils literal">
+          from X.foo import ...
+         </tt>
+         are missed.  We
+could catch these by instead searching for "from X", but this is
+a common phrase in English prose, so we'd end up with false
+positives from comments, strings, etc.  For many of the modules
+considered this shouldn't matter too much -- for example, the
+stdlib modules have flat namespaces -- but it might especially
+lead to undercounting of django, scipy, and twisted.
+        </li>
+       </ul>
+       <p>
+        Also, it's possible there exist other non-stdlib modules we didn't
+think to test that are even more-imported than numpy -- though we
+tried quite a few of the obvious suspects.  If you find one, let us
+know!  The modules tested here were chosen based on a combination
+of intuition and the top-100 list at pypi-ranking.info.
+       </p>
+       <p>
+        Fortunately, it doesn't really matter if it turns out that numpy
+is, say, merely the
+        <em>
+         third
+        </em>
+        most-imported non-stdlib module, since
+the point is just that numeric programming is a common and
+mainstream activity.
+       </p>
+       <p class="last">
+        Finally, we should point out the obvious: whether a package is
+import**ed** is rather different from whether it's import**ant**.
+No-one's claiming numpy is "the most important package" or anything
+like that.  Certainly more packages depend on distutils, e.g., then
+depend on numpy -- and far fewer source files import distutils than
+import numpy.  But this is fine for our present purposes.  Most
+source files don't import distutils because most source files don't
+care how they're distributed, so long as they are; these source
+files thus don't care about details of how distutils' API works.
+This PEP is in some sense about changing how numpy's and related
+packages' APIs work, so the relevant metric is to look at source
+files that are choosing to directly interact with that API, which
+is sort of like what we get by looking at import statements.
+       </p>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="hugunin" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id1">
+        [13]
+       </a>
+      </td>
+      <td>
+       The first such proposal occurs in Jim Hugunin's very
+first email to the matrix SIG in 1995, which lays out the first
+draft of what became Numeric. He suggests using
+       <tt class="docutils literal">
+        *
+       </tt>
+       for
+elementwise multiplication, and
+       <tt class="docutils literal">
+        %
+       </tt>
+       for matrix multiplication:
+       <a class="reference external" href="https://mail.python.org/pipermail/matrix-sig/1995-August/000002.html">
+        https://mail.python.org/pipermail/matrix-sig/1995-August/000002.html
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="atat-discussion" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id15">
+        [14]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="http://mail.scipy.org/pipermail/numpy-discussion/2014-March/069502.html">
+        http://mail.scipy.org/pipermail/numpy-discussion/2014-March/069502.html
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="associativity-discussions" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id10">
+        [15]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="http://mail.scipy.org/pipermail/numpy-discussion/2014-March/069444.html">
+        http://mail.scipy.org/pipermail/numpy-discussion/2014-March/069444.html
+       </a>
+       <a class="reference external" href="http://mail.scipy.org/pipermail/numpy-discussion/2014-March/069605.html">
+        http://mail.scipy.org/pipermail/numpy-discussion/2014-March/069605.html
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="oil-industry-versus-right-associativity" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id12">
+        [16]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="http://mail.scipy.org/pipermail/numpy-discussion/2014-March/069610.html">
+        http://mail.scipy.org/pipermail/numpy-discussion/2014-March/069610.html
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="numpy-associativity-counts" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id13">
+        [17]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="http://mail.scipy.org/pipermail/numpy-discussion/2014-March/069578.html">
+        http://mail.scipy.org/pipermail/numpy-discussion/2014-March/069578.html
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="group-associativity" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id11">
+        [18]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="http://mail.scipy.org/pipermail/numpy-discussion/2014-March/069530.html">
+        http://mail.scipy.org/pipermail/numpy-discussion/2014-March/069530.html
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id19" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id20">
+        [19]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="https://en.wikipedia.org/wiki/Matrix_multiplication">
+        https://en.wikipedia.org/wiki/Matrix_multiplication
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id21" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id22">
+        [20]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="https://en.wikipedia.org/wiki/Empty_product">
+        https://en.wikipedia.org/wiki/Empty_product
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+  </div>
+  <div class="section" id="copyright">
+   <h1>
+    <a class="toc-backref" href="#id46">
+     Copyright
+    </a>
+   </h1>
+   <p>
+    This document has been placed in the public domain.
+   </p>
+  </div>
+ </body>
+
+<!-- Mirrored from www.python.org/dev/peps/pep-0465/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 03 Sep 2015 04:34:53 GMT -->
+</html>Source: <a href="https://hg.python.org/peps/file/tip/pep-0465.txt">https://hg.python.org/peps/file/tip/pep-0465.txt</a>
+
+    </article>
+
+
+                </section>
+
+                
+
+
+<aside class="left-sidebar" role="secondary">
+
+    
+
+
+
+
+
+
+    
+
+
+
+
+
+        <div class="twitter-widget sidebar-widget">
+        <a class="twitter-timeline" data-dnt="true" href="https://twitter.com/ThePSF" data-widget-id="434113224703610882">Tweets by @ThePSF</a>
+        <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+    </div>
+
+    <div class="psf-sidebar-widget sidebar-widget">
+        <h3 class="widget-title">The PSF</h3>
+<p>The Python Software Foundation is the organization behind Python. Become a member of the PSF and help advance the software and our mission. </p>
+
+    </div>
+
+</aside>
+
+
+
+                
+                
+
+
+            </div><!-- end .container -->
+        </div><!-- end #content .content-wrapper -->
+
+        <!-- Footer and social media list -->
+        <footer id="site-map" class="main-footer" role="contentinfo">
+            <div class="main-footer-links">
+                <div class="container">
+
+                    
+                    <a id="back-to-top-1" class="jump-link" href="#python-network"><span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> Back to Top</a>
+
+                    
+
+<ul class="sitemap navigation menu do-not-print" role="tree" id="container">
+    
+    <li class="tier-1 element-1">
+        <a href="https://www.python.org/about/" >About</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/apps/" title="">Applications</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/quotes/" title="">Quotes</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/gettingstarted/" title="">Getting Started</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/help/" title="">Help</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-2">
+        <a href="https://www.python.org/downloads/" >Downloads</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/downloads/" title="">All releases</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/downloads/source/" title="">Source code</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/downloads/windows/" title="">Windows</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/downloads/mac-osx/" title="">Mac OS X</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/download/other/" title="">Other Platforms</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://docs.python.org/3/license.html" title="">License</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/download/alternatives" title="">Alternative Implementations</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-3">
+        <a href="https://www.python.org/doc/" >Documentation</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/doc/" title="">Docs</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/doc/av" title="">Audio/Visual Talks</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://wiki.python.org/moin/BeginnersGuide" title="">Beginner&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://docs.python.org/faq/" title="">FAQ</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="http://wiki.python.org/moin/Languages" title="">Non-English Docs</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="../index.html" title="">PEP Index</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://wiki.python.org/moin/PythonBooks" title="">Python Books</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-4">
+        <a href="https://www.python.org/community/" >Community</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/community/diversity/" title="">Diversity</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/community/irc/" title="">IRC</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/community/lists/" title="">Mailing Lists</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/workshops/" title="">Python Conferences</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/community/sigs/" title="">Special Interest Groups</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://wiki.python.org/moin/" title="">Python Wiki</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/community/logos/" title="">Python Logo</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://www.python.org/community/merchandise/" title="">Merchandise</a></li>
+    
+        <li class="tier-2 element-9" role="treeitem"><a href="https://www.python.org/community/awards" title="">Community Awards</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-5">
+        <a href="https://www.python.org/about/success/" title="success-stories">Success Stories</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/success/#arts" title="">Arts</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/success/#business" title="">Business</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/success/#education" title="">Education</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/success/#engineering" title="">Engineering</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/about/success/#government" title="">Government</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://www.python.org/about/success/#scientific" title="">Scientific</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/about/success/#software-development" title="">Software Development</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-6">
+        <a href="https://www.python.org/blogs/" title="News from around the Python world">News</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/blogs/" title="Python Insider Blog Posts">Python News</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://planetpython.org/" title="Planet Python">Community News</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="http://pyfound.blogspot.com/" title="PSF Blog">PSF News</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pycon.blogspot.com/" title="PyCon Blog">PyCon News</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-7">
+        <a href="https://www.python.org/events/" >Events</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/events/python-events/" title="">Python Events</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/events/python-user-group/" title="">User Group Events</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/events/python-events/past/" title="">Python Events Archive</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/events/python-user-group/past/" title="">User Group Events Archive</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://wiki.python.org/moin/PythonEventsCalendar#Submitting_an_Event" title="">Submit an Event</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-8">
+        <a href="https://www.python.org/dev/" >Contributing</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="http://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://bugs.python.org/" title="">Issue Tracker</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://mail.python.org/mailman/listinfo/python-dev" title="">python-dev list</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pythonmentors.com/" title="">Core Mentorship</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+</ul>
+
+
+                    <a id="back-to-top-2" class="jump-link" href="#python-network"><span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> Back to Top</a>
+                    
+
+                </div><!-- end .container -->
+            </div> <!-- end .main-footer-links -->
+
+            <div class="site-base">
+                <div class="container">
+                    
+                    <ul class="footer-links navigation menu do-not-print" role="tree">
+                        <li class="tier-1 element-1"><a href="https://www.python.org/about/help/">Help &amp; <span class="say-no-more">General</span> Contact</a></li>
+                        <li class="tier-1 element-2"><a href="https://www.python.org/community/diversity/">Diversity <span class="say-no-more">Initiatives</span></a></li>
+                        <li class="tier-1 element-3"><a href="https://github.com/python/pythondotorg/issues">Submit Website Bug</a></li>
+                        <!--<li class="tier-1 element-3"><a href="#"><span class="say-no-more">Website</span> Colophon</a></li>-->
+                    </ul>
+
+                    <div class="copyright">
+                        <p><small>
+                            <span class="pre">Copyright &copy;2001-2015.</span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/psf-landing/">Python Software Foundation</a></span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/about/legal/">Legal Statements</a></span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/privacy/">Privacy Policy</a></span>
+                        </small></p>
+                    </div>
+
+                </div><!-- end .container -->
+            </div><!-- end .site-base -->
+
+        </footer>
+
+    </div><!-- end #touchnav-wrapper -->
+
+    
+    <script src="../../../../ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="../../../static/js/libs/jquery-1.8.2.min.js"><\/script>')</script>
+
+    <script src="../../../static/js/libs/masonry.pkgd.min.js"></script>
+
+    <script type="text/javascript" src="../../../static/js/main-min.js" charset="utf-8"></script>
+    
+
+    <!--[if lte IE 7]>
+    <script type="text/javascript" src="/static/js/plugins/IE8-min.js" charset="utf-8"></script>
+    
+    
+    <![endif]-->
+
+    <!--[if lte IE 8]>
+    <script type="text/javascript" src="/static/js/plugins/getComputedStyle-min.js" charset="utf-8"></script>
+    
+    
+    <![endif]-->
+
+    
+
+    
+    
+
+</body>
+</html>

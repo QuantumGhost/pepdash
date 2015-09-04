@@ -1,0 +1,2043 @@
+<!doctype html>
+<!--[if lt IE 7]>   <html class="no-js ie6 lt-ie7 lt-ie8 lt-ie9">   <![endif]-->
+<!--[if IE 7]>      <html class="no-js ie7 lt-ie8 lt-ie9">          <![endif]-->
+<!--[if IE 8]>      <html class="no-js ie8 lt-ie9">                 <![endif]-->
+<!--[if gt IE 8]><!--><html class="no-js" lang="en" dir="ltr">  <!--<![endif]-->
+
+
+<!-- Mirrored from www.python.org/dev/peps/pep-0468/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 03 Sep 2015 04:33:30 GMT -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <link rel="prefetch" href="../../../../ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js">
+
+    <meta name="application-name" content="Python.org">
+    <meta name="msapplication-tooltip" content="The official home of the Python Programming Language">
+    <meta name="apple-mobile-web-app-title" content="Python.org">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="format-detection" content="telephone=no">
+    <meta http-equiv="cleartype" content="on">
+    <meta http-equiv="imagetoolbar" content="false">
+
+    <script src="../../../static/js/libs/modernizr.js"></script>
+
+    <link href="../../../static/stylesheets/style.css" rel="stylesheet" type="text/css" title="default" />
+    <link href="../../../static/stylesheets/mq.css" rel="stylesheet" type="text/css" media="not print, braille, embossed, speech, tty" />
+    
+
+    <!--[if (lte IE 8)&(!IEMobile)]>
+    <link href="/static/stylesheets/no-mq.css" rel="stylesheet" type="text/css" media="screen" />
+    
+    
+    <![endif]-->
+
+    
+    <link rel="icon" type="image/x-icon" href="https://www.python.org/static/favicon.ico">
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="../../../static/apple-touch-icon-144x144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="../../../static/apple-touch-icon-114x114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="../../../static/apple-touch-icon-72x72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="../../../static/apple-touch-icon-precomposed.png">
+    <link rel="apple-touch-icon" href="../../../static/apple-touch-icon-precomposed.png">
+
+    
+    <meta name="msapplication-TileImage" content="/static/metro-icon-144x144-precomposed.png"><!-- white shape -->
+    <meta name="msapplication-TileColor" content="#3673a5"><!-- python blue -->
+    <meta name="msapplication-navbutton-color" content="#3673a5">
+
+    <meta property="og:site_name" content="Python.org">
+    <meta property="og:type" content="website">
+
+    <title>PEP 0468 -- Preserving the order of **kwargs in a function. | Python.org</title>
+    <meta property="og:title" content="Welcome to Python.org">
+
+    
+    <meta name="description" content="The official home of the Python Programming Language">
+    <meta name="og:description" content="The official home of the Python Programming Language">
+    <meta name="keywords" content="Python programming language object oriented web free open source software license documentation download community">
+    <meta property="og:tag" content="Python programming language object oriented web free open source software license documentation download community">
+    <meta property="og:published_time" content="">
+    <meta property="og:modified_time" content="">
+    <meta property="og:author" content="">
+    <meta property="og:section" content=""> 
+    <meta property="og:url" content="">
+    <meta property="og:image" content="">
+    <meta property="og:video" content="">
+
+    <link rel="author" href="https://www.python.org/static/humans.txt">
+
+    
+
+    
+    <script type="application/ld+json">
+     {
+       "@context": "http://schema.org",
+       "@type": "WebSite",
+       "url": "https://www.python.org/",
+       "potentialAction": {
+         "@type": "SearchAction",
+         "target": "https://www.python.org/search/?q={search_term_string}",
+         "query-input": "required name=search_term_string"
+       }
+     }
+    </script>
+
+    
+    <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-39055973-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+    </script>
+    
+</head>
+
+<body class="python pages pep-page">
+
+    <div id="touchnav-wrapper">
+
+        <div id="nojs" class="do-not-print">
+            <p><strong>Notice:</strong> While Javascript is not essential for this website, your interaction with the content will be limited. Please turn Javascript on for the full experience. </p>
+        </div>
+
+        <!--[if lt IE 8]>
+        <div id="oldie-warning" class="do-not-print">
+            <p><strong>Notice:</strong> Your browser is <em>ancient</em> and <a href="http://www.ie6countdown.com/">Microsoft agrees</a>. <a href="http://browsehappy.com/">Upgrade to a different browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to experience a better web.</p>
+        </div>
+        <![endif]-->
+
+        <!-- Sister Site Links -->
+        <div id="top" class="top-bar do-not-print">
+
+            <nav class="meta-navigation container" role="navigation">
+
+                
+                <div class="skip-link screen-reader-text">
+                    <a href="#content" title="Skip to content">Skip to content</a>
+                </div>
+
+                
+                <a id="close-python-network" class="jump-link" href="#python-network" aria-hidden="true">
+                    <span aria-hidden="true" class="icon-arrow-down"><span>&#9660;</span></span> Close
+                </a>
+
+                
+
+<ul class="menu" role="tree">
+    
+    <li class="python-meta ">
+        <a href="https://www.python.org/" title="The Python Programming Language" >Python</a>
+    </li>
+    
+    <li class="psf-meta ">
+        <a href="https://www.python.org/psf-landing/" title="The Python Software Foundation" >PSF</a>
+    </li>
+    
+    <li class="docs-meta ">
+        <a href="https://docs.python.org/" title="Python Documentation" >Docs</a>
+    </li>
+    
+    <li class="pypi-meta ">
+        <a href="https://pypi.python.org/" title="Python Package Index" >PyPI</a>
+    </li>
+    
+    <li class="jobs-meta ">
+        <a href="https://www.python.org/jobs/" title="Python Job Board" >Jobs</a>
+    </li>
+    
+    <li class="shop-meta ">
+        <a href="https://www.python.org/community/" title="Python Community" >Community</a>
+    </li>
+    
+</ul>
+
+
+                <a id="python-network" class="jump-link" href="#top" aria-hidden="true">
+                    <span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> The Python Network
+                </a>
+
+            </nav>
+
+        </div>
+
+        <!-- Header elements -->
+        <header class="main-header" role="banner">
+            <div class="container">
+
+                <h1 class="site-headline">
+                    <a href="https://www.python.org/"><img class="python-logo" src="../../../static/img/python-logo.png" alt="python&trade;"></a>
+                </h1>
+
+                <div class="options-bar do-not-print">
+
+                    
+                    <a id="site-map-link" class="jump-to-menu" href="#site-map"><span class="menu-icon">&equiv;</span> Menu</a><form class="search-the-site" action="https://www.python.org/search/" method="get">
+                        <fieldset title="Search Python.org">
+
+                            <span aria-hidden="true" class="icon-search"></span>
+
+                            <label class="screen-reader-text" for="id-search-field">Search This Site</label>
+                            <input id="id-search-field" name="q" type="search" role="textbox" class="search-field" placeholder="Search" value="" tabindex="1">
+
+                            <button type="submit" name="submit" id="submit" class="search-button" title="Submit this Search" tabindex="3">
+                                GO
+                            </button>
+
+                            
+                            <!--[if IE]><input type="text" style="display: none;" disabled="disabled" size="1" tabindex="4"><![endif]-->
+
+                        </fieldset>
+                    </form><span class="breaker"></span><div class="adjust-font-size" aria-hidden="true">
+                        <ul class="navigation menu" aria-label="Adjust Text Size on Page">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                <a href="#" class="action-trigger"><strong><small>A</small> A</strong></a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a class="text-shrink" title="Make Text Smaller" href="javascript:;">Smaller</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a class="text-grow" title="Make Text Larger" href="javascript:;">Larger</a></li>
+                                    <li class="tier-2 element-3" role="treeitem"><a class="text-reset" title="Reset any font size changes I have made" href="javascript:;">Reset</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div><div class="winkwink-nudgenudge">
+                        <ul class="navigation menu" aria-label="Social Media Navigation">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                <a href="#" class="action-trigger">Socialize</a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a href="http://plus.google.com/+Python"><span aria-hidden="true" class="icon-google-plus"></span>Google+</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a href="http://www.facebook.com/pythonlang?fref=ts"><span aria-hidden="true" class="icon-facebook"></span>Facebook</a></li>
+                                    <li class="tier-2 element-3" role="treeitem"><a href="http://twitter.com/ThePSF"><span aria-hidden="true" class="icon-twitter"></span>Twitter</a></li>
+                                    <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/irc/"><span aria-hidden="true" class="icon-freenode"></span>Chat on IRC</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div><div class="account-signin">
+                        <ul class="navigation menu" aria-label="Social Media Navigation">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                
+                                <a href="https://www.python.org/accounts/login/" title="Sign Up or Sign In to Python.org">Sign In</a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/accounts/signup/">Sign Up / Register</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/accounts/login/">Sign In</a></li>
+                                </ul>
+                                
+                            </li>
+                        </ul>
+                    </div>
+
+                </div><!-- end options-bar -->
+
+                <nav id="mainnav" class="python-navigation main-navigation do-not-print" role="navigation">
+                    
+                        
+<ul class="navigation menu" role="menubar" aria-label="Main Navigation">
+  
+    
+    
+    <li id="about" class="tier-1 element-1  " aria-haspopup="true">
+        <a href="https://www.python.org/about/" title="" class="">About</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/apps/" title="">Applications</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/quotes/" title="">Quotes</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/gettingstarted/" title="">Getting Started</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/help/" title="">Help</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="downloads" class="tier-1 element-2  " aria-haspopup="true">
+        <a href="https://www.python.org/downloads/" title="" class="">Downloads</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/downloads/" title="">All releases</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/downloads/source/" title="">Source code</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/downloads/windows/" title="">Windows</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/downloads/mac-osx/" title="">Mac OS X</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/download/other/" title="">Other Platforms</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://docs.python.org/3/license.html" title="">License</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/download/alternatives" title="">Alternative Implementations</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="documentation" class="tier-1 element-3  " aria-haspopup="true">
+        <a href="https://www.python.org/doc/" title="" class="">Documentation</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/doc/" title="">Docs</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/doc/av" title="">Audio/Visual Talks</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://wiki.python.org/moin/BeginnersGuide" title="">Beginner&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://docs.python.org/faq/" title="">FAQ</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="http://wiki.python.org/moin/Languages" title="">Non-English Docs</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="../index.html" title="">PEP Index</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://wiki.python.org/moin/PythonBooks" title="">Python Books</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="community" class="tier-1 element-4  " aria-haspopup="true">
+        <a href="https://www.python.org/community/" title="" class="">Community</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/community/diversity/" title="">Diversity</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/community/irc/" title="">IRC</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/community/lists/" title="">Mailing Lists</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/workshops/" title="">Python Conferences</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/community/sigs/" title="">Special Interest Groups</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://wiki.python.org/moin/" title="">Python Wiki</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/community/logos/" title="">Python Logo</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://www.python.org/community/merchandise/" title="">Merchandise</a></li>
+    
+        <li class="tier-2 element-9" role="treeitem"><a href="https://www.python.org/community/awards" title="">Community Awards</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="success-stories" class="tier-1 element-5  " aria-haspopup="true">
+        <a href="https://www.python.org/about/success/" title="success-stories" class="">Success Stories</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/success/#arts" title="">Arts</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/success/#business" title="">Business</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/success/#education" title="">Education</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/success/#engineering" title="">Engineering</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/about/success/#government" title="">Government</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://www.python.org/about/success/#scientific" title="">Scientific</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/about/success/#software-development" title="">Software Development</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="news" class="tier-1 element-6  " aria-haspopup="true">
+        <a href="https://www.python.org/blogs/" title="News from around the Python world" class="">News</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/blogs/" title="Python Insider Blog Posts">Python News</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://planetpython.org/" title="Planet Python">Community News</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="http://pyfound.blogspot.com/" title="PSF Blog">PSF News</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pycon.blogspot.com/" title="PyCon Blog">PyCon News</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="events" class="tier-1 element-7  " aria-haspopup="true">
+        <a href="https://www.python.org/events/" title="" class="">Events</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/events/python-events/" title="">Python Events</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/events/python-user-group/" title="">User Group Events</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/events/python-events/past/" title="">Python Events Archive</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/events/python-user-group/past/" title="">User Group Events Archive</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://wiki.python.org/moin/PythonEventsCalendar#Submitting_an_Event" title="">Submit an Event</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    
+  
+</ul>
+
+                    
+                </nav>
+
+                <div class="header-banner "> <!-- for optional "do-not-print" class -->
+                    
+                    
+                </div>
+
+                
+                
+
+             </div><!-- end .container -->
+        </header>
+
+        <div id="content" class="content-wrapper">
+            <!-- Main Content Column -->
+            <div class="container">
+
+                <section class="main-content with-left-sidebar" role="main">
+
+                    
+<ul class="breadcrumbs menu">
+    <li>
+        <a href="https://www.python.org/" title="The Python Programming Language">Python</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>
+        <a href="https://www.python.org/dev/">Python Developer's Guide</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>
+        <a href="../index.html">PEP Index</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>PEP 0468 -- Preserving the order of **kwargs in a function.</li>
+</ul>
+
+
+                    
+<style>
+   .pep-page pre {
+        padding: .5em;
+        background: inherit;
+        border-left: 0px;
+        -webkit-box-shadow: 0 0 0 0;
+        -moz-box-shadow: 0 0 0 0;
+        box-shadow: 0 0 0 0;
+   }
+</style>
+
+    
+    <article class="text">
+        
+
+        <header class="article-header">
+            <h1 class="page-title">PEP 0468 -- Preserving the order of **kwargs in a function.</h1>
+        </header>
+
+        <!--
+This HTML is auto-generated.  DO NOT EDIT THIS FILE!  If you are writing a new
+PEP, see http://www.python.org/dev/peps/pep-0001 for instructions and links
+to templates.  DO NOT USE THIS HTML FILE AS YOUR TEMPLATE!
+-->
+<html>
+ <body>
+  <table class="rfc2822 docutils field-list" frame="void" rules="none">
+   <col class="field-name">
+   </col>
+   <col class="field-body">
+   </col>
+   <tbody valign="top">
+    <tr class="field">
+     <th class="field-name">
+      PEP:
+     </th>
+     <td class="field-body">
+      468
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Title:
+     </th>
+     <td class="field-body">
+      Preserving the order of **kwargs in a function.
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Author:
+     </th>
+     <td class="field-body">
+      Eric Snow &lt;ericsnowcurrently at gmail.com&gt;
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Discussions-To:
+     </th>
+     <td class="field-body">
+      <a class="reference external" href="mailto:python-ideas@python.org?subject=PEP%20468">
+       python-ideas at python.org
+      </a>
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Status:
+     </th>
+     <td class="field-body">
+      Draft
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Type:
+     </th>
+     <td class="field-body">
+      Standards Track
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Created:
+     </th>
+     <td class="field-body">
+      5-Apr-2014
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Python-Version:
+     </th>
+     <td class="field-body">
+      3.5
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Post-History:
+     </th>
+     <td class="field-body">
+      5-Apr-2014
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Resolution:
+     </th>
+     <td class="field-body">
+     </td>
+    </tr>
+   </tbody>
+  </table>
+  <hr/>
+  <div class="contents topic" id="contents">
+   <p class="topic-title first">
+    Contents
+   </p>
+   <ul class="simple">
+    <li>
+     <a class="reference internal" href="#abstract" id="id15">
+      Abstract
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#motivation" id="id16">
+      Motivation
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#id6" id="id17">
+      Use Cases
+     </a>
+     <ul>
+      <li>
+       <a class="reference internal" href="#serialization" id="id18">
+        Serialization
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#debugging" id="id19">
+        Debugging
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#other-use-cases" id="id20">
+        Other Use Cases
+       </a>
+      </li>
+     </ul>
+    </li>
+    <li>
+     <a class="reference internal" href="#concerns" id="id21">
+      Concerns
+     </a>
+     <ul>
+      <li>
+       <a class="reference internal" href="#performance" id="id22">
+        Performance
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#other-python-implementations" id="id23">
+        Other Python Implementations
+       </a>
+      </li>
+     </ul>
+    </li>
+    <li>
+     <a class="reference internal" href="#specification" id="id24">
+      Specification
+     </a>
+     <ul>
+      <li>
+       <a class="reference internal" href="#relationship-to-unpacking-syntax" id="id25">
+        Relationship to **-unpacking syntax
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#relationship-to-inspect-signature" id="id26">
+        Relationship to inspect.Signature
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#c-api" id="id27">
+        C-API
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#syntax" id="id28">
+        Syntax
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#backward-compatibility" id="id29">
+        Backward-Compatibility
+       </a>
+      </li>
+     </ul>
+    </li>
+    <li>
+     <a class="reference internal" href="#reference-implementation" id="id30">
+      Reference Implementation
+     </a>
+     <ul>
+      <li>
+       <a class="reference internal" href="#implementation-notes" id="id31">
+        Implementation Notes
+       </a>
+      </li>
+     </ul>
+    </li>
+    <li>
+     <a class="reference internal" href="#alternate-approaches" id="id32">
+      Alternate Approaches
+     </a>
+     <ul>
+      <li>
+       <a class="reference internal" href="#opt-out-decorator" id="id33">
+        Opt-out Decorator
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#opt-in-decorator" id="id34">
+        Opt-in Decorator
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#kworder" id="id35">
+        __kworder__
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#compact-dict-with-faster-iteration" id="id36">
+        Compact dict with faster iteration
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#kwargs" id="id37">
+        ***kwargs
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#annotations" id="id38">
+        annotations
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#dict-order" id="id39">
+        dict.__order__
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#kwargsdict-order" id="id40">
+        KWArgsDict.__order__
+       </a>
+      </li>
+     </ul>
+    </li>
+    <li>
+     <a class="reference internal" href="#acknowledgements" id="id41">
+      Acknowledgements
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#footnotes" id="id42">
+      Footnotes
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#references" id="id43">
+      References
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#copyright" id="id44">
+      Copyright
+     </a>
+    </li>
+   </ul>
+  </div>
+  <div class="section" id="abstract">
+   <h1>
+    <a class="toc-backref" href="#id15">
+     Abstract
+    </a>
+   </h1>
+   <p>
+    The **kwargs syntax in a function definition indicates that the
+interpreter should collect all keyword arguments that do not correspond
+to other named parameters.  However,
+Python does not preserved the order in which those collected keyword
+arguments were passed to the function.  In some contexts the order
+matters.  This PEP introduces a mechanism by which the passed order of
+collected keyword arguments will now be preserved.
+   </p>
+  </div>
+  <div class="section" id="motivation">
+   <h1>
+    <a class="toc-backref" href="#id16">
+     Motivation
+    </a>
+   </h1>
+   <p>
+    Python's **kwargs syntax in function definitions provides a powerful
+means of dynamically handling keyword arguments.  In some applications
+of the syntax (see
+    <span class="target" id="use-cases">
+     Use Cases
+    </span>
+    ), the semantics applied to the
+collected keyword arguments requires that order be preserved.
+Unsurprisingly, this is similar to how OrderedDict is related to dict.
+   </p>
+   <p>
+    Currently to preserved the order you have to do so manually and
+separately from the actual function call.  This involves building an
+ordered mapping, whether an OrderedDict or an iterable of 2-tuples,
+which is then passed as a single argument to the function.
+    <a class="footnote-reference" href="#arg-unpacking" id="id1">
+     [1]
+    </a>
+   </p>
+   <p>
+    With the capability described in this PEP, that boilerplate would no
+longer be required.
+   </p>
+   <p>
+    For comparision, currently:
+   </p>
+   <pre class="literal-block">
+kwargs = OrderedDict()
+kwargs['eggs'] = ...
+...
+def spam(a, kwargs):
+    ...
+</pre>
+   <p>
+    and with this proposal:
+   </p>
+   <pre class="literal-block">
+def spam(a, **kwargs):
+    ...
+</pre>
+   <p>
+    Nick Coglan, speaking of some of the uses cases, summed it up well
+    <a class="footnote-reference" href="#nick-obvious" id="id2">
+     [2]
+    </a>
+    :
+   </p>
+   <pre class="literal-block">
+These *can* all be done today, but *not* by using keyword arguments.
+In my view, the problem to be addressed is that keyword arguments
+*look* like they should work for these cases, because they have a
+definite order in the source code. The only reason they don't work
+is because the interpreter throws that ordering information away.
+
+It's a textbook case of a language feature becoming an attractive
+nuisance in some circumstances: the simple and obvious solution for
+the above use cases *doesn't actually work* for reasons that aren't
+obviously clear if you don't have a firm grasp of Python's admittedly
+complicated argument handling.
+</pre>
+   <p>
+    This observation is supported by the appearance of this proposal over
+the years and the numerous times that people have been confused by the
+constructor for OrderedDict.
+    <a class="footnote-reference" href="#past-threads" id="id3">
+     [3]
+    </a>
+    <a class="footnote-reference" href="#loss-of-order" id="id4">
+     [4]
+    </a>
+    <a class="footnote-reference" href="#compact-dict" id="id5">
+     [5]
+    </a>
+   </p>
+  </div>
+  <div class="section" id="id6">
+   <h1>
+    <a class="toc-backref" href="#id17">
+     Use Cases
+    </a>
+   </h1>
+   <p>
+    As Nick noted, the current behavior of **kwargs is unintuitive in
+cases where one would expect order to matter.  Aside from more specific
+cases outlined below, in general "anything else where you want to
+control the iteration order
+    <em>
+     and
+    </em>
+    set field names and values in a single
+call will potentially benefit."
+    <a class="footnote-reference" href="#nick-general" id="id7">
+     [6]
+    </a>
+    That matters in the
+case of factories (e.g. __init__()) for ordered types.
+   </p>
+   <div class="section" id="serialization">
+    <h2>
+     <a class="toc-backref" href="#id18">
+      Serialization
+     </a>
+    </h2>
+    <p>
+     Obviously OrderedDict would benefit (both __init__() and update()) from
+ordered kwargs.  However, the benefit also extends to serialization
+APIs
+     <a class="footnote-reference" href="#nick-obvious" id="id8">
+      [2]
+     </a>
+     :
+    </p>
+    <pre class="literal-block">
+In the context of serialisation, one key lesson we have learned is
+that arbitrary ordering is a problem when you want to minimise
+spurious diffs, and sorting isn't a simple solution.
+
+Tools like doctest don't tolerate spurious diffs at all, but are
+often amenable to a sorting based answer.
+
+The cases where it would be highly desirable to be able use keyword
+arguments to control the order of display of a collection of key
+value pairs are ones like:
+
+* printing out key:value pairs in CLI output
+* mapping semantic names to column order in a CSV
+* serialising attributes and elements in particular orders in XML
+* serialising map keys in particular orders in human readable formats
+  like JSON and YAML (particularly when they're going to be placed
+  under source control)
+</pre>
+   </div>
+   <div class="section" id="debugging">
+    <h2>
+     <a class="toc-backref" href="#id19">
+      Debugging
+     </a>
+    </h2>
+    <p>
+     In the words of Raymond Hettinger
+     <a class="footnote-reference" href="#raymond-debug" id="id9">
+      [7]
+     </a>
+     :
+    </p>
+    <pre class="literal-block">
+It makes it easier to debug if the arguments show-up in the order
+they were created.  AFAICT, no purpose is served by scrambling them.
+</pre>
+   </div>
+   <div class="section" id="other-use-cases">
+    <h2>
+     <a class="toc-backref" href="#id20">
+      Other Use Cases
+     </a>
+    </h2>
+    <ul class="simple">
+     <li>
+      Mock objects.
+      <a class="footnote-reference" href="#mock" id="id10">
+       [8]
+      </a>
+     </li>
+     <li>
+      Controlling object presentation.
+     </li>
+     <li>
+      Alternate namedtuple() where defaults can be specified.
+     </li>
+     <li>
+      Specifying argument priority by order.
+     </li>
+    </ul>
+   </div>
+  </div>
+  <div class="section" id="concerns">
+   <h1>
+    <a class="toc-backref" href="#id21">
+     Concerns
+    </a>
+   </h1>
+   <div class="section" id="performance">
+    <h2>
+     <a class="toc-backref" href="#id22">
+      Performance
+     </a>
+    </h2>
+    <p>
+     As already noted, the idea of ordered keyword arguments has come up on
+a number of occasions.  Each time it has been met with the same
+response, namely that preserving keyword arg order would have a
+sufficiently adverse effect on function call performance that it's not
+worth doing.  However, Guido noted the following
+     <a class="footnote-reference" href="#guido-open" id="id11">
+      [9]
+     </a>
+     :
+    </p>
+    <pre class="literal-block">
+Making **kwds ordered is still open, but requires careful design and
+implementation to avoid slowing down function calls that don't benefit.
+</pre>
+    <p>
+     As will be noted below, there are ways to work around this at the
+expense of increased complication.  Ultimately the simplest approach is
+the one that makes the most sense: pack collected key word arguments
+into an OrderedDict.  However, without a C implementation of OrderedDict
+there isn't much to discuss.  That should change in Python 3.5.
+     <a class="footnote-reference" href="#c-ordereddict" id="id12">
+      [10]
+     </a>
+    </p>
+    <p>
+     In some cases the difference of performance between dict and OrderedDict
+     <em>
+      may
+     </em>
+     be of significance.  For instance: when the collected
+kwargs has an extended lifetime outside the originating function or the
+number of collected kwargs is massive.  However, the difference in
+performance (both CPU and memory) in those cases should not be
+significant.  Furthermore, the performance of the C OrderedDict
+implementation is essentially identical with dict for the non-mutating
+API.  A concrete representation of the difference in performance will be
+a part of this proposal before its resolution.
+    </p>
+   </div>
+   <div class="section" id="other-python-implementations">
+    <h2>
+     <a class="toc-backref" href="#id23">
+      Other Python Implementations
+     </a>
+    </h2>
+    <p>
+     Another important issue to consider is that new features must be
+cognizant of the multiple Python implementations.  At some point each of
+them would be expected to have implemented ordered kwargs.  In this
+regard there doesn't seem to be an issue with the idea.
+     <a class="footnote-reference" href="#ironpython" id="id13">
+      [11]
+     </a>
+     Each of the major Python implementations will be consulted regarding
+this proposal before its resolution.
+    </p>
+   </div>
+  </div>
+  <div class="section" id="specification">
+   <h1>
+    <a class="toc-backref" href="#id24">
+     Specification
+    </a>
+   </h1>
+   <p>
+    Starting in version 3.5 Python will preserve the order of keyword
+arguments as passed to a function.  To accomplish this the collected
+kwargs will now be an OrderedDict rather than a dict.
+   </p>
+   <p>
+    This will apply only to functions for which the definition uses the
+**kwargs syntax for collecting otherwise unspecified keyword
+arguments.  Only the order of those keyword arguments will be
+preserved.
+   </p>
+   <div class="section" id="relationship-to-unpacking-syntax">
+    <h2>
+     <a class="toc-backref" href="#id25">
+      Relationship to **-unpacking syntax
+     </a>
+    </h2>
+    <p>
+     The ** unpacking syntax in function calls has no special connection with
+this proposal.  Keyword arguments provided by unpacking will be treated
+in exactly the same way as they are now: ones that match defined
+parameters are gather there and the remainder will be collected into the
+ordered kwargs (just like any other unmatched keyword argument).
+    </p>
+    <p>
+     Note that unpacking a mapping with undefined order, such as dict, will
+preserve its iteration order like normal.  It's just that the order will
+remain undefined.  The OrderedDict into which the unpacked key-value
+pairs will then be packed will not be able to provide any alternate
+ordering.  This should not be surprising.
+    </p>
+    <p>
+     There have been brief discussions of simply passing these mappings
+through to the functions kwargs without unpacking and repacking them,
+but that is both outside the scope of this proposal and probably a bad
+idea regardless.  (There is a reason those discussions were brief.)
+    </p>
+   </div>
+   <div class="section" id="relationship-to-inspect-signature">
+    <h2>
+     <a class="toc-backref" href="#id26">
+      Relationship to inspect.Signature
+     </a>
+    </h2>
+    <p>
+     Signature objects should need no changes.  The
+     <cite>
+      kwargs
+     </cite>
+     parameter of
+inspect.BoundArguments (returned by Signature.bind() and
+Signature.bind_partial()) will change from a dict to an OrderedDict.
+    </p>
+   </div>
+   <div class="section" id="c-api">
+    <h2>
+     <a class="toc-backref" href="#id27">
+      C-API
+     </a>
+    </h2>
+    <p>
+     TBD
+    </p>
+   </div>
+   <div class="section" id="syntax">
+    <h2>
+     <a class="toc-backref" href="#id28">
+      Syntax
+     </a>
+    </h2>
+    <p>
+     No syntax is added or changed by this proposal.
+    </p>
+   </div>
+   <div class="section" id="backward-compatibility">
+    <h2>
+     <a class="toc-backref" href="#id29">
+      Backward-Compatibility
+     </a>
+    </h2>
+    <p>
+     The following will change:
+    </p>
+    <ul class="simple">
+     <li>
+      type(kwargs)
+     </li>
+     <li>
+      iteration order of kwargs will now be consistent (except of course in
+the case described above)
+     </li>
+     <li>
+      as already noted, performance will be marginally different
+     </li>
+    </ul>
+    <p>
+     None of these should be an issue.  However, each will be carefully
+considered while this proposal is under discussion.
+    </p>
+   </div>
+  </div>
+  <div class="section" id="reference-implementation">
+   <h1>
+    <a class="toc-backref" href="#id30">
+     Reference Implementation
+    </a>
+   </h1>
+   <p>
+    TBD
+   </p>
+   <div class="section" id="implementation-notes">
+    <h2>
+     <a class="toc-backref" href="#id31">
+      Implementation Notes
+     </a>
+    </h2>
+    <p>
+     TBD
+    </p>
+   </div>
+  </div>
+  <div class="section" id="alternate-approaches">
+   <h1>
+    <a class="toc-backref" href="#id32">
+     Alternate Approaches
+    </a>
+   </h1>
+   <div class="section" id="opt-out-decorator">
+    <h2>
+     <a class="toc-backref" href="#id33">
+      Opt-out Decorator
+     </a>
+    </h2>
+    <p>
+     This is identical to the current proposal with the exception that Python
+would also provide a decorator in functools that would cause collected
+keyword arguments to be packed into a normal dict instead of an
+OrderedDict.
+    </p>
+    <p>
+     Prognosis:
+    </p>
+    <p>
+     This would only be necessary if performance is determined to be
+significantly different in some uncommon cases or that there are other
+backward-compatibility concerns that cannot be resolved otherwise.
+    </p>
+   </div>
+   <div class="section" id="opt-in-decorator">
+    <h2>
+     <a class="toc-backref" href="#id34">
+      Opt-in Decorator
+     </a>
+    </h2>
+    <p>
+     The status quo would be unchanged.  Instead Python would provide a
+decorator in functools that would register or mark the decorated
+function as one that should get ordered keyword arguments.  The
+performance overhead to check the function at call time would be
+marginal.
+    </p>
+    <p>
+     Prognosis:
+    </p>
+    <p>
+     The only real down-side is in the case of function wrappers factories
+(e.g.  functools.partial and many decorators) that aim to perfectly
+preserve keyword arguments by using kwargs in the wrapper definition
+and kwargs unpacking in the call to the wrapped function.  Each wrapper
+would have to be updated separately, though having functools.wraps() do
+this automaticallywould help.
+    </p>
+   </div>
+   <div class="section" id="kworder">
+    <h2>
+     <a class="toc-backref" href="#id35">
+      __kworder__
+     </a>
+    </h2>
+    <p>
+     The order of keyword arguments would be stored separately in a list at
+call time.  The list would be bound to __kworder__ in the function
+locals.
+    </p>
+    <p>
+     Prognosis:
+    </p>
+    <p>
+     This likewise complicates the wrapper case.
+    </p>
+   </div>
+   <div class="section" id="compact-dict-with-faster-iteration">
+    <h2>
+     <a class="toc-backref" href="#id36">
+      Compact dict with faster iteration
+     </a>
+    </h2>
+    <p>
+     Raymond Hettinger has introduced the idea of a dict implementation that
+would result in preserving insertion order on dicts (until the first
+deletion).  This would be a perfect fit for kwargs.
+     <a class="footnote-reference" href="#compact-dict" id="id14">
+      [5]
+     </a>
+    </p>
+    <p>
+     Prognosis:
+    </p>
+    <p>
+     The idea is still uncertain in both viability and timeframe.
+    </p>
+   </div>
+   <div class="section" id="kwargs">
+    <h2>
+     <a class="toc-backref" href="#id37">
+      ***kwargs
+     </a>
+    </h2>
+    <p>
+     This would add a new form to a function's signature as a mutually
+exclusive parallel to **kwargs.  The new syntax, ***kwargs (note
+that there are three asterisks), would indicate that kwargs should
+preserve the order of keyword arguments.
+    </p>
+    <p>
+     Prognosis:
+    </p>
+    <p>
+     New syntax is only added to Python under the most
+     <em>
+      dire
+     </em>
+     circumstances.
+With other available solutions, new syntax is not justifiable.
+Furthermore, like all opt-in solutions, the new syntax would complicate
+the pass-through case.
+    </p>
+   </div>
+   <div class="section" id="annotations">
+    <h2>
+     <a class="toc-backref" href="#id38">
+      annotations
+     </a>
+    </h2>
+    <p>
+     This is a variation on the decorator approach.  Instead of using a
+decorator to mark the function, you would use a function annotation on
+**kwargs.
+    </p>
+    <p>
+     Prognosis:
+    </p>
+    <p>
+     In addition to the pass-through complication, annotations have been
+actively discouraged in Python core development.  Use of annotations to
+opt-in to order preservation runs the risk of interfering with other
+application-level use of annotations.
+    </p>
+   </div>
+   <div class="section" id="dict-order">
+    <h2>
+     <a class="toc-backref" href="#id39">
+      dict.__order__
+     </a>
+    </h2>
+    <p>
+     dict objects would have a new attribute,
+     <cite>
+      __order__
+     </cite>
+     that would default
+to None and that in the kwargs case the interpreter would use in the
+same way as described above for __kworder__.
+    </p>
+    <p>
+     Prognosis:
+    </p>
+    <p>
+     It would mean zero impact on kwargs performance but the change would be
+pretty intrusive (Python uses dict a lot).  Also, for the wrapper case
+the interpreter would have to be careful to preserve
+     <cite>
+      __order__
+     </cite>
+     .
+    </p>
+   </div>
+   <div class="section" id="kwargsdict-order">
+    <h2>
+     <a class="toc-backref" href="#id40">
+      KWArgsDict.__order__
+     </a>
+    </h2>
+    <p>
+     This is the same as the
+     <cite>
+      dict.__order__
+     </cite>
+     idea, but kwargs would be an
+instance of a new minimal dict subclass that provides the
+     <cite>
+      __order__
+     </cite>
+     attribute.  dict would instead be unchanged.
+    </p>
+    <p>
+     Prognosis:
+    </p>
+    <p>
+     Simply switching to OrderedDict is a less complicated and more intuitive
+change.
+    </p>
+   </div>
+  </div>
+  <div class="section" id="acknowledgements">
+   <h1>
+    <a class="toc-backref" href="#id41">
+     Acknowledgements
+    </a>
+   </h1>
+   <p>
+    Thanks to Andrew Barnert for helpful feedback and to the participants of
+all the past email threads.
+   </p>
+  </div>
+  <div class="section" id="footnotes">
+   <h1>
+    <a class="toc-backref" href="#id42">
+     Footnotes
+    </a>
+   </h1>
+   <table class="docutils footnote" frame="void" id="arg-unpacking" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id1">
+        [1]
+       </a>
+      </td>
+      <td>
+       Alternately, you could also replace ** in your function definition
+with * and then pass in key/value 2-tuples.  This has the advantage
+of not requiring the keys to be valid identifier strings. See
+       <a class="reference external" href="https://mail.python.org/pipermail/python-ideas/2014-April/027491.html">
+        https://mail.python.org/pipermail/python-ideas/2014-April/027491.html
+       </a>
+       .
+      </td>
+     </tr>
+    </tbody>
+   </table>
+  </div>
+  <div class="section" id="references">
+   <h1>
+    <a class="toc-backref" href="#id43">
+     References
+    </a>
+   </h1>
+   <table class="docutils footnote" frame="void" id="nick-obvious" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       [2]
+      </td>
+      <td>
+       <em>
+        (
+        <a class="fn-backref" href="#id2">
+         1
+        </a>
+        ,
+        <a class="fn-backref" href="#id8">
+         2
+        </a>
+        )
+       </em>
+       <a class="reference external" href="https://mail.python.org/pipermail/python-ideas/2014-April/027512.html">
+        https://mail.python.org/pipermail/python-ideas/2014-April/027512.html
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="past-threads" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id3">
+        [3]
+       </a>
+      </td>
+      <td>
+       <p class="first">
+        <a class="reference external" href="https://mail.python.org/pipermail/python-ideas/2009-April/004163.html">
+         https://mail.python.org/pipermail/python-ideas/2009-April/004163.html
+        </a>
+       </p>
+       <p>
+        <a class="reference external" href="https://mail.python.org/pipermail/python-ideas/2010-October/008445.html">
+         https://mail.python.org/pipermail/python-ideas/2010-October/008445.html
+        </a>
+       </p>
+       <p>
+        <a class="reference external" href="https://mail.python.org/pipermail/python-ideas/2011-January/009037.html">
+         https://mail.python.org/pipermail/python-ideas/2011-January/009037.html
+        </a>
+       </p>
+       <p>
+        <a class="reference external" href="https://mail.python.org/pipermail/python-ideas/2013-February/019690.html">
+         https://mail.python.org/pipermail/python-ideas/2013-February/019690.html
+        </a>
+       </p>
+       <p>
+        <a class="reference external" href="https://mail.python.org/pipermail/python-ideas/2013-May/020727.html">
+         https://mail.python.org/pipermail/python-ideas/2013-May/020727.html
+        </a>
+       </p>
+       <p>
+        <a class="reference external" href="https://mail.python.org/pipermail/python-ideas/2014-March/027225.html">
+         https://mail.python.org/pipermail/python-ideas/2014-March/027225.html
+        </a>
+       </p>
+       <p>
+        <a class="reference external" href="http://bugs.python.org/issue16276">
+         http://bugs.python.org/issue16276
+        </a>
+       </p>
+       <p>
+        <a class="reference external" href="http://bugs.python.org/issue16553">
+         http://bugs.python.org/issue16553
+        </a>
+       </p>
+       <p>
+        <a class="reference external" href="http://bugs.python.org/issue19026">
+         http://bugs.python.org/issue19026
+        </a>
+       </p>
+       <p class="last">
+        <a class="reference external" href="http://bugs.python.org/issue5397#msg82972">
+         http://bugs.python.org/issue5397#msg82972
+        </a>
+       </p>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="loss-of-order" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id4">
+        [4]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="https://mail.python.org/pipermail/python-dev/2007-February/071310.html">
+        https://mail.python.org/pipermail/python-dev/2007-February/071310.html
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="compact-dict" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       [5]
+      </td>
+      <td>
+       <em>
+        (
+        <a class="fn-backref" href="#id5">
+         1
+        </a>
+        ,
+        <a class="fn-backref" href="#id14">
+         2
+        </a>
+        )
+       </em>
+       <p>
+        <a class="reference external" href="https://mail.python.org/pipermail/python-dev/2012-December/123028.html">
+         https://mail.python.org/pipermail/python-dev/2012-December/123028.html
+        </a>
+       </p>
+       <blockquote>
+        <a class="reference external" href="https://mail.python.org/pipermail/python-dev/2012-December/123105.html">
+         https://mail.python.org/pipermail/python-dev/2012-December/123105.html
+        </a>
+       </blockquote>
+       <p>
+        <a class="reference external" href="https://mail.python.org/pipermail/python-dev/2013-May/126327.html">
+         https://mail.python.org/pipermail/python-dev/2013-May/126327.html
+        </a>
+       </p>
+       <blockquote class="last">
+        <a class="reference external" href="https://mail.python.org/pipermail/python-dev/2013-May/126328.html">
+         https://mail.python.org/pipermail/python-dev/2013-May/126328.html
+        </a>
+       </blockquote>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="nick-general" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id7">
+        [6]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="https://mail.python.org/pipermail/python-dev/2012-December/123105.html">
+        https://mail.python.org/pipermail/python-dev/2012-December/123105.html
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="raymond-debug" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id9">
+        [7]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="https://mail.python.org/pipermail/python-dev/2013-May/126327.html">
+        https://mail.python.org/pipermail/python-dev/2013-May/126327.html
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="mock" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id10">
+        [8]
+       </a>
+      </td>
+      <td>
+       <p class="first">
+        <a class="reference external" href="https://mail.python.org/pipermail/python-ideas/2009-April/004163.html">
+         https://mail.python.org/pipermail/python-ideas/2009-April/004163.html
+        </a>
+       </p>
+       <blockquote class="last">
+        <p>
+         <a class="reference external" href="https://mail.python.org/pipermail/python-ideas/2009-April/004165.html">
+          https://mail.python.org/pipermail/python-ideas/2009-April/004165.html
+         </a>
+        </p>
+        <p>
+         <a class="reference external" href="https://mail.python.org/pipermail/python-ideas/2009-April/004175.html">
+          https://mail.python.org/pipermail/python-ideas/2009-April/004175.html
+         </a>
+        </p>
+       </blockquote>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="guido-open" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id11">
+        [9]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="https://mail.python.org/pipermail/python-dev/2013-May/126404.html">
+        https://mail.python.org/pipermail/python-dev/2013-May/126404.html
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="c-ordereddict" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id12">
+        [10]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="http://bugs.python.org/issue16991">
+        http://bugs.python.org/issue16991
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="ironpython" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id13">
+        [11]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="https://mail.python.org/pipermail/python-dev/2012-December/123100.html">
+        https://mail.python.org/pipermail/python-dev/2012-December/123100.html
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+  </div>
+  <div class="section" id="copyright">
+   <h1>
+    <a class="toc-backref" href="#id44">
+     Copyright
+    </a>
+   </h1>
+   <p>
+    This document has been placed in the public domain.
+   </p>
+   <!-- Local Variables:
+mode: indented-text
+indent-tabs-mode: nil
+sentence-end-double-space: t
+fill-column: 70
+coding: utf-8
+End: -->
+  </div>
+ </body>
+
+<!-- Mirrored from www.python.org/dev/peps/pep-0468/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 03 Sep 2015 04:33:30 GMT -->
+</html>Source: <a href="https://hg.python.org/peps/file/tip/pep-0468.txt">https://hg.python.org/peps/file/tip/pep-0468.txt</a>
+
+    </article>
+
+
+                </section>
+
+                
+
+
+<aside class="left-sidebar" role="secondary">
+
+    
+
+
+
+
+
+
+    
+
+
+
+
+
+        <div class="twitter-widget sidebar-widget">
+        <a class="twitter-timeline" data-dnt="true" href="https://twitter.com/ThePSF" data-widget-id="434113224703610882">Tweets by @ThePSF</a>
+        <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+    </div>
+
+    <div class="psf-sidebar-widget sidebar-widget">
+        <h3 class="widget-title">The PSF</h3>
+<p>The Python Software Foundation is the organization behind Python. Become a member of the PSF and help advance the software and our mission. </p>
+
+    </div>
+
+</aside>
+
+
+
+                
+                
+
+
+            </div><!-- end .container -->
+        </div><!-- end #content .content-wrapper -->
+
+        <!-- Footer and social media list -->
+        <footer id="site-map" class="main-footer" role="contentinfo">
+            <div class="main-footer-links">
+                <div class="container">
+
+                    
+                    <a id="back-to-top-1" class="jump-link" href="#python-network"><span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> Back to Top</a>
+
+                    
+
+<ul class="sitemap navigation menu do-not-print" role="tree" id="container">
+    
+    <li class="tier-1 element-1">
+        <a href="https://www.python.org/about/" >About</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/apps/" title="">Applications</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/quotes/" title="">Quotes</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/gettingstarted/" title="">Getting Started</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/help/" title="">Help</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-2">
+        <a href="https://www.python.org/downloads/" >Downloads</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/downloads/" title="">All releases</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/downloads/source/" title="">Source code</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/downloads/windows/" title="">Windows</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/downloads/mac-osx/" title="">Mac OS X</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/download/other/" title="">Other Platforms</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://docs.python.org/3/license.html" title="">License</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/download/alternatives" title="">Alternative Implementations</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-3">
+        <a href="https://www.python.org/doc/" >Documentation</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/doc/" title="">Docs</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/doc/av" title="">Audio/Visual Talks</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://wiki.python.org/moin/BeginnersGuide" title="">Beginner&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://docs.python.org/faq/" title="">FAQ</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="http://wiki.python.org/moin/Languages" title="">Non-English Docs</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="../index.html" title="">PEP Index</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://wiki.python.org/moin/PythonBooks" title="">Python Books</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-4">
+        <a href="https://www.python.org/community/" >Community</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/community/diversity/" title="">Diversity</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/community/irc/" title="">IRC</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/community/lists/" title="">Mailing Lists</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/workshops/" title="">Python Conferences</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/community/sigs/" title="">Special Interest Groups</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://wiki.python.org/moin/" title="">Python Wiki</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/community/logos/" title="">Python Logo</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://www.python.org/community/merchandise/" title="">Merchandise</a></li>
+    
+        <li class="tier-2 element-9" role="treeitem"><a href="https://www.python.org/community/awards" title="">Community Awards</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-5">
+        <a href="https://www.python.org/about/success/" title="success-stories">Success Stories</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/success/#arts" title="">Arts</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/success/#business" title="">Business</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/success/#education" title="">Education</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/success/#engineering" title="">Engineering</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/about/success/#government" title="">Government</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://www.python.org/about/success/#scientific" title="">Scientific</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/about/success/#software-development" title="">Software Development</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-6">
+        <a href="https://www.python.org/blogs/" title="News from around the Python world">News</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/blogs/" title="Python Insider Blog Posts">Python News</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://planetpython.org/" title="Planet Python">Community News</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="http://pyfound.blogspot.com/" title="PSF Blog">PSF News</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pycon.blogspot.com/" title="PyCon Blog">PyCon News</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-7">
+        <a href="https://www.python.org/events/" >Events</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/events/python-events/" title="">Python Events</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/events/python-user-group/" title="">User Group Events</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/events/python-events/past/" title="">Python Events Archive</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/events/python-user-group/past/" title="">User Group Events Archive</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://wiki.python.org/moin/PythonEventsCalendar#Submitting_an_Event" title="">Submit an Event</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-8">
+        <a href="https://www.python.org/dev/" >Contributing</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="http://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://bugs.python.org/" title="">Issue Tracker</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://mail.python.org/mailman/listinfo/python-dev" title="">python-dev list</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pythonmentors.com/" title="">Core Mentorship</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+</ul>
+
+
+                    <a id="back-to-top-2" class="jump-link" href="#python-network"><span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> Back to Top</a>
+                    
+
+                </div><!-- end .container -->
+            </div> <!-- end .main-footer-links -->
+
+            <div class="site-base">
+                <div class="container">
+                    
+                    <ul class="footer-links navigation menu do-not-print" role="tree">
+                        <li class="tier-1 element-1"><a href="https://www.python.org/about/help/">Help &amp; <span class="say-no-more">General</span> Contact</a></li>
+                        <li class="tier-1 element-2"><a href="https://www.python.org/community/diversity/">Diversity <span class="say-no-more">Initiatives</span></a></li>
+                        <li class="tier-1 element-3"><a href="https://github.com/python/pythondotorg/issues">Submit Website Bug</a></li>
+                        <!--<li class="tier-1 element-3"><a href="#"><span class="say-no-more">Website</span> Colophon</a></li>-->
+                    </ul>
+
+                    <div class="copyright">
+                        <p><small>
+                            <span class="pre">Copyright &copy;2001-2015.</span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/psf-landing/">Python Software Foundation</a></span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/about/legal/">Legal Statements</a></span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/privacy/">Privacy Policy</a></span>
+                        </small></p>
+                    </div>
+
+                </div><!-- end .container -->
+            </div><!-- end .site-base -->
+
+        </footer>
+
+    </div><!-- end #touchnav-wrapper -->
+
+    
+    <script src="../../../../ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="../../../static/js/libs/jquery-1.8.2.min.js"><\/script>')</script>
+
+    <script src="../../../static/js/libs/masonry.pkgd.min.js"></script>
+
+    <script type="text/javascript" src="../../../static/js/main-min.js" charset="utf-8"></script>
+    
+
+    <!--[if lte IE 7]>
+    <script type="text/javascript" src="/static/js/plugins/IE8-min.js" charset="utf-8"></script>
+    
+    
+    <![endif]-->
+
+    <!--[if lte IE 8]>
+    <script type="text/javascript" src="/static/js/plugins/getComputedStyle-min.js" charset="utf-8"></script>
+    
+    
+    <![endif]-->
+
+    
+
+    
+    
+
+</body>
+</html>

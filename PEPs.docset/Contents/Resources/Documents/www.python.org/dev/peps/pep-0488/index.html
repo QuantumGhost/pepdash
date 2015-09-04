@@ -1,0 +1,2061 @@
+<!doctype html>
+<!--[if lt IE 7]>   <html class="no-js ie6 lt-ie7 lt-ie8 lt-ie9">   <![endif]-->
+<!--[if IE 7]>      <html class="no-js ie7 lt-ie8 lt-ie9">          <![endif]-->
+<!--[if IE 8]>      <html class="no-js ie8 lt-ie9">                 <![endif]-->
+<!--[if gt IE 8]><!--><html class="no-js" lang="en" dir="ltr">  <!--<![endif]-->
+
+
+<!-- Mirrored from www.python.org/dev/peps/pep-0488/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 03 Sep 2015 04:34:58 GMT -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <link rel="prefetch" href="../../../../ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js">
+
+    <meta name="application-name" content="Python.org">
+    <meta name="msapplication-tooltip" content="The official home of the Python Programming Language">
+    <meta name="apple-mobile-web-app-title" content="Python.org">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="format-detection" content="telephone=no">
+    <meta http-equiv="cleartype" content="on">
+    <meta http-equiv="imagetoolbar" content="false">
+
+    <script src="../../../static/js/libs/modernizr.js"></script>
+
+    <link href="../../../static/stylesheets/style.css" rel="stylesheet" type="text/css" title="default" />
+    <link href="../../../static/stylesheets/mq.css" rel="stylesheet" type="text/css" media="not print, braille, embossed, speech, tty" />
+    
+
+    <!--[if (lte IE 8)&(!IEMobile)]>
+    <link href="/static/stylesheets/no-mq.css" rel="stylesheet" type="text/css" media="screen" />
+    
+    
+    <![endif]-->
+
+    
+    <link rel="icon" type="image/x-icon" href="https://www.python.org/static/favicon.ico">
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="../../../static/apple-touch-icon-144x144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="../../../static/apple-touch-icon-114x114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="../../../static/apple-touch-icon-72x72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="../../../static/apple-touch-icon-precomposed.png">
+    <link rel="apple-touch-icon" href="../../../static/apple-touch-icon-precomposed.png">
+
+    
+    <meta name="msapplication-TileImage" content="/static/metro-icon-144x144-precomposed.png"><!-- white shape -->
+    <meta name="msapplication-TileColor" content="#3673a5"><!-- python blue -->
+    <meta name="msapplication-navbutton-color" content="#3673a5">
+
+    <meta property="og:site_name" content="Python.org">
+    <meta property="og:type" content="website">
+
+    <title>PEP 0488 -- Elimination of PYO files | Python.org</title>
+    <meta property="og:title" content="Welcome to Python.org">
+
+    
+    <meta name="description" content="The official home of the Python Programming Language">
+    <meta name="og:description" content="The official home of the Python Programming Language">
+    <meta name="keywords" content="Python programming language object oriented web free open source software license documentation download community">
+    <meta property="og:tag" content="Python programming language object oriented web free open source software license documentation download community">
+    <meta property="og:published_time" content="">
+    <meta property="og:modified_time" content="">
+    <meta property="og:author" content="">
+    <meta property="og:section" content=""> 
+    <meta property="og:url" content="">
+    <meta property="og:image" content="">
+    <meta property="og:video" content="">
+
+    <link rel="author" href="https://www.python.org/static/humans.txt">
+
+    
+
+    
+    <script type="application/ld+json">
+     {
+       "@context": "http://schema.org",
+       "@type": "WebSite",
+       "url": "https://www.python.org/",
+       "potentialAction": {
+         "@type": "SearchAction",
+         "target": "https://www.python.org/search/?q={search_term_string}",
+         "query-input": "required name=search_term_string"
+       }
+     }
+    </script>
+
+    
+    <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-39055973-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+    </script>
+    
+</head>
+
+<body class="python pages pep-page">
+
+    <div id="touchnav-wrapper">
+
+        <div id="nojs" class="do-not-print">
+            <p><strong>Notice:</strong> While Javascript is not essential for this website, your interaction with the content will be limited. Please turn Javascript on for the full experience. </p>
+        </div>
+
+        <!--[if lt IE 8]>
+        <div id="oldie-warning" class="do-not-print">
+            <p><strong>Notice:</strong> Your browser is <em>ancient</em> and <a href="http://www.ie6countdown.com/">Microsoft agrees</a>. <a href="http://browsehappy.com/">Upgrade to a different browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to experience a better web.</p>
+        </div>
+        <![endif]-->
+
+        <!-- Sister Site Links -->
+        <div id="top" class="top-bar do-not-print">
+
+            <nav class="meta-navigation container" role="navigation">
+
+                
+                <div class="skip-link screen-reader-text">
+                    <a href="#content" title="Skip to content">Skip to content</a>
+                </div>
+
+                
+                <a id="close-python-network" class="jump-link" href="#python-network" aria-hidden="true">
+                    <span aria-hidden="true" class="icon-arrow-down"><span>&#9660;</span></span> Close
+                </a>
+
+                
+
+<ul class="menu" role="tree">
+    
+    <li class="python-meta ">
+        <a href="https://www.python.org/" title="The Python Programming Language" >Python</a>
+    </li>
+    
+    <li class="psf-meta ">
+        <a href="https://www.python.org/psf-landing/" title="The Python Software Foundation" >PSF</a>
+    </li>
+    
+    <li class="docs-meta ">
+        <a href="https://docs.python.org/" title="Python Documentation" >Docs</a>
+    </li>
+    
+    <li class="pypi-meta ">
+        <a href="https://pypi.python.org/" title="Python Package Index" >PyPI</a>
+    </li>
+    
+    <li class="jobs-meta ">
+        <a href="https://www.python.org/jobs/" title="Python Job Board" >Jobs</a>
+    </li>
+    
+    <li class="shop-meta ">
+        <a href="https://www.python.org/community/" title="Python Community" >Community</a>
+    </li>
+    
+</ul>
+
+
+                <a id="python-network" class="jump-link" href="#top" aria-hidden="true">
+                    <span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> The Python Network
+                </a>
+
+            </nav>
+
+        </div>
+
+        <!-- Header elements -->
+        <header class="main-header" role="banner">
+            <div class="container">
+
+                <h1 class="site-headline">
+                    <a href="https://www.python.org/"><img class="python-logo" src="../../../static/img/python-logo.png" alt="python&trade;"></a>
+                </h1>
+
+                <div class="options-bar do-not-print">
+
+                    
+                    <a id="site-map-link" class="jump-to-menu" href="#site-map"><span class="menu-icon">&equiv;</span> Menu</a><form class="search-the-site" action="https://www.python.org/search/" method="get">
+                        <fieldset title="Search Python.org">
+
+                            <span aria-hidden="true" class="icon-search"></span>
+
+                            <label class="screen-reader-text" for="id-search-field">Search This Site</label>
+                            <input id="id-search-field" name="q" type="search" role="textbox" class="search-field" placeholder="Search" value="" tabindex="1">
+
+                            <button type="submit" name="submit" id="submit" class="search-button" title="Submit this Search" tabindex="3">
+                                GO
+                            </button>
+
+                            
+                            <!--[if IE]><input type="text" style="display: none;" disabled="disabled" size="1" tabindex="4"><![endif]-->
+
+                        </fieldset>
+                    </form><span class="breaker"></span><div class="adjust-font-size" aria-hidden="true">
+                        <ul class="navigation menu" aria-label="Adjust Text Size on Page">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                <a href="#" class="action-trigger"><strong><small>A</small> A</strong></a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a class="text-shrink" title="Make Text Smaller" href="javascript:;">Smaller</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a class="text-grow" title="Make Text Larger" href="javascript:;">Larger</a></li>
+                                    <li class="tier-2 element-3" role="treeitem"><a class="text-reset" title="Reset any font size changes I have made" href="javascript:;">Reset</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div><div class="winkwink-nudgenudge">
+                        <ul class="navigation menu" aria-label="Social Media Navigation">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                <a href="#" class="action-trigger">Socialize</a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a href="http://plus.google.com/+Python"><span aria-hidden="true" class="icon-google-plus"></span>Google+</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a href="http://www.facebook.com/pythonlang?fref=ts"><span aria-hidden="true" class="icon-facebook"></span>Facebook</a></li>
+                                    <li class="tier-2 element-3" role="treeitem"><a href="http://twitter.com/ThePSF"><span aria-hidden="true" class="icon-twitter"></span>Twitter</a></li>
+                                    <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/irc/"><span aria-hidden="true" class="icon-freenode"></span>Chat on IRC</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div><div class="account-signin">
+                        <ul class="navigation menu" aria-label="Social Media Navigation">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                
+                                <a href="https://www.python.org/accounts/login/" title="Sign Up or Sign In to Python.org">Sign In</a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/accounts/signup/">Sign Up / Register</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/accounts/login/">Sign In</a></li>
+                                </ul>
+                                
+                            </li>
+                        </ul>
+                    </div>
+
+                </div><!-- end options-bar -->
+
+                <nav id="mainnav" class="python-navigation main-navigation do-not-print" role="navigation">
+                    
+                        
+<ul class="navigation menu" role="menubar" aria-label="Main Navigation">
+  
+    
+    
+    <li id="about" class="tier-1 element-1  " aria-haspopup="true">
+        <a href="https://www.python.org/about/" title="" class="">About</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/apps/" title="">Applications</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/quotes/" title="">Quotes</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/gettingstarted/" title="">Getting Started</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/help/" title="">Help</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="downloads" class="tier-1 element-2  " aria-haspopup="true">
+        <a href="https://www.python.org/downloads/" title="" class="">Downloads</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/downloads/" title="">All releases</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/downloads/source/" title="">Source code</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/downloads/windows/" title="">Windows</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/downloads/mac-osx/" title="">Mac OS X</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/download/other/" title="">Other Platforms</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://docs.python.org/3/license.html" title="">License</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/download/alternatives" title="">Alternative Implementations</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="documentation" class="tier-1 element-3  " aria-haspopup="true">
+        <a href="https://www.python.org/doc/" title="" class="">Documentation</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/doc/" title="">Docs</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/doc/av" title="">Audio/Visual Talks</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://wiki.python.org/moin/BeginnersGuide" title="">Beginner&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://docs.python.org/faq/" title="">FAQ</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="http://wiki.python.org/moin/Languages" title="">Non-English Docs</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="../index.html" title="">PEP Index</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://wiki.python.org/moin/PythonBooks" title="">Python Books</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="community" class="tier-1 element-4  " aria-haspopup="true">
+        <a href="https://www.python.org/community/" title="" class="">Community</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/community/diversity/" title="">Diversity</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/community/irc/" title="">IRC</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/community/lists/" title="">Mailing Lists</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/workshops/" title="">Python Conferences</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/community/sigs/" title="">Special Interest Groups</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://wiki.python.org/moin/" title="">Python Wiki</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/community/logos/" title="">Python Logo</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://www.python.org/community/merchandise/" title="">Merchandise</a></li>
+    
+        <li class="tier-2 element-9" role="treeitem"><a href="https://www.python.org/community/awards" title="">Community Awards</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="success-stories" class="tier-1 element-5  " aria-haspopup="true">
+        <a href="https://www.python.org/about/success/" title="success-stories" class="">Success Stories</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/success/#arts" title="">Arts</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/success/#business" title="">Business</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/success/#education" title="">Education</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/success/#engineering" title="">Engineering</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/about/success/#government" title="">Government</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://www.python.org/about/success/#scientific" title="">Scientific</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/about/success/#software-development" title="">Software Development</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="news" class="tier-1 element-6  " aria-haspopup="true">
+        <a href="https://www.python.org/blogs/" title="News from around the Python world" class="">News</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/blogs/" title="Python Insider Blog Posts">Python News</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://planetpython.org/" title="Planet Python">Community News</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="http://pyfound.blogspot.com/" title="PSF Blog">PSF News</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pycon.blogspot.com/" title="PyCon Blog">PyCon News</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="events" class="tier-1 element-7  " aria-haspopup="true">
+        <a href="https://www.python.org/events/" title="" class="">Events</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/events/python-events/" title="">Python Events</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/events/python-user-group/" title="">User Group Events</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/events/python-events/past/" title="">Python Events Archive</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/events/python-user-group/past/" title="">User Group Events Archive</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://wiki.python.org/moin/PythonEventsCalendar#Submitting_an_Event" title="">Submit an Event</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    
+  
+</ul>
+
+                    
+                </nav>
+
+                <div class="header-banner "> <!-- for optional "do-not-print" class -->
+                    
+                    
+                </div>
+
+                
+                
+
+             </div><!-- end .container -->
+        </header>
+
+        <div id="content" class="content-wrapper">
+            <!-- Main Content Column -->
+            <div class="container">
+
+                <section class="main-content with-left-sidebar" role="main">
+
+                    
+<ul class="breadcrumbs menu">
+    <li>
+        <a href="https://www.python.org/" title="The Python Programming Language">Python</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>
+        <a href="https://www.python.org/dev/">Python Developer's Guide</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>
+        <a href="../index.html">PEP Index</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>PEP 0488 -- Elimination of PYO files</li>
+</ul>
+
+
+                    
+<style>
+   .pep-page pre {
+        padding: .5em;
+        background: inherit;
+        border-left: 0px;
+        -webkit-box-shadow: 0 0 0 0;
+        -moz-box-shadow: 0 0 0 0;
+        box-shadow: 0 0 0 0;
+   }
+</style>
+
+    
+    <article class="text">
+        
+
+        <header class="article-header">
+            <h1 class="page-title">PEP 0488 -- Elimination of PYO files</h1>
+        </header>
+
+        <!--
+This HTML is auto-generated.  DO NOT EDIT THIS FILE!  If you are writing a new
+PEP, see http://www.python.org/dev/peps/pep-0001 for instructions and links
+to templates.  DO NOT USE THIS HTML FILE AS YOUR TEMPLATE!
+-->
+<html>
+ <body>
+  <table class="rfc2822 docutils field-list" frame="void" rules="none">
+   <col class="field-name">
+   </col>
+   <col class="field-body">
+   </col>
+   <tbody valign="top">
+    <tr class="field">
+     <th class="field-name">
+      PEP:
+     </th>
+     <td class="field-body">
+      488
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Title:
+     </th>
+     <td class="field-body">
+      Elimination of PYO files
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Author:
+     </th>
+     <td class="field-body">
+      Brett Cannon &lt;brett at python.org&gt;
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Status:
+     </th>
+     <td class="field-body">
+      Final
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Type:
+     </th>
+     <td class="field-body">
+      Standards Track
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Created:
+     </th>
+     <td class="field-body">
+      20-Feb-2015
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Python-Version:
+     </th>
+     <td class="field-body">
+      3.5
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Post-History:
+     </th>
+     <td class="field-body">
+      2015-03-06
+2015-03-13
+2015-03-20
+     </td>
+    </tr>
+   </tbody>
+  </table>
+  <hr/>
+  <div class="contents topic" id="contents">
+   <p class="topic-title first">
+    Contents
+   </p>
+   <ul class="simple">
+    <li>
+     <a class="reference internal" href="#abstract" id="id23">
+      Abstract
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#rationale" id="id24">
+      Rationale
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#proposal" id="id25">
+      Proposal
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#implementation" id="id26">
+      Implementation
+     </a>
+     <ul>
+      <li>
+       <a class="reference internal" href="#importlib" id="id27">
+        importlib
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#rest-of-the-standard-library" id="id28">
+        Rest of the standard library
+       </a>
+      </li>
+     </ul>
+    </li>
+    <li>
+     <a class="reference internal" href="#compatibility-considerations" id="id29">
+      Compatibility Considerations
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#rejected-ideas" id="id30">
+      Rejected Ideas
+     </a>
+     <ul>
+      <li>
+       <a class="reference internal" href="#completely-dropping-optimization-levels-from-cpython" id="id31">
+        Completely dropping optimization levels from CPython
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#alternative-formatting-of-the-optimization-level-in-the-file-name" id="id32">
+        Alternative formatting of the optimization level in the file name
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#embedding-the-optimization-level-in-the-bytecode-metadata" id="id33">
+        Embedding the optimization level in the bytecode metadata
+       </a>
+      </li>
+     </ul>
+    </li>
+    <li>
+     <a class="reference internal" href="#references" id="id34">
+      References
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#copyright" id="id35">
+      Copyright
+     </a>
+    </li>
+   </ul>
+  </div>
+  <div class="section" id="abstract">
+   <h1>
+    <a class="toc-backref" href="#id23">
+     Abstract
+    </a>
+   </h1>
+   <p>
+    This PEP proposes eliminating the concept of PYO files from Python.
+To continue the support of the separation of bytecode files based on
+their optimization level, this PEP proposes extending the PYC file
+name to include the optimization level in the bytecode repository
+directory when there are optimizations applied.
+   </p>
+  </div>
+  <div class="section" id="rationale">
+   <h1>
+    <a class="toc-backref" href="#id24">
+     Rationale
+    </a>
+   </h1>
+   <p>
+    As of today, bytecode files come in two flavours: PYC and PYO. A PYC
+file is the bytecode file generated and read from when no
+optimization level is specified at interpreter startup (i.e.,
+    <tt class="docutils literal">
+     <span class="pre">
+      -O
+     </span>
+    </tt>
+    is not specified). A PYO file represents the bytecode file that is
+read/written when
+    <strong>
+     any
+    </strong>
+    optimization level is specified (i.e., when
+    <tt class="docutils literal">
+     <span class="pre">
+      -O
+     </span>
+    </tt>
+    <strong>
+     or
+    </strong>
+    <tt class="docutils literal">
+     <span class="pre">
+      -OO
+     </span>
+    </tt>
+    is specified). This means that while PYC
+files clearly delineate the optimization level used when they were
+generated -- namely no optimizations beyond the peepholer -- the same
+is not true for PYO files. To put this in terms of optimization
+levels and the file extension:
+   </p>
+   <blockquote>
+    <ul class="simple">
+     <li>
+      0:
+      <tt class="docutils literal">
+       .pyc
+      </tt>
+     </li>
+     <li>
+      1 (
+      <tt class="docutils literal">
+       <span class="pre">
+        -O
+       </span>
+      </tt>
+      ):
+      <tt class="docutils literal">
+       .pyo
+      </tt>
+     </li>
+     <li>
+      2 (
+      <tt class="docutils literal">
+       <span class="pre">
+        -OO
+       </span>
+      </tt>
+      ):
+      <tt class="docutils literal">
+       .pyo
+      </tt>
+     </li>
+    </ul>
+   </blockquote>
+   <p>
+    The reuse of the
+    <tt class="docutils literal">
+     .pyo
+    </tt>
+    file extension for both level 1 and 2
+optimizations means that there is no clear way to tell what
+optimization level was used to generate the bytecode file. In terms
+of reading PYO files, this can lead to an interpreter using a mixture
+of optimization levels with its code if the user was not careful to
+make sure all PYO files were generated using the same optimization
+level (typically done by blindly deleting all PYO files and then
+using the
+    <cite>
+     compileall
+    </cite>
+    module to compile all-new PYO files
+    <a class="footnote-reference" href="#id12" id="id1">
+     [1]
+    </a>
+    ).
+This issue is only compounded when people optimize Python code beyond
+what the interpreter natively supports, e.g., using the astoptimizer
+project
+    <a class="footnote-reference" href="#id13" id="id2">
+     [2]
+    </a>
+    .
+   </p>
+   <p>
+    In terms of writing PYO files, the need to delete all PYO files
+every time one either changes the optimization level they want to use
+or are unsure of what optimization was used the last time PYO files
+were generated leads to unnecessary file churn. The change proposed
+by this PEP also allows for
+    <strong>
+     all
+    </strong>
+    optimization levels to be
+pre-compiled for bytecode files ahead of time, something that is
+currently impossible thanks to the reuse of the
+    <tt class="docutils literal">
+     .pyo
+    </tt>
+    file
+extension for multiple optimization levels.
+   </p>
+   <p>
+    As for distributing bytecode-only modules, having to distribute both
+    <tt class="docutils literal">
+     .pyc
+    </tt>
+    and
+    <tt class="docutils literal">
+     .pyo
+    </tt>
+    files is unnecessary for the common use-case
+of code obfuscation and smaller file deployments. This means that
+bytecode-only modules will only load from their non-optimized
+    <tt class="docutils literal">
+     .pyc
+    </tt>
+    file name.
+   </p>
+  </div>
+  <div class="section" id="proposal">
+   <h1>
+    <a class="toc-backref" href="#id25">
+     Proposal
+    </a>
+   </h1>
+   <p>
+    To eliminate the ambiguity that PYO files present, this PEP proposes
+eliminating the concept of PYO files and their accompanying
+    <tt class="docutils literal">
+     .pyo
+    </tt>
+    file extension. To allow for the optimization level to be unambiguous
+as well as to avoid having to regenerate optimized bytecode files
+needlessly in the
+    <cite>
+     __pycache__
+    </cite>
+    directory, the optimization level
+used to generate the bytecode file will be incorporated into the
+bytecode file name. When no optimization level is specified, the
+pre-PEP
+    <tt class="docutils literal">
+     .pyc
+    </tt>
+    file name will be used (i.e., no optimization level
+will be specified in the file name). For example, a source file named
+    <tt class="docutils literal">
+     foo.py
+    </tt>
+    in CPython 3.5 could have the following bytecode files
+based on the interpreter's optimization level (none,
+    <tt class="docutils literal">
+     <span class="pre">
+      -O
+     </span>
+    </tt>
+    , and
+    <tt class="docutils literal">
+     <span class="pre">
+      -OO
+     </span>
+    </tt>
+    ):
+   </p>
+   <blockquote>
+    <ul class="simple">
+     <li>
+      0:
+      <tt class="docutils literal">
+       <span class="pre">
+        foo.cpython-35.pyc
+       </span>
+      </tt>
+      (i.e., no change)
+     </li>
+     <li>
+      1:
+      <tt class="docutils literal">
+       <span class="pre">
+        foo.cpython-35.opt-1.pyc
+       </span>
+      </tt>
+     </li>
+     <li>
+      2:
+      <tt class="docutils literal">
+       <span class="pre">
+        foo.cpython-35.opt-2.pyc
+       </span>
+      </tt>
+     </li>
+    </ul>
+   </blockquote>
+   <p>
+    Currently bytecode file names are created by
+    <tt class="docutils literal">
+     importlib.util.cache_from_source()
+    </tt>
+    , approximately using the
+following expression defined by
+    <a class="reference external" href="../pep-3147/index.html">
+     PEP 3147
+    </a>
+    <a class="footnote-reference" href="#id14" id="id3">
+     [3]
+    </a>
+    ,
+    <a class="footnote-reference" href="#id15" id="id4">
+     [4]
+    </a>
+    ,
+    <a class="footnote-reference" href="#id16" id="id5">
+     [5]
+    </a>
+    :
+   </p>
+   <pre class="literal-block">
+'{name}.{cache_tag}.pyc'.format(name=module_name,
+                                cache_tag=sys.implementation.cache_tag)
+</pre>
+   <p>
+    This PEP proposes to change the expression when an optimization
+level is specified to:
+   </p>
+   <pre class="literal-block">
+'{name}.{cache_tag}.opt-{optimization}.pyc'.format(
+        name=module_name,
+        cache_tag=sys.implementation.cache_tag,
+        optimization=str(sys.flags.optimize))
+</pre>
+   <p>
+    The "opt-" prefix was chosen so as to provide a visual separator
+from the cache tag. The placement of the optimization level after
+the cache tag was chosen to preserve lexicographic sort order of
+bytecode file names based on module name and cache tag which will
+not vary for a single interpreter. The "opt-" prefix was chosen over
+"o" so as to be somewhat self-documenting. The "opt-" prefix was
+chosen over "O" so as to not have any confusion in case "0" was the
+leading prefix of the optimization level.
+   </p>
+   <p>
+    A period was chosen over a hyphen as a separator so as to distinguish
+clearly that the optimization level is not part of the interpreter
+version as specified by the cache tag. It also lends to the use of
+the period in the file name to delineate semantically different
+concepts.
+   </p>
+   <p>
+    For example, if
+    <tt class="docutils literal">
+     <span class="pre">
+      -OO
+     </span>
+    </tt>
+    had been passed to the interpreter then
+instead of
+    <tt class="docutils literal">
+     <span class="pre">
+      importlib.cpython-35.pyo
+     </span>
+    </tt>
+    the file name would be
+    <tt class="docutils literal">
+     <span class="pre">
+      importlib.cpython-35.opt-2.pyc
+     </span>
+    </tt>
+    .
+   </p>
+   <p>
+    Leaving out the new
+    <tt class="docutils literal">
+     opt-
+    </tt>
+    tag when no optimization level is
+applied should increase backwards-compatibility. This is also more
+understanding of Python implementations which have no use for
+optimization levels (e.g., PyPy[10]_).
+   </p>
+   <p>
+    It should be noted that this change in no way affects the performance
+of import. Since the import system looks for a single bytecode file
+based on the optimization level of the interpreter already and
+generates a new bytecode file if it doesn't exist, the introduction
+of potentially more bytecode files in the
+    <tt class="docutils literal">
+     __pycache__
+    </tt>
+    directory
+has no effect in terms of stat calls. The interpreter will continue
+to look for only a single bytecode file based on the optimization
+level and thus no increase in stat calls will occur.
+   </p>
+   <p>
+    The only potentially negative result of this PEP is the probable
+increase in the number of
+    <tt class="docutils literal">
+     .pyc
+    </tt>
+    files and thus increase in storage
+use. But for platforms where this is an issue,
+    <tt class="docutils literal">
+     sys.dont_write_bytecode
+    </tt>
+    exists to turn off bytecode generation so
+that it can be controlled offline.
+   </p>
+  </div>
+  <div class="section" id="implementation">
+   <h1>
+    <a class="toc-backref" href="#id26">
+     Implementation
+    </a>
+   </h1>
+   <p>
+    An implementation of this PEP is available
+    <a class="footnote-reference" href="#id22" id="id6">
+     [11]
+    </a>
+    .
+   </p>
+   <div class="section" id="importlib">
+    <h2>
+     <a class="toc-backref" href="#id27">
+      importlib
+     </a>
+    </h2>
+    <p>
+     As
+     <tt class="docutils literal">
+      importlib.util.cache_from_source()
+     </tt>
+     is the API that exposes
+bytecode file paths as well as being directly used by importlib, it
+requires the most critical change. As of Python 3.4, the function's
+signature is:
+    </p>
+    <pre class="literal-block">
+importlib.util.cache_from_source(path, debug_override=None)
+</pre>
+    <p>
+     This PEP proposes changing the signature in Python 3.5 to:
+    </p>
+    <pre class="literal-block">
+importlib.util.cache_from_source(path, debug_override=None, *, optimization=None)
+</pre>
+    <p>
+     The introduced
+     <tt class="docutils literal">
+      optimization
+     </tt>
+     keyword-only parameter will control
+what optimization level is specified in the file name. If the
+argument is
+     <tt class="docutils literal">
+      None
+     </tt>
+     then the current optimization level of the
+interpreter will be assumed (including no optimization). Any argument
+given for
+     <tt class="docutils literal">
+      optimization
+     </tt>
+     will be passed to
+     <tt class="docutils literal">
+      str()
+     </tt>
+     and must have
+     <tt class="docutils literal">
+      str.isalnum()
+     </tt>
+     be true, else
+     <tt class="docutils literal">
+      ValueError
+     </tt>
+     will be raised (this
+prevents invalid characters being used in the file name). If the
+empty string is passed in for
+     <tt class="docutils literal">
+      optimization
+     </tt>
+     then the addition of
+the optimization will be suppressed, reverting to the file name
+format which predates this PEP.
+    </p>
+    <p>
+     It is expected that beyond Python's own two optimization levels,
+third-party code will use a hash of optimization names to specify the
+optimization level, e.g.
+     <tt class="docutils literal">
+      <span class="pre">
+       hashlib.sha256(','.join(['no
+      </span>
+      dead code', 'const
+      <span class="pre">
+       folding'])).hexdigest()
+      </span>
+     </tt>
+     .
+While this might lead to long file names, it is assumed that most
+users never look at the contents of the __pycache__ directory and so
+this won't be an issue.
+    </p>
+    <p>
+     The
+     <tt class="docutils literal">
+      debug_override
+     </tt>
+     parameter will be deprecated. A
+     <tt class="docutils literal">
+      False
+     </tt>
+     value will be equivalent to
+     <tt class="docutils literal">
+      optimization=1
+     </tt>
+     while a
+     <tt class="docutils literal">
+      True
+     </tt>
+     value will represent
+     <tt class="docutils literal">
+      <span class="pre">
+       optimization=''
+      </span>
+     </tt>
+     (a
+     <tt class="docutils literal">
+      None
+     </tt>
+     argument will
+continue to mean the same as for
+     <tt class="docutils literal">
+      optimization
+     </tt>
+     ). A
+deprecation warning will be raised when
+     <tt class="docutils literal">
+      debug_override
+     </tt>
+     is given a
+value other than
+     <tt class="docutils literal">
+      None
+     </tt>
+     , but there are no plans for the complete
+removal of the parameter at this time (but removal will be no later
+than Python 4).
+    </p>
+    <p>
+     The various module attributes for importlib.machinery which relate to
+bytecode file suffixes will be updated
+     <a class="footnote-reference" href="#id18" id="id7">
+      [7]
+     </a>
+     . The
+     <tt class="docutils literal">
+      DEBUG_BYTECODE_SUFFIXES
+     </tt>
+     and
+     <tt class="docutils literal">
+      OPTIMIZED_BYTECODE_SUFFIXES
+     </tt>
+     will
+both be documented as deprecated and set to the same value as
+     <tt class="docutils literal">
+      BYTECODE_SUFFIXES
+     </tt>
+     (removal of
+     <tt class="docutils literal">
+      DEBUG_BYTECODE_SUFFIXES
+     </tt>
+     and
+     <tt class="docutils literal">
+      OPTIMIZED_BYTECODE_SUFFIXES
+     </tt>
+     is not currently planned, but will be
+not later than Python 4).
+    </p>
+    <p>
+     All various finders and loaders will also be updated as necessary,
+but updating the previous mentioned parts of importlib should be all
+that is required.
+    </p>
+   </div>
+   <div class="section" id="rest-of-the-standard-library">
+    <h2>
+     <a class="toc-backref" href="#id28">
+      Rest of the standard library
+     </a>
+    </h2>
+    <p>
+     The various functions exposed by the
+     <tt class="docutils literal">
+      py_compile
+     </tt>
+     and
+     <tt class="docutils literal">
+      compileall
+     </tt>
+     functions will be updated as necessary to make sure
+they follow the new bytecode file name semantics
+     <a class="footnote-reference" href="#id17" id="id8">
+      [6]
+     </a>
+     ,
+     <a class="footnote-reference" href="#id12" id="id9">
+      [1]
+     </a>
+     . The CLI
+for the
+     <tt class="docutils literal">
+      compileall
+     </tt>
+     module will not be directly affected (the
+     <tt class="docutils literal">
+      <span class="pre">
+       -b
+      </span>
+     </tt>
+     flag will be implicit as it will no longer generate
+     <tt class="docutils literal">
+      .pyo
+     </tt>
+     files when
+     <tt class="docutils literal">
+      <span class="pre">
+       -O
+      </span>
+     </tt>
+     is specified).
+    </p>
+   </div>
+  </div>
+  <div class="section" id="compatibility-considerations">
+   <h1>
+    <a class="toc-backref" href="#id29">
+     Compatibility Considerations
+    </a>
+   </h1>
+   <p>
+    Any code directly manipulating bytecode files from Python 3.2 on
+will need to consider the impact of this change on their code (prior
+to Python 3.2 -- including all of Python 2 -- there was no
+__pycache__ which already necessitates bifurcating bytecode file
+handling support). If code was setting the
+    <tt class="docutils literal">
+     debug_override
+    </tt>
+    argument to
+    <tt class="docutils literal">
+     importlib.util.cache_from_source()
+    </tt>
+    then care will be
+needed if they want the path to a bytecode file with an optimization
+level of 2. Otherwise only code
+    <strong>
+     not
+    </strong>
+    using
+    <tt class="docutils literal">
+     importlib.util.cache_from_source()
+    </tt>
+    will need updating.
+   </p>
+   <p>
+    As for people who distribute bytecode-only modules (i.e., use a
+bytecode file instead of a source file), they will have to choose
+which optimization level they want their bytecode files to be since
+distributing a
+    <tt class="docutils literal">
+     .pyo
+    </tt>
+    file with a
+    <tt class="docutils literal">
+     .pyc
+    </tt>
+    file will no longer be
+of any use. Since people typically only distribute bytecode files for
+code obfuscation purposes or smaller distribution size then only
+having to distribute a single
+    <tt class="docutils literal">
+     .pyc
+    </tt>
+    should actually be beneficial
+to these use-cases. And since the magic number for bytecode files
+changed in Python 3.5 to support
+    <a class="reference external" href="../pep-0465/index.html">
+     PEP 465
+    </a>
+    there is no need to support
+pre-existing
+    <tt class="docutils literal">
+     .pyo
+    </tt>
+    files
+    <a class="footnote-reference" href="#id19" id="id10">
+     [8]
+    </a>
+    .
+   </p>
+  </div>
+  <div class="section" id="rejected-ideas">
+   <h1>
+    <a class="toc-backref" href="#id30">
+     Rejected Ideas
+    </a>
+   </h1>
+   <div class="section" id="completely-dropping-optimization-levels-from-cpython">
+    <h2>
+     <a class="toc-backref" href="#id31">
+      Completely dropping optimization levels from CPython
+     </a>
+    </h2>
+    <p>
+     Some have suggested that instead of accommodating the various
+optimization levels in CPython, we should instead drop them
+entirely. The argument is that significant performance gains would
+occur from runtime optimizations through something like a JIT and not
+through pre-execution bytecode optimizations.
+    </p>
+    <p>
+     This idea is rejected for this PEP as that ignores the fact that
+there are people who do find the pre-existing optimization levels for
+CPython useful. It also assumes that no other Python interpreter
+would find what this PEP proposes useful.
+    </p>
+   </div>
+   <div class="section" id="alternative-formatting-of-the-optimization-level-in-the-file-name">
+    <h2>
+     <a class="toc-backref" href="#id32">
+      Alternative formatting of the optimization level in the file name
+     </a>
+    </h2>
+    <p>
+     Using the "opt-" prefix and placing the optimization level between
+the cache tag and file extension is not critical. All options which
+have been considered are:
+    </p>
+    <ul class="simple">
+     <li>
+      <tt class="docutils literal">
+       <span class="pre">
+        importlib.cpython-35.opt-1.pyc
+       </span>
+      </tt>
+     </li>
+     <li>
+      <tt class="docutils literal">
+       <span class="pre">
+        importlib.cpython-35.opt1.pyc
+       </span>
+      </tt>
+     </li>
+     <li>
+      <tt class="docutils literal">
+       <span class="pre">
+        importlib.cpython-35.o1.pyc
+       </span>
+      </tt>
+     </li>
+     <li>
+      <tt class="docutils literal">
+       <span class="pre">
+        importlib.cpython-35.O1.pyc
+       </span>
+      </tt>
+     </li>
+     <li>
+      <tt class="docutils literal">
+       <span class="pre">
+        importlib.cpython-35.1.pyc
+       </span>
+      </tt>
+     </li>
+     <li>
+      <tt class="docutils literal">
+       <span class="pre">
+        importlib.cpython-35-O1.pyc
+       </span>
+      </tt>
+     </li>
+     <li>
+      <tt class="docutils literal">
+       <span class="pre">
+        importlib.O1.cpython-35.pyc
+       </span>
+      </tt>
+     </li>
+     <li>
+      <tt class="docutils literal">
+       <span class="pre">
+        importlib.o1.cpython-35.pyc
+       </span>
+      </tt>
+     </li>
+     <li>
+      <tt class="docutils literal">
+       <span class="pre">
+        importlib.1.cpython-35.pyc
+       </span>
+      </tt>
+     </li>
+    </ul>
+    <p>
+     These were initially rejected either because they would change the
+sort order of bytecode files, possible ambiguity with the cache tag,
+or were not self-documenting enough. An informal poll was taken and
+people clearly preferred the formatting proposed by the PEP
+     <a class="footnote-reference" href="#id20" id="id11">
+      [9]
+     </a>
+     .
+Since this topic is non-technical and of personal choice, the issue
+is considered solved.
+    </p>
+   </div>
+   <div class="section" id="embedding-the-optimization-level-in-the-bytecode-metadata">
+    <h2>
+     <a class="toc-backref" href="#id33">
+      Embedding the optimization level in the bytecode metadata
+     </a>
+    </h2>
+    <p>
+     Some have suggested that rather than embedding the optimization level
+of bytecode in the file name that it be included in the file's
+metadata instead. This would mean every interpreter had a single copy
+of bytecode at any time. Changing the optimization level would thus
+require rewriting the bytecode, but there would also only be a single
+file to care about.
+    </p>
+    <p>
+     This has been rejected due to the fact that Python is often installed
+as a root-level application and thus modifying the bytecode file for
+modules in the standard library are always possible. In this
+situation integrators would need to guess at what a reasonable
+optimization level was for users for any/all situations. By
+allowing multiple optimization levels to co-exist simultaneously it
+frees integrators from having to guess what users want and allows
+users to utilize the optimization level they want.
+    </p>
+   </div>
+  </div>
+  <div class="section" id="references">
+   <h1>
+    <a class="toc-backref" href="#id34">
+     References
+    </a>
+   </h1>
+   <table class="docutils footnote" frame="void" id="id12" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       [1]
+      </td>
+      <td>
+       <em>
+        (
+        <a class="fn-backref" href="#id1">
+         1
+        </a>
+        ,
+        <a class="fn-backref" href="#id9">
+         2
+        </a>
+        )
+       </em>
+       The compileall module
+(
+       <a class="reference external" href="https://docs.python.org/3/library/compileall.html#module-compileall">
+        https://docs.python.org/3/library/compileall.html#module-compileall
+       </a>
+       )
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id13" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id2">
+        [2]
+       </a>
+      </td>
+      <td>
+       The astoptimizer project
+(
+       <a class="reference external" href="https://pypi.python.org/pypi/astoptimizer">
+        https://pypi.python.org/pypi/astoptimizer
+       </a>
+       )
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id14" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id3">
+        [3]
+       </a>
+      </td>
+      <td>
+       <tt class="docutils literal">
+        importlib.util.cache_from_source()
+       </tt>
+       (
+       <a class="reference external" href="https://docs.python.org/3.5/library/importlib.html#importlib.util.cache_from_source">
+        https://docs.python.org/3.5/library/importlib.html#importlib.util.cache_from_source
+       </a>
+       )
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id15" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id4">
+        [4]
+       </a>
+      </td>
+      <td>
+       Implementation of
+       <tt class="docutils literal">
+        importlib.util.cache_from_source()
+       </tt>
+       from CPython 3.4.3rc1
+(
+       <a class="reference external" href="https://hg.python.org/cpython/file/038297948389/Lib/importlib/_bootstrap.py#l437">
+        https://hg.python.org/cpython/file/038297948389/Lib/importlib/_bootstrap.py#l437
+       </a>
+       )
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id16" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id5">
+        [5]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="../pep-3147/index.html">
+        PEP 3147
+       </a>
+       , PYC Repository Directories, Warsaw
+(
+       <a class="reference external" href="../pep-3147/index.html">
+        http://www.python.org/dev/peps/pep-3147
+       </a>
+       )
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id17" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id8">
+        [6]
+       </a>
+      </td>
+      <td>
+       The py_compile module
+(
+       <a class="reference external" href="https://docs.python.org/3/library/compileall.html#module-compileall">
+        https://docs.python.org/3/library/compileall.html#module-compileall
+       </a>
+       )
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id18" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id7">
+        [7]
+       </a>
+      </td>
+      <td>
+       The importlib.machinery module
+(
+       <a class="reference external" href="https://docs.python.org/3/library/importlib.html#module-importlib.machinery">
+        https://docs.python.org/3/library/importlib.html#module-importlib.machinery
+       </a>
+       )
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id19" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id10">
+        [8]
+       </a>
+      </td>
+      <td>
+       <tt class="docutils literal">
+        importlib.util.MAGIC_NUMBER
+       </tt>
+       (
+       <a class="reference external" href="https://docs.python.org/3/library/importlib.html#importlib.util.MAGIC_NUMBER">
+        https://docs.python.org/3/library/importlib.html#importlib.util.MAGIC_NUMBER
+       </a>
+       )
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id20" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id11">
+        [9]
+       </a>
+      </td>
+      <td>
+       Informal poll of file name format options on Google+
+(
+       <a class="reference external" href="https://plus.google.com/u/0/+BrettCannon/posts/fZynLNwHWGm">
+        https://plus.google.com/u/0/+BrettCannon/posts/fZynLNwHWGm
+       </a>
+       )
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id21" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       [10]
+      </td>
+      <td>
+       The PyPy Project
+(
+       <a class="reference external" href="http://pypy.org/">
+        http://pypy.org/
+       </a>
+       )
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id22" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id6">
+        [11]
+       </a>
+      </td>
+      <td>
+       Implementation of
+       <a class="reference external" href="index.html">
+        PEP 488
+       </a>
+       (
+       <a class="reference external" href="http://bugs.python.org/issue23731">
+        http://bugs.python.org/issue23731
+       </a>
+       )
+      </td>
+     </tr>
+    </tbody>
+   </table>
+  </div>
+  <div class="section" id="copyright">
+   <h1>
+    <a class="toc-backref" href="#id35">
+     Copyright
+    </a>
+   </h1>
+   <p>
+    This document has been placed in the public domain.
+   </p>
+   <!-- Local Variables:
+mode: indented-text
+indent-tabs-mode: nil
+sentence-end-double-space: t
+fill-column: 70
+coding: utf-8
+End: -->
+  </div>
+ </body>
+
+<!-- Mirrored from www.python.org/dev/peps/pep-0488/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 03 Sep 2015 04:35:00 GMT -->
+</html>Source: <a href="https://hg.python.org/peps/file/tip/pep-0488.txt">https://hg.python.org/peps/file/tip/pep-0488.txt</a>
+
+    </article>
+
+
+                </section>
+
+                
+
+
+<aside class="left-sidebar" role="secondary">
+
+    
+
+
+
+
+
+
+    
+
+
+
+
+
+        <div class="twitter-widget sidebar-widget">
+        <a class="twitter-timeline" data-dnt="true" href="https://twitter.com/ThePSF" data-widget-id="434113224703610882">Tweets by @ThePSF</a>
+        <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+    </div>
+
+    <div class="psf-sidebar-widget sidebar-widget">
+        <h3 class="widget-title">The PSF</h3>
+<p>The Python Software Foundation is the organization behind Python. Become a member of the PSF and help advance the software and our mission. </p>
+
+    </div>
+
+</aside>
+
+
+
+                
+                
+
+
+            </div><!-- end .container -->
+        </div><!-- end #content .content-wrapper -->
+
+        <!-- Footer and social media list -->
+        <footer id="site-map" class="main-footer" role="contentinfo">
+            <div class="main-footer-links">
+                <div class="container">
+
+                    
+                    <a id="back-to-top-1" class="jump-link" href="#python-network"><span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> Back to Top</a>
+
+                    
+
+<ul class="sitemap navigation menu do-not-print" role="tree" id="container">
+    
+    <li class="tier-1 element-1">
+        <a href="https://www.python.org/about/" >About</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/apps/" title="">Applications</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/quotes/" title="">Quotes</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/gettingstarted/" title="">Getting Started</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/help/" title="">Help</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-2">
+        <a href="https://www.python.org/downloads/" >Downloads</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/downloads/" title="">All releases</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/downloads/source/" title="">Source code</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/downloads/windows/" title="">Windows</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/downloads/mac-osx/" title="">Mac OS X</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/download/other/" title="">Other Platforms</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://docs.python.org/3/license.html" title="">License</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/download/alternatives" title="">Alternative Implementations</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-3">
+        <a href="https://www.python.org/doc/" >Documentation</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/doc/" title="">Docs</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/doc/av" title="">Audio/Visual Talks</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://wiki.python.org/moin/BeginnersGuide" title="">Beginner&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://docs.python.org/faq/" title="">FAQ</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="http://wiki.python.org/moin/Languages" title="">Non-English Docs</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="../index.html" title="">PEP Index</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://wiki.python.org/moin/PythonBooks" title="">Python Books</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-4">
+        <a href="https://www.python.org/community/" >Community</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/community/diversity/" title="">Diversity</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/community/irc/" title="">IRC</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/community/lists/" title="">Mailing Lists</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/workshops/" title="">Python Conferences</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/community/sigs/" title="">Special Interest Groups</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://wiki.python.org/moin/" title="">Python Wiki</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/community/logos/" title="">Python Logo</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://www.python.org/community/merchandise/" title="">Merchandise</a></li>
+    
+        <li class="tier-2 element-9" role="treeitem"><a href="https://www.python.org/community/awards" title="">Community Awards</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-5">
+        <a href="https://www.python.org/about/success/" title="success-stories">Success Stories</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/success/#arts" title="">Arts</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/success/#business" title="">Business</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/success/#education" title="">Education</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/success/#engineering" title="">Engineering</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/about/success/#government" title="">Government</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://www.python.org/about/success/#scientific" title="">Scientific</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/about/success/#software-development" title="">Software Development</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-6">
+        <a href="https://www.python.org/blogs/" title="News from around the Python world">News</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/blogs/" title="Python Insider Blog Posts">Python News</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://planetpython.org/" title="Planet Python">Community News</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="http://pyfound.blogspot.com/" title="PSF Blog">PSF News</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pycon.blogspot.com/" title="PyCon Blog">PyCon News</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-7">
+        <a href="https://www.python.org/events/" >Events</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/events/python-events/" title="">Python Events</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/events/python-user-group/" title="">User Group Events</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/events/python-events/past/" title="">Python Events Archive</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/events/python-user-group/past/" title="">User Group Events Archive</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://wiki.python.org/moin/PythonEventsCalendar#Submitting_an_Event" title="">Submit an Event</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-8">
+        <a href="https://www.python.org/dev/" >Contributing</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="http://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://bugs.python.org/" title="">Issue Tracker</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://mail.python.org/mailman/listinfo/python-dev" title="">python-dev list</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pythonmentors.com/" title="">Core Mentorship</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+</ul>
+
+
+                    <a id="back-to-top-2" class="jump-link" href="#python-network"><span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> Back to Top</a>
+                    
+
+                </div><!-- end .container -->
+            </div> <!-- end .main-footer-links -->
+
+            <div class="site-base">
+                <div class="container">
+                    
+                    <ul class="footer-links navigation menu do-not-print" role="tree">
+                        <li class="tier-1 element-1"><a href="https://www.python.org/about/help/">Help &amp; <span class="say-no-more">General</span> Contact</a></li>
+                        <li class="tier-1 element-2"><a href="https://www.python.org/community/diversity/">Diversity <span class="say-no-more">Initiatives</span></a></li>
+                        <li class="tier-1 element-3"><a href="https://github.com/python/pythondotorg/issues">Submit Website Bug</a></li>
+                        <!--<li class="tier-1 element-3"><a href="#"><span class="say-no-more">Website</span> Colophon</a></li>-->
+                    </ul>
+
+                    <div class="copyright">
+                        <p><small>
+                            <span class="pre">Copyright &copy;2001-2015.</span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/psf-landing/">Python Software Foundation</a></span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/about/legal/">Legal Statements</a></span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/privacy/">Privacy Policy</a></span>
+                        </small></p>
+                    </div>
+
+                </div><!-- end .container -->
+            </div><!-- end .site-base -->
+
+        </footer>
+
+    </div><!-- end #touchnav-wrapper -->
+
+    
+    <script src="../../../../ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="../../../static/js/libs/jquery-1.8.2.min.js"><\/script>')</script>
+
+    <script src="../../../static/js/libs/masonry.pkgd.min.js"></script>
+
+    <script type="text/javascript" src="../../../static/js/main-min.js" charset="utf-8"></script>
+    
+
+    <!--[if lte IE 7]>
+    <script type="text/javascript" src="/static/js/plugins/IE8-min.js" charset="utf-8"></script>
+    
+    
+    <![endif]-->
+
+    <!--[if lte IE 8]>
+    <script type="text/javascript" src="/static/js/plugins/getComputedStyle-min.js" charset="utf-8"></script>
+    
+    
+    <![endif]-->
+
+    
+
+    
+    
+
+</body>
+</html>

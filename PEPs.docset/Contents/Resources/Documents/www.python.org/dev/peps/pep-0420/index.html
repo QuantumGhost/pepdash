@@ -1,0 +1,2655 @@
+<!doctype html>
+<!--[if lt IE 7]>   <html class="no-js ie6 lt-ie7 lt-ie8 lt-ie9">   <![endif]-->
+<!--[if IE 7]>      <html class="no-js ie7 lt-ie8 lt-ie9">          <![endif]-->
+<!--[if IE 8]>      <html class="no-js ie8 lt-ie9">                 <![endif]-->
+<!--[if gt IE 8]><!--><html class="no-js" lang="en" dir="ltr">  <!--<![endif]-->
+
+
+<!-- Mirrored from www.python.org/dev/peps/pep-0420/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 03 Sep 2015 04:34:32 GMT -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <link rel="prefetch" href="../../../../ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js">
+
+    <meta name="application-name" content="Python.org">
+    <meta name="msapplication-tooltip" content="The official home of the Python Programming Language">
+    <meta name="apple-mobile-web-app-title" content="Python.org">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="format-detection" content="telephone=no">
+    <meta http-equiv="cleartype" content="on">
+    <meta http-equiv="imagetoolbar" content="false">
+
+    <script src="../../../static/js/libs/modernizr.js"></script>
+
+    <link href="../../../static/stylesheets/style.css" rel="stylesheet" type="text/css" title="default" />
+    <link href="../../../static/stylesheets/mq.css" rel="stylesheet" type="text/css" media="not print, braille, embossed, speech, tty" />
+    
+
+    <!--[if (lte IE 8)&(!IEMobile)]>
+    <link href="/static/stylesheets/no-mq.css" rel="stylesheet" type="text/css" media="screen" />
+    
+    
+    <![endif]-->
+
+    
+    <link rel="icon" type="image/x-icon" href="https://www.python.org/static/favicon.ico">
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="../../../static/apple-touch-icon-144x144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="../../../static/apple-touch-icon-114x114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="../../../static/apple-touch-icon-72x72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="../../../static/apple-touch-icon-precomposed.png">
+    <link rel="apple-touch-icon" href="../../../static/apple-touch-icon-precomposed.png">
+
+    
+    <meta name="msapplication-TileImage" content="/static/metro-icon-144x144-precomposed.png"><!-- white shape -->
+    <meta name="msapplication-TileColor" content="#3673a5"><!-- python blue -->
+    <meta name="msapplication-navbutton-color" content="#3673a5">
+
+    <meta property="og:site_name" content="Python.org">
+    <meta property="og:type" content="website">
+
+    <title>PEP 0420 -- Implicit Namespace Packages | Python.org</title>
+    <meta property="og:title" content="Welcome to Python.org">
+
+    
+    <meta name="description" content="The official home of the Python Programming Language">
+    <meta name="og:description" content="The official home of the Python Programming Language">
+    <meta name="keywords" content="Python programming language object oriented web free open source software license documentation download community">
+    <meta property="og:tag" content="Python programming language object oriented web free open source software license documentation download community">
+    <meta property="og:published_time" content="">
+    <meta property="og:modified_time" content="">
+    <meta property="og:author" content="">
+    <meta property="og:section" content=""> 
+    <meta property="og:url" content="">
+    <meta property="og:image" content="">
+    <meta property="og:video" content="">
+
+    <link rel="author" href="https://www.python.org/static/humans.txt">
+
+    
+
+    
+    <script type="application/ld+json">
+     {
+       "@context": "http://schema.org",
+       "@type": "WebSite",
+       "url": "https://www.python.org/",
+       "potentialAction": {
+         "@type": "SearchAction",
+         "target": "https://www.python.org/search/?q={search_term_string}",
+         "query-input": "required name=search_term_string"
+       }
+     }
+    </script>
+
+    
+    <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-39055973-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+    </script>
+    
+</head>
+
+<body class="python pages pep-page">
+
+    <div id="touchnav-wrapper">
+
+        <div id="nojs" class="do-not-print">
+            <p><strong>Notice:</strong> While Javascript is not essential for this website, your interaction with the content will be limited. Please turn Javascript on for the full experience. </p>
+        </div>
+
+        <!--[if lt IE 8]>
+        <div id="oldie-warning" class="do-not-print">
+            <p><strong>Notice:</strong> Your browser is <em>ancient</em> and <a href="http://www.ie6countdown.com/">Microsoft agrees</a>. <a href="http://browsehappy.com/">Upgrade to a different browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to experience a better web.</p>
+        </div>
+        <![endif]-->
+
+        <!-- Sister Site Links -->
+        <div id="top" class="top-bar do-not-print">
+
+            <nav class="meta-navigation container" role="navigation">
+
+                
+                <div class="skip-link screen-reader-text">
+                    <a href="#content" title="Skip to content">Skip to content</a>
+                </div>
+
+                
+                <a id="close-python-network" class="jump-link" href="#python-network" aria-hidden="true">
+                    <span aria-hidden="true" class="icon-arrow-down"><span>&#9660;</span></span> Close
+                </a>
+
+                
+
+<ul class="menu" role="tree">
+    
+    <li class="python-meta ">
+        <a href="https://www.python.org/" title="The Python Programming Language" >Python</a>
+    </li>
+    
+    <li class="psf-meta ">
+        <a href="https://www.python.org/psf-landing/" title="The Python Software Foundation" >PSF</a>
+    </li>
+    
+    <li class="docs-meta ">
+        <a href="https://docs.python.org/" title="Python Documentation" >Docs</a>
+    </li>
+    
+    <li class="pypi-meta ">
+        <a href="https://pypi.python.org/" title="Python Package Index" >PyPI</a>
+    </li>
+    
+    <li class="jobs-meta ">
+        <a href="https://www.python.org/jobs/" title="Python Job Board" >Jobs</a>
+    </li>
+    
+    <li class="shop-meta ">
+        <a href="https://www.python.org/community/" title="Python Community" >Community</a>
+    </li>
+    
+</ul>
+
+
+                <a id="python-network" class="jump-link" href="#top" aria-hidden="true">
+                    <span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> The Python Network
+                </a>
+
+            </nav>
+
+        </div>
+
+        <!-- Header elements -->
+        <header class="main-header" role="banner">
+            <div class="container">
+
+                <h1 class="site-headline">
+                    <a href="https://www.python.org/"><img class="python-logo" src="../../../static/img/python-logo.png" alt="python&trade;"></a>
+                </h1>
+
+                <div class="options-bar do-not-print">
+
+                    
+                    <a id="site-map-link" class="jump-to-menu" href="#site-map"><span class="menu-icon">&equiv;</span> Menu</a><form class="search-the-site" action="https://www.python.org/search/" method="get">
+                        <fieldset title="Search Python.org">
+
+                            <span aria-hidden="true" class="icon-search"></span>
+
+                            <label class="screen-reader-text" for="id-search-field">Search This Site</label>
+                            <input id="id-search-field" name="q" type="search" role="textbox" class="search-field" placeholder="Search" value="" tabindex="1">
+
+                            <button type="submit" name="submit" id="submit" class="search-button" title="Submit this Search" tabindex="3">
+                                GO
+                            </button>
+
+                            
+                            <!--[if IE]><input type="text" style="display: none;" disabled="disabled" size="1" tabindex="4"><![endif]-->
+
+                        </fieldset>
+                    </form><span class="breaker"></span><div class="adjust-font-size" aria-hidden="true">
+                        <ul class="navigation menu" aria-label="Adjust Text Size on Page">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                <a href="#" class="action-trigger"><strong><small>A</small> A</strong></a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a class="text-shrink" title="Make Text Smaller" href="javascript:;">Smaller</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a class="text-grow" title="Make Text Larger" href="javascript:;">Larger</a></li>
+                                    <li class="tier-2 element-3" role="treeitem"><a class="text-reset" title="Reset any font size changes I have made" href="javascript:;">Reset</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div><div class="winkwink-nudgenudge">
+                        <ul class="navigation menu" aria-label="Social Media Navigation">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                <a href="#" class="action-trigger">Socialize</a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a href="http://plus.google.com/+Python"><span aria-hidden="true" class="icon-google-plus"></span>Google+</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a href="http://www.facebook.com/pythonlang?fref=ts"><span aria-hidden="true" class="icon-facebook"></span>Facebook</a></li>
+                                    <li class="tier-2 element-3" role="treeitem"><a href="http://twitter.com/ThePSF"><span aria-hidden="true" class="icon-twitter"></span>Twitter</a></li>
+                                    <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/irc/"><span aria-hidden="true" class="icon-freenode"></span>Chat on IRC</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div><div class="account-signin">
+                        <ul class="navigation menu" aria-label="Social Media Navigation">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                
+                                <a href="https://www.python.org/accounts/login/" title="Sign Up or Sign In to Python.org">Sign In</a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/accounts/signup/">Sign Up / Register</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/accounts/login/">Sign In</a></li>
+                                </ul>
+                                
+                            </li>
+                        </ul>
+                    </div>
+
+                </div><!-- end options-bar -->
+
+                <nav id="mainnav" class="python-navigation main-navigation do-not-print" role="navigation">
+                    
+                        
+<ul class="navigation menu" role="menubar" aria-label="Main Navigation">
+  
+    
+    
+    <li id="about" class="tier-1 element-1  " aria-haspopup="true">
+        <a href="https://www.python.org/about/" title="" class="">About</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/apps/" title="">Applications</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/quotes/" title="">Quotes</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/gettingstarted/" title="">Getting Started</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/help/" title="">Help</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="downloads" class="tier-1 element-2  " aria-haspopup="true">
+        <a href="https://www.python.org/downloads/" title="" class="">Downloads</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/downloads/" title="">All releases</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/downloads/source/" title="">Source code</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/downloads/windows/" title="">Windows</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/downloads/mac-osx/" title="">Mac OS X</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/download/other/" title="">Other Platforms</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://docs.python.org/3/license.html" title="">License</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/download/alternatives" title="">Alternative Implementations</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="documentation" class="tier-1 element-3  " aria-haspopup="true">
+        <a href="https://www.python.org/doc/" title="" class="">Documentation</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/doc/" title="">Docs</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/doc/av" title="">Audio/Visual Talks</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://wiki.python.org/moin/BeginnersGuide" title="">Beginner&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://docs.python.org/faq/" title="">FAQ</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="http://wiki.python.org/moin/Languages" title="">Non-English Docs</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="../index.html" title="">PEP Index</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://wiki.python.org/moin/PythonBooks" title="">Python Books</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="community" class="tier-1 element-4  " aria-haspopup="true">
+        <a href="https://www.python.org/community/" title="" class="">Community</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/community/diversity/" title="">Diversity</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/community/irc/" title="">IRC</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/community/lists/" title="">Mailing Lists</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/workshops/" title="">Python Conferences</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/community/sigs/" title="">Special Interest Groups</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://wiki.python.org/moin/" title="">Python Wiki</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/community/logos/" title="">Python Logo</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://www.python.org/community/merchandise/" title="">Merchandise</a></li>
+    
+        <li class="tier-2 element-9" role="treeitem"><a href="https://www.python.org/community/awards" title="">Community Awards</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="success-stories" class="tier-1 element-5  " aria-haspopup="true">
+        <a href="https://www.python.org/about/success/" title="success-stories" class="">Success Stories</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/success/#arts" title="">Arts</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/success/#business" title="">Business</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/success/#education" title="">Education</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/success/#engineering" title="">Engineering</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/about/success/#government" title="">Government</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://www.python.org/about/success/#scientific" title="">Scientific</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/about/success/#software-development" title="">Software Development</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="news" class="tier-1 element-6  " aria-haspopup="true">
+        <a href="https://www.python.org/blogs/" title="News from around the Python world" class="">News</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/blogs/" title="Python Insider Blog Posts">Python News</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://planetpython.org/" title="Planet Python">Community News</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="http://pyfound.blogspot.com/" title="PSF Blog">PSF News</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pycon.blogspot.com/" title="PyCon Blog">PyCon News</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="events" class="tier-1 element-7  " aria-haspopup="true">
+        <a href="https://www.python.org/events/" title="" class="">Events</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/events/python-events/" title="">Python Events</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/events/python-user-group/" title="">User Group Events</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/events/python-events/past/" title="">Python Events Archive</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/events/python-user-group/past/" title="">User Group Events Archive</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://wiki.python.org/moin/PythonEventsCalendar#Submitting_an_Event" title="">Submit an Event</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    
+  
+</ul>
+
+                    
+                </nav>
+
+                <div class="header-banner "> <!-- for optional "do-not-print" class -->
+                    
+                    
+                </div>
+
+                
+                
+
+             </div><!-- end .container -->
+        </header>
+
+        <div id="content" class="content-wrapper">
+            <!-- Main Content Column -->
+            <div class="container">
+
+                <section class="main-content with-left-sidebar" role="main">
+
+                    
+<ul class="breadcrumbs menu">
+    <li>
+        <a href="https://www.python.org/" title="The Python Programming Language">Python</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>
+        <a href="https://www.python.org/dev/">Python Developer's Guide</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>
+        <a href="../index.html">PEP Index</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>PEP 0420 -- Implicit Namespace Packages</li>
+</ul>
+
+
+                    
+<style>
+   .pep-page pre {
+        padding: .5em;
+        background: inherit;
+        border-left: 0px;
+        -webkit-box-shadow: 0 0 0 0;
+        -moz-box-shadow: 0 0 0 0;
+        box-shadow: 0 0 0 0;
+   }
+</style>
+
+    
+    <article class="text">
+        
+
+        <header class="article-header">
+            <h1 class="page-title">PEP 0420 -- Implicit Namespace Packages</h1>
+        </header>
+
+        <!--
+This HTML is auto-generated.  DO NOT EDIT THIS FILE!  If you are writing a new
+PEP, see http://www.python.org/dev/peps/pep-0001 for instructions and links
+to templates.  DO NOT USE THIS HTML FILE AS YOUR TEMPLATE!
+-->
+<html>
+ <body>
+  <table class="rfc2822 docutils field-list" frame="void" rules="none">
+   <col class="field-name">
+   </col>
+   <col class="field-body">
+   </col>
+   <tbody valign="top">
+    <tr class="field">
+     <th class="field-name">
+      PEP:
+     </th>
+     <td class="field-body">
+      420
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Title:
+     </th>
+     <td class="field-body">
+      Implicit Namespace Packages
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Author:
+     </th>
+     <td class="field-body">
+      Eric V. Smith &lt;eric at trueblade.com&gt;
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Status:
+     </th>
+     <td class="field-body">
+      Final
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Type:
+     </th>
+     <td class="field-body">
+      Standards Track
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Created:
+     </th>
+     <td class="field-body">
+      19-Apr-2012
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Python-Version:
+     </th>
+     <td class="field-body">
+      3.3
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Post-History:
+     </th>
+     <td class="field-body">
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Resolution:
+     </th>
+     <td class="field-body">
+      <a class="reference external" href="http://mail.python.org/pipermail/python-dev/2012-May/119651.html">
+       http://mail.python.org/pipermail/python-dev/2012-May/119651.html
+      </a>
+     </td>
+    </tr>
+   </tbody>
+  </table>
+  <hr/>
+  <div class="contents topic" id="contents">
+   <p class="topic-title first">
+    Contents
+   </p>
+   <ul class="simple">
+    <li>
+     <a class="reference internal" href="#abstract" id="id20">
+      Abstract
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#terminology" id="id21">
+      Terminology
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#namespace-packages-today" id="id22">
+      Namespace packages today
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#rationale" id="id23">
+      Rationale
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#specification" id="id24">
+      Specification
+     </a>
+     <ul>
+      <li>
+       <a class="reference internal" href="#dynamic-path-computation" id="id25">
+        Dynamic path computation
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#impact-on-import-finders-and-loaders" id="id26">
+        Impact on import finders and loaders
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#differences-between-namespace-packages-and-regular-packages" id="id27">
+        Differences between namespace packages and regular packages
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#namespace-packages-in-the-standard-library" id="id28">
+        Namespace packages in the standard library
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#migrating-from-legacy-namespace-packages" id="id29">
+        Migrating from legacy namespace packages
+       </a>
+      </li>
+     </ul>
+    </li>
+    <li>
+     <a class="reference internal" href="#packaging-implications" id="id30">
+      Packaging Implications
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#examples" id="id31">
+      Examples
+     </a>
+     <ul>
+      <li>
+       <a class="reference internal" href="#nested-namespace-packages" id="id32">
+        Nested namespace packages
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#id3" id="id33">
+        Dynamic path computation
+       </a>
+      </li>
+     </ul>
+    </li>
+    <li>
+     <a class="reference internal" href="#discussion" id="id34">
+      Discussion
+     </a>
+     <ul>
+      <li>
+       <a class="reference internal" href="#find-module-versus-find-loader" id="id35">
+        <tt class="docutils literal">
+         find_module
+        </tt>
+        versus
+        <tt class="docutils literal">
+         find_loader
+        </tt>
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#id9" id="id36">
+        Dynamic path computation
+       </a>
+      </li>
+     </ul>
+    </li>
+    <li>
+     <a class="reference internal" href="#module-reprs" id="id37">
+      Module reprs
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#references" id="id38">
+      References
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#copyright" id="id39">
+      Copyright
+     </a>
+    </li>
+   </ul>
+  </div>
+  <div class="section" id="abstract">
+   <h1>
+    <a class="toc-backref" href="#id20">
+     Abstract
+    </a>
+   </h1>
+   <p>
+    Namespace packages are a mechanism for splitting a single Python package
+across multiple directories on disk.  In current Python versions, an algorithm
+to compute the packages
+    <tt class="docutils literal">
+     __path__
+    </tt>
+    must be formulated.  With the enhancement
+proposed here, the import machinery itself will construct the list of
+directories that make up the package.  This PEP builds upon previous work,
+documented in
+    <a class="reference external" href="../pep-0382/index.html">
+     PEP 382
+    </a>
+    and
+    <a class="reference external" href="../pep-0402/index.html">
+     PEP 402
+    </a>
+    .  Those PEPs have since been rejected in
+favor of this one.  An implementation of this PEP is at
+    <a class="footnote-reference" href="#id12" id="id1">
+     [1]
+    </a>
+    .
+   </p>
+  </div>
+  <div class="section" id="terminology">
+   <h1>
+    <a class="toc-backref" href="#id21">
+     Terminology
+    </a>
+   </h1>
+   <p>
+    Within this PEP:
+   </p>
+   <blockquote>
+    <ul class="simple">
+     <li>
+      "package" refers to Python packages as defined by Python's import
+statement.
+     </li>
+     <li>
+      "distribution" refers to separately installable sets of Python
+modules as stored in the Python package index, and installed by
+distutils or setuptools.
+     </li>
+     <li>
+      "vendor package" refers to groups of files installed by an
+operating system's packaging mechanism (e.g. Debian or Redhat
+packages install on Linux systems).
+     </li>
+     <li>
+      "regular package" refers to packages as they are implemented in
+Python 3.2 and earlier.
+     </li>
+     <li>
+      "portion" refers to a set of files in a single directory (possibly
+stored in a zip file) that contribute to a namespace package.
+     </li>
+     <li>
+      "legacy portion" refers to a portion that uses
+      <tt class="docutils literal">
+       __path__
+      </tt>
+      manipulation in order to implement namespace packages.
+     </li>
+    </ul>
+   </blockquote>
+   <p>
+    This PEP defines a new type of package, the "namespace package".
+   </p>
+  </div>
+  <div class="section" id="namespace-packages-today">
+   <h1>
+    <a class="toc-backref" href="#id22">
+     Namespace packages today
+    </a>
+   </h1>
+   <p>
+    Python currently provides
+    <tt class="docutils literal">
+     pkgutil.extend_path
+    </tt>
+    to denote a package
+as a namespace package.  The recommended way of using it is to put:
+   </p>
+   <pre class="literal-block">
+from pkgutil import extend_path
+__path__ = extend_path(__path__, __name__)
+</pre>
+   <p>
+    in the package's
+    <tt class="docutils literal">
+     __init__.py
+    </tt>
+    .  Every distribution needs to provide
+the same contents in its
+    <tt class="docutils literal">
+     __init__.py
+    </tt>
+    , so that
+    <tt class="docutils literal">
+     extend_path
+    </tt>
+    is
+invoked independent of which portion of the package gets imported
+first.  As a consequence, the package's
+    <tt class="docutils literal">
+     __init__.py
+    </tt>
+    cannot
+practically define any names as it depends on the order of the package
+fragments on
+    <tt class="docutils literal">
+     sys.path
+    </tt>
+    to determine which portion is imported
+first.  As a special feature,
+    <tt class="docutils literal">
+     extend_path
+    </tt>
+    reads files named
+    <tt class="docutils literal">
+     <span class="pre">
+      &lt;packagename&gt;.pkg
+     </span>
+    </tt>
+    which allows declaration of additional portions.
+   </p>
+   <p>
+    setuptools provides a similar function named
+    <tt class="docutils literal">
+     pkg_resources.declare_namespace
+    </tt>
+    that is used in the form:
+   </p>
+   <pre class="literal-block">
+import pkg_resources
+pkg_resources.declare_namespace(__name__)
+</pre>
+   <p>
+    In the portion's
+    <tt class="docutils literal">
+     __init__.py
+    </tt>
+    , no assignment to
+    <tt class="docutils literal">
+     __path__
+    </tt>
+    is
+necessary, as
+    <tt class="docutils literal">
+     declare_namespace
+    </tt>
+    modifies the package
+    <tt class="docutils literal">
+     __path__
+    </tt>
+    through
+    <tt class="docutils literal">
+     sys.modules
+    </tt>
+    .  As a special feature,
+    <tt class="docutils literal">
+     declare_namespace
+    </tt>
+    also supports zip files, and registers the package name internally so
+that future additions to
+    <tt class="docutils literal">
+     sys.path
+    </tt>
+    by setuptools can properly add
+additional portions to each package.
+   </p>
+   <p>
+    setuptools allows declaring namespace packages in a distribution's
+    <tt class="docutils literal">
+     setup.py
+    </tt>
+    , so that distribution developers don't need to put the
+magic
+    <tt class="docutils literal">
+     __path__
+    </tt>
+    modification into
+    <tt class="docutils literal">
+     __init__.py
+    </tt>
+    themselves.
+   </p>
+   <p>
+    See
+    <a class="reference external" href="../pep-0402/index.html">
+     PEP 402
+    </a>
+    's "The Problem" section
+    <a class="footnote-reference" href="#id13" id="id2">
+     [2]
+    </a>
+    for additional motivations
+for namespace packages.  Note that
+    <a class="reference external" href="../pep-0402/index.html">
+     PEP 402
+    </a>
+    has been rejected, but the
+motivating use cases are still valid.
+   </p>
+  </div>
+  <div class="section" id="rationale">
+   <h1>
+    <a class="toc-backref" href="#id23">
+     Rationale
+    </a>
+   </h1>
+   <p>
+    The current imperative approach to namespace packages has led to
+multiple slightly-incompatible mechanisms for providing namespace
+packages.  For example, pkgutil supports
+    <tt class="docutils literal">
+     *.pkg
+    </tt>
+    files; setuptools
+doesn't.  Likewise, setuptools supports inspecting zip files, and
+supports adding portions to its
+    <tt class="docutils literal">
+     _namespace_packages
+    </tt>
+    variable,
+whereas pkgutil doesn't.
+   </p>
+   <p>
+    Namespace packages are designed to support being split across multiple
+directories (and hence found via multiple
+    <tt class="docutils literal">
+     sys.path
+    </tt>
+    entries).  In
+this configuration, it doesn't matter if multiple portions all provide
+an
+    <tt class="docutils literal">
+     __init__.py
+    </tt>
+    file, so long as each portion correctly initializes
+the namespace package.  However, Linux distribution vendors (amongst
+others) prefer to combine the separate portions and install them all
+into the
+    <em>
+     same
+    </em>
+    file system directory.  This creates a potential for
+conflict, as the portions are now attempting to provide the
+    <em>
+     same
+    </em>
+    file on the target system - something that is not allowed by many
+package managers.  Allowing implicit namespace packages means that the
+requirement to provide an
+    <tt class="docutils literal">
+     __init__.py
+    </tt>
+    file can be dropped
+completely, and affected portions can be installed into a common
+directory or split across multiple directories as distributions see
+fit.
+   </p>
+   <p>
+    A namespace package will not be constrained by a fixed
+    <tt class="docutils literal">
+     __path__
+    </tt>
+    ,
+computed from the parent path at namespace package creation time.
+Consider the standard library
+    <tt class="docutils literal">
+     encodings
+    </tt>
+    package:
+   </p>
+   <blockquote>
+    <ol class="arabic simple">
+     <li>
+      Suppose that
+      <tt class="docutils literal">
+       encodings
+      </tt>
+      becomes a namespace package.
+     </li>
+     <li>
+      It sometimes gets imported during interpreter startup to
+initialize the standard io streams.
+     </li>
+     <li>
+      An application modifies
+      <tt class="docutils literal">
+       sys.path
+      </tt>
+      after startup and wants to
+contribute additional encodings from new path entries.
+     </li>
+     <li>
+      An attempt is made to import an encoding from an
+      <tt class="docutils literal">
+       encodings
+      </tt>
+      portion that is found on a path entry added in step 3.
+     </li>
+    </ol>
+   </blockquote>
+   <p>
+    If the import system was restricted to only finding portions along the
+value of
+    <tt class="docutils literal">
+     sys.path
+    </tt>
+    that existed at the time the
+    <tt class="docutils literal">
+     encodings
+    </tt>
+    namespace package was created, the additional paths added in step 3
+would never be searched for the additional portions imported in step
+4.  In addition, if step 2 were sometimes skipped (due to some runtime
+flag or other condition), then the path items added in step 3 would
+indeed be used the first time a portion was imported.  Thus this PEP
+requires that the list of path entries be dynamically computed when
+each portion is loaded.  It is expected that the import machinery will
+do this efficiently by caching
+    <tt class="docutils literal">
+     __path__
+    </tt>
+    values and only refreshing
+them when it detects that the parent path has changed.  In the case of
+a top-level package like
+    <tt class="docutils literal">
+     encodings
+    </tt>
+    , this parent path would be
+    <tt class="docutils literal">
+     sys.path
+    </tt>
+    .
+   </p>
+  </div>
+  <div class="section" id="specification">
+   <h1>
+    <a class="toc-backref" href="#id24">
+     Specification
+    </a>
+   </h1>
+   <p>
+    Regular packages will continue to have an
+    <tt class="docutils literal">
+     __init__.py
+    </tt>
+    and will
+reside in a single directory.
+   </p>
+   <p>
+    Namespace packages cannot contain an
+    <tt class="docutils literal">
+     __init__.py
+    </tt>
+    .  As a
+consequence,
+    <tt class="docutils literal">
+     pkgutil.extend_path
+    </tt>
+    and
+    <tt class="docutils literal">
+     pkg_resources.declare_namespace
+    </tt>
+    become obsolete for purposes of
+namespace package creation.  There will be no marker file or directory
+for specifying a namespace package.
+   </p>
+   <p>
+    During import processing, the import machinery will continue to
+iterate over each directory in the parent path as it does in Python
+3.2.  While looking for a module or package named "foo", for each
+directory in the parent path:
+   </p>
+   <blockquote>
+    <ul class="simple">
+     <li>
+      If
+      <tt class="docutils literal">
+       <span class="pre">
+        &lt;directory&gt;/foo/__init__.py
+       </span>
+      </tt>
+      is found, a regular package is
+imported and returned.
+     </li>
+     <li>
+      If not, but
+      <tt class="docutils literal">
+       <span class="pre">
+        &lt;directory&gt;/foo.{py,pyc,so,pyd}
+       </span>
+      </tt>
+      is found, a module
+is imported and returned.  The exact list of extension varies by
+platform and whether the -O flag is specified.  The list here is
+representative.
+     </li>
+     <li>
+      If not, but
+      <tt class="docutils literal">
+       <span class="pre">
+        &lt;directory&gt;/foo
+       </span>
+      </tt>
+      is found and is a directory, it is
+recorded and the scan continues with the next directory in the
+parent path.
+     </li>
+     <li>
+      Otherwise the scan continues with the next directory in the parent
+path.
+     </li>
+    </ul>
+   </blockquote>
+   <p>
+    If the scan completes without returning a module or package, and at
+least one directory was recorded, then a namespace package is created.
+The new namespace package:
+   </p>
+   <blockquote>
+    <ul class="simple">
+     <li>
+      Has a
+      <tt class="docutils literal">
+       __path__
+      </tt>
+      attribute set to an iterable of the path strings
+that were found and recorded during the scan.
+     </li>
+     <li>
+      Does not have a
+      <tt class="docutils literal">
+       __file__
+      </tt>
+      attribute.
+     </li>
+    </ul>
+   </blockquote>
+   <p>
+    Note that if "import foo" is executed and "foo" is found as a
+namespace package (using the above rules), then "foo" is immediately
+created as a package.  The creation of the namespace package is not
+deferred until a sub-level import occurs.
+   </p>
+   <p>
+    A namespace package is not fundamentally different from a regular
+package.  It is just a different way of creating packages.  Once a
+namespace package is created, there is no functional difference
+between it and a regular package.
+   </p>
+   <div class="section" id="dynamic-path-computation">
+    <h2>
+     <a class="toc-backref" href="#id25">
+      Dynamic path computation
+     </a>
+    </h2>
+    <p>
+     The import machinery will behave as if a namespace package's
+     <tt class="docutils literal">
+      __path__
+     </tt>
+     is recomputed before each portion is loaded.
+    </p>
+    <p>
+     For performance reasons, it is expected that this will be achieved by
+detecting that the parent path has changed.  If no change has taken
+place, then no
+     <tt class="docutils literal">
+      __path__
+     </tt>
+     recomputation is required.  The
+implementation must ensure that changes to the contents of the parent
+path are detected, as well as detecting the replacement of the parent
+path with a new path entry list object.
+    </p>
+   </div>
+   <div class="section" id="impact-on-import-finders-and-loaders">
+    <h2>
+     <a class="toc-backref" href="#id26">
+      Impact on import finders and loaders
+     </a>
+    </h2>
+    <p>
+     <a class="reference external" href="../pep-0302/index.html">
+      PEP 302
+     </a>
+     defines "finders" that are called to search path elements.
+These finders'
+     <tt class="docutils literal">
+      find_module
+     </tt>
+     methods return either a "loader" object
+or
+     <tt class="docutils literal">
+      None
+     </tt>
+     .
+    </p>
+    <p>
+     For a finder to contribute to namespace packages, it must implement a
+new
+     <tt class="docutils literal">
+      find_loader(fullname)
+     </tt>
+     method.
+     <tt class="docutils literal">
+      fullname
+     </tt>
+     has the same
+meaning as for
+     <tt class="docutils literal">
+      find_module
+     </tt>
+     .
+     <tt class="docutils literal">
+      find_loader
+     </tt>
+     always returns a
+2-tuple of
+     <tt class="docutils literal">
+      (loader,
+      <span class="pre">
+       &lt;iterable-of-path-entries&gt;)
+      </span>
+     </tt>
+     .
+     <tt class="docutils literal">
+      loader
+     </tt>
+     may
+be
+     <tt class="docutils literal">
+      None
+     </tt>
+     , in which case
+     <tt class="docutils literal">
+      <span class="pre">
+       &lt;iterable-of-path-entries&gt;
+      </span>
+     </tt>
+     (which may
+be empty) is added to the list of recorded path entries and path
+searching continues.  If
+     <tt class="docutils literal">
+      loader
+     </tt>
+     is not
+     <tt class="docutils literal">
+      None
+     </tt>
+     , it is immediately
+used to load a module or regular package.
+    </p>
+    <p>
+     Even if
+     <tt class="docutils literal">
+      loader
+     </tt>
+     is returned and is not
+     <tt class="docutils literal">
+      None
+     </tt>
+     ,
+     <tt class="docutils literal">
+      <span class="pre">
+       &lt;iterable-of-path-entries&gt;
+      </span>
+     </tt>
+     must still contain the path entries for
+the package.  This allows code such as
+     <tt class="docutils literal">
+      pkgutil.extend_path()
+     </tt>
+     to
+compute path entries for packages that it does not load.
+    </p>
+    <p>
+     Note that multiple path entries per finder are allowed.  This is to
+support the case where a finder discovers multiple namespace portions
+for a given
+     <tt class="docutils literal">
+      fullname
+     </tt>
+     .  Many finders will support only a single
+namespace package portion per
+     <tt class="docutils literal">
+      find_loader
+     </tt>
+     call, in which case this
+iterable will contain only a single string.
+    </p>
+    <p>
+     The import machinery will call
+     <tt class="docutils literal">
+      find_loader
+     </tt>
+     if it exists, else fall
+back to
+     <tt class="docutils literal">
+      find_module
+     </tt>
+     .  Legacy finders which implement
+     <tt class="docutils literal">
+      find_module
+     </tt>
+     but not
+     <tt class="docutils literal">
+      find_loader
+     </tt>
+     will be unable to contribute
+portions to a namespace package.
+    </p>
+    <p>
+     The specification expands
+     <a class="reference external" href="../pep-0302/index.html">
+      PEP 302
+     </a>
+     loaders to include an optional method called
+     <tt class="docutils literal">
+      module_repr()
+     </tt>
+     which if present, is used to generate module object reprs.
+See the section below for further details.
+    </p>
+   </div>
+   <div class="section" id="differences-between-namespace-packages-and-regular-packages">
+    <h2>
+     <a class="toc-backref" href="#id27">
+      Differences between namespace packages and regular packages
+     </a>
+    </h2>
+    <p>
+     Namespace packages and regular packages are very similar. The
+differences are:
+    </p>
+    <blockquote>
+     <ul class="simple">
+      <li>
+       Portions of namespace packages need not all come from the same
+directory structure, or even from the same loader. Regular packages
+are self-contained: all parts live in the same directory hierarchy.
+      </li>
+      <li>
+       Namespace packages have no
+       <tt class="docutils literal">
+        __file__
+       </tt>
+       attribute.
+      </li>
+      <li>
+       Namespace packages'
+       <tt class="docutils literal">
+        __path__
+       </tt>
+       attribute is a read-only iterable
+of strings, which is automatically updated when the parent path is
+modified.
+      </li>
+      <li>
+       Namespace packages have no
+       <tt class="docutils literal">
+        __init__.py
+       </tt>
+       module.
+      </li>
+      <li>
+       Namespace packages have a different type of object for their
+       <tt class="docutils literal">
+        __loader__
+       </tt>
+       attribute.
+      </li>
+     </ul>
+    </blockquote>
+   </div>
+   <div class="section" id="namespace-packages-in-the-standard-library">
+    <h2>
+     <a class="toc-backref" href="#id28">
+      Namespace packages in the standard library
+     </a>
+    </h2>
+    <p>
+     It is possible, and this PEP explicitly allows, that parts of the
+standard library be implemented as namespace packages.  When and if
+any standard library packages become namespace packages is outside the
+scope of this PEP.
+    </p>
+   </div>
+   <div class="section" id="migrating-from-legacy-namespace-packages">
+    <h2>
+     <a class="toc-backref" href="#id29">
+      Migrating from legacy namespace packages
+     </a>
+    </h2>
+    <p>
+     As described above, prior to this PEP
+     <tt class="docutils literal">
+      pkgutil.extend_path()
+     </tt>
+     was
+used by legacy portions to create namespace packages.  Because it is
+likely not practical for all existing portions of a namespace package
+to be migrated to this PEP at once,
+     <tt class="docutils literal">
+      extend_path()
+     </tt>
+     will be modified
+to also recognize
+     <a class="reference external" href="index.html">
+      PEP 420
+     </a>
+     namespace packages.  This will allow some
+portions of a namespace to be legacy portions while others are
+migrated to
+     <a class="reference external" href="index.html">
+      PEP 420
+     </a>
+     .  These hybrid namespace packages will not have
+the dynamic path computation that normal namespace packages have,
+since
+     <tt class="docutils literal">
+      extend_path()
+     </tt>
+     never provided this functionality in the past.
+    </p>
+   </div>
+  </div>
+  <div class="section" id="packaging-implications">
+   <h1>
+    <a class="toc-backref" href="#id30">
+     Packaging Implications
+    </a>
+   </h1>
+   <p>
+    Multiple portions of a namespace package can be installed into the
+same directory, or into separate directories.  For this section,
+suppose there are two portions which define "foo.bar" and "foo.baz".
+"foo" itself is a namespace package.
+   </p>
+   <p>
+    If these are installed in the same location, a single directory "foo"
+would be in a directory that is on
+    <tt class="docutils literal">
+     sys.path
+    </tt>
+    .  Inside "foo" would
+be two directories, "bar" and "baz".  If "foo.bar" is removed (perhaps
+by an OS package manager), care must be taken not to remove the
+"foo/baz" or "foo" directories.  Note that in this case "foo" will be
+a namespace package (because it lacks an
+    <tt class="docutils literal">
+     __init__.py
+    </tt>
+    ), even though
+all of its portions are in the same directory.
+   </p>
+   <p>
+    Note that "foo.bar" and "foo.baz" can be installed into the same "foo"
+directory because they will not have any files in common.
+   </p>
+   <p>
+    If the portions are installed in different locations, two different
+"foo" directories would be in directories that are on
+    <tt class="docutils literal">
+     sys.path
+    </tt>
+    .
+"foo/bar" would be in one of these sys.path entries, and "foo/baz"
+would be in the other.  Upon removal of "foo.bar", the "foo/bar" and
+corresponding "foo" directories can be completely removed.  But
+"foo/baz" and its corresponding "foo" directory cannot be removed.
+   </p>
+   <p>
+    It is also possible to have the "foo.bar" portion installed in a
+directory on
+    <tt class="docutils literal">
+     sys.path
+    </tt>
+    , and have the "foo.baz" portion provided in
+a zip file, also on
+    <tt class="docutils literal">
+     sys.path
+    </tt>
+    .
+   </p>
+  </div>
+  <div class="section" id="examples">
+   <h1>
+    <a class="toc-backref" href="#id31">
+     Examples
+    </a>
+   </h1>
+   <div class="section" id="nested-namespace-packages">
+    <h2>
+     <a class="toc-backref" href="#id32">
+      Nested namespace packages
+     </a>
+    </h2>
+    <p>
+     This example uses the following directory structure:
+    </p>
+    <pre class="literal-block">
+Lib/test/namespace_pkgs
+    project1
+        parent
+            child
+                one.py
+    project2
+        parent
+            child
+                two.py
+</pre>
+    <p>
+     Here, both parent and child are namespace packages: Portions of them
+exist in different directories, and they do not have
+     <tt class="docutils literal">
+      __init__.py
+     </tt>
+     files.
+    </p>
+    <p>
+     Here we add the parent directories to
+     <tt class="docutils literal">
+      sys.path
+     </tt>
+     , and show that the
+portions are correctly found:
+    </p>
+    <pre class="literal-block">
+&gt;&gt;&gt; import sys
+&gt;&gt;&gt; sys.path += ['Lib/test/namespace_pkgs/project1', 'Lib/test/namespace_pkgs/project2']
+&gt;&gt;&gt; import parent.child.one
+&gt;&gt;&gt; parent.__path__
+_NamespacePath(['Lib/test/namespace_pkgs/project1/parent', 'Lib/test/namespace_pkgs/project2/parent'])
+&gt;&gt;&gt; parent.child.__path__
+_NamespacePath(['Lib/test/namespace_pkgs/project1/parent/child', 'Lib/test/namespace_pkgs/project2/parent/child'])
+&gt;&gt;&gt; import parent.child.two
+&gt;&gt;&gt;
+</pre>
+   </div>
+   <div class="section" id="id3">
+    <h2>
+     <a class="toc-backref" href="#id33">
+      Dynamic path computation
+     </a>
+    </h2>
+    <p>
+     This example uses a similar directory structure, but adds a third
+portion:
+    </p>
+    <pre class="literal-block">
+Lib/test/namespace_pkgs
+    project1
+        parent
+            child
+                one.py
+    project2
+        parent
+            child
+                two.py
+    project3
+        parent
+            child
+                three.py
+</pre>
+    <p>
+     We add
+     <tt class="docutils literal">
+      project1
+     </tt>
+     and
+     <tt class="docutils literal">
+      project2
+     </tt>
+     to
+     <tt class="docutils literal">
+      sys.path
+     </tt>
+     , then import
+     <tt class="docutils literal">
+      parent.child.one
+     </tt>
+     and
+     <tt class="docutils literal">
+      parent.child.two
+     </tt>
+     .  Then we add the
+     <tt class="docutils literal">
+      project3
+     </tt>
+     to
+     <tt class="docutils literal">
+      sys.path
+     </tt>
+     and when
+     <tt class="docutils literal">
+      parent.child.three
+     </tt>
+     is
+imported,
+     <tt class="docutils literal">
+      project3/parent
+     </tt>
+     is automatically added to
+     <tt class="docutils literal">
+      parent.__path__
+     </tt>
+     :
+    </p>
+    <pre class="literal-block">
+# add the first two parent paths to sys.path
+&gt;&gt;&gt; import sys
+&gt;&gt;&gt; sys.path += ['Lib/test/namespace_pkgs/project1', 'Lib/test/namespace_pkgs/project2']
+
+# parent.child.one can be imported, because project1 was added to sys.path:
+&gt;&gt;&gt; import parent.child.one
+&gt;&gt;&gt; parent.__path__
+_NamespacePath(['Lib/test/namespace_pkgs/project1/parent', 'Lib/test/namespace_pkgs/project2/parent'])
+
+# parent.child.__path__ contains project1/parent/child and project2/parent/child, but not project3/parent/child:
+&gt;&gt;&gt; parent.child.__path__
+_NamespacePath(['Lib/test/namespace_pkgs/project1/parent/child', 'Lib/test/namespace_pkgs/project2/parent/child'])
+
+# parent.child.two can be imported, because project2 was added to sys.path:
+&gt;&gt;&gt; import parent.child.two
+
+# we cannot import parent.child.three, because project3 is not in the path:
+&gt;&gt;&gt; import parent.child.three
+Traceback (most recent call last):
+  File "&lt;stdin&gt;", line 1, in &lt;module&gt;
+  File "&lt;frozen importlib._bootstrap&gt;", line 1286, in _find_and_load
+  File "&lt;frozen importlib._bootstrap&gt;", line 1250, in _find_and_load_unlocked
+ImportError: No module named 'parent.child.three'
+
+# now add project3 to sys.path:
+&gt;&gt;&gt; sys.path.append('Lib/test/namespace_pkgs/project3')
+
+# and now parent.child.three can be imported:
+&gt;&gt;&gt; import parent.child.three
+
+# project3/parent has been added to parent.__path__:
+&gt;&gt;&gt; parent.__path__
+_NamespacePath(['Lib/test/namespace_pkgs/project1/parent', 'Lib/test/namespace_pkgs/project2/parent', 'Lib/test/namespace_pkgs/project3/parent'])
+
+# and project3/parent/child has been added to parent.child.__path__
+&gt;&gt;&gt; parent.child.__path__
+_NamespacePath(['Lib/test/namespace_pkgs/project1/parent/child', 'Lib/test/namespace_pkgs/project2/parent/child', 'Lib/test/namespace_pkgs/project3/parent/child'])
+&gt;&gt;&gt;
+</pre>
+   </div>
+  </div>
+  <div class="section" id="discussion">
+   <h1>
+    <a class="toc-backref" href="#id34">
+     Discussion
+    </a>
+   </h1>
+   <p>
+    At PyCon 2012, we had a discussion about namespace packages at which
+    <a class="reference external" href="../pep-0382/index.html">
+     PEP 382
+    </a>
+    and
+    <a class="reference external" href="../pep-0402/index.html">
+     PEP 402
+    </a>
+    were rejected, to be replaced by this PEP
+    <a class="footnote-reference" href="#id14" id="id4">
+     [3]
+    </a>
+    .
+   </p>
+   <p>
+    There is no intention to remove support of regular packages.  If a
+developer knows that her package will never be a portion of a
+namespace package, then there is a performance advantage to it being a
+regular package (with an
+    <tt class="docutils literal">
+     __init__.py
+    </tt>
+    ).  Creation and loading of a
+regular package can take place immediately when it is located along
+the path.  With namespace packages, all entries in the path must be
+scanned before the package is created.
+   </p>
+   <p>
+    Note that an ImportWarning will no longer be raised for a directory
+lacking an
+    <tt class="docutils literal">
+     __init__.py
+    </tt>
+    file.  Such a directory will now be
+imported as a namespace package, whereas in prior Python versions an
+ImportWarning would be raised.
+   </p>
+   <p>
+    Nick Coghlan presented a list of his objections to this proposal
+    <a class="footnote-reference" href="#id15" id="id5">
+     [4]
+    </a>
+    .
+They are:
+   </p>
+   <blockquote>
+    <ol class="arabic simple">
+     <li>
+      Implicit package directories go against the Zen of Python.
+     </li>
+     <li>
+      Implicit package directories pose awkward backwards compatibility
+challenges.
+     </li>
+     <li>
+      Implicit package directories introduce ambiguity into file system
+layouts.
+     </li>
+     <li>
+      Implicit package directories will permanently entrench current
+newbie-hostile behavior in
+      <tt class="docutils literal">
+       __main__
+      </tt>
+      .
+     </li>
+    </ol>
+   </blockquote>
+   <p>
+    Nick later gave a detailed response to his own objections
+    <a class="footnote-reference" href="#id16" id="id6">
+     [5]
+    </a>
+    , which
+is summarized here:
+   </p>
+   <blockquote>
+    <ol class="arabic simple">
+     <li>
+      The practicality of this PEP wins over other proposals and the
+status quo.
+     </li>
+     <li>
+      Minor backward compatibility issues are okay, as long as they are
+properly documented.
+     </li>
+     <li>
+      This will be addressed in
+      <a class="reference external" href="../pep-0395/index.html">
+       PEP 395
+      </a>
+      .
+     </li>
+     <li>
+      This will also be addressed in
+      <a class="reference external" href="../pep-0395/index.html">
+       PEP 395
+      </a>
+      .
+     </li>
+    </ol>
+   </blockquote>
+   <p>
+    The inclusion of namespace packages in the standard library was
+motivated by Martin v. Löwis, who wanted the
+    <tt class="docutils literal">
+     encodings
+    </tt>
+    package to
+become a namespace package
+    <a class="footnote-reference" href="#id17" id="id7">
+     [6]
+    </a>
+    .  While this PEP allows for standard
+library packages to become namespaces, it defers a decision on
+    <tt class="docutils literal">
+     encodings
+    </tt>
+    .
+   </p>
+   <div class="section" id="find-module-versus-find-loader">
+    <h2>
+     <a class="toc-backref" href="#id35">
+      <tt class="docutils literal">
+       find_module
+      </tt>
+      versus
+      <tt class="docutils literal">
+       find_loader
+      </tt>
+     </a>
+    </h2>
+    <p>
+     An early draft of this PEP specified a change to the
+     <tt class="docutils literal">
+      find_module
+     </tt>
+     method in order to support namespace packages.  It would be modified
+to return a string in the case where a namespace package portion was
+discovered.
+    </p>
+    <p>
+     However, this caused a problem with existing code outside of the
+standard library which calls
+     <tt class="docutils literal">
+      find_module
+     </tt>
+     .  Because this code would
+not be upgraded in concert with changes required by this PEP, it would
+fail when it would receive unexpected return values from
+     <tt class="docutils literal">
+      find_module
+     </tt>
+     .  Because of this incompatibility, this PEP now
+specifies that finders that want to provide namespace portions must
+implement the
+     <tt class="docutils literal">
+      find_loader
+     </tt>
+     method, described above.
+    </p>
+    <p>
+     The use case for supporting multiple portions per
+     <tt class="docutils literal">
+      find_loader
+     </tt>
+     call
+is given in
+     <a class="footnote-reference" href="#id18" id="id8">
+      [7]
+     </a>
+     .
+    </p>
+   </div>
+   <div class="section" id="id9">
+    <h2>
+     <a class="toc-backref" href="#id36">
+      Dynamic path computation
+     </a>
+    </h2>
+    <p>
+     Guido raised a concern that automatic dynamic path computation was an
+unnecessary feature
+     <a class="footnote-reference" href="#id19" id="id10">
+      [8]
+     </a>
+     .  Later in that thread, PJ Eby and Nick
+Coghlan presented arguments as to why dynamic computation would
+minimize surprise to Python users.  The conclusion of that discussion
+has been included in this PEP's Rationale section.
+    </p>
+    <p>
+     An earlier version of this PEP required that dynamic path computation
+could only take affect if the parent path object were modified
+in-place.  That is, this would work:
+    </p>
+    <pre class="literal-block">
+sys.path.append('new-dir')
+</pre>
+    <p>
+     But this would not:
+    </p>
+    <pre class="literal-block">
+sys.path = sys.path + ['new-dir']
+</pre>
+    <p>
+     In the same thread
+     <a class="footnote-reference" href="#id19" id="id11">
+      [8]
+     </a>
+     , it was pointed out that this restriction is
+not required.  If the parent path is looked up by name instead of by
+holding a reference to it, then there is no restriction on how the
+parent path is modified or replaced.  For a top-level namespace
+package, the lookup would be the module named
+     <tt class="docutils literal">
+      "sys"
+     </tt>
+     then its
+attribute
+     <tt class="docutils literal">
+      "path"
+     </tt>
+     .  For a namespace package nested inside a package
+     <tt class="docutils literal">
+      foo
+     </tt>
+     , the lookup would be for the module named
+     <tt class="docutils literal">
+      "foo"
+     </tt>
+     then its
+attribute
+     <tt class="docutils literal">
+      "__path__"
+     </tt>
+     .
+    </p>
+   </div>
+  </div>
+  <div class="section" id="module-reprs">
+   <h1>
+    <a class="toc-backref" href="#id37">
+     Module reprs
+    </a>
+   </h1>
+   <p>
+    Previously, module reprs were hard coded based on assumptions about a module's
+    <tt class="docutils literal">
+     __file__
+    </tt>
+    attribute.  If this attribute existed and was a string, it was
+assumed to be a file system path, and the module object's repr would include
+this in its value.  The only exception was that
+    <a class="reference external" href="../pep-0302/index.html">
+     PEP 302
+    </a>
+    reserved missing
+    <tt class="docutils literal">
+     __file__
+    </tt>
+    attributes to built-in modules, and in CPython, this assumption
+was baked into the module object's implementation.  Because of this
+restriction, some modules contained contrived
+    <tt class="docutils literal">
+     __file__
+    </tt>
+    values that did not
+reflect file system paths, and which could cause unexpected problems later
+(e.g.
+    <tt class="docutils literal">
+     os.path.join()
+    </tt>
+    on a non-path
+    <tt class="docutils literal">
+     __file__
+    </tt>
+    would return gibberish).
+   </p>
+   <p>
+    This PEP relaxes this constraint, and leaves the setting of
+    <tt class="docutils literal">
+     __file__
+    </tt>
+    to
+the purview of the loader producing the module.  Loaders may opt to leave
+    <tt class="docutils literal">
+     __file__
+    </tt>
+    unset if no file system path is appropriate.  Loaders may also
+set additional reserved attributes on the module if useful.  This means that
+the definitive way to determine the origin of a module is to check its
+    <tt class="docutils literal">
+     __loader__
+    </tt>
+    attribute.
+   </p>
+   <p>
+    For example, namespace packages as described in this PEP will have no
+    <tt class="docutils literal">
+     __file__
+    </tt>
+    attribute because no corresponding file exists.  In order to
+provide flexibility and descriptiveness in the reprs of such modules, a new
+optional protocol is added to
+    <a class="reference external" href="../pep-0302/index.html">
+     PEP 302
+    </a>
+    loaders.  Loaders can implement a
+    <tt class="docutils literal">
+     module_repr()
+    </tt>
+    method which takes a single argument, the module object.
+This method should return the string to be used verbatim as the repr of the
+module.  The rules for producing a module repr are now standardized as:
+   </p>
+   <blockquote>
+    <ul class="simple">
+     <li>
+      If the module has an
+      <tt class="docutils literal">
+       __loader__
+      </tt>
+      and that loader has a
+      <tt class="docutils literal">
+       module_repr()
+      </tt>
+      method, call it with a single argument, which is the module object.  The
+value returned is used as the module's repr.
+     </li>
+     <li>
+      If an exception occurs in
+      <tt class="docutils literal">
+       module_repr()
+      </tt>
+      , the exception is
+caught and discarded, and the calculation of the module's repr
+continues as if
+      <tt class="docutils literal">
+       module_repr()
+      </tt>
+      did not exist.
+     </li>
+     <li>
+      If the module has an
+      <tt class="docutils literal">
+       __file__
+      </tt>
+      attribute, this is used as part of the
+module's repr.
+     </li>
+     <li>
+      If the module has no
+      <tt class="docutils literal">
+       __file__
+      </tt>
+      but does have an
+      <tt class="docutils literal">
+       __loader__
+      </tt>
+      , then the
+loader's repr is used as part of the module's repr.
+     </li>
+     <li>
+      Otherwise, just use the module's
+      <tt class="docutils literal">
+       __name__
+      </tt>
+      in the repr.
+     </li>
+    </ul>
+   </blockquote>
+   <p>
+    Here is a snippet showing how namespace module reprs are calculated
+from its loader:
+   </p>
+   <pre class="literal-block">
+class NamespaceLoader:
+    @classmethod
+    def module_repr(cls, module):
+        return "&lt;module '{}' (namespace)&gt;".format(module.__name__)
+</pre>
+   <p>
+    Built-in module reprs would no longer need to be hard-coded, but
+instead would come from their loader as well:
+   </p>
+   <pre class="literal-block">
+class BuiltinImporter:
+    @classmethod
+    def module_repr(cls, module):
+        return "&lt;module '{}' (built-in)&gt;".format(module.__name__)
+</pre>
+   <p>
+    Here are some example reprs of different types of modules with
+different sets of the related attributes:
+   </p>
+   <pre class="literal-block">
+&gt;&gt;&gt; import email
+&gt;&gt;&gt; email
+&lt;module 'email' from '/home/barry/projects/python/pep-420/Lib/email/__init__.py'&gt;
+&gt;&gt;&gt; m = type(email)('foo')
+&gt;&gt;&gt; m
+&lt;module 'foo'&gt;
+&gt;&gt;&gt; m.__file__ = 'zippy:/de/do/dah'
+&gt;&gt;&gt; m
+&lt;module 'foo' from 'zippy:/de/do/dah'&gt;
+&gt;&gt;&gt; class Loader: pass
+...
+&gt;&gt;&gt; m.__loader__ = Loader
+&gt;&gt;&gt; del m.__file__
+&gt;&gt;&gt; m
+&lt;module 'foo' (&lt;class '__main__.Loader'&gt;)&gt;
+&gt;&gt;&gt; class NewLoader:
+...   @classmethod
+...   def module_repr(cls, module):
+...      return '&lt;mystery module!&gt;'
+...
+&gt;&gt;&gt; m.__loader__ = NewLoader
+&gt;&gt;&gt; m
+&lt;mystery module!&gt;
+&gt;&gt;&gt;
+</pre>
+  </div>
+  <div class="section" id="references">
+   <h1>
+    <a class="toc-backref" href="#id38">
+     References
+    </a>
+   </h1>
+   <table class="docutils footnote" frame="void" id="id12" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id1">
+        [1]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="index.html">
+        PEP 420
+       </a>
+       branch (
+       <a class="reference external" href="http://hg.python.org/features/pep-420">
+        http://hg.python.org/features/pep-420
+       </a>
+       )
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id13" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id2">
+        [2]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="../pep-0402/index.html">
+        PEP 402
+       </a>
+       's description of use cases for namespace packages
+(
+       <a class="reference external" href="../pep-0402/index.html#the-problem">
+        http://www.python.org/dev/peps/pep-0402/#the-problem
+       </a>
+       )
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id14" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id4">
+        [3]
+       </a>
+      </td>
+      <td>
+       PyCon 2012 Namespace Package discussion outcome
+(
+       <a class="reference external" href="http://mail.python.org/pipermail/import-sig/2012-March/000421.html">
+        http://mail.python.org/pipermail/import-sig/2012-March/000421.html
+       </a>
+       )
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id15" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id5">
+        [4]
+       </a>
+      </td>
+      <td>
+       Nick Coghlan's objection to the lack of marker files or directories
+(
+       <a class="reference external" href="http://mail.python.org/pipermail/import-sig/2012-March/000423.html">
+        http://mail.python.org/pipermail/import-sig/2012-March/000423.html
+       </a>
+       )
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id16" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id6">
+        [5]
+       </a>
+      </td>
+      <td>
+       Nick Coghlan's response to his initial objections
+(
+       <a class="reference external" href="http://mail.python.org/pipermail/import-sig/2012-April/000464.html">
+        http://mail.python.org/pipermail/import-sig/2012-April/000464.html
+       </a>
+       )
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id17" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id7">
+        [6]
+       </a>
+      </td>
+      <td>
+       Martin v. Löwis's suggestion to make
+       <tt class="docutils literal">
+        encodings
+       </tt>
+       a namespace
+package
+(
+       <a class="reference external" href="http://mail.python.org/pipermail/import-sig/2012-May/000540.html">
+        http://mail.python.org/pipermail/import-sig/2012-May/000540.html
+       </a>
+       )
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id18" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id8">
+        [7]
+       </a>
+      </td>
+      <td>
+       Use case for multiple portions per
+       <tt class="docutils literal">
+        find_loader
+       </tt>
+       call
+(
+       <a class="reference external" href="http://mail.python.org/pipermail/import-sig/2012-May/000585.html">
+        http://mail.python.org/pipermail/import-sig/2012-May/000585.html
+       </a>
+       )
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id19" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       [8]
+      </td>
+      <td>
+       <em>
+        (
+        <a class="fn-backref" href="#id10">
+         1
+        </a>
+        ,
+        <a class="fn-backref" href="#id11">
+         2
+        </a>
+        )
+       </em>
+       Discussion about dynamic path computation
+(
+       <a class="reference external" href="http://mail.python.org/pipermail/python-dev/2012-May/119560.html">
+        http://mail.python.org/pipermail/python-dev/2012-May/119560.html
+       </a>
+       )
+      </td>
+     </tr>
+    </tbody>
+   </table>
+  </div>
+  <div class="section" id="copyright">
+   <h1>
+    <a class="toc-backref" href="#id39">
+     Copyright
+    </a>
+   </h1>
+   <p>
+    This document has been placed in the public domain.
+   </p>
+   <!-- Local Variables:
+mode: indented-text
+indent-tabs-mode: nil
+sentence-end-double-space: t
+fill-column: 70
+coding: utf-8
+End: -->
+  </div>
+ </body>
+
+<!-- Mirrored from www.python.org/dev/peps/pep-0420/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 03 Sep 2015 04:34:36 GMT -->
+</html>Source: <a href="https://hg.python.org/peps/file/tip/pep-0420.txt">https://hg.python.org/peps/file/tip/pep-0420.txt</a>
+
+    </article>
+
+
+                </section>
+
+                
+
+
+<aside class="left-sidebar" role="secondary">
+
+    
+
+
+
+
+
+
+    
+
+
+
+
+
+        <div class="twitter-widget sidebar-widget">
+        <a class="twitter-timeline" data-dnt="true" href="https://twitter.com/ThePSF" data-widget-id="434113224703610882">Tweets by @ThePSF</a>
+        <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+    </div>
+
+    <div class="psf-sidebar-widget sidebar-widget">
+        <h3 class="widget-title">The PSF</h3>
+<p>The Python Software Foundation is the organization behind Python. Become a member of the PSF and help advance the software and our mission. </p>
+
+    </div>
+
+</aside>
+
+
+
+                
+                
+
+
+            </div><!-- end .container -->
+        </div><!-- end #content .content-wrapper -->
+
+        <!-- Footer and social media list -->
+        <footer id="site-map" class="main-footer" role="contentinfo">
+            <div class="main-footer-links">
+                <div class="container">
+
+                    
+                    <a id="back-to-top-1" class="jump-link" href="#python-network"><span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> Back to Top</a>
+
+                    
+
+<ul class="sitemap navigation menu do-not-print" role="tree" id="container">
+    
+    <li class="tier-1 element-1">
+        <a href="https://www.python.org/about/" >About</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/apps/" title="">Applications</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/quotes/" title="">Quotes</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/gettingstarted/" title="">Getting Started</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/help/" title="">Help</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-2">
+        <a href="https://www.python.org/downloads/" >Downloads</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/downloads/" title="">All releases</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/downloads/source/" title="">Source code</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/downloads/windows/" title="">Windows</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/downloads/mac-osx/" title="">Mac OS X</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/download/other/" title="">Other Platforms</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://docs.python.org/3/license.html" title="">License</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/download/alternatives" title="">Alternative Implementations</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-3">
+        <a href="https://www.python.org/doc/" >Documentation</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/doc/" title="">Docs</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/doc/av" title="">Audio/Visual Talks</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://wiki.python.org/moin/BeginnersGuide" title="">Beginner&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://docs.python.org/faq/" title="">FAQ</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="http://wiki.python.org/moin/Languages" title="">Non-English Docs</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="../index.html" title="">PEP Index</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://wiki.python.org/moin/PythonBooks" title="">Python Books</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-4">
+        <a href="https://www.python.org/community/" >Community</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/community/diversity/" title="">Diversity</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/community/irc/" title="">IRC</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/community/lists/" title="">Mailing Lists</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/workshops/" title="">Python Conferences</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/community/sigs/" title="">Special Interest Groups</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://wiki.python.org/moin/" title="">Python Wiki</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/community/logos/" title="">Python Logo</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://www.python.org/community/merchandise/" title="">Merchandise</a></li>
+    
+        <li class="tier-2 element-9" role="treeitem"><a href="https://www.python.org/community/awards" title="">Community Awards</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-5">
+        <a href="https://www.python.org/about/success/" title="success-stories">Success Stories</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/success/#arts" title="">Arts</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/success/#business" title="">Business</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/success/#education" title="">Education</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/success/#engineering" title="">Engineering</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/about/success/#government" title="">Government</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://www.python.org/about/success/#scientific" title="">Scientific</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/about/success/#software-development" title="">Software Development</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-6">
+        <a href="https://www.python.org/blogs/" title="News from around the Python world">News</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/blogs/" title="Python Insider Blog Posts">Python News</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://planetpython.org/" title="Planet Python">Community News</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="http://pyfound.blogspot.com/" title="PSF Blog">PSF News</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pycon.blogspot.com/" title="PyCon Blog">PyCon News</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-7">
+        <a href="https://www.python.org/events/" >Events</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/events/python-events/" title="">Python Events</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/events/python-user-group/" title="">User Group Events</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/events/python-events/past/" title="">Python Events Archive</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/events/python-user-group/past/" title="">User Group Events Archive</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://wiki.python.org/moin/PythonEventsCalendar#Submitting_an_Event" title="">Submit an Event</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-8">
+        <a href="https://www.python.org/dev/" >Contributing</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="http://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://bugs.python.org/" title="">Issue Tracker</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://mail.python.org/mailman/listinfo/python-dev" title="">python-dev list</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pythonmentors.com/" title="">Core Mentorship</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+</ul>
+
+
+                    <a id="back-to-top-2" class="jump-link" href="#python-network"><span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> Back to Top</a>
+                    
+
+                </div><!-- end .container -->
+            </div> <!-- end .main-footer-links -->
+
+            <div class="site-base">
+                <div class="container">
+                    
+                    <ul class="footer-links navigation menu do-not-print" role="tree">
+                        <li class="tier-1 element-1"><a href="https://www.python.org/about/help/">Help &amp; <span class="say-no-more">General</span> Contact</a></li>
+                        <li class="tier-1 element-2"><a href="https://www.python.org/community/diversity/">Diversity <span class="say-no-more">Initiatives</span></a></li>
+                        <li class="tier-1 element-3"><a href="https://github.com/python/pythondotorg/issues">Submit Website Bug</a></li>
+                        <!--<li class="tier-1 element-3"><a href="#"><span class="say-no-more">Website</span> Colophon</a></li>-->
+                    </ul>
+
+                    <div class="copyright">
+                        <p><small>
+                            <span class="pre">Copyright &copy;2001-2015.</span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/psf-landing/">Python Software Foundation</a></span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/about/legal/">Legal Statements</a></span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/privacy/">Privacy Policy</a></span>
+                        </small></p>
+                    </div>
+
+                </div><!-- end .container -->
+            </div><!-- end .site-base -->
+
+        </footer>
+
+    </div><!-- end #touchnav-wrapper -->
+
+    
+    <script src="../../../../ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="../../../static/js/libs/jquery-1.8.2.min.js"><\/script>')</script>
+
+    <script src="../../../static/js/libs/masonry.pkgd.min.js"></script>
+
+    <script type="text/javascript" src="../../../static/js/main-min.js" charset="utf-8"></script>
+    
+
+    <!--[if lte IE 7]>
+    <script type="text/javascript" src="/static/js/plugins/IE8-min.js" charset="utf-8"></script>
+    
+    
+    <![endif]-->
+
+    <!--[if lte IE 8]>
+    <script type="text/javascript" src="/static/js/plugins/getComputedStyle-min.js" charset="utf-8"></script>
+    
+    
+    <![endif]-->
+
+    
+
+    
+    
+
+</body>
+</html>

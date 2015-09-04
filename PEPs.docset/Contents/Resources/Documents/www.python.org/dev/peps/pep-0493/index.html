@@ -1,0 +1,1695 @@
+<!doctype html>
+<!--[if lt IE 7]>   <html class="no-js ie6 lt-ie7 lt-ie8 lt-ie9">   <![endif]-->
+<!--[if IE 7]>      <html class="no-js ie7 lt-ie8 lt-ie9">          <![endif]-->
+<!--[if IE 8]>      <html class="no-js ie8 lt-ie9">                 <![endif]-->
+<!--[if gt IE 8]><!--><html class="no-js" lang="en" dir="ltr">  <!--<![endif]-->
+
+
+<!-- Mirrored from www.python.org/dev/peps/pep-0493/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 03 Sep 2015 04:33:42 GMT -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <link rel="prefetch" href="../../../../ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js">
+
+    <meta name="application-name" content="Python.org">
+    <meta name="msapplication-tooltip" content="The official home of the Python Programming Language">
+    <meta name="apple-mobile-web-app-title" content="Python.org">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="format-detection" content="telephone=no">
+    <meta http-equiv="cleartype" content="on">
+    <meta http-equiv="imagetoolbar" content="false">
+
+    <script src="../../../static/js/libs/modernizr.js"></script>
+
+    <link href="../../../static/stylesheets/style.css" rel="stylesheet" type="text/css" title="default" />
+    <link href="../../../static/stylesheets/mq.css" rel="stylesheet" type="text/css" media="not print, braille, embossed, speech, tty" />
+    
+
+    <!--[if (lte IE 8)&(!IEMobile)]>
+    <link href="/static/stylesheets/no-mq.css" rel="stylesheet" type="text/css" media="screen" />
+    
+    
+    <![endif]-->
+
+    
+    <link rel="icon" type="image/x-icon" href="https://www.python.org/static/favicon.ico">
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="../../../static/apple-touch-icon-144x144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="../../../static/apple-touch-icon-114x114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="../../../static/apple-touch-icon-72x72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="../../../static/apple-touch-icon-precomposed.png">
+    <link rel="apple-touch-icon" href="../../../static/apple-touch-icon-precomposed.png">
+
+    
+    <meta name="msapplication-TileImage" content="/static/metro-icon-144x144-precomposed.png"><!-- white shape -->
+    <meta name="msapplication-TileColor" content="#3673a5"><!-- python blue -->
+    <meta name="msapplication-navbutton-color" content="#3673a5">
+
+    <meta property="og:site_name" content="Python.org">
+    <meta property="og:type" content="website">
+
+    <title>PEP 0493 -- HTTPS verification recommendations for Python 2.7 redistributors | Python.org</title>
+    <meta property="og:title" content="Welcome to Python.org">
+
+    
+    <meta name="description" content="The official home of the Python Programming Language">
+    <meta name="og:description" content="The official home of the Python Programming Language">
+    <meta name="keywords" content="Python programming language object oriented web free open source software license documentation download community">
+    <meta property="og:tag" content="Python programming language object oriented web free open source software license documentation download community">
+    <meta property="og:published_time" content="">
+    <meta property="og:modified_time" content="">
+    <meta property="og:author" content="">
+    <meta property="og:section" content=""> 
+    <meta property="og:url" content="">
+    <meta property="og:image" content="">
+    <meta property="og:video" content="">
+
+    <link rel="author" href="https://www.python.org/static/humans.txt">
+
+    
+
+    
+    <script type="application/ld+json">
+     {
+       "@context": "http://schema.org",
+       "@type": "WebSite",
+       "url": "https://www.python.org/",
+       "potentialAction": {
+         "@type": "SearchAction",
+         "target": "https://www.python.org/search/?q={search_term_string}",
+         "query-input": "required name=search_term_string"
+       }
+     }
+    </script>
+
+    
+    <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-39055973-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+    </script>
+    
+</head>
+
+<body class="python pages pep-page">
+
+    <div id="touchnav-wrapper">
+
+        <div id="nojs" class="do-not-print">
+            <p><strong>Notice:</strong> While Javascript is not essential for this website, your interaction with the content will be limited. Please turn Javascript on for the full experience. </p>
+        </div>
+
+        <!--[if lt IE 8]>
+        <div id="oldie-warning" class="do-not-print">
+            <p><strong>Notice:</strong> Your browser is <em>ancient</em> and <a href="http://www.ie6countdown.com/">Microsoft agrees</a>. <a href="http://browsehappy.com/">Upgrade to a different browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to experience a better web.</p>
+        </div>
+        <![endif]-->
+
+        <!-- Sister Site Links -->
+        <div id="top" class="top-bar do-not-print">
+
+            <nav class="meta-navigation container" role="navigation">
+
+                
+                <div class="skip-link screen-reader-text">
+                    <a href="#content" title="Skip to content">Skip to content</a>
+                </div>
+
+                
+                <a id="close-python-network" class="jump-link" href="#python-network" aria-hidden="true">
+                    <span aria-hidden="true" class="icon-arrow-down"><span>&#9660;</span></span> Close
+                </a>
+
+                
+
+<ul class="menu" role="tree">
+    
+    <li class="python-meta ">
+        <a href="https://www.python.org/" title="The Python Programming Language" >Python</a>
+    </li>
+    
+    <li class="psf-meta ">
+        <a href="https://www.python.org/psf-landing/" title="The Python Software Foundation" >PSF</a>
+    </li>
+    
+    <li class="docs-meta ">
+        <a href="https://docs.python.org/" title="Python Documentation" >Docs</a>
+    </li>
+    
+    <li class="pypi-meta ">
+        <a href="https://pypi.python.org/" title="Python Package Index" >PyPI</a>
+    </li>
+    
+    <li class="jobs-meta ">
+        <a href="https://www.python.org/jobs/" title="Python Job Board" >Jobs</a>
+    </li>
+    
+    <li class="shop-meta ">
+        <a href="https://www.python.org/community/" title="Python Community" >Community</a>
+    </li>
+    
+</ul>
+
+
+                <a id="python-network" class="jump-link" href="#top" aria-hidden="true">
+                    <span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> The Python Network
+                </a>
+
+            </nav>
+
+        </div>
+
+        <!-- Header elements -->
+        <header class="main-header" role="banner">
+            <div class="container">
+
+                <h1 class="site-headline">
+                    <a href="https://www.python.org/"><img class="python-logo" src="../../../static/img/python-logo.png" alt="python&trade;"></a>
+                </h1>
+
+                <div class="options-bar do-not-print">
+
+                    
+                    <a id="site-map-link" class="jump-to-menu" href="#site-map"><span class="menu-icon">&equiv;</span> Menu</a><form class="search-the-site" action="https://www.python.org/search/" method="get">
+                        <fieldset title="Search Python.org">
+
+                            <span aria-hidden="true" class="icon-search"></span>
+
+                            <label class="screen-reader-text" for="id-search-field">Search This Site</label>
+                            <input id="id-search-field" name="q" type="search" role="textbox" class="search-field" placeholder="Search" value="" tabindex="1">
+
+                            <button type="submit" name="submit" id="submit" class="search-button" title="Submit this Search" tabindex="3">
+                                GO
+                            </button>
+
+                            
+                            <!--[if IE]><input type="text" style="display: none;" disabled="disabled" size="1" tabindex="4"><![endif]-->
+
+                        </fieldset>
+                    </form><span class="breaker"></span><div class="adjust-font-size" aria-hidden="true">
+                        <ul class="navigation menu" aria-label="Adjust Text Size on Page">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                <a href="#" class="action-trigger"><strong><small>A</small> A</strong></a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a class="text-shrink" title="Make Text Smaller" href="javascript:;">Smaller</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a class="text-grow" title="Make Text Larger" href="javascript:;">Larger</a></li>
+                                    <li class="tier-2 element-3" role="treeitem"><a class="text-reset" title="Reset any font size changes I have made" href="javascript:;">Reset</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div><div class="winkwink-nudgenudge">
+                        <ul class="navigation menu" aria-label="Social Media Navigation">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                <a href="#" class="action-trigger">Socialize</a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a href="http://plus.google.com/+Python"><span aria-hidden="true" class="icon-google-plus"></span>Google+</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a href="http://www.facebook.com/pythonlang?fref=ts"><span aria-hidden="true" class="icon-facebook"></span>Facebook</a></li>
+                                    <li class="tier-2 element-3" role="treeitem"><a href="http://twitter.com/ThePSF"><span aria-hidden="true" class="icon-twitter"></span>Twitter</a></li>
+                                    <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/irc/"><span aria-hidden="true" class="icon-freenode"></span>Chat on IRC</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div><div class="account-signin">
+                        <ul class="navigation menu" aria-label="Social Media Navigation">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                
+                                <a href="https://www.python.org/accounts/login/" title="Sign Up or Sign In to Python.org">Sign In</a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/accounts/signup/">Sign Up / Register</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/accounts/login/">Sign In</a></li>
+                                </ul>
+                                
+                            </li>
+                        </ul>
+                    </div>
+
+                </div><!-- end options-bar -->
+
+                <nav id="mainnav" class="python-navigation main-navigation do-not-print" role="navigation">
+                    
+                        
+<ul class="navigation menu" role="menubar" aria-label="Main Navigation">
+  
+    
+    
+    <li id="about" class="tier-1 element-1  " aria-haspopup="true">
+        <a href="https://www.python.org/about/" title="" class="">About</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/apps/" title="">Applications</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/quotes/" title="">Quotes</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/gettingstarted/" title="">Getting Started</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/help/" title="">Help</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="downloads" class="tier-1 element-2  " aria-haspopup="true">
+        <a href="https://www.python.org/downloads/" title="" class="">Downloads</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/downloads/" title="">All releases</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/downloads/source/" title="">Source code</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/downloads/windows/" title="">Windows</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/downloads/mac-osx/" title="">Mac OS X</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/download/other/" title="">Other Platforms</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://docs.python.org/3/license.html" title="">License</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/download/alternatives" title="">Alternative Implementations</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="documentation" class="tier-1 element-3  " aria-haspopup="true">
+        <a href="https://www.python.org/doc/" title="" class="">Documentation</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/doc/" title="">Docs</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/doc/av" title="">Audio/Visual Talks</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://wiki.python.org/moin/BeginnersGuide" title="">Beginner&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://docs.python.org/faq/" title="">FAQ</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="http://wiki.python.org/moin/Languages" title="">Non-English Docs</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="../index.html" title="">PEP Index</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://wiki.python.org/moin/PythonBooks" title="">Python Books</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="community" class="tier-1 element-4  " aria-haspopup="true">
+        <a href="https://www.python.org/community/" title="" class="">Community</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/community/diversity/" title="">Diversity</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/community/irc/" title="">IRC</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/community/lists/" title="">Mailing Lists</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/workshops/" title="">Python Conferences</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/community/sigs/" title="">Special Interest Groups</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://wiki.python.org/moin/" title="">Python Wiki</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/community/logos/" title="">Python Logo</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://www.python.org/community/merchandise/" title="">Merchandise</a></li>
+    
+        <li class="tier-2 element-9" role="treeitem"><a href="https://www.python.org/community/awards" title="">Community Awards</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="success-stories" class="tier-1 element-5  " aria-haspopup="true">
+        <a href="https://www.python.org/about/success/" title="success-stories" class="">Success Stories</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/success/#arts" title="">Arts</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/success/#business" title="">Business</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/success/#education" title="">Education</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/success/#engineering" title="">Engineering</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/about/success/#government" title="">Government</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://www.python.org/about/success/#scientific" title="">Scientific</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/about/success/#software-development" title="">Software Development</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="news" class="tier-1 element-6  " aria-haspopup="true">
+        <a href="https://www.python.org/blogs/" title="News from around the Python world" class="">News</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/blogs/" title="Python Insider Blog Posts">Python News</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://planetpython.org/" title="Planet Python">Community News</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="http://pyfound.blogspot.com/" title="PSF Blog">PSF News</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pycon.blogspot.com/" title="PyCon Blog">PyCon News</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="events" class="tier-1 element-7  " aria-haspopup="true">
+        <a href="https://www.python.org/events/" title="" class="">Events</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/events/python-events/" title="">Python Events</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/events/python-user-group/" title="">User Group Events</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/events/python-events/past/" title="">Python Events Archive</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/events/python-user-group/past/" title="">User Group Events Archive</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://wiki.python.org/moin/PythonEventsCalendar#Submitting_an_Event" title="">Submit an Event</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    
+  
+</ul>
+
+                    
+                </nav>
+
+                <div class="header-banner "> <!-- for optional "do-not-print" class -->
+                    
+                    
+                </div>
+
+                
+                
+
+             </div><!-- end .container -->
+        </header>
+
+        <div id="content" class="content-wrapper">
+            <!-- Main Content Column -->
+            <div class="container">
+
+                <section class="main-content with-left-sidebar" role="main">
+
+                    
+<ul class="breadcrumbs menu">
+    <li>
+        <a href="https://www.python.org/" title="The Python Programming Language">Python</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>
+        <a href="https://www.python.org/dev/">Python Developer's Guide</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>
+        <a href="../index.html">PEP Index</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>PEP 0493 -- HTTPS verification recommendations for Python 2.7 redistributors</li>
+</ul>
+
+
+                    
+<style>
+   .pep-page pre {
+        padding: .5em;
+        background: inherit;
+        border-left: 0px;
+        -webkit-box-shadow: 0 0 0 0;
+        -moz-box-shadow: 0 0 0 0;
+        box-shadow: 0 0 0 0;
+   }
+</style>
+
+    
+    <article class="text">
+        
+
+        <header class="article-header">
+            <h1 class="page-title">PEP 0493 -- HTTPS verification recommendations for Python 2.7 redistributors</h1>
+        </header>
+
+        <!--
+This HTML is auto-generated.  DO NOT EDIT THIS FILE!  If you are writing a new
+PEP, see http://www.python.org/dev/peps/pep-0001 for instructions and links
+to templates.  DO NOT USE THIS HTML FILE AS YOUR TEMPLATE!
+-->
+<html>
+ <body>
+  <table class="rfc2822 docutils field-list" frame="void" rules="none">
+   <col class="field-name">
+   </col>
+   <col class="field-body">
+   </col>
+   <tbody valign="top">
+    <tr class="field">
+     <th class="field-name">
+      PEP:
+     </th>
+     <td class="field-body">
+      493
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Title:
+     </th>
+     <td class="field-body">
+      HTTPS verification recommendations for Python 2.7 redistributors
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Author:
+     </th>
+     <td class="field-body">
+      Nick Coghlan &lt;ncoghlan at gmail.com&gt;,
+Robert Kuska &lt;rkuska at redhat.com&gt;,
+Marc-André Lemburg &lt;mal at lemburg.com&gt;
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Status:
+     </th>
+     <td class="field-body">
+      Draft
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Type:
+     </th>
+     <td class="field-body">
+      Informational
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Created:
+     </th>
+     <td class="field-body">
+      10-May-2015
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Post-History:
+     </th>
+     <td class="field-body">
+      06-Jul-2015
+     </td>
+    </tr>
+   </tbody>
+  </table>
+  <hr/>
+  <div class="contents topic" id="contents">
+   <p class="topic-title first">
+    Contents
+   </p>
+   <ul class="simple">
+    <li>
+     <a class="reference internal" href="#abstract" id="id7">
+      Abstract
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#rationale" id="id8">
+      Rationale
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#requirements-for-capability-detection" id="id9">
+      Requirements for capability detection
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#recommendation-for-an-environment-variable-based-security-downgrade" id="id10">
+      Recommendation for an environment variable based security downgrade
+     </a>
+     <ul>
+      <li>
+       <a class="reference internal" href="#required-marker-attribute" id="id11">
+        Required marker attribute
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#recommended-modifications-to-the-python-standard-library" id="id12">
+        Recommended modifications to the Python standard library
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#example-implementation" id="id13">
+        Example implementation
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#security-considerations" id="id14">
+        Security Considerations
+       </a>
+      </li>
+     </ul>
+    </li>
+    <li>
+     <a class="reference internal" href="#recommendation-for-backporting-to-earlier-python-versions" id="id15">
+      Recommendation for backporting to earlier Python versions
+     </a>
+     <ul>
+      <li>
+       <a class="reference internal" href="#id1" id="id16">
+        Required marker attribute
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#id2" id="id17">
+        Recommended modifications to the Python standard library
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#recommended-file-location" id="id18">
+        Recommended file location
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#recommended-file-format" id="id19">
+        Recommended file format
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#id3" id="id20">
+        Example implementation
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#id4" id="id21">
+        Security Considerations
+       </a>
+      </li>
+     </ul>
+    </li>
+    <li>
+     <a class="reference internal" href="#combining-the-recommendations" id="id22">
+      Combining the recommendations
+     </a>
+     <ul>
+      <li>
+       <a class="reference internal" href="#id5" id="id23">
+        Example implementation
+       </a>
+      </li>
+     </ul>
+    </li>
+    <li>
+     <a class="reference internal" href="#copyright" id="id24">
+      Copyright
+     </a>
+    </li>
+   </ul>
+  </div>
+  <div class="section" id="abstract">
+   <h1>
+    <a class="toc-backref" href="#id7">
+     Abstract
+    </a>
+   </h1>
+   <p>
+    <a class="reference external" href="../pep-0476/index.html">
+     PEP 476
+    </a>
+    updated Python's default handling of HTTPS certificates to be
+appropriate for communication over the public internet. The Python 2.7 long
+term maintenance series was judged to be in scope for this change, with the
+new behaviour introduced in the Python 2.7.9 maintenance release.
+   </p>
+   <p>
+    This PEP provides recommendations to downstream redistributors wishing to
+provide a smoother migration experience when helping their users to manage
+this change in Python's default behaviour.
+   </p>
+   <p>
+    <em>
+     Note that this PEP is not currently accepted, so it is a *proposed
+    </em>
+    recommendation, rather than an active one.*
+   </p>
+  </div>
+  <div class="section" id="rationale">
+   <h1>
+    <a class="toc-backref" href="#id8">
+     Rationale
+    </a>
+   </h1>
+   <p>
+    <a class="reference external" href="../pep-0476/index.html">
+     PEP 476
+    </a>
+    changed Python's default behaviour to better match the needs and
+expectations of developers operating over the public internet, a category
+which appears to include most new Python developers. It is the position of
+the authors of this PEP that this was a correct decision.
+   </p>
+   <p>
+    However, it is also the case that this change
+    <em>
+     does
+    </em>
+    cause problems for
+infrastructure administrators operating private intranets that rely on
+self-signed certificates, or otherwise encounter problems with the new default
+certificate verification settings.
+   </p>
+   <p>
+    The long term answer for such environments is to update their internal
+certificate management to at least match the standards set by the public
+internet, but in the meantime, it is desirable to offer these administrators
+a way to continue receiving maintenance updates to the Python 2.7 series,
+without having to gate that on upgrades to their certificate management
+infrastructure.
+   </p>
+   <p>
+    <a class="reference external" href="../pep-0476/index.html">
+     PEP 476
+    </a>
+    did attempt to address this question, by covering how to revert the
+new settings process wide by monkeypatching the
+    <tt class="docutils literal">
+     ssl
+    </tt>
+    module to restore the
+old behaviour. Unfortunately, the
+    <tt class="docutils literal">
+     sitecustomize.py
+    </tt>
+    based technique proposed
+to allow system administrators to disable the feature by default in their
+Standard Operating Environment definition has been determined to be
+insufficient in at least some cases. The specific case of interest to the
+authors of this PEP is the one where a Linux distributor aims to provide
+their users with a
+    <a class="reference external" href="https://bugzilla.redhat.com/show_bug.cgi?id=1173041">
+     smoother migration path
+    </a>
+    than the standard one provided by consuming upstream CPython 2.7 releases
+directly, but other potential challenges have also been pointed out with
+updating embedded Python runtimes and other user level installations of Python.
+   </p>
+   <p>
+    Rather than allowing a plethora of mutually incompatibile migration techniques
+to bloom, this PEP proposes two alternative approaches that redistributors
+may take when addressing these problems. Redistributors may choose to implement
+one, both, or neither of these approaches based on their assessment of the
+needs of their particular userbase.
+   </p>
+   <p>
+    These designs are being proposed as a recommendation for redistributors, rather
+than as new upstream features, as they are needed purely to support legacy
+environments migrating from older versions of Python 2.7. Neither approach
+is being proposed as an upstream Python 2.7 feature, nor as a feature in any
+version of Python 3 (whether published directly by the Python Software
+Foundation or by a redistributor).
+   </p>
+  </div>
+  <div class="section" id="requirements-for-capability-detection">
+   <h1>
+    <a class="toc-backref" href="#id9">
+     Requirements for capability detection
+    </a>
+   </h1>
+   <p>
+    As these recommendations are intended to cover backports to earlier Python
+versions, the Python version number cannot be used as a reliable means for
+detecting them. Instead, the recommendations are defined to allow the presence
+or absence of the feature to be determined using the following technique:
+   </p>
+   <pre class="literal-block">
+python -c "import ssl; ssl._relevant_attribute"
+</pre>
+   <p>
+    This will fail with
+    <cite>
+     AttributeError
+    </cite>
+    (and hence a non-zero return code) if the
+relevant capability is not available.
+   </p>
+   <p>
+    The marker attributes are prefixed with an underscore to indicate the
+implementation dependent nature of these capabilities - not all Python
+distributions will offer them, only those that are providing a multi-stage
+migration process from the legacy HTTPS handling to the new default behaviour.
+   </p>
+  </div>
+  <div class="section" id="recommendation-for-an-environment-variable-based-security-downgrade">
+   <h1>
+    <a class="toc-backref" href="#id10">
+     Recommendation for an environment variable based security downgrade
+    </a>
+   </h1>
+   <p>
+    Some redistributors may wish to provide a per-application option to disable
+certificate verification in selected applications that run on or embed CPython
+without needing to modify the application itself.
+   </p>
+   <p>
+    In these cases, a configuration mechanism is needed that provides:
+   </p>
+   <ul class="simple">
+    <li>
+     an opt-out model that allows certificate verification to be selectively
+turned off for particular applications after upgrading to a version of
+Python that verifies certificates by default
+    </li>
+    <li>
+     the ability for all users to configure this setting on a per-application
+basis, rather than on a per-system, or per-Python-installation basis
+    </li>
+   </ul>
+   <p>
+    This approach may be used for any redistributor provided version of Python 2.7,
+including those that advertise themselves as providing Python 2.7.9 or later.
+   </p>
+   <div class="section" id="required-marker-attribute">
+    <h2>
+     <a class="toc-backref" href="#id11">
+      Required marker attribute
+     </a>
+    </h2>
+    <p>
+     The required marker attribute on the
+     <tt class="docutils literal">
+      ssl
+     </tt>
+     module when implementing this
+recommendation is:
+    </p>
+    <pre class="literal-block">
+_https_verify_envvar = 'PYTHONHTTPSVERIFY'
+</pre>
+    <p>
+     This not only makes it straightforward to detect the presence (or absence) of
+the capability, it also makes it possible to programmatically determine the
+relevant environment variable name.
+    </p>
+   </div>
+   <div class="section" id="recommended-modifications-to-the-python-standard-library">
+    <h2>
+     <a class="toc-backref" href="#id12">
+      Recommended modifications to the Python standard library
+     </a>
+    </h2>
+    <p>
+     The recommended approach to providing a per-application configuration setting
+for HTTPS certificate verification that doesn't require modifications to the
+application itself is to:
+    </p>
+    <ul class="simple">
+     <li>
+      modify the
+      <tt class="docutils literal">
+       ssl
+      </tt>
+      module to read the
+      <tt class="docutils literal">
+       PYTHONHTTPSVERIFY
+      </tt>
+      environment
+variable when the module is first imported into a Python process
+     </li>
+     <li>
+      set the
+      <tt class="docutils literal">
+       ssl._create_default_https_context
+      </tt>
+      function to be an alias for
+      <tt class="docutils literal">
+       ssl._create_unverified_context
+      </tt>
+      if this environment variable is present
+and set to
+      <tt class="docutils literal">
+       '0'
+      </tt>
+     </li>
+     <li>
+      otherwise, set the
+      <tt class="docutils literal">
+       ssl._create_default_https_context
+      </tt>
+      function to be an
+alias for
+      <tt class="docutils literal">
+       ssl.create_default_context
+      </tt>
+      as usual
+     </li>
+    </ul>
+   </div>
+   <div class="section" id="example-implementation">
+    <h2>
+     <a class="toc-backref" href="#id13">
+      Example implementation
+     </a>
+    </h2>
+    <pre class="literal-block">
+_https_verify_envvar = 'PYTHONHTTPSVERIFY'
+
+def _get_https_context_factory():
+    config_setting = os.environ.get(_https_verify_envvar)
+    if config_setting == '0':
+        return _create_unverified_context
+    return create_default_context
+
+_create_default_https_context = _get_https_context_factory()
+</pre>
+   </div>
+   <div class="section" id="security-considerations">
+    <h2>
+     <a class="toc-backref" href="#id14">
+      Security Considerations
+     </a>
+    </h2>
+    <p>
+     Relative to an unmodified version of CPython 2.7.9 or later, this approach
+does introduce a new downgrade attack against the default security settings
+that potentially allows a sufficiently determined attacker to revert Python
+to the vulnerable configuration used in CPython 2.7.8 and earlier releases.
+However, such an attack requires the ability to modify the execution
+environment of a Python process prior to the import of the
+     <tt class="docutils literal">
+      ssl
+     </tt>
+     module,
+and any attacker with such access would already be able to modify the
+behaviour of the underlying OpenSSL implementation.
+    </p>
+   </div>
+  </div>
+  <div class="section" id="recommendation-for-backporting-to-earlier-python-versions">
+   <h1>
+    <a class="toc-backref" href="#id15">
+     Recommendation for backporting to earlier Python versions
+    </a>
+   </h1>
+   <p>
+    Some redistributors, most notably Linux distributions, may choose to backport
+the
+    <a class="reference external" href="../pep-0476/index.html">
+     PEP 476
+    </a>
+    HTTPS verification changes to modified Python versions based on
+earlier Python 2 maintenance releases. In these cases, a configuration
+mechanism is needed that provides:
+   </p>
+   <ul class="simple">
+    <li>
+     an opt-in model that allows the decision to enable HTTPS certificate
+verification to be made independently of the decision to upgrade to the
+Python version where the feature was first backported
+    </li>
+    <li>
+     the ability for system administrators to set the default behaviour of Python
+applications and scripts run directly in the system Python installation
+    </li>
+    <li>
+     the ability for the redistributor to consider changing the default behaviour
+of
+     <em>
+      new
+     </em>
+     installations at some point in the future without impacting existing
+installations that have been explicitly configured to skip verifying HTTPS
+certificates by default
+    </li>
+   </ul>
+   <p>
+    This approach should not be used for any Python installation that advertises
+itself as providing Python 2.7.9 or later, as most Python users will have the
+reasonable expectation that all such environments will validate HTTPS
+certificates by default.
+   </p>
+   <div class="section" id="id1">
+    <h2>
+     <a class="toc-backref" href="#id16">
+      Required marker attribute
+     </a>
+    </h2>
+    <p>
+     The required marker attribute on the
+     <tt class="docutils literal">
+      ssl
+     </tt>
+     module when implementing this
+recommendation is:
+    </p>
+    <pre class="literal-block">
+_cert_verification_config = '&lt;path to configuration file&gt;'
+</pre>
+    <p>
+     This not only makes it straightforward to detect the presence (or absence) of
+the capability, it also makes it possible to programmatically determine the
+relevant configuration file name.
+    </p>
+   </div>
+   <div class="section" id="id2">
+    <h2>
+     <a class="toc-backref" href="#id17">
+      Recommended modifications to the Python standard library
+     </a>
+    </h2>
+    <p>
+     The recommended approach to backporting the
+     <a class="reference external" href="../pep-0476/index.html">
+      PEP 476
+     </a>
+     modifications to an earlier
+point release is to implement the following changes relative to the default
+     <a class="reference external" href="../pep-0476/index.html">
+      PEP 476
+     </a>
+     behaviour implemented in Python 2.7.9+:
+    </p>
+    <ul class="simple">
+     <li>
+      modify the
+      <tt class="docutils literal">
+       ssl
+      </tt>
+      module to read a system wide configuration file when the
+module is first imported into a Python process
+     </li>
+     <li>
+      define a platform default behaviour (either verifying or not verifying HTTPS
+certificates) to be used if this configuration file is not present
+     </li>
+     <li>
+      support selection between the following three modes of operation:
+      <ul>
+       <li>
+        ensure HTTPS certificate verification is enabled
+       </li>
+       <li>
+        ensure HTTPS certificate verification is disabled
+       </li>
+       <li>
+        delegate the decision to the redistributor providing this Python version
+       </li>
+      </ul>
+     </li>
+     <li>
+      set the
+      <tt class="docutils literal">
+       ssl._create_default_https_context
+      </tt>
+      function to be an alias for
+either
+      <tt class="docutils literal">
+       ssl.create_default_context
+      </tt>
+      or
+      <tt class="docutils literal">
+       ssl._create_unverified_context
+      </tt>
+      based on the given configuration setting.
+     </li>
+    </ul>
+   </div>
+   <div class="section" id="recommended-file-location">
+    <h2>
+     <a class="toc-backref" href="#id18">
+      Recommended file location
+     </a>
+    </h2>
+    <p>
+     This approach is currently only defined for *nix system Python installations.
+    </p>
+    <p>
+     The recommended configuration file name is
+     <tt class="docutils literal">
+      <span class="pre">
+       /etc/python/cert-verification.cfg
+      </span>
+     </tt>
+     .
+    </p>
+    <p>
+     The
+     <tt class="docutils literal">
+      .cfg
+     </tt>
+     filename extension is recommended for consistency with the
+     <tt class="docutils literal">
+      pyvenv.cfg
+     </tt>
+     used by the
+     <tt class="docutils literal">
+      venv
+     </tt>
+     module in Python 3's standard library.
+    </p>
+   </div>
+   <div class="section" id="recommended-file-format">
+    <h2>
+     <a class="toc-backref" href="#id19">
+      Recommended file format
+     </a>
+    </h2>
+    <p>
+     The configuration file should use a ConfigParser ini-style format with a
+single section named
+     <tt class="docutils literal">
+      [https]
+     </tt>
+     containing one required setting
+     <tt class="docutils literal">
+      verify
+     </tt>
+     .
+    </p>
+    <p>
+     Permitted values for
+     <tt class="docutils literal">
+      verify
+     </tt>
+     are:
+    </p>
+    <ul class="simple">
+     <li>
+      <tt class="docutils literal">
+       enable
+      </tt>
+      : ensure HTTPS certificate verification is enabled by default
+     </li>
+     <li>
+      <tt class="docutils literal">
+       disable
+      </tt>
+      : ensure HTTPS certificate verification is disabled by default
+     </li>
+     <li>
+      <tt class="docutils literal">
+       platform_default
+      </tt>
+      : delegate the decision to the redistributor providing
+this particular Python version
+     </li>
+    </ul>
+    <p>
+     If the
+     <tt class="docutils literal">
+      [https]
+     </tt>
+     section or the
+     <tt class="docutils literal">
+      verify
+     </tt>
+     setting are missing, or if the
+     <tt class="docutils literal">
+      verify
+     </tt>
+     setting is set to an unknown value, it should be treated as if the
+configuration file is not present.
+    </p>
+   </div>
+   <div class="section" id="id3">
+    <h2>
+     <a class="toc-backref" href="#id20">
+      Example implementation
+     </a>
+    </h2>
+    <pre class="literal-block">
+_cert_verification_config = '/etc/python/cert-verification.cfg'
+
+def _get_https_context_factory():
+    # Check for a system-wide override of the default behaviour
+    context_factories = {
+        'enable': create_default_context,
+        'disable': _create_unverified_context,
+        'platform_default': _create_unverified_context, # For now :)
+    }
+    import ConfigParser
+    config = ConfigParser.RawConfigParser()
+    config.read(_cert_verification_config)
+    try:
+        verify_mode = config.get('https', 'verify')
+    except (ConfigParser.NoSectionError, ConfigParser.NoOptionError):
+        verify_mode = 'platform_default'
+    default_factory = context_factories.get('platform_default')
+    return context_factories.get(verify_mode, default_factory)
+
+_create_default_https_context = _get_https_context_factory()
+</pre>
+   </div>
+   <div class="section" id="id4">
+    <h2>
+     <a class="toc-backref" href="#id21">
+      Security Considerations
+     </a>
+    </h2>
+    <p>
+     The specific recommendations for the backporting case are designed to work for
+privileged, security sensitive processes, even those being run in the following
+locked down configuration:
+    </p>
+    <ul class="simple">
+     <li>
+      run from a locked down administrator controlled directory rather than a normal
+user directory (preventing
+      <tt class="docutils literal">
+       sys.path[0]
+      </tt>
+      based privilege escalation attacks)
+     </li>
+     <li>
+      run using the
+      <tt class="docutils literal">
+       <span class="pre">
+        -E
+       </span>
+      </tt>
+      switch (preventing
+      <tt class="docutils literal">
+       PYTHON*
+      </tt>
+      environment variable based
+privilege escalation attacks)
+     </li>
+     <li>
+      run using the
+      <tt class="docutils literal">
+       <span class="pre">
+        -s
+       </span>
+      </tt>
+      switch (preventing user site directory based privilege
+escalation attacks)
+     </li>
+     <li>
+      run using the
+      <tt class="docutils literal">
+       <span class="pre">
+        -S
+       </span>
+      </tt>
+      switch (preventing
+      <tt class="docutils literal">
+       sitecustomize
+      </tt>
+      based privilege
+escalation attacks)
+     </li>
+    </ul>
+    <p>
+     The intent is that the
+     <em>
+      only
+     </em>
+     reason HTTPS verification should be getting
+turned off system wide when using this approach is because:
+    </p>
+    <ul class="simple">
+     <li>
+      an end user is running a redistributor provided version of CPython rather
+than running upstream CPython directly
+     </li>
+     <li>
+      that redistributor has decided to provide a smoother migration path to
+verifying HTTPS certificates by default than that being provided by the
+upstream project
+     </li>
+     <li>
+      either the redistributor or the local infrastructure administrator has
+determined that it is appropriate to override the default upstream behaviour
+(at least for the time being)
+     </li>
+    </ul>
+    <p>
+     Using an administrator controlled configuration file rather than an environment
+variable has the essential feature of providing a smoother migration path, even
+for applications being run with the
+     <tt class="docutils literal">
+      <span class="pre">
+       -E
+      </span>
+     </tt>
+     switch.
+    </p>
+   </div>
+  </div>
+  <div class="section" id="combining-the-recommendations">
+   <h1>
+    <a class="toc-backref" href="#id22">
+     Combining the recommendations
+    </a>
+   </h1>
+   <p>
+    If a redistributor chooses to implement both recommendations, then the
+environment variable should take precedence over the system-wide configuration
+setting. This allows the setting to be changed for a given user, virtual
+environment or application, regardless of the system-wide default behaviour.
+   </p>
+   <p>
+    In this case, if the
+    <tt class="docutils literal">
+     PYTHONHTTPSVERIFY
+    </tt>
+    environment variable is defined, and
+set to anything
+    <em>
+     other
+    </em>
+    than
+    <tt class="docutils literal">
+     '0'
+    </tt>
+    , then HTTPS certificate verification
+should be enabled.
+   </p>
+   <div class="section" id="id5">
+    <h2>
+     <a class="toc-backref" href="#id23">
+      Example implementation
+     </a>
+    </h2>
+    <pre class="literal-block">
+_https_verify_envvar = 'PYTHONHTTPSVERIFY'
+_cert_verification_config = '/etc/python/cert-verification.cfg'
+
+def _get_https_context_factory():
+    # Check for am environmental override of the default behaviour
+    config_setting = os.environ.get(_https_verify_envvar)
+    if config_setting is not None:
+        if config_setting == '0':
+            return _create_unverified_context
+        return create_default_context
+
+    # Check for a system-wide override of the default behaviour
+    context_factories = {
+        'enable': create_default_context,
+        'disable': _create_unverified_context,
+        'platform_default': _create_unverified_context, # For now :)
+    }
+    import ConfigParser
+    config = ConfigParser.RawConfigParser()
+    config.read(_cert_verification_config)
+    try:
+        verify_mode = config.get('https', 'verify')
+    except (ConfigParser.NoSectionError, ConfigParser.NoOptionError):
+        verify_mode = 'platform_default'
+    default_factory = context_factories.get('platform_default')
+    return context_factories.get(verify_mode, default_factory)
+
+_create_default_https_context = _get_https_context_factory()
+</pre>
+   </div>
+  </div>
+  <div class="section" id="copyright">
+   <h1>
+    <a class="toc-backref" href="#id24">
+     Copyright
+    </a>
+   </h1>
+   <p>
+    This document has been placed into the public domain.
+   </p>
+   <!-- Local Variables:
+mode: indented-text
+indent-tabs-mode: nil
+sentence-end-double-space: t
+fill-column: 70
+coding: utf-8 -->
+  </div>
+ </body>
+
+<!-- Mirrored from www.python.org/dev/peps/pep-0493/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 03 Sep 2015 04:33:43 GMT -->
+</html>Source: <a href="https://hg.python.org/peps/file/tip/pep-0493.txt">https://hg.python.org/peps/file/tip/pep-0493.txt</a>
+
+    </article>
+
+
+                </section>
+
+                
+
+
+<aside class="left-sidebar" role="secondary">
+
+    
+
+
+
+
+
+
+    
+
+
+
+
+
+        <div class="twitter-widget sidebar-widget">
+        <a class="twitter-timeline" data-dnt="true" href="https://twitter.com/ThePSF" data-widget-id="434113224703610882">Tweets by @ThePSF</a>
+        <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+    </div>
+
+    <div class="psf-sidebar-widget sidebar-widget">
+        <h3 class="widget-title">The PSF</h3>
+<p>The Python Software Foundation is the organization behind Python. Become a member of the PSF and help advance the software and our mission. </p>
+
+    </div>
+
+</aside>
+
+
+
+                
+                
+
+
+            </div><!-- end .container -->
+        </div><!-- end #content .content-wrapper -->
+
+        <!-- Footer and social media list -->
+        <footer id="site-map" class="main-footer" role="contentinfo">
+            <div class="main-footer-links">
+                <div class="container">
+
+                    
+                    <a id="back-to-top-1" class="jump-link" href="#python-network"><span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> Back to Top</a>
+
+                    
+
+<ul class="sitemap navigation menu do-not-print" role="tree" id="container">
+    
+    <li class="tier-1 element-1">
+        <a href="https://www.python.org/about/" >About</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/apps/" title="">Applications</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/quotes/" title="">Quotes</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/gettingstarted/" title="">Getting Started</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/help/" title="">Help</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-2">
+        <a href="https://www.python.org/downloads/" >Downloads</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/downloads/" title="">All releases</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/downloads/source/" title="">Source code</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/downloads/windows/" title="">Windows</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/downloads/mac-osx/" title="">Mac OS X</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/download/other/" title="">Other Platforms</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://docs.python.org/3/license.html" title="">License</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/download/alternatives" title="">Alternative Implementations</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-3">
+        <a href="https://www.python.org/doc/" >Documentation</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/doc/" title="">Docs</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/doc/av" title="">Audio/Visual Talks</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://wiki.python.org/moin/BeginnersGuide" title="">Beginner&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://docs.python.org/faq/" title="">FAQ</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="http://wiki.python.org/moin/Languages" title="">Non-English Docs</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="../index.html" title="">PEP Index</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://wiki.python.org/moin/PythonBooks" title="">Python Books</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-4">
+        <a href="https://www.python.org/community/" >Community</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/community/diversity/" title="">Diversity</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/community/irc/" title="">IRC</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/community/lists/" title="">Mailing Lists</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/workshops/" title="">Python Conferences</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/community/sigs/" title="">Special Interest Groups</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://wiki.python.org/moin/" title="">Python Wiki</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/community/logos/" title="">Python Logo</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://www.python.org/community/merchandise/" title="">Merchandise</a></li>
+    
+        <li class="tier-2 element-9" role="treeitem"><a href="https://www.python.org/community/awards" title="">Community Awards</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-5">
+        <a href="https://www.python.org/about/success/" title="success-stories">Success Stories</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/success/#arts" title="">Arts</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/success/#business" title="">Business</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/success/#education" title="">Education</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/success/#engineering" title="">Engineering</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/about/success/#government" title="">Government</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://www.python.org/about/success/#scientific" title="">Scientific</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/about/success/#software-development" title="">Software Development</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-6">
+        <a href="https://www.python.org/blogs/" title="News from around the Python world">News</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/blogs/" title="Python Insider Blog Posts">Python News</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://planetpython.org/" title="Planet Python">Community News</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="http://pyfound.blogspot.com/" title="PSF Blog">PSF News</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pycon.blogspot.com/" title="PyCon Blog">PyCon News</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-7">
+        <a href="https://www.python.org/events/" >Events</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/events/python-events/" title="">Python Events</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/events/python-user-group/" title="">User Group Events</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/events/python-events/past/" title="">Python Events Archive</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/events/python-user-group/past/" title="">User Group Events Archive</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://wiki.python.org/moin/PythonEventsCalendar#Submitting_an_Event" title="">Submit an Event</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-8">
+        <a href="https://www.python.org/dev/" >Contributing</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="http://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://bugs.python.org/" title="">Issue Tracker</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://mail.python.org/mailman/listinfo/python-dev" title="">python-dev list</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pythonmentors.com/" title="">Core Mentorship</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+</ul>
+
+
+                    <a id="back-to-top-2" class="jump-link" href="#python-network"><span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> Back to Top</a>
+                    
+
+                </div><!-- end .container -->
+            </div> <!-- end .main-footer-links -->
+
+            <div class="site-base">
+                <div class="container">
+                    
+                    <ul class="footer-links navigation menu do-not-print" role="tree">
+                        <li class="tier-1 element-1"><a href="https://www.python.org/about/help/">Help &amp; <span class="say-no-more">General</span> Contact</a></li>
+                        <li class="tier-1 element-2"><a href="https://www.python.org/community/diversity/">Diversity <span class="say-no-more">Initiatives</span></a></li>
+                        <li class="tier-1 element-3"><a href="https://github.com/python/pythondotorg/issues">Submit Website Bug</a></li>
+                        <!--<li class="tier-1 element-3"><a href="#"><span class="say-no-more">Website</span> Colophon</a></li>-->
+                    </ul>
+
+                    <div class="copyright">
+                        <p><small>
+                            <span class="pre">Copyright &copy;2001-2015.</span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/psf-landing/">Python Software Foundation</a></span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/about/legal/">Legal Statements</a></span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/privacy/">Privacy Policy</a></span>
+                        </small></p>
+                    </div>
+
+                </div><!-- end .container -->
+            </div><!-- end .site-base -->
+
+        </footer>
+
+    </div><!-- end #touchnav-wrapper -->
+
+    
+    <script src="../../../../ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="../../../static/js/libs/jquery-1.8.2.min.js"><\/script>')</script>
+
+    <script src="../../../static/js/libs/masonry.pkgd.min.js"></script>
+
+    <script type="text/javascript" src="../../../static/js/main-min.js" charset="utf-8"></script>
+    
+
+    <!--[if lte IE 7]>
+    <script type="text/javascript" src="/static/js/plugins/IE8-min.js" charset="utf-8"></script>
+    
+    
+    <![endif]-->
+
+    <!--[if lte IE 8]>
+    <script type="text/javascript" src="/static/js/plugins/getComputedStyle-min.js" charset="utf-8"></script>
+    
+    
+    <![endif]-->
+
+    
+
+    
+    
+
+</body>
+</html>

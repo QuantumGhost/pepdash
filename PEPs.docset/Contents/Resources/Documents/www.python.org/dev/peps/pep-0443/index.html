@@ -1,0 +1,1875 @@
+<!doctype html>
+<!--[if lt IE 7]>   <html class="no-js ie6 lt-ie7 lt-ie8 lt-ie9">   <![endif]-->
+<!--[if IE 7]>      <html class="no-js ie7 lt-ie8 lt-ie9">          <![endif]-->
+<!--[if IE 8]>      <html class="no-js ie8 lt-ie9">                 <![endif]-->
+<!--[if gt IE 8]><!--><html class="no-js" lang="en" dir="ltr">  <!--<![endif]-->
+
+
+<!-- Mirrored from www.python.org/dev/peps/pep-0443/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 03 Sep 2015 04:34:41 GMT -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <link rel="prefetch" href="../../../../ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js">
+
+    <meta name="application-name" content="Python.org">
+    <meta name="msapplication-tooltip" content="The official home of the Python Programming Language">
+    <meta name="apple-mobile-web-app-title" content="Python.org">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="format-detection" content="telephone=no">
+    <meta http-equiv="cleartype" content="on">
+    <meta http-equiv="imagetoolbar" content="false">
+
+    <script src="../../../static/js/libs/modernizr.js"></script>
+
+    <link href="../../../static/stylesheets/style.css" rel="stylesheet" type="text/css" title="default" />
+    <link href="../../../static/stylesheets/mq.css" rel="stylesheet" type="text/css" media="not print, braille, embossed, speech, tty" />
+    
+
+    <!--[if (lte IE 8)&(!IEMobile)]>
+    <link href="/static/stylesheets/no-mq.css" rel="stylesheet" type="text/css" media="screen" />
+    
+    
+    <![endif]-->
+
+    
+    <link rel="icon" type="image/x-icon" href="https://www.python.org/static/favicon.ico">
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="../../../static/apple-touch-icon-144x144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="../../../static/apple-touch-icon-114x114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="../../../static/apple-touch-icon-72x72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="../../../static/apple-touch-icon-precomposed.png">
+    <link rel="apple-touch-icon" href="../../../static/apple-touch-icon-precomposed.png">
+
+    
+    <meta name="msapplication-TileImage" content="/static/metro-icon-144x144-precomposed.png"><!-- white shape -->
+    <meta name="msapplication-TileColor" content="#3673a5"><!-- python blue -->
+    <meta name="msapplication-navbutton-color" content="#3673a5">
+
+    <meta property="og:site_name" content="Python.org">
+    <meta property="og:type" content="website">
+
+    <title>PEP 0443 -- Single-dispatch generic functions | Python.org</title>
+    <meta property="og:title" content="Welcome to Python.org">
+
+    
+    <meta name="description" content="The official home of the Python Programming Language">
+    <meta name="og:description" content="The official home of the Python Programming Language">
+    <meta name="keywords" content="Python programming language object oriented web free open source software license documentation download community">
+    <meta property="og:tag" content="Python programming language object oriented web free open source software license documentation download community">
+    <meta property="og:published_time" content="">
+    <meta property="og:modified_time" content="">
+    <meta property="og:author" content="">
+    <meta property="og:section" content=""> 
+    <meta property="og:url" content="">
+    <meta property="og:image" content="">
+    <meta property="og:video" content="">
+
+    <link rel="author" href="https://www.python.org/static/humans.txt">
+
+    
+
+    
+    <script type="application/ld+json">
+     {
+       "@context": "http://schema.org",
+       "@type": "WebSite",
+       "url": "https://www.python.org/",
+       "potentialAction": {
+         "@type": "SearchAction",
+         "target": "https://www.python.org/search/?q={search_term_string}",
+         "query-input": "required name=search_term_string"
+       }
+     }
+    </script>
+
+    
+    <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-39055973-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+    </script>
+    
+</head>
+
+<body class="python pages pep-page">
+
+    <div id="touchnav-wrapper">
+
+        <div id="nojs" class="do-not-print">
+            <p><strong>Notice:</strong> While Javascript is not essential for this website, your interaction with the content will be limited. Please turn Javascript on for the full experience. </p>
+        </div>
+
+        <!--[if lt IE 8]>
+        <div id="oldie-warning" class="do-not-print">
+            <p><strong>Notice:</strong> Your browser is <em>ancient</em> and <a href="http://www.ie6countdown.com/">Microsoft agrees</a>. <a href="http://browsehappy.com/">Upgrade to a different browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to experience a better web.</p>
+        </div>
+        <![endif]-->
+
+        <!-- Sister Site Links -->
+        <div id="top" class="top-bar do-not-print">
+
+            <nav class="meta-navigation container" role="navigation">
+
+                
+                <div class="skip-link screen-reader-text">
+                    <a href="#content" title="Skip to content">Skip to content</a>
+                </div>
+
+                
+                <a id="close-python-network" class="jump-link" href="#python-network" aria-hidden="true">
+                    <span aria-hidden="true" class="icon-arrow-down"><span>&#9660;</span></span> Close
+                </a>
+
+                
+
+<ul class="menu" role="tree">
+    
+    <li class="python-meta ">
+        <a href="https://www.python.org/" title="The Python Programming Language" >Python</a>
+    </li>
+    
+    <li class="psf-meta ">
+        <a href="https://www.python.org/psf-landing/" title="The Python Software Foundation" >PSF</a>
+    </li>
+    
+    <li class="docs-meta ">
+        <a href="https://docs.python.org/" title="Python Documentation" >Docs</a>
+    </li>
+    
+    <li class="pypi-meta ">
+        <a href="https://pypi.python.org/" title="Python Package Index" >PyPI</a>
+    </li>
+    
+    <li class="jobs-meta ">
+        <a href="https://www.python.org/jobs/" title="Python Job Board" >Jobs</a>
+    </li>
+    
+    <li class="shop-meta ">
+        <a href="https://www.python.org/community/" title="Python Community" >Community</a>
+    </li>
+    
+</ul>
+
+
+                <a id="python-network" class="jump-link" href="#top" aria-hidden="true">
+                    <span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> The Python Network
+                </a>
+
+            </nav>
+
+        </div>
+
+        <!-- Header elements -->
+        <header class="main-header" role="banner">
+            <div class="container">
+
+                <h1 class="site-headline">
+                    <a href="https://www.python.org/"><img class="python-logo" src="../../../static/img/python-logo.png" alt="python&trade;"></a>
+                </h1>
+
+                <div class="options-bar do-not-print">
+
+                    
+                    <a id="site-map-link" class="jump-to-menu" href="#site-map"><span class="menu-icon">&equiv;</span> Menu</a><form class="search-the-site" action="https://www.python.org/search/" method="get">
+                        <fieldset title="Search Python.org">
+
+                            <span aria-hidden="true" class="icon-search"></span>
+
+                            <label class="screen-reader-text" for="id-search-field">Search This Site</label>
+                            <input id="id-search-field" name="q" type="search" role="textbox" class="search-field" placeholder="Search" value="" tabindex="1">
+
+                            <button type="submit" name="submit" id="submit" class="search-button" title="Submit this Search" tabindex="3">
+                                GO
+                            </button>
+
+                            
+                            <!--[if IE]><input type="text" style="display: none;" disabled="disabled" size="1" tabindex="4"><![endif]-->
+
+                        </fieldset>
+                    </form><span class="breaker"></span><div class="adjust-font-size" aria-hidden="true">
+                        <ul class="navigation menu" aria-label="Adjust Text Size on Page">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                <a href="#" class="action-trigger"><strong><small>A</small> A</strong></a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a class="text-shrink" title="Make Text Smaller" href="javascript:;">Smaller</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a class="text-grow" title="Make Text Larger" href="javascript:;">Larger</a></li>
+                                    <li class="tier-2 element-3" role="treeitem"><a class="text-reset" title="Reset any font size changes I have made" href="javascript:;">Reset</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div><div class="winkwink-nudgenudge">
+                        <ul class="navigation menu" aria-label="Social Media Navigation">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                <a href="#" class="action-trigger">Socialize</a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a href="http://plus.google.com/+Python"><span aria-hidden="true" class="icon-google-plus"></span>Google+</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a href="http://www.facebook.com/pythonlang?fref=ts"><span aria-hidden="true" class="icon-facebook"></span>Facebook</a></li>
+                                    <li class="tier-2 element-3" role="treeitem"><a href="http://twitter.com/ThePSF"><span aria-hidden="true" class="icon-twitter"></span>Twitter</a></li>
+                                    <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/irc/"><span aria-hidden="true" class="icon-freenode"></span>Chat on IRC</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div><div class="account-signin">
+                        <ul class="navigation menu" aria-label="Social Media Navigation">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                
+                                <a href="https://www.python.org/accounts/login/" title="Sign Up or Sign In to Python.org">Sign In</a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/accounts/signup/">Sign Up / Register</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/accounts/login/">Sign In</a></li>
+                                </ul>
+                                
+                            </li>
+                        </ul>
+                    </div>
+
+                </div><!-- end options-bar -->
+
+                <nav id="mainnav" class="python-navigation main-navigation do-not-print" role="navigation">
+                    
+                        
+<ul class="navigation menu" role="menubar" aria-label="Main Navigation">
+  
+    
+    
+    <li id="about" class="tier-1 element-1  " aria-haspopup="true">
+        <a href="https://www.python.org/about/" title="" class="">About</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/apps/" title="">Applications</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/quotes/" title="">Quotes</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/gettingstarted/" title="">Getting Started</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/help/" title="">Help</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="downloads" class="tier-1 element-2  " aria-haspopup="true">
+        <a href="https://www.python.org/downloads/" title="" class="">Downloads</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/downloads/" title="">All releases</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/downloads/source/" title="">Source code</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/downloads/windows/" title="">Windows</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/downloads/mac-osx/" title="">Mac OS X</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/download/other/" title="">Other Platforms</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://docs.python.org/3/license.html" title="">License</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/download/alternatives" title="">Alternative Implementations</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="documentation" class="tier-1 element-3  " aria-haspopup="true">
+        <a href="https://www.python.org/doc/" title="" class="">Documentation</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/doc/" title="">Docs</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/doc/av" title="">Audio/Visual Talks</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://wiki.python.org/moin/BeginnersGuide" title="">Beginner&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://docs.python.org/faq/" title="">FAQ</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="http://wiki.python.org/moin/Languages" title="">Non-English Docs</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="../index.html" title="">PEP Index</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://wiki.python.org/moin/PythonBooks" title="">Python Books</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="community" class="tier-1 element-4  " aria-haspopup="true">
+        <a href="https://www.python.org/community/" title="" class="">Community</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/community/diversity/" title="">Diversity</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/community/irc/" title="">IRC</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/community/lists/" title="">Mailing Lists</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/workshops/" title="">Python Conferences</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/community/sigs/" title="">Special Interest Groups</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://wiki.python.org/moin/" title="">Python Wiki</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/community/logos/" title="">Python Logo</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://www.python.org/community/merchandise/" title="">Merchandise</a></li>
+    
+        <li class="tier-2 element-9" role="treeitem"><a href="https://www.python.org/community/awards" title="">Community Awards</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="success-stories" class="tier-1 element-5  " aria-haspopup="true">
+        <a href="https://www.python.org/about/success/" title="success-stories" class="">Success Stories</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/success/#arts" title="">Arts</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/success/#business" title="">Business</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/success/#education" title="">Education</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/success/#engineering" title="">Engineering</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/about/success/#government" title="">Government</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://www.python.org/about/success/#scientific" title="">Scientific</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/about/success/#software-development" title="">Software Development</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="news" class="tier-1 element-6  " aria-haspopup="true">
+        <a href="https://www.python.org/blogs/" title="News from around the Python world" class="">News</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/blogs/" title="Python Insider Blog Posts">Python News</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://planetpython.org/" title="Planet Python">Community News</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="http://pyfound.blogspot.com/" title="PSF Blog">PSF News</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pycon.blogspot.com/" title="PyCon Blog">PyCon News</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="events" class="tier-1 element-7  " aria-haspopup="true">
+        <a href="https://www.python.org/events/" title="" class="">Events</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/events/python-events/" title="">Python Events</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/events/python-user-group/" title="">User Group Events</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/events/python-events/past/" title="">Python Events Archive</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/events/python-user-group/past/" title="">User Group Events Archive</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://wiki.python.org/moin/PythonEventsCalendar#Submitting_an_Event" title="">Submit an Event</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    
+  
+</ul>
+
+                    
+                </nav>
+
+                <div class="header-banner "> <!-- for optional "do-not-print" class -->
+                    
+                    
+                </div>
+
+                
+                
+
+             </div><!-- end .container -->
+        </header>
+
+        <div id="content" class="content-wrapper">
+            <!-- Main Content Column -->
+            <div class="container">
+
+                <section class="main-content with-left-sidebar" role="main">
+
+                    
+<ul class="breadcrumbs menu">
+    <li>
+        <a href="https://www.python.org/" title="The Python Programming Language">Python</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>
+        <a href="https://www.python.org/dev/">Python Developer's Guide</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>
+        <a href="../index.html">PEP Index</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>PEP 0443 -- Single-dispatch generic functions</li>
+</ul>
+
+
+                    
+<style>
+   .pep-page pre {
+        padding: .5em;
+        background: inherit;
+        border-left: 0px;
+        -webkit-box-shadow: 0 0 0 0;
+        -moz-box-shadow: 0 0 0 0;
+        box-shadow: 0 0 0 0;
+   }
+</style>
+
+    
+    <article class="text">
+        
+
+        <header class="article-header">
+            <h1 class="page-title">PEP 0443 -- Single-dispatch generic functions</h1>
+        </header>
+
+        <!--
+This HTML is auto-generated.  DO NOT EDIT THIS FILE!  If you are writing a new
+PEP, see http://www.python.org/dev/peps/pep-0001 for instructions and links
+to templates.  DO NOT USE THIS HTML FILE AS YOUR TEMPLATE!
+-->
+<html>
+ <body>
+  <table class="rfc2822 docutils field-list" frame="void" rules="none">
+   <col class="field-name">
+   </col>
+   <col class="field-body">
+   </col>
+   <tbody valign="top">
+    <tr class="field">
+     <th class="field-name">
+      PEP:
+     </th>
+     <td class="field-body">
+      443
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Title:
+     </th>
+     <td class="field-body">
+      Single-dispatch generic functions
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Author:
+     </th>
+     <td class="field-body">
+      Łukasz Langa &lt;lukasz at langa.pl&gt;
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Discussions-To:
+     </th>
+     <td class="field-body">
+      Python-Dev &lt;
+      <a class="reference external" href="mailto:python-dev@python.org?subject=PEP%20443">
+       python-dev at python.org
+      </a>
+      &gt;
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Status:
+     </th>
+     <td class="field-body">
+      Final
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Type:
+     </th>
+     <td class="field-body">
+      Standards Track
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Created:
+     </th>
+     <td class="field-body">
+      22-May-2013
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Post-History:
+     </th>
+     <td class="field-body">
+      22-May-2013, 25-May-2013, 31-May-2013
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Replaces:
+     </th>
+     <td class="field-body">
+      <a class="reference external" href="../pep-0245/index.html">
+       245
+      </a>
+      <a class="reference external" href="../pep-0246/index.html">
+       246
+      </a>
+      <a class="reference external" href="../pep-3124/index.html">
+       3124
+      </a>
+     </td>
+    </tr>
+   </tbody>
+  </table>
+  <hr/>
+  <div class="contents topic" id="contents">
+   <p class="topic-title first">
+    Contents
+   </p>
+   <ul class="simple">
+    <li>
+     <a class="reference internal" href="#abstract" id="id13">
+      Abstract
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#rationale-and-goals" id="id14">
+      Rationale and Goals
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#user-api" id="id15">
+      User API
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#implementation-notes" id="id16">
+      Implementation Notes
+     </a>
+     <ul>
+      <li>
+       <a class="reference internal" href="#abstract-base-classes" id="id17">
+        Abstract Base Classes
+       </a>
+      </li>
+     </ul>
+    </li>
+    <li>
+     <a class="reference internal" href="#usage-patterns" id="id18">
+      Usage Patterns
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#alternative-approaches" id="id19">
+      Alternative approaches
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#acknowledgements" id="id20">
+      Acknowledgements
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#references" id="id21">
+      References
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#copyright" id="id22">
+      Copyright
+     </a>
+    </li>
+   </ul>
+  </div>
+  <div class="section" id="abstract">
+   <h1>
+    <a class="toc-backref" href="#id13">
+     Abstract
+    </a>
+   </h1>
+   <p>
+    This PEP proposes a new mechanism in the
+    <tt class="docutils literal">
+     functools
+    </tt>
+    standard library
+module that provides a simple form of generic programming known as
+single-dispatch generic functions.
+   </p>
+   <p>
+    A
+    <strong>
+     generic function
+    </strong>
+    is composed of multiple functions implementing
+the same operation for different types. Which implementation should be
+used during a call is determined by the dispatch algorithm. When the
+implementation is chosen based on the type of a single argument, this is
+known as
+    <strong>
+     single dispatch
+    </strong>
+    .
+   </p>
+  </div>
+  <div class="section" id="rationale-and-goals">
+   <h1>
+    <a class="toc-backref" href="#id14">
+     Rationale and Goals
+    </a>
+   </h1>
+   <p>
+    Python has always provided a variety of built-in and standard-library
+generic functions, such as
+    <tt class="docutils literal">
+     len()
+    </tt>
+    ,
+    <tt class="docutils literal">
+     iter()
+    </tt>
+    ,
+    <tt class="docutils literal">
+     pprint.pprint()
+    </tt>
+    ,
+    <tt class="docutils literal">
+     copy.copy()
+    </tt>
+    , and most of the functions in the
+    <tt class="docutils literal">
+     operator
+    </tt>
+    module.
+However, it currently:
+   </p>
+   <ol class="arabic simple">
+    <li>
+     does not have a simple or straightforward way for developers to
+create new generic functions,
+    </li>
+    <li>
+     does not have a standard way for methods to be added to existing
+generic functions (i.e., some are added using registration
+functions, others require defining
+     <tt class="docutils literal">
+      __special__
+     </tt>
+     methods, possibly
+by monkeypatching).
+    </li>
+   </ol>
+   <p>
+    In addition, it is currently a common anti-pattern for Python code to
+inspect the types of received arguments, in order to decide what to do
+with the objects.
+   </p>
+   <p>
+    For example, code may wish to accept either an object
+of some type, or a sequence of objects of that type.
+Currently, the "obvious way" to do this is by type inspection, but this
+is brittle and closed to extension.
+   </p>
+   <p>
+    Abstract Base Classes make it easier
+to discover present behaviour, but don't help adding new behaviour.
+A developer using an already-written library may be unable to change how
+their objects are treated by such code, especially if the objects they
+are using were created by a third party.
+   </p>
+   <p>
+    Therefore, this PEP proposes a uniform API to address dynamic
+overloading using decorators.
+   </p>
+  </div>
+  <div class="section" id="user-api">
+   <h1>
+    <a class="toc-backref" href="#id15">
+     User API
+    </a>
+   </h1>
+   <p>
+    To define a generic function, decorate it with the
+    <tt class="docutils literal">
+     @singledispatch
+    </tt>
+    decorator. Note that the dispatch happens on the type of the first
+argument. Create your function accordingly:
+   </p>
+   <pre class="literal-block">
+&gt;&gt;&gt; from functools import singledispatch
+&gt;&gt;&gt; @singledispatch
+... def fun(arg, verbose=False):
+...     if verbose:
+...         print("Let me just say,", end=" ")
+...     print(arg)
+</pre>
+   <p>
+    To add overloaded implementations to the function, use the
+    <tt class="docutils literal">
+     register()
+    </tt>
+    attribute of the generic function. This is a decorator,
+taking a type parameter and decorating a function implementing the
+operation for that type:
+   </p>
+   <pre class="literal-block">
+&gt;&gt;&gt; @fun.register(int)
+... def _(arg, verbose=False):
+...     if verbose:
+...         print("Strength in numbers, eh?", end=" ")
+...     print(arg)
+...
+&gt;&gt;&gt; @fun.register(list)
+... def _(arg, verbose=False):
+...     if verbose:
+...         print("Enumerate this:")
+...     for i, elem in enumerate(arg):
+...         print(i, elem)
+</pre>
+   <p>
+    To enable registering lambdas and pre-existing functions, the
+    <tt class="docutils literal">
+     register()
+    </tt>
+    attribute can be used in a functional form:
+   </p>
+   <pre class="literal-block">
+&gt;&gt;&gt; def nothing(arg, verbose=False):
+...     print("Nothing.")
+...
+&gt;&gt;&gt; fun.register(type(None), nothing)
+</pre>
+   <p>
+    The
+    <tt class="docutils literal">
+     register()
+    </tt>
+    attribute returns the undecorated function. This
+enables decorator stacking, pickling, as well as creating unit tests for
+each variant independently:
+   </p>
+   <pre class="literal-block">
+&gt;&gt;&gt; @fun.register(float)
+... @fun.register(Decimal)
+... def fun_num(arg, verbose=False):
+...     if verbose:
+...         print("Half of your number:", end=" ")
+...     print(arg / 2)
+...
+&gt;&gt;&gt; fun_num is fun
+False
+</pre>
+   <p>
+    When called, the generic function dispatches on the type of the first
+argument:
+   </p>
+   <pre class="literal-block">
+&gt;&gt;&gt; fun("Hello, world.")
+Hello, world.
+&gt;&gt;&gt; fun("test.", verbose=True)
+Let me just say, test.
+&gt;&gt;&gt; fun(42, verbose=True)
+Strength in numbers, eh? 42
+&gt;&gt;&gt; fun(['spam', 'spam', 'eggs', 'spam'], verbose=True)
+Enumerate this:
+0 spam
+1 spam
+2 eggs
+3 spam
+&gt;&gt;&gt; fun(None)
+Nothing.
+&gt;&gt;&gt; fun(1.23)
+0.615
+</pre>
+   <p>
+    Where there is no registered implementation for a specific type, its
+method resolution order is used to find a more generic implementation.
+The original function decorated with
+    <tt class="docutils literal">
+     @singledispatch
+    </tt>
+    is registered
+for the base
+    <tt class="docutils literal">
+     object
+    </tt>
+    type, which means it is used if no better
+implementation is found.
+   </p>
+   <p>
+    To check which implementation will the generic function choose for
+a given type, use the
+    <tt class="docutils literal">
+     dispatch()
+    </tt>
+    attribute:
+   </p>
+   <pre class="literal-block">
+&gt;&gt;&gt; fun.dispatch(float)
+&lt;function fun_num at 0x104319058&gt;
+&gt;&gt;&gt; fun.dispatch(dict)    # note: default implementation
+&lt;function fun at 0x103fe0000&gt;
+</pre>
+   <p>
+    To access all registered implementations, use the read-only
+    <tt class="docutils literal">
+     registry
+    </tt>
+    attribute:
+   </p>
+   <pre class="literal-block">
+&gt;&gt;&gt; fun.registry.keys()
+dict_keys([&lt;class 'NoneType'&gt;, &lt;class 'int'&gt;, &lt;class 'object'&gt;,
+          &lt;class 'decimal.Decimal'&gt;, &lt;class 'list'&gt;,
+          &lt;class 'float'&gt;])
+&gt;&gt;&gt; fun.registry[float]
+&lt;function fun_num at 0x1035a2840&gt;
+&gt;&gt;&gt; fun.registry[object]
+&lt;function fun at 0x103fe0000&gt;
+</pre>
+   <p>
+    The proposed API is intentionally limited and opinionated, as to ensure
+it is easy to explain and use, as well as to maintain consistency with
+existing members in the
+    <tt class="docutils literal">
+     functools
+    </tt>
+    module.
+   </p>
+  </div>
+  <div class="section" id="implementation-notes">
+   <h1>
+    <a class="toc-backref" href="#id16">
+     Implementation Notes
+    </a>
+   </h1>
+   <p>
+    The functionality described in this PEP is already implemented in the
+    <tt class="docutils literal">
+     pkgutil
+    </tt>
+    standard library module as
+    <tt class="docutils literal">
+     simplegeneric
+    </tt>
+    . Because this
+implementation is mature, the goal is to move it largely as-is. The
+reference implementation is available on hg.python.org
+    <a class="footnote-reference" href="#ref-impl" id="id1">
+     [1]
+    </a>
+    .
+   </p>
+   <p>
+    The dispatch type is specified as a decorator argument. An alternative
+form using function annotations was considered but its inclusion
+has been rejected. As of May 2013, this usage pattern is out of scope
+for the standard library
+    <a class="footnote-reference" href="#pep-0008" id="id2">
+     [2]
+    </a>
+    , and the best practices for
+annotation usage are still debated.
+   </p>
+   <p>
+    Based on the current
+    <tt class="docutils literal">
+     pkgutil.simplegeneric
+    </tt>
+    implementation, and
+following the convention on registering virtual subclasses on Abstract
+Base Classes, the dispatch registry will not be thread-safe.
+   </p>
+   <div class="section" id="abstract-base-classes">
+    <h2>
+     <a class="toc-backref" href="#id17">
+      Abstract Base Classes
+     </a>
+    </h2>
+    <p>
+     The
+     <tt class="docutils literal">
+      pkgutil.simplegeneric
+     </tt>
+     implementation relied on several forms of
+method resultion order (MRO).
+     <tt class="docutils literal">
+      @singledispatch
+     </tt>
+     removes special
+handling of old-style classes and Zope's ExtensionClasses. More
+importantly, it introduces support for Abstract Base Classes (ABC).
+    </p>
+    <p>
+     When a generic function implementation is registered for an ABC, the
+dispatch algorithm switches to an extended form of C3 linearization,
+which includes the relevant ABCs in the MRO of the provided argument.
+The algorithm inserts ABCs where their functionality is introduced, i.e.
+     <tt class="docutils literal">
+      issubclass(cls, abc)
+     </tt>
+     returns
+     <tt class="docutils literal">
+      True
+     </tt>
+     for the class itself but
+returns
+     <tt class="docutils literal">
+      False
+     </tt>
+     for all its direct base classes. Implicit ABCs for
+a given class (either registered or inferred from the presence of
+a special method like
+     <tt class="docutils literal">
+      __len__()
+     </tt>
+     ) are inserted directly after the
+last ABC explicitly listed in the MRO of said class.
+    </p>
+    <p>
+     In its most basic form, this linearization returns the MRO for the given
+type:
+    </p>
+    <pre class="literal-block">
+&gt;&gt;&gt; _compose_mro(dict, [])
+[&lt;class 'dict'&gt;, &lt;class 'object'&gt;]
+</pre>
+    <p>
+     When the second argument contains ABCs that the specified type is
+a subclass of, they are inserted in a predictable order:
+    </p>
+    <pre class="literal-block">
+&gt;&gt;&gt; _compose_mro(dict, [Sized, MutableMapping, str,
+...                     Sequence, Iterable])
+[&lt;class 'dict'&gt;, &lt;class 'collections.abc.MutableMapping'&gt;,
+ &lt;class 'collections.abc.Mapping'&gt;, &lt;class 'collections.abc.Sized'&gt;,
+ &lt;class 'collections.abc.Iterable'&gt;, &lt;class 'collections.abc.Container'&gt;,
+ &lt;class 'object'&gt;]
+</pre>
+    <p>
+     While this mode of operation is significantly slower, all dispatch
+decisions are cached. The cache is invalidated on registering new
+implementations on the generic function or when user code calls
+     <tt class="docutils literal">
+      register()
+     </tt>
+     on an ABC to implicitly subclass it. In the latter case,
+it is possible to create a situation with ambiguous dispatch, for
+instance:
+    </p>
+    <pre class="literal-block">
+&gt;&gt;&gt; from collections import Iterable, Container
+&gt;&gt;&gt; class P:
+...     pass
+&gt;&gt;&gt; Iterable.register(P)
+&lt;class '__main__.P'&gt;
+&gt;&gt;&gt; Container.register(P)
+&lt;class '__main__.P'&gt;
+</pre>
+    <p>
+     Faced with ambiguity,
+     <tt class="docutils literal">
+      @singledispatch
+     </tt>
+     refuses the temptation to
+guess:
+    </p>
+    <pre class="literal-block">
+&gt;&gt;&gt; @singledispatch
+... def g(arg):
+...     return "base"
+...
+&gt;&gt;&gt; g.register(Iterable, lambda arg: "iterable")
+&lt;function &lt;lambda&gt; at 0x108b49110&gt;
+&gt;&gt;&gt; g.register(Container, lambda arg: "container")
+&lt;function &lt;lambda&gt; at 0x108b491c8&gt;
+&gt;&gt;&gt; g(P())
+Traceback (most recent call last):
+...
+RuntimeError: Ambiguous dispatch: &lt;class 'collections.abc.Container'&gt;
+or &lt;class 'collections.abc.Iterable'&gt;
+</pre>
+    <p>
+     Note that this exception would not be raised if one or more ABCs had
+been provided explicitly as base classes during class definition. In
+this case dispatch happens in the MRO order:
+    </p>
+    <pre class="literal-block">
+&gt;&gt;&gt; class Ten(Iterable, Container):
+...     def __iter__(self):
+...         for i in range(10):
+...             yield i
+...     def __contains__(self, value):
+...         return value in range(10)
+...
+&gt;&gt;&gt; g(Ten())
+'iterable'
+</pre>
+    <p>
+     A similar conflict arises when subclassing an ABC is inferred from the
+presence of a special method like
+     <tt class="docutils literal">
+      __len__()
+     </tt>
+     or
+     <tt class="docutils literal">
+      __contains__()
+     </tt>
+     :
+    </p>
+    <pre class="literal-block">
+&gt;&gt;&gt; class Q:
+...   def __contains__(self, value):
+...     return False
+...
+&gt;&gt;&gt; issubclass(Q, Container)
+True
+&gt;&gt;&gt; Iterable.register(Q)
+&gt;&gt;&gt; g(Q())
+Traceback (most recent call last):
+...
+RuntimeError: Ambiguous dispatch: &lt;class 'collections.abc.Container'&gt;
+or &lt;class 'collections.abc.Iterable'&gt;
+</pre>
+    <p>
+     An early version of the PEP contained a custom approach that was simpler
+but created a number of edge cases with surprising results
+     <a class="footnote-reference" href="#why-c3" id="id3">
+      [3]
+     </a>
+     .
+    </p>
+   </div>
+  </div>
+  <div class="section" id="usage-patterns">
+   <h1>
+    <a class="toc-backref" href="#id18">
+     Usage Patterns
+    </a>
+   </h1>
+   <p>
+    This PEP proposes extending behaviour only of functions specifically
+marked as generic. Just as a base class method may be overridden by
+a subclass, so too a function may be overloaded to provide custom
+functionality for a given type.
+   </p>
+   <p>
+    Universal overloading does not equal
+    <em>
+     arbitrary
+    </em>
+    overloading, in the
+sense that we need not expect people to randomly redefine the behavior
+of existing functions in unpredictable ways. To the contrary, generic
+function usage in actual programs tends to follow very predictable
+patterns and registered implementations are highly-discoverable in the
+common case.
+   </p>
+   <p>
+    If a module is defining a new generic operation, it will usually also
+define any required implementations for existing types in the same
+place.  Likewise, if a module is defining a new type, then it will
+usually define implementations there for any generic functions that it
+knows or cares about.  As a result, the vast majority of registered
+implementations can be found adjacent to either the function being
+overloaded, or to a newly-defined type for which the implementation is
+adding support.
+   </p>
+   <p>
+    It is only in rather infrequent cases that one will have implementations
+registered in a module that contains neither the function nor the
+type(s) for which the implementation is added. In the absence of
+incompetence or deliberate intention to be obscure, the few
+implementations that are not registered adjacent to the relevant type(s)
+or function(s), will generally not need to be understood or known about
+outside the scope where those implementations are defined. (Except in
+the "support modules" case, where best practice suggests naming them
+accordingly.)
+   </p>
+   <p>
+    As mentioned earlier, single-dispatch generics are already prolific
+throughout the standard library. A clean, standard way of doing them
+provides a way forward to refactor those custom implementations to use
+a common one, opening them up for user extensibility at the same time.
+   </p>
+  </div>
+  <div class="section" id="alternative-approaches">
+   <h1>
+    <a class="toc-backref" href="#id19">
+     Alternative approaches
+    </a>
+   </h1>
+   <p>
+    In
+    <a class="reference external" href="../pep-3124/index.html">
+     PEP 3124
+    </a>
+    <a class="footnote-reference" href="#pep-3124" id="id4">
+     [4]
+    </a>
+    Phillip J. Eby proposes a full-grown solution
+with overloading based on arbitrary rule sets (with the default
+implementation dispatching on argument types), as well as interfaces,
+adaptation and method combining. PEAK-Rules
+    <a class="footnote-reference" href="#peak-rules" id="id5">
+     [5]
+    </a>
+    is
+a reference implementation of the concepts described in PJE's PEP.
+   </p>
+   <p>
+    Such a broad approach is inherently complex, which makes reaching
+a consensus hard. In contrast, this PEP focuses on a single piece of
+functionality that is simple to reason about. It's important to note
+this does not preclude the use of other approaches now or in the future.
+   </p>
+   <p>
+    In a 2005 article on Artima
+    <a class="footnote-reference" href="#artima2005" id="id6">
+     [6]
+    </a>
+    Guido van Rossum presents
+a generic function implementation that dispatches on types of all
+arguments on a function. The same approach was chosen in Andrey Popp's
+    <tt class="docutils literal">
+     generic
+    </tt>
+    package available on PyPI
+    <a class="footnote-reference" href="#pypi-generic" id="id7">
+     [7]
+    </a>
+    , as well as David
+Mertz's
+    <tt class="docutils literal">
+     gnosis.magic.multimethods
+    </tt>
+    <a class="footnote-reference" href="#gnosis-multimethods" id="id8">
+     [8]
+    </a>
+    .
+   </p>
+   <p>
+    While this seems desirable at first, I agree with Fredrik Lundh's
+comment that "if you design APIs with pages of logic just to sort out
+what code a function should execute, you should probably hand over the
+API design to someone else". In other words, the single argument
+approach proposed in this PEP is not only easier to implement but also
+clearly communicates that dispatching on a more complex state is an
+anti-pattern. It also has the virtue of corresponding directly with the
+familiar method dispatch mechanism in object oriented programming. The
+only difference is whether the custom implementation is associated more
+closely with the data (object-oriented methods) or the algorithm
+(single-dispatch overloading).
+   </p>
+   <p>
+    PyPy's RPython offers
+    <tt class="docutils literal">
+     extendabletype
+    </tt>
+    <a class="footnote-reference" href="#pairtype" id="id9">
+     [9]
+    </a>
+    , a metaclass which
+enables classes to be externally extended. In combination with
+    <tt class="docutils literal">
+     pairtype()
+    </tt>
+    and
+    <tt class="docutils literal">
+     pair()
+    </tt>
+    factories, this offers a form of
+single-dispatch generics.
+   </p>
+  </div>
+  <div class="section" id="acknowledgements">
+   <h1>
+    <a class="toc-backref" href="#id20">
+     Acknowledgements
+    </a>
+   </h1>
+   <p>
+    Apart from Phillip J. Eby's work on
+    <a class="reference external" href="../pep-3124/index.html">
+     PEP 3124
+    </a>
+    <a class="footnote-reference" href="#pep-3124" id="id10">
+     [4]
+    </a>
+    and
+PEAK-Rules, influences include Paul Moore's original issue
+    <a class="footnote-reference" href="#issue-5135" id="id11">
+     [10]
+    </a>
+    that proposed exposing
+    <tt class="docutils literal">
+     pkgutil.simplegeneric
+    </tt>
+    as part
+of the
+    <tt class="docutils literal">
+     functools
+    </tt>
+    API, Guido van Rossum's article on multimethods
+    <a class="footnote-reference" href="#artima2005" id="id12">
+     [6]
+    </a>
+    , and discussions with Raymond Hettinger on a general
+pprint rewrite. Huge thanks to Nick Coghlan for encouraging me to create
+this PEP and providing initial feedback.
+   </p>
+  </div>
+  <div class="section" id="references">
+   <h1>
+    <a class="toc-backref" href="#id21">
+     References
+    </a>
+   </h1>
+   <table class="docutils footnote" frame="void" id="ref-impl" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id1">
+        [1]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="http://hg.python.org/features/pep-443/file/tip/Lib/functools.py#l359">
+        http://hg.python.org/features/pep-443/file/tip/Lib/functools.py#l359
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="pep-0008" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id2">
+        [2]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="../pep-0008/index.html">
+        PEP 8
+       </a>
+       states in the "Programming Recommendations"
+section that "the Python standard library will not use function
+annotations as that would result in a premature commitment to
+a particular annotation style".
+(
+       <a class="reference external" href="../pep-0008/index.html">
+        http://www.python.org/dev/peps/pep-0008
+       </a>
+       )
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="why-c3" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id3">
+        [3]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="http://bugs.python.org/issue18244">
+        http://bugs.python.org/issue18244
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="pep-3124" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       [4]
+      </td>
+      <td>
+       <em>
+        (
+        <a class="fn-backref" href="#id4">
+         1
+        </a>
+        ,
+        <a class="fn-backref" href="#id10">
+         2
+        </a>
+        )
+       </em>
+       <a class="reference external" href="../pep-3124/index.html">
+        http://www.python.org/dev/peps/pep-3124/
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="peak-rules" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id5">
+        [5]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="http://peak.telecommunity.com/DevCenter/PEAK_2dRules">
+        http://peak.telecommunity.com/DevCenter/PEAK_2dRules
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="artima2005" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       [6]
+      </td>
+      <td>
+       <em>
+        (
+        <a class="fn-backref" href="#id6">
+         1
+        </a>
+        ,
+        <a class="fn-backref" href="#id12">
+         2
+        </a>
+        )
+       </em>
+       <a class="reference external" href="http://www.artima.com/weblogs/viewpost.jsp?thread=101605">
+        http://www.artima.com/weblogs/viewpost.jsp?thread=101605
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="pypi-generic" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id7">
+        [7]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="http://pypi.python.org/pypi/generic">
+        http://pypi.python.org/pypi/generic
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="gnosis-multimethods" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id8">
+        [8]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="http://gnosis.cx/publish/programming/charming_python_b12.html">
+        http://gnosis.cx/publish/programming/charming_python_b12.html
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="pairtype" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id9">
+        [9]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="https://bitbucket.org/pypy/pypy/raw/default/rpython/tool/pairtype.py">
+        https://bitbucket.org/pypy/pypy/raw/default/rpython/tool/pairtype.py
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="issue-5135" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id11">
+        [10]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="http://bugs.python.org/issue5135">
+        http://bugs.python.org/issue5135
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+  </div>
+  <div class="section" id="copyright">
+   <h1>
+    <a class="toc-backref" href="#id22">
+     Copyright
+    </a>
+   </h1>
+   <p>
+    This document has been placed in the public domain.
+   </p>
+   <!-- Local Variables:
+mode: indented-text
+indent-tabs-mode: nil
+sentence-end-double-space: t
+fill-column: 70
+coding: utf-8
+End: -->
+  </div>
+ </body>
+
+<!-- Mirrored from www.python.org/dev/peps/pep-0443/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 03 Sep 2015 04:34:44 GMT -->
+</html>Source: <a href="https://hg.python.org/peps/file/tip/pep-0443.txt">https://hg.python.org/peps/file/tip/pep-0443.txt</a>
+
+    </article>
+
+
+                </section>
+
+                
+
+
+<aside class="left-sidebar" role="secondary">
+
+    
+
+
+
+
+
+
+    
+
+
+
+
+
+        <div class="twitter-widget sidebar-widget">
+        <a class="twitter-timeline" data-dnt="true" href="https://twitter.com/ThePSF" data-widget-id="434113224703610882">Tweets by @ThePSF</a>
+        <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+    </div>
+
+    <div class="psf-sidebar-widget sidebar-widget">
+        <h3 class="widget-title">The PSF</h3>
+<p>The Python Software Foundation is the organization behind Python. Become a member of the PSF and help advance the software and our mission. </p>
+
+    </div>
+
+</aside>
+
+
+
+                
+                
+
+
+            </div><!-- end .container -->
+        </div><!-- end #content .content-wrapper -->
+
+        <!-- Footer and social media list -->
+        <footer id="site-map" class="main-footer" role="contentinfo">
+            <div class="main-footer-links">
+                <div class="container">
+
+                    
+                    <a id="back-to-top-1" class="jump-link" href="#python-network"><span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> Back to Top</a>
+
+                    
+
+<ul class="sitemap navigation menu do-not-print" role="tree" id="container">
+    
+    <li class="tier-1 element-1">
+        <a href="https://www.python.org/about/" >About</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/apps/" title="">Applications</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/quotes/" title="">Quotes</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/gettingstarted/" title="">Getting Started</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/help/" title="">Help</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-2">
+        <a href="https://www.python.org/downloads/" >Downloads</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/downloads/" title="">All releases</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/downloads/source/" title="">Source code</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/downloads/windows/" title="">Windows</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/downloads/mac-osx/" title="">Mac OS X</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/download/other/" title="">Other Platforms</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://docs.python.org/3/license.html" title="">License</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/download/alternatives" title="">Alternative Implementations</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-3">
+        <a href="https://www.python.org/doc/" >Documentation</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/doc/" title="">Docs</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/doc/av" title="">Audio/Visual Talks</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://wiki.python.org/moin/BeginnersGuide" title="">Beginner&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://docs.python.org/faq/" title="">FAQ</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="http://wiki.python.org/moin/Languages" title="">Non-English Docs</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="../index.html" title="">PEP Index</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://wiki.python.org/moin/PythonBooks" title="">Python Books</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-4">
+        <a href="https://www.python.org/community/" >Community</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/community/diversity/" title="">Diversity</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/community/irc/" title="">IRC</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/community/lists/" title="">Mailing Lists</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/workshops/" title="">Python Conferences</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/community/sigs/" title="">Special Interest Groups</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://wiki.python.org/moin/" title="">Python Wiki</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/community/logos/" title="">Python Logo</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://www.python.org/community/merchandise/" title="">Merchandise</a></li>
+    
+        <li class="tier-2 element-9" role="treeitem"><a href="https://www.python.org/community/awards" title="">Community Awards</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-5">
+        <a href="https://www.python.org/about/success/" title="success-stories">Success Stories</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/success/#arts" title="">Arts</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/success/#business" title="">Business</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/success/#education" title="">Education</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/success/#engineering" title="">Engineering</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/about/success/#government" title="">Government</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://www.python.org/about/success/#scientific" title="">Scientific</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/about/success/#software-development" title="">Software Development</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-6">
+        <a href="https://www.python.org/blogs/" title="News from around the Python world">News</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/blogs/" title="Python Insider Blog Posts">Python News</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://planetpython.org/" title="Planet Python">Community News</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="http://pyfound.blogspot.com/" title="PSF Blog">PSF News</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pycon.blogspot.com/" title="PyCon Blog">PyCon News</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-7">
+        <a href="https://www.python.org/events/" >Events</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/events/python-events/" title="">Python Events</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/events/python-user-group/" title="">User Group Events</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/events/python-events/past/" title="">Python Events Archive</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/events/python-user-group/past/" title="">User Group Events Archive</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://wiki.python.org/moin/PythonEventsCalendar#Submitting_an_Event" title="">Submit an Event</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-8">
+        <a href="https://www.python.org/dev/" >Contributing</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="http://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://bugs.python.org/" title="">Issue Tracker</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://mail.python.org/mailman/listinfo/python-dev" title="">python-dev list</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pythonmentors.com/" title="">Core Mentorship</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+</ul>
+
+
+                    <a id="back-to-top-2" class="jump-link" href="#python-network"><span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> Back to Top</a>
+                    
+
+                </div><!-- end .container -->
+            </div> <!-- end .main-footer-links -->
+
+            <div class="site-base">
+                <div class="container">
+                    
+                    <ul class="footer-links navigation menu do-not-print" role="tree">
+                        <li class="tier-1 element-1"><a href="https://www.python.org/about/help/">Help &amp; <span class="say-no-more">General</span> Contact</a></li>
+                        <li class="tier-1 element-2"><a href="https://www.python.org/community/diversity/">Diversity <span class="say-no-more">Initiatives</span></a></li>
+                        <li class="tier-1 element-3"><a href="https://github.com/python/pythondotorg/issues">Submit Website Bug</a></li>
+                        <!--<li class="tier-1 element-3"><a href="#"><span class="say-no-more">Website</span> Colophon</a></li>-->
+                    </ul>
+
+                    <div class="copyright">
+                        <p><small>
+                            <span class="pre">Copyright &copy;2001-2015.</span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/psf-landing/">Python Software Foundation</a></span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/about/legal/">Legal Statements</a></span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/privacy/">Privacy Policy</a></span>
+                        </small></p>
+                    </div>
+
+                </div><!-- end .container -->
+            </div><!-- end .site-base -->
+
+        </footer>
+
+    </div><!-- end #touchnav-wrapper -->
+
+    
+    <script src="../../../../ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="../../../static/js/libs/jquery-1.8.2.min.js"><\/script>')</script>
+
+    <script src="../../../static/js/libs/masonry.pkgd.min.js"></script>
+
+    <script type="text/javascript" src="../../../static/js/main-min.js" charset="utf-8"></script>
+    
+
+    <!--[if lte IE 7]>
+    <script type="text/javascript" src="/static/js/plugins/IE8-min.js" charset="utf-8"></script>
+    
+    
+    <![endif]-->
+
+    <!--[if lte IE 8]>
+    <script type="text/javascript" src="/static/js/plugins/getComputedStyle-min.js" charset="utf-8"></script>
+    
+    
+    <![endif]-->
+
+    
+
+    
+    
+
+</body>
+</html>

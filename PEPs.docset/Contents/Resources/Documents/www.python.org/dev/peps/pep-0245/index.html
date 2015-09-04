@@ -1,0 +1,1423 @@
+<!doctype html>
+<!--[if lt IE 7]>   <html class="no-js ie6 lt-ie7 lt-ie8 lt-ie9">   <![endif]-->
+<!--[if IE 7]>      <html class="no-js ie7 lt-ie8 lt-ie9">          <![endif]-->
+<!--[if IE 8]>      <html class="no-js ie8 lt-ie9">                 <![endif]-->
+<!--[if gt IE 8]><!--><html class="no-js" lang="en" dir="ltr">  <!--<![endif]-->
+
+
+<!-- Mirrored from www.python.org/dev/peps/pep-0245/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 03 Sep 2015 04:37:08 GMT -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <link rel="prefetch" href="../../../../ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js">
+
+    <meta name="application-name" content="Python.org">
+    <meta name="msapplication-tooltip" content="The official home of the Python Programming Language">
+    <meta name="apple-mobile-web-app-title" content="Python.org">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="format-detection" content="telephone=no">
+    <meta http-equiv="cleartype" content="on">
+    <meta http-equiv="imagetoolbar" content="false">
+
+    <script src="../../../static/js/libs/modernizr.js"></script>
+
+    <link href="../../../static/stylesheets/style.css" rel="stylesheet" type="text/css" title="default" />
+    <link href="../../../static/stylesheets/mq.css" rel="stylesheet" type="text/css" media="not print, braille, embossed, speech, tty" />
+    
+
+    <!--[if (lte IE 8)&(!IEMobile)]>
+    <link href="/static/stylesheets/no-mq.css" rel="stylesheet" type="text/css" media="screen" />
+    
+    
+    <![endif]-->
+
+    
+    <link rel="icon" type="image/x-icon" href="https://www.python.org/static/favicon.ico">
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="../../../static/apple-touch-icon-144x144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="../../../static/apple-touch-icon-114x114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="../../../static/apple-touch-icon-72x72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="../../../static/apple-touch-icon-precomposed.png">
+    <link rel="apple-touch-icon" href="../../../static/apple-touch-icon-precomposed.png">
+
+    
+    <meta name="msapplication-TileImage" content="/static/metro-icon-144x144-precomposed.png"><!-- white shape -->
+    <meta name="msapplication-TileColor" content="#3673a5"><!-- python blue -->
+    <meta name="msapplication-navbutton-color" content="#3673a5">
+
+    <meta property="og:site_name" content="Python.org">
+    <meta property="og:type" content="website">
+
+    <title>PEP 245 -- Python Interface Syntax | Python.org</title>
+    <meta property="og:title" content="Welcome to Python.org">
+
+    
+    <meta name="description" content="The official home of the Python Programming Language">
+    <meta name="og:description" content="The official home of the Python Programming Language">
+    <meta name="keywords" content="Python programming language object oriented web free open source software license documentation download community">
+    <meta property="og:tag" content="Python programming language object oriented web free open source software license documentation download community">
+    <meta property="og:published_time" content="">
+    <meta property="og:modified_time" content="">
+    <meta property="og:author" content="">
+    <meta property="og:section" content=""> 
+    <meta property="og:url" content="">
+    <meta property="og:image" content="">
+    <meta property="og:video" content="">
+
+    <link rel="author" href="https://www.python.org/static/humans.txt">
+
+    
+
+    
+    <script type="application/ld+json">
+     {
+       "@context": "http://schema.org",
+       "@type": "WebSite",
+       "url": "https://www.python.org/",
+       "potentialAction": {
+         "@type": "SearchAction",
+         "target": "https://www.python.org/search/?q={search_term_string}",
+         "query-input": "required name=search_term_string"
+       }
+     }
+    </script>
+
+    
+    <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-39055973-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+    </script>
+    
+</head>
+
+<body class="python pages pep-page">
+
+    <div id="touchnav-wrapper">
+
+        <div id="nojs" class="do-not-print">
+            <p><strong>Notice:</strong> While Javascript is not essential for this website, your interaction with the content will be limited. Please turn Javascript on for the full experience. </p>
+        </div>
+
+        <!--[if lt IE 8]>
+        <div id="oldie-warning" class="do-not-print">
+            <p><strong>Notice:</strong> Your browser is <em>ancient</em> and <a href="http://www.ie6countdown.com/">Microsoft agrees</a>. <a href="http://browsehappy.com/">Upgrade to a different browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to experience a better web.</p>
+        </div>
+        <![endif]-->
+
+        <!-- Sister Site Links -->
+        <div id="top" class="top-bar do-not-print">
+
+            <nav class="meta-navigation container" role="navigation">
+
+                
+                <div class="skip-link screen-reader-text">
+                    <a href="#content" title="Skip to content">Skip to content</a>
+                </div>
+
+                
+                <a id="close-python-network" class="jump-link" href="#python-network" aria-hidden="true">
+                    <span aria-hidden="true" class="icon-arrow-down"><span>&#9660;</span></span> Close
+                </a>
+
+                
+
+<ul class="menu" role="tree">
+    
+    <li class="python-meta ">
+        <a href="https://www.python.org/" title="The Python Programming Language" >Python</a>
+    </li>
+    
+    <li class="psf-meta ">
+        <a href="https://www.python.org/psf-landing/" title="The Python Software Foundation" >PSF</a>
+    </li>
+    
+    <li class="docs-meta ">
+        <a href="https://docs.python.org/" title="Python Documentation" >Docs</a>
+    </li>
+    
+    <li class="pypi-meta ">
+        <a href="https://pypi.python.org/" title="Python Package Index" >PyPI</a>
+    </li>
+    
+    <li class="jobs-meta ">
+        <a href="https://www.python.org/jobs/" title="Python Job Board" >Jobs</a>
+    </li>
+    
+    <li class="shop-meta ">
+        <a href="https://www.python.org/community/" title="Python Community" >Community</a>
+    </li>
+    
+</ul>
+
+
+                <a id="python-network" class="jump-link" href="#top" aria-hidden="true">
+                    <span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> The Python Network
+                </a>
+
+            </nav>
+
+        </div>
+
+        <!-- Header elements -->
+        <header class="main-header" role="banner">
+            <div class="container">
+
+                <h1 class="site-headline">
+                    <a href="https://www.python.org/"><img class="python-logo" src="../../../static/img/python-logo.png" alt="python&trade;"></a>
+                </h1>
+
+                <div class="options-bar do-not-print">
+
+                    
+                    <a id="site-map-link" class="jump-to-menu" href="#site-map"><span class="menu-icon">&equiv;</span> Menu</a><form class="search-the-site" action="https://www.python.org/search/" method="get">
+                        <fieldset title="Search Python.org">
+
+                            <span aria-hidden="true" class="icon-search"></span>
+
+                            <label class="screen-reader-text" for="id-search-field">Search This Site</label>
+                            <input id="id-search-field" name="q" type="search" role="textbox" class="search-field" placeholder="Search" value="" tabindex="1">
+
+                            <button type="submit" name="submit" id="submit" class="search-button" title="Submit this Search" tabindex="3">
+                                GO
+                            </button>
+
+                            
+                            <!--[if IE]><input type="text" style="display: none;" disabled="disabled" size="1" tabindex="4"><![endif]-->
+
+                        </fieldset>
+                    </form><span class="breaker"></span><div class="adjust-font-size" aria-hidden="true">
+                        <ul class="navigation menu" aria-label="Adjust Text Size on Page">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                <a href="#" class="action-trigger"><strong><small>A</small> A</strong></a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a class="text-shrink" title="Make Text Smaller" href="javascript:;">Smaller</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a class="text-grow" title="Make Text Larger" href="javascript:;">Larger</a></li>
+                                    <li class="tier-2 element-3" role="treeitem"><a class="text-reset" title="Reset any font size changes I have made" href="javascript:;">Reset</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div><div class="winkwink-nudgenudge">
+                        <ul class="navigation menu" aria-label="Social Media Navigation">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                <a href="#" class="action-trigger">Socialize</a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a href="http://plus.google.com/+Python"><span aria-hidden="true" class="icon-google-plus"></span>Google+</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a href="http://www.facebook.com/pythonlang?fref=ts"><span aria-hidden="true" class="icon-facebook"></span>Facebook</a></li>
+                                    <li class="tier-2 element-3" role="treeitem"><a href="http://twitter.com/ThePSF"><span aria-hidden="true" class="icon-twitter"></span>Twitter</a></li>
+                                    <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/irc/"><span aria-hidden="true" class="icon-freenode"></span>Chat on IRC</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div><div class="account-signin">
+                        <ul class="navigation menu" aria-label="Social Media Navigation">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                
+                                <a href="https://www.python.org/accounts/login/" title="Sign Up or Sign In to Python.org">Sign In</a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/accounts/signup/">Sign Up / Register</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/accounts/login/">Sign In</a></li>
+                                </ul>
+                                
+                            </li>
+                        </ul>
+                    </div>
+
+                </div><!-- end options-bar -->
+
+                <nav id="mainnav" class="python-navigation main-navigation do-not-print" role="navigation">
+                    
+                        
+<ul class="navigation menu" role="menubar" aria-label="Main Navigation">
+  
+    
+    
+    <li id="about" class="tier-1 element-1  " aria-haspopup="true">
+        <a href="https://www.python.org/about/" title="" class="">About</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/apps/" title="">Applications</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/quotes/" title="">Quotes</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/gettingstarted/" title="">Getting Started</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/help/" title="">Help</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="downloads" class="tier-1 element-2  " aria-haspopup="true">
+        <a href="https://www.python.org/downloads/" title="" class="">Downloads</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/downloads/" title="">All releases</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/downloads/source/" title="">Source code</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/downloads/windows/" title="">Windows</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/downloads/mac-osx/" title="">Mac OS X</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/download/other/" title="">Other Platforms</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://docs.python.org/3/license.html" title="">License</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/download/alternatives" title="">Alternative Implementations</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="documentation" class="tier-1 element-3  " aria-haspopup="true">
+        <a href="https://www.python.org/doc/" title="" class="">Documentation</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/doc/" title="">Docs</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/doc/av" title="">Audio/Visual Talks</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://wiki.python.org/moin/BeginnersGuide" title="">Beginner&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://docs.python.org/faq/" title="">FAQ</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="http://wiki.python.org/moin/Languages" title="">Non-English Docs</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="../index.html" title="">PEP Index</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://wiki.python.org/moin/PythonBooks" title="">Python Books</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="community" class="tier-1 element-4  " aria-haspopup="true">
+        <a href="https://www.python.org/community/" title="" class="">Community</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/community/diversity/" title="">Diversity</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/community/irc/" title="">IRC</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/community/lists/" title="">Mailing Lists</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/workshops/" title="">Python Conferences</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/community/sigs/" title="">Special Interest Groups</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://wiki.python.org/moin/" title="">Python Wiki</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/community/logos/" title="">Python Logo</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://www.python.org/community/merchandise/" title="">Merchandise</a></li>
+    
+        <li class="tier-2 element-9" role="treeitem"><a href="https://www.python.org/community/awards" title="">Community Awards</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="success-stories" class="tier-1 element-5  " aria-haspopup="true">
+        <a href="https://www.python.org/about/success/" title="success-stories" class="">Success Stories</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/success/#arts" title="">Arts</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/success/#business" title="">Business</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/success/#education" title="">Education</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/success/#engineering" title="">Engineering</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/about/success/#government" title="">Government</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://www.python.org/about/success/#scientific" title="">Scientific</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/about/success/#software-development" title="">Software Development</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="news" class="tier-1 element-6  " aria-haspopup="true">
+        <a href="https://www.python.org/blogs/" title="News from around the Python world" class="">News</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/blogs/" title="Python Insider Blog Posts">Python News</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://planetpython.org/" title="Planet Python">Community News</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="http://pyfound.blogspot.com/" title="PSF Blog">PSF News</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pycon.blogspot.com/" title="PyCon Blog">PyCon News</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="events" class="tier-1 element-7  " aria-haspopup="true">
+        <a href="https://www.python.org/events/" title="" class="">Events</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/events/python-events/" title="">Python Events</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/events/python-user-group/" title="">User Group Events</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/events/python-events/past/" title="">Python Events Archive</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/events/python-user-group/past/" title="">User Group Events Archive</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://wiki.python.org/moin/PythonEventsCalendar#Submitting_an_Event" title="">Submit an Event</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    
+  
+</ul>
+
+                    
+                </nav>
+
+                <div class="header-banner "> <!-- for optional "do-not-print" class -->
+                    
+                    
+                </div>
+
+                
+                
+
+             </div><!-- end .container -->
+        </header>
+
+        <div id="content" class="content-wrapper">
+            <!-- Main Content Column -->
+            <div class="container">
+
+                <section class="main-content with-left-sidebar" role="main">
+
+                    
+<ul class="breadcrumbs menu">
+    <li>
+        <a href="https://www.python.org/" title="The Python Programming Language">Python</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>
+        <a href="https://www.python.org/dev/">Python Developer's Guide</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>
+        <a href="../index.html">PEP Index</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>PEP 245 -- Python Interface Syntax</li>
+</ul>
+
+
+                    
+<style>
+   .pep-page pre {
+        padding: .5em;
+        background: inherit;
+        border-left: 0px;
+        -webkit-box-shadow: 0 0 0 0;
+        -moz-box-shadow: 0 0 0 0;
+        box-shadow: 0 0 0 0;
+   }
+</style>
+
+    
+    <article class="text">
+        
+
+        <header class="article-header">
+            <h1 class="page-title">PEP 245 -- Python Interface Syntax</h1>
+        </header>
+
+        <html>
+ <body>
+  <div class="header">
+   <table border="0">
+    <tr>
+     <th>
+      PEP:
+     </th>
+     <td>
+      245
+     </td>
+    </tr>
+    <tr>
+     <th>
+      Title:
+     </th>
+     <td>
+      Python Interface Syntax
+     </td>
+    </tr>
+    <tr>
+     <th>
+      Author:
+     </th>
+     <td>
+      Michel Pelletier &lt;michel at users.sourceforge.net&gt;
+     </td>
+    </tr>
+    <tr>
+     <th>
+      Discussions-To:
+     </th>
+     <td>
+      <a href="http://www.zope.org/Wikis/Interfaces">
+       http://www.zope.org/Wikis/Interfaces
+      </a>
+     </td>
+    </tr>
+    <tr>
+     <th>
+      Status:
+     </th>
+     <td>
+      Rejected
+     </td>
+    </tr>
+    <tr>
+     <th>
+      Type:
+     </th>
+     <td>
+      Standards Track
+     </td>
+    </tr>
+    <tr>
+     <th>
+      Created:
+     </th>
+     <td>
+      11-Jan-2001
+     </td>
+    </tr>
+    <tr>
+     <th>
+      Python-Version:
+     </th>
+     <td>
+      2.2
+     </td>
+    </tr>
+    <tr>
+     <th>
+      Post-History:
+     </th>
+     <td>
+      21-Mar-2001
+     </td>
+    </tr>
+   </table>
+  </div>
+  <div class="content">
+   <h3>
+    Rejection Notice
+   </h3>
+   <pre>
+    I'm rejecting this PEP.  It's been five years now.  While at some
+    point I expect that Python will have interfaces, it would be naive
+    to expect it to resemble the syntax in this PEP.  Also, <a href="../pep-0246/index.html">PEP 246</a> is
+    being rejected in favor of something completely different; interfaces
+    won't play a role in adaptation or whatever will replace it.  GvR.
+
+
+</pre>
+   <h3>
+    Introduction
+   </h3>
+   <pre>
+    This PEP describes a proposed syntax for creating interface
+    objects in Python.
+
+
+</pre>
+   <h3>
+    Overview
+   </h3>
+   <pre>
+    In addition to thinking about adding a static type system to
+    Python, the Types-SIG was also charged to devise an interface
+    system for Python.  In December of 1998, Jim Fulton released a
+    prototype interfaces system based on discussions from the SIG.
+    Many of the issues and background information on this discussion
+    and prototype can be found in the SIG archives[1].
+
+    Around the end of 2000, Digital Creations began thinking about
+    better component model designs for Zope[2].  Zope's future
+    component model relies heavily on interface objects.  This led to
+    further development of Jim's "Scarecrow" interfaces prototype.
+    Starting with version 2.3, Zope comes with an Interface package as
+    standard software.  Zope's Interface package is used as the
+    reference implementation for this PEP.
+
+    The syntax proposed by this PEP relies on syntax enhancements
+    describe in <a href="../pep-0232/index.html">PEP 232</a> [3] and describes an underlying framework
+    which <a href="../pep-0233/index.html">PEP 233</a> [4] could be based upon.  There is some work being
+    done with regard to interface objects and Proxy objects, so for
+    those optional parts of this PEP you may want to see[5].
+
+
+</pre>
+   <h3>
+    The Problem
+   </h3>
+   <pre>
+    Interfaces are important because they solve a number of problems
+    that arise while developing software:
+
+    - There are many implied interfaces in Python, commonly referred
+      to as "protocols".  Currently determining those protocols is
+      based on implementation introspection, but often that also
+      fails.  For example, defining __getitem__ implies both a
+      sequence and a mapping (the former with sequential, integer
+      keys).  There is no way for the developer to be explict about
+      which protocols the object intends to implement.
+
+    - Python is limited, from the developer's point of view, by the
+      split between types and classes.  When types are expected, the
+      consumer uses code like 'type(foo) == type("")' to determine if
+      'foo' is a string.  When instances of classes are expected, the
+      consumer uses 'isinstance(foo, MyString)' to determine if 'foo'
+      is an instance of the 'MyString' class.  There is no unified
+      model for determining if an object can be used in a certain,
+      valid way.
+
+    - Python's dynamic typing is very flexible and powerful, but it
+      does not have the advantage of static typed languages that
+      provide type checking.  Static typed langauges provide you with
+      much more type saftey, but are often overly verbose because
+      objects can only be generalized by common subclassing and used
+      specificly with casting (for example, in Java).
+
+    There are also a number of documentation problems that interfaces
+    try to solve.
+
+    - Developers waste a lot of time looking at the source code of
+      your system to figure out how objects work.
+
+    - Developers who are new to your system may misunderstand how your
+      objects work, causing, and possibly propagating, usage errors.
+
+    - Because a lack of interfaces means usage is inferred from the
+      source, developers may end up using methods and attributes that
+      are meant for "internal use only".
+
+    - Code inspection can be hard, and very discouraging to novice
+      programmers trying to properly understand code written by gurus.
+
+    - A lot of time is wasted when many people try very hard to
+      understand obscurity (like undocumented software).  Effort spend
+      up front documenting interfaces will save much of this time in
+      the end.
+
+    Interfaces try to solve these problems by providing a way for you
+    to specify a contractual obligation for your object, documentation
+    on how to use an object, and a built-in mechanism for discovering
+    the contract and the documentation.
+
+    Python has very useful introspection features.  It is well known
+    that this makes exploring concepts in the interactive interpreter
+    easier, because Python gives you the ability to look at all kinds
+    of information about the objects: the type, doc strings, instance
+    dictionaries, base classes, unbound methods and more.
+
+    Many of these features are oriented toward introspecting, using
+    and changing the implementation of software, and one of them ("doc
+    strings") is oriented toward providing documentation.  This
+    proposal describes an extension to this natural introspection
+    framework that describes an object's interface.
+
+
+</pre>
+   <h3>
+    Overview of the Interface Syntax
+   </h3>
+   <pre>
+    For the most part, the syntax of interfaces is very much like the
+    syntax of classes, but future needs, or needs brought up in
+    discussion, may define new possibilities for interface syntax.
+
+    A formal BNF description of the syntax is givena later in the PEP,
+    for the purposes of illustration, here is an example of two
+    different interfaces created with the proposed syntax:
+
+        interface CountFishInterface:
+            "Fish counting interface"
+
+            def oneFish():
+                "Increments the fish count by one"
+
+            def twoFish():
+                "Increments the fish count by two"
+
+            def getFishCount():
+                "Returns the fish count"
+
+        interface ColorFishInterface:
+            "Fish coloring interface"
+
+            def redFish():
+                "Sets the current fish color to red"
+
+            def blueFish():
+                "Sets the current fish color to blue"
+
+            def getFishColor():
+                "This returns the current fish color" 
+
+    This code, when evaluated, will create two interfaces called
+    `CountFishInterface' and `ColorFishInterface'. These interfaces
+    are defined by the `interface' statement.
+
+    The prose documentation for the interfaces and their methods come
+    from doc strings.  The method signature information comes from the
+    signatures of the `def' statements.  Notice how there is no body
+    for the def statements.  The interface does not implement a
+    service to anything; it merely describes one.  Documentation
+    strings on interfaces and interface methods are mandatory, a
+    'pass' statement cannot be provided.  The interface equivalent of
+    a pass statement is an empty doc string.
+
+    You can also create interfaces that "extend" other interfaces.
+    Here, you can see a new type of Interface that extends the
+    CountFishInterface and ColorFishInterface:
+
+        interface FishMarketInterface(CountFishInterface, ColorFishInterface):
+            "This is the documentation for the FishMarketInterface"
+
+            def getFishMonger():
+                "Returns the fish monger you can interact with"
+
+            def hireNewFishMonger(name):
+                "Hire a new fish monger"
+
+            def buySomeFish(quantity=1):
+                "Buy some fish at the market"
+
+    The FishMarketInteface extends upon the CountFishInterface and
+    ColorfishInterface.
+
+
+</pre>
+   <h3>
+    Interface Assertion
+   </h3>
+   <pre>
+    The next step is to put classes and interfaces together by
+    creating a concrete Python class that asserts that it implements
+    an interface.  Here is an example FishMarket component that might
+    do this:
+
+        class FishError(Error):
+            pass
+
+        class FishMarket implements FishMarketInterface:
+            number = 0
+            color = None
+            monger_name = 'Crusty Barnacles' 
+
+            def __init__(self, number, color):
+                self.number = number
+                self.color = color
+
+            def oneFish(self):
+                self.number += 1
+
+            def twoFish(self):
+                self.number += 2
+
+            def redFish(self):
+                self.color = 'red'
+
+            def blueFish(self):
+                self.color = 'blue'
+
+            def getFishCount(self):
+                return self.number
+
+            def getFishColor(self):
+                return self.color
+
+            def getFishMonger(self):
+                return self.monger_name
+
+            def hireNewFishMonger(self, name):
+                self.monger_name = name
+
+            def buySomeFish(self, quantity=1):
+                if quantity &gt; self.count:
+                    raise FishError("There's not enough fish")
+                self.count -= quantity
+                return quantity
+
+    This new class, FishMarket defines a concrete class which
+    implements the FishMarketInterface.  The object following the
+    `implements' statement is called an "interface assertion".  An
+    interface assertion can be either an interface object, or tuple of
+    interface assertions.
+
+    The interface assertion provided in a `class' statement like this
+    is stored in the class's `__implements__' class attribute.  After
+    interpreting the above example, you would have a class statement
+    that can be examined like this with an 'implements' built-in
+    function:
+
+        &gt;&gt;&gt; FishMarket
+        &lt;class FishMarket at 8140f50&gt;
+        &gt;&gt;&gt; FishMarket.__implements__
+        (&lt;Interface FishMarketInterface at 81006f0&gt;,)
+        &gt;&gt;&gt; f = FishMarket(6, 'red')
+        &gt;&gt;&gt; implements(f, FishMarketInterface)
+        1
+        &gt;&gt;&gt;
+
+    A class can realize more than one interface.  For example, say you
+    had an interface called `ItemInterface' that described how an
+    object worked as an item in a container object.  If you wanted to
+    assert that FishMarket instances realized the ItemInterface
+    interface as well as the FishMarketInterface, you can provide an
+    interface assertion that contained a tuple of interface objects to
+    the FishMarket class:
+
+        class FishMarket implements FishMarketInterface, ItemInterface:
+            # ...
+
+    Interface assertions can also be used if you want to assert that
+    one class implements an interface, and all of the interfaces that
+    another class implements:
+
+        class MyFishMarket implements FishMarketInterface, ItemInterface:
+            # ...
+
+        class YourFishMarket implements FooInterface, MyFishMarket.__implements__:
+            # ...
+
+    This new class YourFishMarket, asserts that it implements the
+    FooInterface, as well as the interfaces implemented by the
+    MyFishMarket class.
+
+    It's worth going into a little bit more detail about interface
+    assertions.  An interface assertion is either an interface object,
+    or a tuple of interface assertions.  For example:
+
+        FooInterface
+
+        FooInterface, (BarInteface, BobInterface)
+
+        FooInterface, (BarInterface, (BobInterface, MyClass.__implements__))
+
+    Are all valid interface assertions.  When two interfaces define
+    the same attributes, the order in which information is preferred
+    in the assertion is from top-to-bottom, left-to-right.
+
+    There are other interface proposals that, in the need for
+    simplicity, have combined the notion of class and interface to
+    provide simple interface enforcement.  Interface objects have a
+    `deferred' method that returns a deferred class that implements
+    this behavior:
+
+        &gt;&gt;&gt; FM = FishMarketInterface.deferred()
+        &gt;&gt;&gt; class MyFM(FM): pass
+
+        &gt;&gt;&gt; f = MyFM()
+        &gt;&gt;&gt; f.getFishMonger()
+        Traceback (innermost last):
+          File "&lt;stdin&gt;", line 1, in ?
+        Interface.Exceptions.BrokenImplementation: 
+        An object has failed to implement interface FishMarketInterface
+
+                The getFishMonger attribute was not provided.
+        &gt;&gt;&gt; 
+
+    This provides for a bit of passive interface enforcement by
+    telling you what you forgot to do to implement that interface.
+
+
+</pre>
+   <h3>
+    Formal Interface Syntax
+   </h3>
+   <pre>
+    Python syntax is defined in a modified BNF grammer notation
+    described in the Python Reference Manual [8].  This section
+    describes the proposed interface syntax using this grammar:
+
+        interfacedef:   "interface" interfacename [extends] ":" suite
+        extends:        "(" [expression_list] ")"
+        interfacename:  identifier
+
+    An interface definition is an executable statement.  It first
+    evaluates the extends list, if present.  Each item in the extends
+    list should evaluate to an interface object.
+
+    The interface's suite is then executed in a new execution frame
+    (see the Python Reference Manual, section 4.1), using a newly
+    created local namespace and the original global namespace.  When
+    the interface's suite finishes execution, its execution frame is
+    discarded but its local namespace is saved as interface elements.
+    An interface object is then created using the extends list for the
+    base interfaces and the saved interface elements.  The interface
+    name is bound to this interface object in the original local
+    namespace.
+
+    This PEP also proposes an extension to Python's 'class' statement:
+
+        classdef:    "class" classname [inheritance] [implements] ":" suite
+        implements:  "implements" implist
+        implist:     expression-list
+
+        classname,
+        inheritance,
+        suite,
+        expression-list:  see the Python Reference Manual
+
+    Before a class' suite is executed, the 'inheritance' and
+    'implements' statements are evaluated, if present.  The
+    'inheritance' behavior is unchanged as defined in Section 7.6 of
+    the Language Reference.
+
+    The 'implements', if present, is evaluated after inheritance.
+    This must evaluate to an interface specification, which is either
+    an interface, or a tuple of interface specifications.  If a valid
+    interface specification is present, the assertion is assigned to
+    the class object's '__implements__' attribute, as a tuple.
+
+    This PEP does not propose any changes to the syntax of function
+    definitions or assignments.
+
+
+</pre>
+   <h3>
+    Classes and Interfaces
+   </h3>
+   <pre>
+    The example interfaces above do not describe any kind of behavior
+    for their methods, they just describe an interface that a typical
+    FishMarket object would realize.
+
+    You may notice a similarity between interfaces extending from
+    other interfaces and classes sub-classing from other classes.
+    This is a similar concept.  However it is important to note that
+    interfaces extend interfaces and classes subclass classes.  You
+    cannot extend a class or subclass an interface.  Classes and
+    interfaces are separate.
+
+    The purpose of a class is to share the implementation of how an
+    object works.  The purpose of an interface is to document how to
+    work with an object, not how the object is implemented.  It is
+    possible to have several different classes with very different
+    implementations realize the same interface.
+
+    It's also possible to implement one interface with many classes
+    that mix in pieces the functionality of the interface or,
+    conversely, it's possible to have one class implement many
+    interfaces.  Because of this, interfaces and classes should not be
+    confused or intermingled.
+
+
+</pre>
+   <h3>
+    Interface-aware built-ins
+   </h3>
+   <pre>
+    A useful extension to Python's list of built-in functions in the
+    light of interface objects would be `implements()'.  This builtin
+    would expect two arguments, an object and an interface, and return
+    a true value if the object implements the interface, false
+    otherwise.  For example:
+
+        &gt;&gt;&gt; interface FooInterface: pass
+        &gt;&gt;&gt; class Foo implements FooInterface: pass
+        &gt;&gt;&gt; f = Foo()
+        &gt;&gt;&gt; implements(f, FooInterface)
+        1
+
+    Currently, this functionality exists in the reference
+    implementation as functions in the `Interface' package, requiring
+    an "import Interface" to use it.  Its existence as a built-in
+    would be purely for a convenience, and not necessary for using
+    interfaces, and analogous to `isinstance()' for classes.
+
+
+</pre>
+   <h3>
+    Backward Compatibility
+   </h3>
+   <pre>
+    The proposed interface model does not introduce any backward
+    compatibility issues in Python.  The proposed syntax, however,
+    does.
+
+    Any existing code that uses `interface' as an identifier will
+    break.  There may be other kinds of backwards incompatibility that
+    defining `interface' as a new keyword will introduce.  This
+    extension to Python's syntax does not change any existing syntax
+    in any backward incompatible way.
+
+    The new `from __future__' Python syntax[6], and the new warning
+    framework [7] is ideal for resolving this backward
+    incompatibility.  To use interface syntax now, a developer could
+    use the statement:
+
+        from __future__ import interfaces
+
+    In addition, any code that uses the keyword `interface' as an
+    identifier will be issued a warning from Python.  After the
+    appropriate period of time, the interface syntax would become
+    standard, the above import statement would do nothing, and any
+    identifiers named `interface' would raise an exception.  This
+    period of time is proposed to be 24 months.
+
+
+</pre>
+   <h3>
+    Summary of Proposed Changes to Python
+   </h3>
+   <pre>
+    Adding new `interface' keyword and extending class syntax with
+    `implements'.
+
+    Extending class interface to include __implements__.
+
+    Add 'implements(obj, interface)' built-in.
+
+
+</pre>
+   <h3>
+    Risks
+   </h3>
+   <pre>
+    This PEP proposes adding one new keyword to the Python language,
+    `interface'.  This will break code.
+
+
+</pre>
+   <h3>
+    Open Issues
+   </h3>
+   <pre>
+    Goals
+
+    Syntax
+
+    Architecture
+
+
+</pre>
+   <h3>
+    Dissenting Opinion
+   </h3>
+   <pre>
+    This PEP has not yet been discussed on python-dev.
+        
+
+</pre>
+   <h3>
+    References
+   </h3>
+   <pre>
+    [1] <a href="http://mail.python.org/pipermail/types-sig/1998-December/date.html">http://mail.python.org/pipermail/types-sig/1998-December/date.html</a>
+
+    [2] <a href="http://www.zope.org/">http://www.zope.org</a>
+
+    [3] <a href="../pep-0232/index.html">PEP 232</a>, Function Attributes, Warsaw
+        <a href="../pep-0232/index.html">http://www.python.org/dev/peps/pep-0232/</a>
+
+    [4] <a href="../pep-0233/index.html">PEP 233</a>, Python Online Help, Prescod
+        <a href="../pep-0233/index.html">http://www.python.org/dev/peps/pep-0233/</a>
+
+    [5] <a href="http://www.lemburg.com/files/python/mxProxy.html">http://www.lemburg.com/files/python/mxProxy.html</a>
+
+    [6] <a href="../pep-0236/index.html">PEP 236</a>, Back to the __future__, Peters
+        <a href="../pep-0236/index.html">http://www.python.org/dev/peps/pep-0236/</a>
+
+    [7] <a href="../pep-0230/index.html">PEP 230</a>, Warning Framework, van Rossum
+        <a href="../pep-0236/index.html">http://www.python.org/dev/peps/pep-0236/</a>
+
+
+</pre>
+   <h3>
+    Copyright
+   </h3>
+   <pre>
+    This document has been placed in the public domain.
+
+
+
+</pre>
+  </div>
+ </body>
+
+<!-- Mirrored from www.python.org/dev/peps/pep-0245/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 03 Sep 2015 04:37:08 GMT -->
+</html>Source: <a href="https://hg.python.org/peps/file/tip/pep-0245.txt">https://hg.python.org/peps/file/tip/pep-0245.txt</a>
+
+    </article>
+
+
+                </section>
+
+                
+
+
+<aside class="left-sidebar" role="secondary">
+
+    
+
+
+
+
+
+
+    
+
+
+
+
+
+        <div class="twitter-widget sidebar-widget">
+        <a class="twitter-timeline" data-dnt="true" href="https://twitter.com/ThePSF" data-widget-id="434113224703610882">Tweets by @ThePSF</a>
+        <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+    </div>
+
+    <div class="psf-sidebar-widget sidebar-widget">
+        <h3 class="widget-title">The PSF</h3>
+<p>The Python Software Foundation is the organization behind Python. Become a member of the PSF and help advance the software and our mission. </p>
+
+    </div>
+
+</aside>
+
+
+
+                
+                
+
+
+            </div><!-- end .container -->
+        </div><!-- end #content .content-wrapper -->
+
+        <!-- Footer and social media list -->
+        <footer id="site-map" class="main-footer" role="contentinfo">
+            <div class="main-footer-links">
+                <div class="container">
+
+                    
+                    <a id="back-to-top-1" class="jump-link" href="#python-network"><span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> Back to Top</a>
+
+                    
+
+<ul class="sitemap navigation menu do-not-print" role="tree" id="container">
+    
+    <li class="tier-1 element-1">
+        <a href="https://www.python.org/about/" >About</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/apps/" title="">Applications</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/quotes/" title="">Quotes</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/gettingstarted/" title="">Getting Started</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/help/" title="">Help</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-2">
+        <a href="https://www.python.org/downloads/" >Downloads</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/downloads/" title="">All releases</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/downloads/source/" title="">Source code</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/downloads/windows/" title="">Windows</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/downloads/mac-osx/" title="">Mac OS X</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/download/other/" title="">Other Platforms</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://docs.python.org/3/license.html" title="">License</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/download/alternatives" title="">Alternative Implementations</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-3">
+        <a href="https://www.python.org/doc/" >Documentation</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/doc/" title="">Docs</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/doc/av" title="">Audio/Visual Talks</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://wiki.python.org/moin/BeginnersGuide" title="">Beginner&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://docs.python.org/faq/" title="">FAQ</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="http://wiki.python.org/moin/Languages" title="">Non-English Docs</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="../index.html" title="">PEP Index</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://wiki.python.org/moin/PythonBooks" title="">Python Books</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-4">
+        <a href="https://www.python.org/community/" >Community</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/community/diversity/" title="">Diversity</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/community/irc/" title="">IRC</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/community/lists/" title="">Mailing Lists</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/workshops/" title="">Python Conferences</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/community/sigs/" title="">Special Interest Groups</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://wiki.python.org/moin/" title="">Python Wiki</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/community/logos/" title="">Python Logo</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://www.python.org/community/merchandise/" title="">Merchandise</a></li>
+    
+        <li class="tier-2 element-9" role="treeitem"><a href="https://www.python.org/community/awards" title="">Community Awards</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-5">
+        <a href="https://www.python.org/about/success/" title="success-stories">Success Stories</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/success/#arts" title="">Arts</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/success/#business" title="">Business</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/success/#education" title="">Education</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/success/#engineering" title="">Engineering</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/about/success/#government" title="">Government</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://www.python.org/about/success/#scientific" title="">Scientific</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/about/success/#software-development" title="">Software Development</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-6">
+        <a href="https://www.python.org/blogs/" title="News from around the Python world">News</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/blogs/" title="Python Insider Blog Posts">Python News</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://planetpython.org/" title="Planet Python">Community News</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="http://pyfound.blogspot.com/" title="PSF Blog">PSF News</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pycon.blogspot.com/" title="PyCon Blog">PyCon News</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-7">
+        <a href="https://www.python.org/events/" >Events</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/events/python-events/" title="">Python Events</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/events/python-user-group/" title="">User Group Events</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/events/python-events/past/" title="">Python Events Archive</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/events/python-user-group/past/" title="">User Group Events Archive</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://wiki.python.org/moin/PythonEventsCalendar#Submitting_an_Event" title="">Submit an Event</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-8">
+        <a href="https://www.python.org/dev/" >Contributing</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="http://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://bugs.python.org/" title="">Issue Tracker</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://mail.python.org/mailman/listinfo/python-dev" title="">python-dev list</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pythonmentors.com/" title="">Core Mentorship</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+</ul>
+
+
+                    <a id="back-to-top-2" class="jump-link" href="#python-network"><span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> Back to Top</a>
+                    
+
+                </div><!-- end .container -->
+            </div> <!-- end .main-footer-links -->
+
+            <div class="site-base">
+                <div class="container">
+                    
+                    <ul class="footer-links navigation menu do-not-print" role="tree">
+                        <li class="tier-1 element-1"><a href="https://www.python.org/about/help/">Help &amp; <span class="say-no-more">General</span> Contact</a></li>
+                        <li class="tier-1 element-2"><a href="https://www.python.org/community/diversity/">Diversity <span class="say-no-more">Initiatives</span></a></li>
+                        <li class="tier-1 element-3"><a href="https://github.com/python/pythondotorg/issues">Submit Website Bug</a></li>
+                        <!--<li class="tier-1 element-3"><a href="#"><span class="say-no-more">Website</span> Colophon</a></li>-->
+                    </ul>
+
+                    <div class="copyright">
+                        <p><small>
+                            <span class="pre">Copyright &copy;2001-2015.</span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/psf-landing/">Python Software Foundation</a></span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/about/legal/">Legal Statements</a></span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/privacy/">Privacy Policy</a></span>
+                        </small></p>
+                    </div>
+
+                </div><!-- end .container -->
+            </div><!-- end .site-base -->
+
+        </footer>
+
+    </div><!-- end #touchnav-wrapper -->
+
+    
+    <script src="../../../../ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="../../../static/js/libs/jquery-1.8.2.min.js"><\/script>')</script>
+
+    <script src="../../../static/js/libs/masonry.pkgd.min.js"></script>
+
+    <script type="text/javascript" src="../../../static/js/main-min.js" charset="utf-8"></script>
+    
+
+    <!--[if lte IE 7]>
+    <script type="text/javascript" src="/static/js/plugins/IE8-min.js" charset="utf-8"></script>
+    
+    
+    <![endif]-->
+
+    <!--[if lte IE 8]>
+    <script type="text/javascript" src="/static/js/plugins/getComputedStyle-min.js" charset="utf-8"></script>
+    
+    
+    <![endif]-->
+
+    
+
+    
+    
+
+</body>
+</html>

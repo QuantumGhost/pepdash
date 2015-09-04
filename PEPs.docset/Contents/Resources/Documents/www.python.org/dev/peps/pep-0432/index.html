@@ -1,0 +1,4515 @@
+<!doctype html>
+<!--[if lt IE 7]>   <html class="no-js ie6 lt-ie7 lt-ie8 lt-ie9">   <![endif]-->
+<!--[if IE 7]>      <html class="no-js ie7 lt-ie8 lt-ie9">          <![endif]-->
+<!--[if IE 8]>      <html class="no-js ie8 lt-ie9">                 <![endif]-->
+<!--[if gt IE 8]><!--><html class="no-js" lang="en" dir="ltr">  <!--<![endif]-->
+
+
+<!-- Mirrored from www.python.org/dev/peps/pep-0432/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 03 Sep 2015 04:33:20 GMT -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <link rel="prefetch" href="../../../../ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js">
+
+    <meta name="application-name" content="Python.org">
+    <meta name="msapplication-tooltip" content="The official home of the Python Programming Language">
+    <meta name="apple-mobile-web-app-title" content="Python.org">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="format-detection" content="telephone=no">
+    <meta http-equiv="cleartype" content="on">
+    <meta http-equiv="imagetoolbar" content="false">
+
+    <script src="../../../static/js/libs/modernizr.js"></script>
+
+    <link href="../../../static/stylesheets/style.css" rel="stylesheet" type="text/css" title="default" />
+    <link href="../../../static/stylesheets/mq.css" rel="stylesheet" type="text/css" media="not print, braille, embossed, speech, tty" />
+    
+
+    <!--[if (lte IE 8)&(!IEMobile)]>
+    <link href="/static/stylesheets/no-mq.css" rel="stylesheet" type="text/css" media="screen" />
+    
+    
+    <![endif]-->
+
+    
+    <link rel="icon" type="image/x-icon" href="https://www.python.org/static/favicon.ico">
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="../../../static/apple-touch-icon-144x144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="../../../static/apple-touch-icon-114x114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="../../../static/apple-touch-icon-72x72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="../../../static/apple-touch-icon-precomposed.png">
+    <link rel="apple-touch-icon" href="../../../static/apple-touch-icon-precomposed.png">
+
+    
+    <meta name="msapplication-TileImage" content="/static/metro-icon-144x144-precomposed.png"><!-- white shape -->
+    <meta name="msapplication-TileColor" content="#3673a5"><!-- python blue -->
+    <meta name="msapplication-navbutton-color" content="#3673a5">
+
+    <meta property="og:site_name" content="Python.org">
+    <meta property="og:type" content="website">
+
+    <title>PEP 0432 -- Simplifying the CPython startup sequence | Python.org</title>
+    <meta property="og:title" content="Welcome to Python.org">
+
+    
+    <meta name="description" content="The official home of the Python Programming Language">
+    <meta name="og:description" content="The official home of the Python Programming Language">
+    <meta name="keywords" content="Python programming language object oriented web free open source software license documentation download community">
+    <meta property="og:tag" content="Python programming language object oriented web free open source software license documentation download community">
+    <meta property="og:published_time" content="">
+    <meta property="og:modified_time" content="">
+    <meta property="og:author" content="">
+    <meta property="og:section" content=""> 
+    <meta property="og:url" content="">
+    <meta property="og:image" content="">
+    <meta property="og:video" content="">
+
+    <link rel="author" href="https://www.python.org/static/humans.txt">
+
+    
+
+    
+    <script type="application/ld+json">
+     {
+       "@context": "http://schema.org",
+       "@type": "WebSite",
+       "url": "https://www.python.org/",
+       "potentialAction": {
+         "@type": "SearchAction",
+         "target": "https://www.python.org/search/?q={search_term_string}",
+         "query-input": "required name=search_term_string"
+       }
+     }
+    </script>
+
+    
+    <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-39055973-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+    </script>
+    
+</head>
+
+<body class="python pages pep-page">
+
+    <div id="touchnav-wrapper">
+
+        <div id="nojs" class="do-not-print">
+            <p><strong>Notice:</strong> While Javascript is not essential for this website, your interaction with the content will be limited. Please turn Javascript on for the full experience. </p>
+        </div>
+
+        <!--[if lt IE 8]>
+        <div id="oldie-warning" class="do-not-print">
+            <p><strong>Notice:</strong> Your browser is <em>ancient</em> and <a href="http://www.ie6countdown.com/">Microsoft agrees</a>. <a href="http://browsehappy.com/">Upgrade to a different browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to experience a better web.</p>
+        </div>
+        <![endif]-->
+
+        <!-- Sister Site Links -->
+        <div id="top" class="top-bar do-not-print">
+
+            <nav class="meta-navigation container" role="navigation">
+
+                
+                <div class="skip-link screen-reader-text">
+                    <a href="#content" title="Skip to content">Skip to content</a>
+                </div>
+
+                
+                <a id="close-python-network" class="jump-link" href="#python-network" aria-hidden="true">
+                    <span aria-hidden="true" class="icon-arrow-down"><span>&#9660;</span></span> Close
+                </a>
+
+                
+
+<ul class="menu" role="tree">
+    
+    <li class="python-meta ">
+        <a href="https://www.python.org/" title="The Python Programming Language" >Python</a>
+    </li>
+    
+    <li class="psf-meta ">
+        <a href="https://www.python.org/psf-landing/" title="The Python Software Foundation" >PSF</a>
+    </li>
+    
+    <li class="docs-meta ">
+        <a href="https://docs.python.org/" title="Python Documentation" >Docs</a>
+    </li>
+    
+    <li class="pypi-meta ">
+        <a href="https://pypi.python.org/" title="Python Package Index" >PyPI</a>
+    </li>
+    
+    <li class="jobs-meta ">
+        <a href="https://www.python.org/jobs/" title="Python Job Board" >Jobs</a>
+    </li>
+    
+    <li class="shop-meta ">
+        <a href="https://www.python.org/community/" title="Python Community" >Community</a>
+    </li>
+    
+</ul>
+
+
+                <a id="python-network" class="jump-link" href="#top" aria-hidden="true">
+                    <span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> The Python Network
+                </a>
+
+            </nav>
+
+        </div>
+
+        <!-- Header elements -->
+        <header class="main-header" role="banner">
+            <div class="container">
+
+                <h1 class="site-headline">
+                    <a href="https://www.python.org/"><img class="python-logo" src="../../../static/img/python-logo.png" alt="python&trade;"></a>
+                </h1>
+
+                <div class="options-bar do-not-print">
+
+                    
+                    <a id="site-map-link" class="jump-to-menu" href="#site-map"><span class="menu-icon">&equiv;</span> Menu</a><form class="search-the-site" action="https://www.python.org/search/" method="get">
+                        <fieldset title="Search Python.org">
+
+                            <span aria-hidden="true" class="icon-search"></span>
+
+                            <label class="screen-reader-text" for="id-search-field">Search This Site</label>
+                            <input id="id-search-field" name="q" type="search" role="textbox" class="search-field" placeholder="Search" value="" tabindex="1">
+
+                            <button type="submit" name="submit" id="submit" class="search-button" title="Submit this Search" tabindex="3">
+                                GO
+                            </button>
+
+                            
+                            <!--[if IE]><input type="text" style="display: none;" disabled="disabled" size="1" tabindex="4"><![endif]-->
+
+                        </fieldset>
+                    </form><span class="breaker"></span><div class="adjust-font-size" aria-hidden="true">
+                        <ul class="navigation menu" aria-label="Adjust Text Size on Page">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                <a href="#" class="action-trigger"><strong><small>A</small> A</strong></a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a class="text-shrink" title="Make Text Smaller" href="javascript:;">Smaller</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a class="text-grow" title="Make Text Larger" href="javascript:;">Larger</a></li>
+                                    <li class="tier-2 element-3" role="treeitem"><a class="text-reset" title="Reset any font size changes I have made" href="javascript:;">Reset</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div><div class="winkwink-nudgenudge">
+                        <ul class="navigation menu" aria-label="Social Media Navigation">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                <a href="#" class="action-trigger">Socialize</a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a href="http://plus.google.com/+Python"><span aria-hidden="true" class="icon-google-plus"></span>Google+</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a href="http://www.facebook.com/pythonlang?fref=ts"><span aria-hidden="true" class="icon-facebook"></span>Facebook</a></li>
+                                    <li class="tier-2 element-3" role="treeitem"><a href="http://twitter.com/ThePSF"><span aria-hidden="true" class="icon-twitter"></span>Twitter</a></li>
+                                    <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/irc/"><span aria-hidden="true" class="icon-freenode"></span>Chat on IRC</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div><div class="account-signin">
+                        <ul class="navigation menu" aria-label="Social Media Navigation">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                
+                                <a href="https://www.python.org/accounts/login/" title="Sign Up or Sign In to Python.org">Sign In</a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/accounts/signup/">Sign Up / Register</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/accounts/login/">Sign In</a></li>
+                                </ul>
+                                
+                            </li>
+                        </ul>
+                    </div>
+
+                </div><!-- end options-bar -->
+
+                <nav id="mainnav" class="python-navigation main-navigation do-not-print" role="navigation">
+                    
+                        
+<ul class="navigation menu" role="menubar" aria-label="Main Navigation">
+  
+    
+    
+    <li id="about" class="tier-1 element-1  " aria-haspopup="true">
+        <a href="https://www.python.org/about/" title="" class="">About</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/apps/" title="">Applications</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/quotes/" title="">Quotes</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/gettingstarted/" title="">Getting Started</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/help/" title="">Help</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="downloads" class="tier-1 element-2  " aria-haspopup="true">
+        <a href="https://www.python.org/downloads/" title="" class="">Downloads</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/downloads/" title="">All releases</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/downloads/source/" title="">Source code</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/downloads/windows/" title="">Windows</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/downloads/mac-osx/" title="">Mac OS X</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/download/other/" title="">Other Platforms</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://docs.python.org/3/license.html" title="">License</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/download/alternatives" title="">Alternative Implementations</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="documentation" class="tier-1 element-3  " aria-haspopup="true">
+        <a href="https://www.python.org/doc/" title="" class="">Documentation</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/doc/" title="">Docs</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/doc/av" title="">Audio/Visual Talks</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://wiki.python.org/moin/BeginnersGuide" title="">Beginner&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://docs.python.org/faq/" title="">FAQ</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="http://wiki.python.org/moin/Languages" title="">Non-English Docs</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="../index.html" title="">PEP Index</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://wiki.python.org/moin/PythonBooks" title="">Python Books</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="community" class="tier-1 element-4  " aria-haspopup="true">
+        <a href="https://www.python.org/community/" title="" class="">Community</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/community/diversity/" title="">Diversity</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/community/irc/" title="">IRC</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/community/lists/" title="">Mailing Lists</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/workshops/" title="">Python Conferences</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/community/sigs/" title="">Special Interest Groups</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://wiki.python.org/moin/" title="">Python Wiki</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/community/logos/" title="">Python Logo</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://www.python.org/community/merchandise/" title="">Merchandise</a></li>
+    
+        <li class="tier-2 element-9" role="treeitem"><a href="https://www.python.org/community/awards" title="">Community Awards</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="success-stories" class="tier-1 element-5  " aria-haspopup="true">
+        <a href="https://www.python.org/about/success/" title="success-stories" class="">Success Stories</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/success/#arts" title="">Arts</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/success/#business" title="">Business</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/success/#education" title="">Education</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/success/#engineering" title="">Engineering</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/about/success/#government" title="">Government</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://www.python.org/about/success/#scientific" title="">Scientific</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/about/success/#software-development" title="">Software Development</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="news" class="tier-1 element-6  " aria-haspopup="true">
+        <a href="https://www.python.org/blogs/" title="News from around the Python world" class="">News</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/blogs/" title="Python Insider Blog Posts">Python News</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://planetpython.org/" title="Planet Python">Community News</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="http://pyfound.blogspot.com/" title="PSF Blog">PSF News</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pycon.blogspot.com/" title="PyCon Blog">PyCon News</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="events" class="tier-1 element-7  " aria-haspopup="true">
+        <a href="https://www.python.org/events/" title="" class="">Events</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/events/python-events/" title="">Python Events</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/events/python-user-group/" title="">User Group Events</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/events/python-events/past/" title="">Python Events Archive</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/events/python-user-group/past/" title="">User Group Events Archive</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://wiki.python.org/moin/PythonEventsCalendar#Submitting_an_Event" title="">Submit an Event</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    
+  
+</ul>
+
+                    
+                </nav>
+
+                <div class="header-banner "> <!-- for optional "do-not-print" class -->
+                    
+                    
+                </div>
+
+                
+                
+
+             </div><!-- end .container -->
+        </header>
+
+        <div id="content" class="content-wrapper">
+            <!-- Main Content Column -->
+            <div class="container">
+
+                <section class="main-content with-left-sidebar" role="main">
+
+                    
+<ul class="breadcrumbs menu">
+    <li>
+        <a href="https://www.python.org/" title="The Python Programming Language">Python</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>
+        <a href="https://www.python.org/dev/">Python Developer's Guide</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>
+        <a href="../index.html">PEP Index</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>PEP 0432 -- Simplifying the CPython startup sequence</li>
+</ul>
+
+
+                    
+<style>
+   .pep-page pre {
+        padding: .5em;
+        background: inherit;
+        border-left: 0px;
+        -webkit-box-shadow: 0 0 0 0;
+        -moz-box-shadow: 0 0 0 0;
+        box-shadow: 0 0 0 0;
+   }
+</style>
+
+    
+    <article class="text">
+        
+
+        <header class="article-header">
+            <h1 class="page-title">PEP 0432 -- Simplifying the CPython startup sequence</h1>
+        </header>
+
+        <!--
+This HTML is auto-generated.  DO NOT EDIT THIS FILE!  If you are writing a new
+PEP, see http://www.python.org/dev/peps/pep-0001 for instructions and links
+to templates.  DO NOT USE THIS HTML FILE AS YOUR TEMPLATE!
+-->
+<html>
+ <body>
+  <table class="rfc2822 docutils field-list" frame="void" rules="none">
+   <col class="field-name">
+   </col>
+   <col class="field-body">
+   </col>
+   <tbody valign="top">
+    <tr class="field">
+     <th class="field-name">
+      PEP:
+     </th>
+     <td class="field-body">
+      432
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Title:
+     </th>
+     <td class="field-body">
+      Simplifying the CPython startup sequence
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Author:
+     </th>
+     <td class="field-body">
+      Nick Coghlan &lt;ncoghlan at gmail.com&gt;
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Status:
+     </th>
+     <td class="field-body">
+      Draft
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Type:
+     </th>
+     <td class="field-body">
+      Standards Track
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Created:
+     </th>
+     <td class="field-body">
+      28-Dec-2012
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Python-Version:
+     </th>
+     <td class="field-body">
+      3.5
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Post-History:
+     </th>
+     <td class="field-body">
+      28-Dec-2012, 2-Jan-2013
+     </td>
+    </tr>
+   </tbody>
+  </table>
+  <hr/>
+  <div class="contents topic" id="contents">
+   <p class="topic-title first">
+    Contents
+   </p>
+   <ul class="simple">
+    <li>
+     <a class="reference internal" href="#abstract" id="id11">
+      Abstract
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#proposal" id="id12">
+      Proposal
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#background" id="id13">
+      Background
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#key-concerns" id="id14">
+      Key Concerns
+     </a>
+     <ul>
+      <li>
+       <a class="reference internal" href="#maintainability" id="id15">
+        Maintainability
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#performance" id="id16">
+        Performance
+       </a>
+      </li>
+     </ul>
+    </li>
+    <li>
+     <a class="reference internal" href="#required-configuration-settings" id="id17">
+      Required Configuration Settings
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#design-details" id="id18">
+      Design Details
+     </a>
+     <ul>
+      <li>
+       <a class="reference internal" href="#interpreter-initialization-phases" id="id19">
+        Interpreter Initialization Phases
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#invocation-of-phases" id="id20">
+        Invocation of Phases
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#pre-initialization-phase" id="id21">
+        Pre-Initialization Phase
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#determining-the-remaining-configuration-settings" id="id22">
+        Determining the remaining configuration settings
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#supported-configuration-settings" id="id23">
+        Supported configuration settings
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#completing-the-interpreter-initialization" id="id24">
+        Completing the interpreter initialization
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#preparing-the-main-module" id="id25">
+        Preparing the main module
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#executing-the-main-module" id="id26">
+        Executing the main module
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#internal-storage-of-configuration-data" id="id27">
+        Internal Storage of Configuration Data
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#creating-and-configuring-subinterpreters" id="id28">
+        Creating and Configuring Subinterpreters
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#stable-abi" id="id29">
+        Stable ABI
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#build-time-configuration" id="id30">
+        Build time configuration
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#backwards-compatibility" id="id31">
+        Backwards Compatibility
+       </a>
+      </li>
+     </ul>
+    </li>
+    <li>
+     <a class="reference internal" href="#a-system-python-executable" id="id32">
+      A System Python Executable
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#open-questions" id="id33">
+      Open Questions
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#implementation" id="id34">
+      Implementation
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#the-status-quo" id="id35">
+      The Status Quo
+     </a>
+     <ul>
+      <li>
+       <a class="reference internal" href="#ignoring-environment-variables" id="id36">
+        Ignoring Environment Variables
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#randomised-hashing" id="id37">
+        Randomised Hashing
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#locating-python-and-the-standard-library" id="id38">
+        Locating Python and the standard library
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#configuring-sys-path" id="id39">
+        Configuring
+        <tt class="docutils literal">
+         sys.path
+        </tt>
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#configuring-sys-argv" id="id40">
+        Configuring
+        <tt class="docutils literal">
+         sys.argv
+        </tt>
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#other-configuration-settings" id="id41">
+        Other configuration settings
+       </a>
+      </li>
+     </ul>
+    </li>
+    <li>
+     <a class="reference internal" href="#references" id="id42">
+      References
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#copyright" id="id43">
+      Copyright
+     </a>
+    </li>
+   </ul>
+  </div>
+  <div class="section" id="abstract">
+   <h1>
+    <a class="toc-backref" href="#id11">
+     Abstract
+    </a>
+   </h1>
+   <p>
+    This PEP proposes a mechanism for simplifying the startup sequence for
+CPython, making it easier to modify the initialization behaviour of the
+reference interpreter executable, as well as making it easier to control
+CPython's startup behaviour when creating an alternate executable or
+embedding it as a Python execution engine inside a larger application.
+   </p>
+   <p>
+    Note: TBC = To Be Confirmed, TBD = To Be Determined. The appropriate
+resolution for most of these should become clearer as the reference
+implementation is developed.
+   </p>
+  </div>
+  <div class="section" id="proposal">
+   <h1>
+    <a class="toc-backref" href="#id12">
+     Proposal
+    </a>
+   </h1>
+   <p>
+    This PEP proposes that initialization of the CPython runtime be split into
+two clearly distinct phases:
+   </p>
+   <ul class="simple">
+    <li>
+     core runtime initialization
+    </li>
+    <li>
+     main interpreter initialization
+    </li>
+   </ul>
+   <p>
+    The proposed design also has significant implications for:
+   </p>
+   <ul class="simple">
+    <li>
+     main module execution
+    </li>
+    <li>
+     subinterpreter initialization
+    </li>
+   </ul>
+   <p>
+    In the new design, the interpreter will move through the following
+well-defined phases during the initialization sequence:
+   </p>
+   <ul class="simple">
+    <li>
+     Pre-Initialization - no interpreter available
+    </li>
+    <li>
+     Core Initialized - main interpreter partially available,
+subinterpreter creation not yet available
+    </li>
+    <li>
+     Initialized - main interpreter fully available, subinterpreter creation
+available
+    </li>
+   </ul>
+   <p>
+    As a concrete use case to help guide any design changes, and to solve a known
+problem where the appropriate defaults for system utilities differ from those
+for running user scripts, this PEP also proposes the creation and
+distribution of a separate system Python (
+    <tt class="docutils literal">
+     pysystem
+    </tt>
+    ) executable
+which, by default, operates in "isolated mode" (as selected by the CPython
+    <tt class="docutils literal">
+     <span class="pre">
+      -I
+     </span>
+    </tt>
+    switch).
+   </p>
+   <p>
+    To keep the implementation complexity under control, this PEP does
+    <em>
+     not
+    </em>
+    propose wholesale changes to the way the interpreter state is accessed at
+runtime. Changing the order in which the existing initialization steps
+occur in order to make the startup sequence easier to maintain is already a
+substantial change, and attempting to make those other changes at the same time
+will make the change significantly more invasive and much harder to review.
+However, such proposals may be suitable topics for follow-on PEPs or patches
+- one key benefit of this PEP is decreasing the coupling between the internal
+storage model and the configuration interface, so such changes should be easier
+once this PEP has been implemented.
+   </p>
+  </div>
+  <div class="section" id="background">
+   <h1>
+    <a class="toc-backref" href="#id13">
+     Background
+    </a>
+   </h1>
+   <p>
+    Over time, CPython's initialization sequence has become progressively more
+complicated, offering more options, as well as performing more complex tasks
+(such as configuring the Unicode settings for OS interfaces in Python 3 [
+    <a class="reference internal" href="#id10">
+     10
+    </a>
+    ],
+bootstrapping a pure Python implementation of the import system, and
+implementing an isolated mode more suitable for system applications that run
+with elevated privileges [
+    <a class="reference internal" href="#id6">
+     6
+    </a>
+    ]).
+   </p>
+   <p>
+    Much of this complexity is formally accessible only through the
+    <tt class="docutils literal">
+     Py_Main
+    </tt>
+    and
+    <tt class="docutils literal">
+     Py_Initialize
+    </tt>
+    APIs, offering embedding applications little
+opportunity for customisation. This creeping complexity also makes life
+difficult for maintainers, as much of the configuration needs to take
+place prior to the
+    <tt class="docutils literal">
+     Py_Initialize
+    </tt>
+    call, meaning much of the Python C
+API cannot be used safely.
+   </p>
+   <p>
+    A number of proposals are on the table for even
+    <em>
+     more
+    </em>
+    sophisticated
+startup behaviour, such as better control over
+    <tt class="docutils literal">
+     sys.path
+    </tt>
+    initialization (e.g. easily adding additional directories on the command line
+in a cross-platform fashion [
+    <a class="reference internal" href="#id7">
+     7
+    </a>
+    ], controlling the configuration of
+    <tt class="docutils literal">
+     sys.path[0]
+    </tt>
+    [
+    <a class="reference internal" href="#id8">
+     8
+    </a>
+    ]), easier configuration of utilities like coverage
+tracing when launching Python subprocesses [
+    <a class="reference internal" href="#id9">
+     9
+    </a>
+    ]).
+   </p>
+   <p>
+    Rather than continuing to bolt such behaviour onto an already complicated
+system, this PEP proposes to start simplifying the status quo by introducing
+a more stuctured startup sequence, with the aim of making these further
+feature requests easier to implement.
+   </p>
+  </div>
+  <div class="section" id="key-concerns">
+   <h1>
+    <a class="toc-backref" href="#id14">
+     Key Concerns
+    </a>
+   </h1>
+   <p>
+    There are a couple of key concerns that any change to the startup sequence
+needs to take into account.
+   </p>
+   <div class="section" id="maintainability">
+    <h2>
+     <a class="toc-backref" href="#id15">
+      Maintainability
+     </a>
+    </h2>
+    <p>
+     The current CPython startup sequence is difficult to understand, and even
+more difficult to modify. It is not clear what state the interpreter is in
+while much of the initialization code executes, leading to behaviour such
+as lists, dictionaries and Unicode values being created prior to the call
+to
+     <tt class="docutils literal">
+      Py_Initialize
+     </tt>
+     when the
+     <tt class="docutils literal">
+      <span class="pre">
+       -X
+      </span>
+     </tt>
+     or
+     <tt class="docutils literal">
+      <span class="pre">
+       -W
+      </span>
+     </tt>
+     options are used [
+     <a class="reference internal" href="#id1">
+      1
+     </a>
+     ].
+    </p>
+    <p>
+     By moving to an explicitly multi-phase startup sequence, developers should
+only need to understand which features are not available in the core
+bootstrapping phase, as the vast majority of the configuration process
+will now take place during that phase.
+    </p>
+    <p>
+     By basing the new design on a combination of C structures and Python
+data types, it should also be easier to modify the system in the
+future to add new configuration options.
+    </p>
+   </div>
+   <div class="section" id="performance">
+    <h2>
+     <a class="toc-backref" href="#id16">
+      Performance
+     </a>
+    </h2>
+    <p>
+     CPython is used heavily to run short scripts where the runtime is dominated
+by the interpreter initialization time. Any changes to the startup sequence
+should minimise their impact on the startup overhead.
+    </p>
+    <p>
+     Experience with the importlib migration suggests that the startup time is
+dominated by IO operations. However, to monitor the impact of any changes,
+a simple benchmark can be used to check how long it takes to start and then
+tear down the interpreter:
+    </p>
+    <pre class="literal-block">
+python3 -m timeit -s "from subprocess import call" "call(['./python', '-c', 'pass'])"
+</pre>
+    <p>
+     Current numbers on my system for Python 3.5 (using the 3.4
+subprocess and timeit modules to execute the check, all with non-debug
+builds):
+    </p>
+    <pre class="literal-block">
+$ python3 -m timeit -s "from subprocess import call" "call(['./python', '-c', 'pass'])"
+10 loops, best of 3: 18.2 msec per loop
+</pre>
+    <p>
+     This PEP is not expected to have any significant effect on the startup time,
+as it is aimed primarily at
+     <em>
+      reordering
+     </em>
+     the existing initialization
+sequence, without making substantial changes to the individual steps.
+    </p>
+    <p>
+     However, if this simple check suggests that the proposed changes to the
+initialization sequence may pose a performance problem, then a more
+sophisticated microbenchmark will be developed to assist in investigation.
+    </p>
+   </div>
+  </div>
+  <div class="section" id="required-configuration-settings">
+   <h1>
+    <a class="toc-backref" href="#id17">
+     Required Configuration Settings
+    </a>
+   </h1>
+   <p>
+    A comprehensive configuration scheme requires that an embedding application
+be able to control the following aspects of the final interpreter state:
+   </p>
+   <ul class="simple">
+    <li>
+     Whether or not to use randomised hashes (and if used, potentially specify
+a specific random seed)
+    </li>
+    <li>
+     Whether or not to enable the import system (required by CPython's
+build process when freezing the importlib._bootstrap bytecode)
+    </li>
+    <li>
+     The "Where is Python located?" elements in the
+     <tt class="docutils literal">
+      sys
+     </tt>
+     module:
+*
+     <tt class="docutils literal">
+      sys.executable
+     </tt>
+     *
+     <tt class="docutils literal">
+      sys.base_exec_prefix
+     </tt>
+     *
+     <tt class="docutils literal">
+      sys.base_prefix
+     </tt>
+     *
+     <tt class="docutils literal">
+      sys.exec_prefix
+     </tt>
+     *
+     <tt class="docutils literal">
+      sys.prefix
+     </tt>
+    </li>
+    <li>
+     The path searched for imports from the filesystem (and other path hooks):
+*
+     <tt class="docutils literal">
+      sys.path
+     </tt>
+    </li>
+    <li>
+     The command line arguments seen by the interpeter:
+*
+     <tt class="docutils literal">
+      sys.argv
+     </tt>
+    </li>
+    <li>
+     The filesystem encoding used by:
+*
+     <tt class="docutils literal">
+      sys.getfsencoding
+     </tt>
+     *
+     <tt class="docutils literal">
+      os.fsencode
+     </tt>
+     *
+     <tt class="docutils literal">
+      os.fsdecode
+     </tt>
+    </li>
+    <li>
+     The IO encoding (if any) and the buffering used by:
+*
+     <tt class="docutils literal">
+      sys.stdin
+     </tt>
+     *
+     <tt class="docutils literal">
+      sys.stdout
+     </tt>
+     *
+     <tt class="docutils literal">
+      sys.stderr
+     </tt>
+    </li>
+    <li>
+     The initial warning system state:
+*
+     <tt class="docutils literal">
+      sys.warnoptions
+     </tt>
+    </li>
+    <li>
+     Arbitrary extended options (e.g. to automatically enable
+     <tt class="docutils literal">
+      faulthandler
+     </tt>
+     ):
+*
+     <tt class="docutils literal">
+      sys._xoptions
+     </tt>
+    </li>
+    <li>
+     Whether or not to implicitly cache bytecode files:
+*
+     <tt class="docutils literal">
+      sys.dont_write_bytecode
+     </tt>
+    </li>
+    <li>
+     Whether or not to enforce correct case in filenames on case-insensitive
+platforms
+*
+     <tt class="docutils literal">
+      <span class="pre">
+       os.environ["PYTHONCASEOK"]
+      </span>
+     </tt>
+    </li>
+    <li>
+     The other settings exposed to Python code in
+     <tt class="docutils literal">
+      sys.flags
+     </tt>
+     :
+     <ul>
+      <li>
+       <tt class="docutils literal">
+        debug
+       </tt>
+       (Enable debugging output in the pgen parser)
+      </li>
+      <li>
+       <tt class="docutils literal">
+        inspect
+       </tt>
+       (Enter interactive interpreter after __main__ terminates)
+      </li>
+      <li>
+       <tt class="docutils literal">
+        interactive
+       </tt>
+       (Treat stdin as a tty)
+      </li>
+      <li>
+       <tt class="docutils literal">
+        optimize
+       </tt>
+       (__debug__ status, write .pyc or .pyo, strip doc strings)
+      </li>
+      <li>
+       <tt class="docutils literal">
+        no_user_site
+       </tt>
+       (don't add the user site directory to sys.path)
+      </li>
+      <li>
+       <tt class="docutils literal">
+        no_site
+       </tt>
+       (don't implicitly import site during startup)
+      </li>
+      <li>
+       <tt class="docutils literal">
+        ignore_environment
+       </tt>
+       (whether environment vars are used during config)
+      </li>
+      <li>
+       <tt class="docutils literal">
+        verbose
+       </tt>
+       (enable all sorts of random output)
+      </li>
+      <li>
+       <tt class="docutils literal">
+        bytes_warning
+       </tt>
+       (warnings/errors for implicit str/bytes interaction)
+      </li>
+      <li>
+       <tt class="docutils literal">
+        quiet
+       </tt>
+       (disable banner output even if verbose is also enabled or
+stdin is a tty and the interpreter is launched in interactive mode)
+      </li>
+     </ul>
+    </li>
+    <li>
+     Whether or not CPython's signal handlers should be installed
+    </li>
+    <li>
+     What code (if any) should be executed as
+     <tt class="docutils literal">
+      __main__
+     </tt>
+     :
+     <ul>
+      <li>
+       Nothing (just create an empty module)
+      </li>
+      <li>
+       A filesystem path referring to a Python script (source or bytecode)
+      </li>
+      <li>
+       A filesystem path referring to a valid
+       <tt class="docutils literal">
+        sys.path
+       </tt>
+       entry (typically
+a directory or zipfile)
+      </li>
+      <li>
+       A given string (equivalent to the "-c" option)
+      </li>
+      <li>
+       A module or package (equivalent to the "-m" option)
+      </li>
+      <li>
+       Standard input as a script (i.e. a non-interactive stream)
+      </li>
+      <li>
+       Standard input as an interactive interpreter session
+      </li>
+     </ul>
+    </li>
+   </ul>
+   <p>
+    &lt;TBD: Did I miss anything?&gt;
+   </p>
+   <p>
+    Note that this just covers settings that are currently configurable in some
+manner when using the main CPython executable. While this PEP aims to make
+adding additional configuration settings easier in the future, it
+deliberately avoids adding any new settings of its own (except where such
+additional settings arise naturally in the course of migrating existing
+settings to the new structure).
+   </p>
+  </div>
+  <div class="section" id="design-details">
+   <h1>
+    <a class="toc-backref" href="#id18">
+     Design Details
+    </a>
+   </h1>
+   <p>
+    (Note: details here are still very much in flux, but preliminary feedback
+is appreciated anyway)
+   </p>
+   <p>
+    The main theme of this proposal is to create the interpreter state for
+the main interpreter
+    <em>
+     much
+    </em>
+    earlier in the startup process. This will allow
+most of the CPython API to be used during the remainder of the initialization
+process, potentially simplifying a number of operations that currently need
+to rely on basic C functionality rather than being able to use the richer
+data structures provided by the CPython C API.
+   </p>
+   <p>
+    In the following, the term "embedding application" also covers the standard
+CPython command line application.
+   </p>
+   <div class="section" id="interpreter-initialization-phases">
+    <h2>
+     <a class="toc-backref" href="#id19">
+      Interpreter Initialization Phases
+     </a>
+    </h2>
+    <p>
+     Three distinct interpreter initialisation phases are proposed:
+    </p>
+    <ul class="simple">
+     <li>
+      Pre-Initialization:
+      <ul>
+       <li>
+        no interpreter is available.
+       </li>
+       <li>
+        <tt class="docutils literal">
+         Py_IsCoreInitialized()
+        </tt>
+        returns
+        <tt class="docutils literal">
+         0
+        </tt>
+       </li>
+       <li>
+        <tt class="docutils literal">
+         Py_IsInitialized()
+        </tt>
+        returns
+        <tt class="docutils literal">
+         0
+        </tt>
+       </li>
+       <li>
+        The embedding application determines the settings required to create the
+main interpreter and moves to the next phase by calling
+        <tt class="docutils literal">
+         Py_InitializationCore
+        </tt>
+        .
+       </li>
+      </ul>
+     </li>
+     <li>
+      Core Initialized:
+      <ul>
+       <li>
+        the main interpreter is available, but only partially configured.
+       </li>
+       <li>
+        <tt class="docutils literal">
+         Py_IsCoreInitialized()
+        </tt>
+        returns
+        <tt class="docutils literal">
+         1
+        </tt>
+       </li>
+       <li>
+        <tt class="docutils literal">
+         Py_IsInitialized()
+        </tt>
+        returns
+        <tt class="docutils literal">
+         0
+        </tt>
+       </li>
+       <li>
+        The embedding application determines and applies the settings
+required to complete the initialization process by calling
+        <tt class="docutils literal">
+         Py_ReadMainInterpreterConfig
+        </tt>
+        and
+        <tt class="docutils literal">
+         Py_InitializeMainInterpreter
+        </tt>
+        .
+       </li>
+      </ul>
+     </li>
+     <li>
+      Initialized:
+      <ul>
+       <li>
+        the main interpreter is available and fully operational, but
+        <tt class="docutils literal">
+         __main__
+        </tt>
+        related metadata is incomplete
+       </li>
+       <li>
+        <tt class="docutils literal">
+         Py_IsCoreInitialized()
+        </tt>
+        returns
+        <tt class="docutils literal">
+         1
+        </tt>
+       </li>
+       <li>
+        <tt class="docutils literal">
+         Py_IsInitialized()
+        </tt>
+        returns
+        <tt class="docutils literal">
+         1
+        </tt>
+       </li>
+      </ul>
+     </li>
+    </ul>
+   </div>
+   <div class="section" id="invocation-of-phases">
+    <h2>
+     <a class="toc-backref" href="#id20">
+      Invocation of Phases
+     </a>
+    </h2>
+    <p>
+     All listed phases will be used by the standard CPython interpreter and the
+proposed System Python interpreter.
+    </p>
+    <p>
+     An embedding application may still continue to leave initialization almost
+entirely under CPython's control by using the existing
+     <tt class="docutils literal">
+      Py_Initialize
+     </tt>
+     API. Alternatively, if an embedding application wants greater control
+over CPython's initial state, it will be able to use the new, finer
+grained API, which allows the embedding application greater control
+over the initialization process:
+    </p>
+    <pre class="literal-block">
+/* Phase 1: Pre-Initialization */
+PyCoreConfig core_config = PyCoreConfig_INIT;
+PyMainInterpreterConfig config = PyMainInterpreterConfig_INIT;
+/* Easily control the core configuration */
+core_config.ignore_environment = 1; /* Ignore environment variables */
+core_config.use_hash_seed = 0;      /* Full hash randomisation */
+Py_InitializeCore(&amp;core_config);
+/* Phase 2: Initialization */
+/* Optionally preconfigure some settings here - they will then be
+ * used to derive other settings */
+Py_ReadMainInterpreterConfig(&amp;config);
+/* Can completely override derived settings here */
+Py_InitializeMainInterpreter(&amp;config);
+/* Phase 3: Initialized */
+/* If an embedding application has no real concept of a main module
+ * it can just stop the initialization process here.
+ * Alternatively, it can launch __main__ via the relevant API functions.
+ */
+</pre>
+   </div>
+   <div class="section" id="pre-initialization-phase">
+    <h2>
+     <a class="toc-backref" href="#id21">
+      Pre-Initialization Phase
+     </a>
+    </h2>
+    <p>
+     The pre-initialization phase is where an embedding application determines
+the settings which are absolutely required before the interpreter can be
+initialized at all. Currently, the primary configuration settings in this
+category are those related to the randomised hash algorithm - the hash
+algorithms must be consistent for the lifetime of the process, and so they
+must be in place before the core interpreter is created.
+    </p>
+    <p>
+     The specific settings needed are a flag indicating whether or not to use a
+specific seed value for the randomised hashes, and if so, the specific value
+for the seed (a seed value of zero disables randomised hashing). In addition,
+due to the possible use of
+     <tt class="docutils literal">
+      PYTHONHASHSEED
+     </tt>
+     in configuring the hash
+randomisation, the question of whether or not to consider environment
+variables must also be addressed early. Finally, to support the CPython
+build process, an option is offered to completely disable the import
+system.
+    </p>
+    <p>
+     The proposed API for this step in the startup sequence is:
+    </p>
+    <pre class="literal-block">
+void Py_InitializeCore(const PyCoreConfig *config);
+</pre>
+    <p>
+     Like
+     <tt class="docutils literal">
+      Py_Initialize
+     </tt>
+     , this part of the new API treats initialization
+failures
+as fatal errors. While that's still not particularly embedding friendly,
+the operations in this step
+     <em>
+      really
+     </em>
+     shouldn't be failing, and changing them
+to return error codes instead of aborting would be an even larger task than
+the one already being proposed.
+    </p>
+    <p>
+     The new
+     <tt class="docutils literal">
+      PyCoreConfig
+     </tt>
+     struct holds the settings required for preliminary
+configuration of the core runtime and creation of the main interpreter:
+    </p>
+    <pre class="literal-block">
+/* Note: if changing anything in PyCoreConfig, also update
+ * PyCoreConfig_INIT */
+typedef struct {
+    int ignore_environment;   /* -E switch, -I switch */
+    int use_hash_seed;        /* PYTHONHASHSEED */
+    unsigned long hash_seed;  /* PYTHONHASHSEED */
+    int _disable_importlib;   /* Needed by freeze_importlib */
+} PyCoreConfig;
+
+#define PyCoreConfig_INIT {0, -1, 0, 0}
+</pre>
+    <p>
+     The core configuration settings pointer may be
+     <tt class="docutils literal">
+      NULL
+     </tt>
+     , in which case the
+default values are
+     <tt class="docutils literal">
+      ignore_environment =
+      <span class="pre">
+       -1
+      </span>
+     </tt>
+     and
+     <tt class="docutils literal">
+      use_hash_seed =
+      <span class="pre">
+       -1
+      </span>
+     </tt>
+     .
+    </p>
+    <p>
+     The
+     <tt class="docutils literal">
+      PyCoreConfig_INIT
+     </tt>
+     macro is designed to allow easy initialization
+of a struct instance with sensible defaults:
+    </p>
+    <pre class="literal-block">
+PyCoreConfig core_config = PyCoreConfig_INIT;
+</pre>
+    <p>
+     <tt class="docutils literal">
+      ignore_environment
+     </tt>
+     controls the processing of all Python related
+environment variables. If the flag is zero, then environment variables are
+processed normally. Otherwise, all Python-specific environment variables
+are considered undefined (exceptions may be made for some OS specific
+environment variables, such as those used on Mac OS X to communicate
+between the App bundle and the main Python binary).
+    </p>
+    <p>
+     <tt class="docutils literal">
+      use_hash_seed
+     </tt>
+     controls the configuration of the randomised hash
+algorithm. If it is zero, then randomised hashes with a random seed will
+be used. It it is positive, then the value in
+     <tt class="docutils literal">
+      hash_seed
+     </tt>
+     will be used
+to seed the random number generator. If the
+     <tt class="docutils literal">
+      hash_seed
+     </tt>
+     is zero in this
+case, then the randomised hashing is disabled completely.
+    </p>
+    <p>
+     If
+     <tt class="docutils literal">
+      use_hash_seed
+     </tt>
+     is negative (and
+     <tt class="docutils literal">
+      ignore_environment
+     </tt>
+     is zero),
+then CPython will inspect the
+     <tt class="docutils literal">
+      PYTHONHASHSEED
+     </tt>
+     environment variable. If the
+environment variable is not set, is set to the empty string, or to the value
+     <tt class="docutils literal">
+      "random"
+     </tt>
+     , then randomised hashes with a random seed will be used. If the
+environment variable is set to the string
+     <tt class="docutils literal">
+      "0"
+     </tt>
+     the randomised hashing will
+be disabled. Otherwise, the hash seed is expected to be a string
+representation of an integer in the range
+     <tt class="docutils literal">
+      [0; 4294967295]
+     </tt>
+     .
+    </p>
+    <p>
+     To make it easier for embedding applications to use the
+     <tt class="docutils literal">
+      PYTHONHASHSEED
+     </tt>
+     processing with a different data source, the following helper function
+will be added to the C API:
+    </p>
+    <pre class="literal-block">
+int Py_ReadHashSeed(char *seed_text,
+                    int *use_hash_seed,
+                    unsigned long *hash_seed);
+</pre>
+    <p>
+     This function accepts a seed string in
+     <tt class="docutils literal">
+      seed_text
+     </tt>
+     and converts it to
+the appropriate flag and seed values. If
+     <tt class="docutils literal">
+      seed_text
+     </tt>
+     is
+     <tt class="docutils literal">
+      NULL
+     </tt>
+     ,
+the empty string or the value
+     <tt class="docutils literal">
+      "random"
+     </tt>
+     , both
+     <tt class="docutils literal">
+      use_hash_seed
+     </tt>
+     and
+     <tt class="docutils literal">
+      hash_seed
+     </tt>
+     will be set to zero. Otherwise,
+     <tt class="docutils literal">
+      use_hash_seed
+     </tt>
+     will be set to
+     <tt class="docutils literal">
+      1
+     </tt>
+     and the seed text will be interpreted as an integer and reported as
+     <tt class="docutils literal">
+      hash_seed
+     </tt>
+     . On success the function will return zero. A non-zero return
+value indicates an error (most likely in the conversion to an integer).
+    </p>
+    <p>
+     The
+     <tt class="docutils literal">
+      _disable_importlib
+     </tt>
+     setting is used as part of the CPython build
+process to create an interpreter with no import capability at all. It is
+considered private to the CPython development team (hence the leading
+underscore), as the only known use case is to permit compiler changes
+that invalidate the previously frozen bytecode for
+     <tt class="docutils literal">
+      importlib._bootstrap
+     </tt>
+     without breaking the build process.
+    </p>
+    <p>
+     The aim is to keep this initial level of configuration as small as possible
+in order to keep the bootstrapping environment consistent across
+different embedding applications. If we can create a valid interpreter state
+without the setting, then the setting should go in the configuration passed
+to
+     <tt class="docutils literal">
+      Py_InitializeMainInterpreter()
+     </tt>
+     rather than in the core configuration.
+    </p>
+    <p>
+     A new query API will allow code to determine if the interpreter is in the
+bootstrapping state between the creation of the interpreter state and the
+completion of the bulk of the initialization process:
+    </p>
+    <pre class="literal-block">
+int Py_IsCoreInitialized();
+</pre>
+    <p>
+     Attempting to call
+     <tt class="docutils literal">
+      Py_InitializeCore()
+     </tt>
+     again when
+     <tt class="docutils literal">
+      Py_IsCoreInitialized()
+     </tt>
+     is true is a fatal error.
+    </p>
+    <p>
+     As frozen bytecode may now be legitimately run in an interpreter which is not
+yet fully initialized,
+     <tt class="docutils literal">
+      sys.flags
+     </tt>
+     will gain a new
+     <tt class="docutils literal">
+      initialized
+     </tt>
+     flag.
+    </p>
+    <p>
+     With the core runtime initialised, the interpreter should be fully functional
+except that:
+    </p>
+    <ul class="simple">
+     <li>
+      compilation is not allowed (as the parser and compiler are not yet
+configured properly)
+     </li>
+     <li>
+      creation of subinterpreters is not allowed
+     </li>
+     <li>
+      creation of additional thread states is not allowed
+     </li>
+     <li>
+      The following attributes in the
+      <tt class="docutils literal">
+       sys
+      </tt>
+      module are all either missing or
+      <tt class="docutils literal">
+       None
+      </tt>
+      :
+*
+      <tt class="docutils literal">
+       sys.path
+      </tt>
+      *
+      <tt class="docutils literal">
+       sys.argv
+      </tt>
+      *
+      <tt class="docutils literal">
+       sys.executable
+      </tt>
+      *
+      <tt class="docutils literal">
+       sys.base_exec_prefix
+      </tt>
+      *
+      <tt class="docutils literal">
+       sys.base_prefix
+      </tt>
+      *
+      <tt class="docutils literal">
+       sys.exec_prefix
+      </tt>
+      *
+      <tt class="docutils literal">
+       sys.prefix
+      </tt>
+      *
+      <tt class="docutils literal">
+       sys.warnoptions
+      </tt>
+      *
+      <tt class="docutils literal">
+       sys.dont_write_bytecode
+      </tt>
+      *
+      <tt class="docutils literal">
+       sys.stdin
+      </tt>
+      *
+      <tt class="docutils literal">
+       sys.stdout
+      </tt>
+     </li>
+     <li>
+      The filesystem encoding is not yet defined
+     </li>
+     <li>
+      The IO encoding is not yet defined
+     </li>
+     <li>
+      CPython signal handlers are not yet installed
+     </li>
+     <li>
+      Only builtin and frozen modules may be imported (due to above limitations)
+     </li>
+     <li>
+      <tt class="docutils literal">
+       sys.stderr
+      </tt>
+      is set to a temporary IO object using unbuffered binary
+mode
+     </li>
+     <li>
+      The
+      <tt class="docutils literal">
+       sys.flags
+      </tt>
+      attribute exists, but may contain flags may not yet
+have their final values.
+     </li>
+     <li>
+      The
+      <tt class="docutils literal">
+       sys.flags.initialized
+      </tt>
+      attribute is set to
+      <tt class="docutils literal">
+       0
+      </tt>
+     </li>
+     <li>
+      The
+      <tt class="docutils literal">
+       warnings
+      </tt>
+      module is not yet initialized
+     </li>
+     <li>
+      The
+      <tt class="docutils literal">
+       __main__
+      </tt>
+      module does not yet exist
+     </li>
+    </ul>
+    <p>
+     &lt;TBD: identify any other notable missing functionality&gt;
+    </p>
+    <p>
+     The main things made available by this step will be the core Python
+data types, in particular dictionaries, lists and strings. This allows them
+to be used safely for all of the remaining configuration steps (unlike the
+status quo).
+    </p>
+    <p>
+     In addition, the current thread will possess a valid Python thread state,
+allowing any further configuration data to be stored on the interpreter
+object rather than in C process globals.
+    </p>
+    <p>
+     Any call to
+     <tt class="docutils literal">
+      Py_InitializeCore()
+     </tt>
+     must have a matching call to
+     <tt class="docutils literal">
+      Py_Finalize()
+     </tt>
+     . It is acceptable to skip calling
+     <tt class="docutils literal">
+      Py_InitializeMainInterpreter()
+     </tt>
+     in between (e.g. if attempting to read the
+main interpreter configuration settings fails)
+    </p>
+   </div>
+   <div class="section" id="determining-the-remaining-configuration-settings">
+    <h2>
+     <a class="toc-backref" href="#id22">
+      Determining the remaining configuration settings
+     </a>
+    </h2>
+    <p>
+     The next step in the initialization sequence is to determine the full
+settings needed to complete the process. No changes are made to the
+interpreter state at this point. The core API for this step is:
+    </p>
+    <pre class="literal-block">
+int Py_ReadMainInterpreterConfig(PyMainInterpreterConfig *config);
+</pre>
+    <p>
+     The config argument should be a pointer to a config struct (which may be
+a temporary one stored on the C stack). For any already configured value
+(i.e. non-NULL pointer or non-negative numeric value), CPython will sanity
+check the supplied value, but otherwise accept it as correct.
+    </p>
+    <p>
+     A struct is used rather than a Python dictionary as the struct is easier
+to work with from C, the list of supported fields is fixed for a given
+CPython version and only a read-only view needs to be exposed to Python
+code (which is relatively straightforward, thanks to the infrastructure
+already put in place to expose
+     <tt class="docutils literal">
+      sys.implementation
+     </tt>
+     ).
+    </p>
+    <p>
+     Unlike
+     <tt class="docutils literal">
+      Py_Initialize
+     </tt>
+     and
+     <tt class="docutils literal">
+      Py_InitializeCore
+     </tt>
+     , this call will raise
+an exception and report an error return rather than exhibiting fatal errors
+if a problem is found with the config data.
+    </p>
+    <p>
+     Any supported configuration setting which is not already set will be
+populated appropriately in the supplied configuration struct. The default
+configuration can be overridden entirely by setting the value
+     <em>
+      before
+     </em>
+     calling
+     <tt class="docutils literal">
+      Py_ReadMainInterpreterConfig
+     </tt>
+     . The provided value will then also be
+used in calculating any other settings derived from that value.
+    </p>
+    <p>
+     Alternatively, settings may be overridden
+     <em>
+      after
+     </em>
+     the
+     <tt class="docutils literal">
+      Py_ReadMainInterpreterConfig
+     </tt>
+     call (this can be useful if an embedding
+application wants to adjust a setting rather than replace it completely,
+such as removing
+     <tt class="docutils literal">
+      sys.path[0]
+     </tt>
+     ).
+    </p>
+    <p>
+     Merely reading the configuration has no effect on the interpreter state: it
+only modifies the passed in configuration struct. The settings are not
+applied to the running interpreter until the
+     <tt class="docutils literal">
+      Py_InitializeMainInterpreter
+     </tt>
+     call (see below).
+    </p>
+   </div>
+   <div class="section" id="supported-configuration-settings">
+    <h2>
+     <a class="toc-backref" href="#id23">
+      Supported configuration settings
+     </a>
+    </h2>
+    <p>
+     The interpreter configuration is split into two parts: settings which are
+either relevant only to the main interpreter or must be identical across the
+main interpreter and all subinterpreters, and settings which may vary across
+subinterpreters.
+    </p>
+    <p>
+     NOTE: For initial implementation purposes, only the flag indicating whether
+or not the interpreter is the main interpreter will be configured on a per
+interpreter basis. Other fields will be reviewed for whether or not they can
+feasibly be made interpreter specific over the course of the implementation.
+    </p>
+    <p>
+     The
+     <tt class="docutils literal">
+      PyMainInterpreterConfig
+     </tt>
+     struct holds the settings required to
+complete the main interpreter configuration. These settings are also all
+passed through unmodified to subinterpreters. Fields are either pointers to
+Python data types (not set ==
+     <tt class="docutils literal">
+      NULL
+     </tt>
+     ) or numeric flags (not set ==
+     <tt class="docutils literal">
+      <span class="pre">
+       -1
+      </span>
+     </tt>
+     ):
+    </p>
+    <pre class="literal-block">
+/* Note: if changing anything in PyMainInterpreterConfig, also update
+ * PyMainInterpreterConfig_INIT */
+typedef struct {
+    /* Argument processing */
+    PyListObject *raw_argv;
+    PyListObject *argv;
+    PyListObject *warnoptions; /* -W switch, PYTHONWARNINGS */
+    PyDictObject *xoptions;    /* -X switch */
+
+    /* Filesystem locations */
+    PyUnicodeObject *program_name;
+    PyUnicodeObject *executable;
+    PyUnicodeObject *prefix;           /* PYTHONHOME */
+    PyUnicodeObject *exec_prefix;      /* PYTHONHOME */
+    PyUnicodeObject *base_prefix;      /* pyvenv.cfg */
+    PyUnicodeObject *base_exec_prefix; /* pyvenv.cfg */
+
+    /* Site module */
+    int enable_site_config;  /* -S switch (inverted) */
+    int no_user_site;        /* -s switch, PYTHONNOUSERSITE */
+
+    /* Import configuration */
+    int dont_write_bytecode;        /* -B switch, PYTHONDONTWRITEBYTECODE */
+    int ignore_module_case;         /* PYTHONCASEOK */
+    PyListObject    *import_path;   /* PYTHONPATH (etc) */
+
+    /* Standard streams */
+    int use_unbuffered_io;            /* -u switch, PYTHONUNBUFFEREDIO */
+    PyUnicodeObject *stdin_encoding;  /* PYTHONIOENCODING */
+    PyUnicodeObject *stdin_errors;    /* PYTHONIOENCODING */
+    PyUnicodeObject *stdout_encoding; /* PYTHONIOENCODING */
+    PyUnicodeObject *stdout_errors;   /* PYTHONIOENCODING */
+    PyUnicodeObject *stderr_encoding; /* PYTHONIOENCODING */
+    PyUnicodeObject *stderr_errors;   /* PYTHONIOENCODING */
+
+    /* Filesystem access */
+    PyUnicodeObject *fs_encoding;
+
+    /* Debugging output */
+    int debug_parser;    /* -d switch, PYTHONDEBUG */
+    int verbosity;       /* -v switch */
+
+    /* Code generation */
+    int bytes_warnings;  /* -b switch */
+    int optimize;        /* -O switch */
+
+    /* Signal handling */
+    int install_signal_handlers;
+
+    /* Implicit execution */
+    PyUnicodeObject *startup_file;  /* PYTHONSTARTUP */
+
+    /* Main module
+     *
+     * If prepare_main is set, at most one of the main_* settings should
+     * be set before calling PyRun_PrepareMain (Py_ReadConfiguration will
+     * set one of them based on the command line arguments if prepare_main
+     * is non-zero when that API is called).
+    int prepare_main;
+    PyUnicodeObject *main_source; /* -c switch */
+    PyUnicodeObject *main_path;   /* filesystem path */
+    PyUnicodeObject *main_module; /* -m switch */
+    PyCodeObject    *main_code;   /* Run directly from a code object */
+    PyObject        *main_stream; /* Run from stream */
+    int run_implicit_code;        /* Run implicit code during prep */
+
+    /* Interactive main
+     *
+     * Note: Settings related to interactive mode are very much in flux.
+     */
+    PyObject *prompt_stream;      /* Output interactive prompt */
+    int show_banner;              /* -q switch (inverted) */
+    int inspect_main;             /* -i switch, PYTHONINSPECT */
+
+} PyMainInterpreterConfig;
+
+
+/* Struct initialization is pretty horrible in C89. Avoiding this mess would
+ * be the most attractive aspect of using a PyDictObject* instead... */
+#define _PyArgConfig_INIT  NULL, NULL, NULL, NULL
+#define _PyLocationConfig_INIT  NULL, NULL, NULL, NULL, NULL, NULL
+#define _PySiteConfig_INIT  -1, -1
+#define _PyImportConfig_INIT  -1, -1, NULL
+#define _PyStreamConfig_INIT  -1, NULL, NULL, NULL, NULL, NULL, NULL
+#define _PyFilesystemConfig_INIT  NULL
+#define _PyDebuggingConfig_INIT  -1, -1, -1
+#define _PyCodeGenConfig_INIT  -1, -1
+#define _PySignalConfig_INIT  -1
+#define _PyImplicitConfig_INIT  NULL
+#define _PyMainConfig_INIT  -1, NULL, NULL, NULL, NULL, NULL, -1
+#define _PyInteractiveConfig_INIT  NULL, -1, -1
+
+#define PyMainInterpreterConfig_INIT {
+                       _PyArgConfig_INIT, _PyLocationConfig_INIT,
+                       _PySiteConfig_INIT, _PyImportConfig_INIT,
+                       _PyStreamConfig_INIT, _PyFilesystemConfig_INIT,
+                       _PyDebuggingConfig_INIT, _PyCodeGenConfig_INIT,
+                       _PySignalConfig_INIT, _PyImplicitConfig_INIT,
+                       _PyMainConfig_INIT, _PyInteractiveConfig_INIT}
+</pre>
+    <p>
+     The
+     <tt class="docutils literal">
+      PyInterpreterConfig
+     </tt>
+     struct holds the settings that may vary between
+the main interpreter and subinterpreters. For the main interpreter, these
+settings are automatically populated by
+     <tt class="docutils literal">
+      Py_InitializeMainInterpreter()
+     </tt>
+     .
+    </p>
+    <pre class="literal-block">
+/* Note: if changing anything in PyInterpreterConfig, also update
+ * PyInterpreterConfig_INIT */
+typedef struct {
+    int is_main_interpreter;    /* Easily check for subinterpreters */
+} PyInterpreterConfig;
+
+#define PyInterpreterConfig_INIT {0}
+</pre>
+    <p>
+     &lt;TBD: did I miss anything?&gt;
+    </p>
+   </div>
+   <div class="section" id="completing-the-interpreter-initialization">
+    <h2>
+     <a class="toc-backref" href="#id24">
+      Completing the interpreter initialization
+     </a>
+    </h2>
+    <p>
+     The final step in the initialization process is to actually put the
+configuration settings into effect and finish bootstrapping the main
+interpreter up to full operation:
+    </p>
+    <pre class="literal-block">
+int Py_InitializeMainInterpreter(const PyMainInterpreterConfig *config);
+</pre>
+    <p>
+     Like
+     <tt class="docutils literal">
+      Py_ReadMainInterpreterConfig
+     </tt>
+     , this call will raise an exception and
+report an error return rather than exhibiting fatal errors if a problem is
+found with the config data.
+    </p>
+    <p>
+     All configuration settings are required - the configuration struct
+should always be passed through
+     <tt class="docutils literal">
+      Py_ReadMainInterpreterConfig
+     </tt>
+     to ensure it
+is fully populated.
+    </p>
+    <p>
+     After a successful call
+     <tt class="docutils literal">
+      Py_IsInitialized()
+     </tt>
+     will become true. The caveats
+described above for the interpreter during the phase where only the core
+runtime is initialized will no longer hold.
+    </p>
+    <p>
+     Attempting to call
+     <tt class="docutils literal">
+      Py_InitializeMainInterpreter()
+     </tt>
+     again when
+     <tt class="docutils literal">
+      Py_IsInitialized()
+     </tt>
+     is true is an error.
+    </p>
+    <p>
+     However, some metadata related to the
+     <tt class="docutils literal">
+      __main__
+     </tt>
+     module may still be
+incomplete:
+    </p>
+    <ul>
+     <li>
+      <p class="first">
+       <tt class="docutils literal">
+        sys.argv[0]
+       </tt>
+       may not yet have its final value
+      </p>
+      <ul>
+       <li>
+        <p class="first">
+         it will be
+         <tt class="docutils literal">
+          <span class="pre">
+           -m
+          </span>
+         </tt>
+         when executing a module or package with CPython
+        </p>
+       </li>
+       <li>
+        <p class="first">
+         it will be the same as
+         <tt class="docutils literal">
+          sys.path[0]
+         </tt>
+         rather than the location of
+the
+         <tt class="docutils literal">
+          __main__
+         </tt>
+         module when executing a valid
+         <tt class="docutils literal">
+          sys.path
+         </tt>
+         entry
+(typically a zipfile or directory)
+        </p>
+       </li>
+       <li>
+        <p class="first">
+         otherwise, it will be accurate:
+        </p>
+        <blockquote>
+         <ul class="simple">
+          <li>
+           the script name if running an ordinary script
+          </li>
+          <li>
+           <tt class="docutils literal">
+            <span class="pre">
+             -c
+            </span>
+           </tt>
+           if executing a supplied string
+          </li>
+          <li>
+           <tt class="docutils literal">
+            -
+           </tt>
+           or the empty string if running from stdin
+          </li>
+         </ul>
+        </blockquote>
+       </li>
+      </ul>
+     </li>
+     <li>
+      <p class="first">
+       the metadata in the
+       <tt class="docutils literal">
+        __main__
+       </tt>
+       module will still indicate it is a
+builtin module
+      </p>
+     </li>
+    </ul>
+    <p>
+     This function will normally implicitly import site as its final operation
+(after
+     <tt class="docutils literal">
+      Py_IsInitialized()
+     </tt>
+     is already set). Clearing the
+"enable_site_config" flag in the configuration settings will disable this
+behaviour, as well as eliminating any side effects on global state if
+     <tt class="docutils literal">
+      import site
+     </tt>
+     is later explicitly executed in the process.
+    </p>
+   </div>
+   <div class="section" id="preparing-the-main-module">
+    <h2>
+     <a class="toc-backref" href="#id25">
+      Preparing the main module
+     </a>
+    </h2>
+    <p>
+     This subphase completes the population of the
+     <tt class="docutils literal">
+      __main__
+     </tt>
+     module
+related metadata, without actually starting execution of the
+     <tt class="docutils literal">
+      __main__
+     </tt>
+     module code.
+    </p>
+    <p>
+     It is handled by calling the following API:
+    </p>
+    <pre class="literal-block">
+int PyRun_PrepareMain();
+</pre>
+    <p>
+     This operation is only permitted for the main interpreter, and will raise
+     <tt class="docutils literal">
+      RuntimeError
+     </tt>
+     when invoked from a thread where the current thread state
+belongs to a subinterpreter.
+    </p>
+    <p>
+     The actual processing is driven by the main related settings stored in
+the interpreter state as part of the configuration struct.
+    </p>
+    <p>
+     If
+     <tt class="docutils literal">
+      prepare_main
+     </tt>
+     is zero, this call does nothing.
+    </p>
+    <p>
+     If all of
+     <tt class="docutils literal">
+      main_source
+     </tt>
+     ,
+     <tt class="docutils literal">
+      main_path
+     </tt>
+     ,
+     <tt class="docutils literal">
+      main_module
+     </tt>
+     ,
+     <tt class="docutils literal">
+      main_stream
+     </tt>
+     and
+     <tt class="docutils literal">
+      main_code
+     </tt>
+     are NULL, this call does nothing.
+    </p>
+    <p>
+     If more than one of
+     <tt class="docutils literal">
+      main_source
+     </tt>
+     ,
+     <tt class="docutils literal">
+      main_path
+     </tt>
+     ,
+     <tt class="docutils literal">
+      main_module
+     </tt>
+     ,
+     <tt class="docutils literal">
+      main_stream
+     </tt>
+     or
+     <tt class="docutils literal">
+      main_code
+     </tt>
+     are set,
+     <tt class="docutils literal">
+      RuntimeError
+     </tt>
+     will be reported.
+    </p>
+    <p>
+     If
+     <tt class="docutils literal">
+      main_code
+     </tt>
+     is already set, then this call does nothing.
+    </p>
+    <p>
+     If
+     <tt class="docutils literal">
+      main_stream
+     </tt>
+     is set, and
+     <tt class="docutils literal">
+      run_implicit_code
+     </tt>
+     is also set, then
+the file identified in
+     <tt class="docutils literal">
+      startup_file
+     </tt>
+     will be read, compiled and
+executed in the
+     <tt class="docutils literal">
+      __main__
+     </tt>
+     namespace.
+    </p>
+    <p>
+     If
+     <tt class="docutils literal">
+      main_source
+     </tt>
+     ,
+     <tt class="docutils literal">
+      main_path
+     </tt>
+     or
+     <tt class="docutils literal">
+      main_module
+     </tt>
+     are set, then this
+call will take whatever steps are needed to populate
+     <tt class="docutils literal">
+      main_code
+     </tt>
+     :
+    </p>
+    <ul>
+     <li>
+      <p class="first">
+       For
+       <tt class="docutils literal">
+        main_source
+       </tt>
+       , the supplied string will be compiled and saved to
+       <tt class="docutils literal">
+        main_code
+       </tt>
+       .
+      </p>
+     </li>
+     <li>
+      <dl class="first docutils">
+       <dt>
+        For
+        <tt class="docutils literal">
+         main_path
+        </tt>
+        :
+       </dt>
+       <dd>
+        <ul class="first last simple">
+         <li>
+          if the supplied path is recognised as a valid
+          <tt class="docutils literal">
+           sys.path
+          </tt>
+          entry, it
+is inserted as
+          <tt class="docutils literal">
+           sys.path[0]
+          </tt>
+          ,
+          <tt class="docutils literal">
+           main_module
+          </tt>
+          is set
+to
+          <tt class="docutils literal">
+           __main__
+          </tt>
+          and processing continues as for
+          <tt class="docutils literal">
+           main_module
+          </tt>
+          below.
+         </li>
+         <li>
+          otherwise, path is read as a CPython bytecode file
+         </li>
+         <li>
+          if that fails, it is read as a Python source file and compiled
+         </li>
+         <li>
+          in the latter two cases, the code object is saved to
+          <tt class="docutils literal">
+           main_code
+          </tt>
+          and
+          <tt class="docutils literal">
+           __main__.__file__
+          </tt>
+          is set appropriately
+         </li>
+        </ul>
+       </dd>
+      </dl>
+     </li>
+     <li>
+      <dl class="first docutils">
+       <dt>
+        For
+        <tt class="docutils literal">
+         main_module
+        </tt>
+        :
+       </dt>
+       <dd>
+        <ul class="first last simple">
+         <li>
+          any parent package is imported
+         </li>
+         <li>
+          the loader for the module is determined
+         </li>
+         <li>
+          if the loader indicates the module is a package, add
+          <tt class="docutils literal">
+           .__main__
+          </tt>
+          to
+the end of
+          <tt class="docutils literal">
+           main_module
+          </tt>
+          and try again (if the final name segment
+is already
+          <tt class="docutils literal">
+           .__main__
+          </tt>
+          then fail immediately)
+         </li>
+         <li>
+          once the module source code is located, save the compiled module code
+as
+          <tt class="docutils literal">
+           main_code
+          </tt>
+          and populate the following attributes in
+          <tt class="docutils literal">
+           __main__
+          </tt>
+          appropriately:
+          <tt class="docutils literal">
+           __name__
+          </tt>
+          ,
+          <tt class="docutils literal">
+           __loader__
+          </tt>
+          ,
+          <tt class="docutils literal">
+           __file__
+          </tt>
+          ,
+          <tt class="docutils literal">
+           __cached__
+          </tt>
+          ,
+          <tt class="docutils literal">
+           __package__
+          </tt>
+          .
+         </li>
+        </ul>
+       </dd>
+      </dl>
+     </li>
+    </ul>
+    <p>
+     (Note: the behaviour described in this section isn't new, it's a write-up
+of the current behaviour of the CPython interpreter adjusted for the new
+configuration system)
+    </p>
+   </div>
+   <div class="section" id="executing-the-main-module">
+    <h2>
+     <a class="toc-backref" href="#id26">
+      Executing the main module
+     </a>
+    </h2>
+    <p>
+     This subphase covers the execution of the actual
+     <tt class="docutils literal">
+      __main__
+     </tt>
+     module code.
+    </p>
+    <p>
+     It is handled by calling the following API:
+    </p>
+    <pre class="literal-block">
+int PyRun_ExecMain();
+</pre>
+    <p>
+     This operation is only permitted for the main interpreter, and will raise
+     <tt class="docutils literal">
+      RuntimeError
+     </tt>
+     when invoked from a thread where the current thread state
+belongs to a subinterpreter.
+    </p>
+    <p>
+     The actual processing is driven by the main related settings stored in
+the interpreter state as part of the configuration struct.
+    </p>
+    <p>
+     If both
+     <tt class="docutils literal">
+      main_stream
+     </tt>
+     and
+     <tt class="docutils literal">
+      main_code
+     </tt>
+     are NULL, this call does nothing.
+    </p>
+    <p>
+     If both
+     <tt class="docutils literal">
+      main_stream
+     </tt>
+     and
+     <tt class="docutils literal">
+      main_code
+     </tt>
+     are set,
+     <tt class="docutils literal">
+      RuntimeError
+     </tt>
+     will
+be reported.
+    </p>
+    <p>
+     If
+     <tt class="docutils literal">
+      main_stream
+     </tt>
+     and
+     <tt class="docutils literal">
+      prompt_stream
+     </tt>
+     are both set, main execution will
+be delegated to a new API:
+    </p>
+    <pre class="literal-block">
+int _PyRun_InteractiveMain(PyObject *input, PyObject* output);
+</pre>
+    <p>
+     If
+     <tt class="docutils literal">
+      main_stream
+     </tt>
+     is set and
+     <tt class="docutils literal">
+      prompt_stream
+     </tt>
+     is NULL, main execution will
+be delegated to a new API:
+    </p>
+    <pre class="literal-block">
+int _PyRun_StreamInMain(PyObject *input);
+</pre>
+    <p>
+     If
+     <tt class="docutils literal">
+      main_code
+     </tt>
+     is set, main execution will be delegated to a new
+API:
+    </p>
+    <pre class="literal-block">
+int _PyRun_CodeInMain(PyCodeObject *code);
+</pre>
+    <p>
+     After execution of main completes, if
+     <tt class="docutils literal">
+      inspect_main
+     </tt>
+     is set, or
+the
+     <tt class="docutils literal">
+      PYTHONINSPECT
+     </tt>
+     environment variable has been set, then
+     <tt class="docutils literal">
+      PyRun_ExecMain
+     </tt>
+     will invoke
+     <tt class="docutils literal">
+      _PyRun_InteractiveMain(sys.__stdin__, sys.__stdout__)
+     </tt>
+     .
+    </p>
+   </div>
+   <div class="section" id="internal-storage-of-configuration-data">
+    <h2>
+     <a class="toc-backref" href="#id27">
+      Internal Storage of Configuration Data
+     </a>
+    </h2>
+    <p>
+     The interpreter state will be updated to include details of the configuration
+settings supplied during initialization by extending the interpreter state
+object with an embedded copy of the
+     <tt class="docutils literal">
+      PyCoreConfig
+     </tt>
+     ,
+     <tt class="docutils literal">
+      PyMainInterpreterConfig
+     </tt>
+     and
+     <tt class="docutils literal">
+      PyInterpreterConfig
+     </tt>
+     structs.
+    </p>
+    <p>
+     For debugging purposes, the configuration settings will be exposed as
+a
+     <tt class="docutils literal">
+      sys._configuration
+     </tt>
+     simple namespace (similar to
+     <tt class="docutils literal">
+      sys.flags
+     </tt>
+     and
+     <tt class="docutils literal">
+      sys.implementation
+     </tt>
+     . Field names will match those in the configuration
+structs, except for
+     <tt class="docutils literal">
+      hash_seed
+     </tt>
+     , which will be deliberately excluded.
+    </p>
+    <p>
+     An underscored attribute is chosen deliberately, as these configuration
+settings are part of the CPython implementation, rather than part of the
+Python language definition. If settings are needed to support
+cross-implementation compatibility in the standard library, then those
+should be agreed with the other implementations and exposed as new required
+attributes on
+     <tt class="docutils literal">
+      sys.implementation
+     </tt>
+     , as described in
+     <a class="reference external" href="../pep-0421/index.html">
+      PEP 421
+     </a>
+     .
+    </p>
+    <p>
+     These are
+     <em>
+      snapshots
+     </em>
+     of the initial configuration settings. They are not
+modified by the interpreter during runtime (except as noted above).
+    </p>
+   </div>
+   <div class="section" id="creating-and-configuring-subinterpreters">
+    <h2>
+     <a class="toc-backref" href="#id28">
+      Creating and Configuring Subinterpreters
+     </a>
+    </h2>
+    <p>
+     As the new configuration settings are stored in the interpreter state, they
+need to be initialised when a new subinterpreter is created. This turns out
+to be trickier than one might think due to
+     <tt class="docutils literal">
+      PyThreadState_Swap(NULL);
+     </tt>
+     (which is fortunately exercised by CPython's own embedding tests, allowing
+this problem to be detected during development).
+    </p>
+    <p>
+     To provide a straightforward solution for this case, the PEP proposes to
+add a new API:
+    </p>
+    <pre class="literal-block">
+Py_InterpreterState *Py_InterpreterState_Main();
+</pre>
+    <p>
+     This will be a counterpart to Py_InterpreterState_Head(), reporting the
+oldest currently existing interpreter rather than the newest. If
+     <tt class="docutils literal">
+      Py_NewInterpreter()
+     </tt>
+     is called from a thread with an existing thread
+state, then the interpreter configuration for that thread will be
+used when initialising the new subinterpreter. If there is no current
+thread state, the configuration from
+     <tt class="docutils literal">
+      Py_InterpreterState_Main()
+     </tt>
+     will be used.
+    </p>
+    <p>
+     While the existing
+     <tt class="docutils literal">
+      Py_InterpreterState_Head()
+     </tt>
+     API could be used instead,
+that reference changes as subinterpreters are created and destroyed, while
+     <tt class="docutils literal">
+      PyInterpreterState_Main()
+     </tt>
+     will always refer to the initial interpreter
+state created in
+     <tt class="docutils literal">
+      Py_InitializeCore()
+     </tt>
+     .
+    </p>
+    <p>
+     A new constraint is also added to the embedding API: attempting to delete
+the main interpreter while subinterpreters still exist will now be a fatal
+error.
+    </p>
+   </div>
+   <div class="section" id="stable-abi">
+    <h2>
+     <a class="toc-backref" href="#id29">
+      Stable ABI
+     </a>
+    </h2>
+    <p>
+     Most of the APIs proposed in this PEP are excluded from the stable ABI, as
+embedding a Python interpreter involves a much higher degree of coupling
+than merely writing an extension.
+    </p>
+    <p>
+     The only newly exposed API that will be part of the stable ABI is the
+     <tt class="docutils literal">
+      Py_IsCoreInitialized()
+     </tt>
+     query.
+    </p>
+   </div>
+   <div class="section" id="build-time-configuration">
+    <h2>
+     <a class="toc-backref" href="#id30">
+      Build time configuration
+     </a>
+    </h2>
+    <p>
+     This PEP makes no changes to the handling of build time configuration
+settings, and thus has no effect on the contents of
+     <tt class="docutils literal">
+      sys.implementation
+     </tt>
+     or the result of
+     <tt class="docutils literal">
+      sysconfig.get_config_vars()
+     </tt>
+     .
+    </p>
+   </div>
+   <div class="section" id="backwards-compatibility">
+    <h2>
+     <a class="toc-backref" href="#id31">
+      Backwards Compatibility
+     </a>
+    </h2>
+    <p>
+     Backwards compatibility will be preserved primarily by ensuring that
+     <tt class="docutils literal">
+      Py_ReadMainInterpreterConfig()
+     </tt>
+     interrogates all the previously defined
+configuration settings stored in global variables and environment variables,
+and that
+     <tt class="docutils literal">
+      Py_InitializeMainInterpreter()
+     </tt>
+     writes affected settings back to
+the relevant locations.
+    </p>
+    <p>
+     One acknowledged incompatiblity is that some environment variables which
+are currently read lazily may instead be read once during interpreter
+initialization. As the PEP matures, these will be discussed in more detail
+on a case by case basis. The environment variables which are currently
+known to be looked up dynamically are:
+    </p>
+    <ul class="simple">
+     <li>
+      <tt class="docutils literal">
+       PYTHONCASEOK
+      </tt>
+      : writing to
+      <tt class="docutils literal">
+       <span class="pre">
+        os.environ['PYTHONCASEOK']
+       </span>
+      </tt>
+      will no longer
+dynamically alter the interpreter's handling of filename case differences
+on import (TBC)
+     </li>
+     <li>
+      <tt class="docutils literal">
+       PYTHONINSPECT
+      </tt>
+      :
+      <tt class="docutils literal">
+       <span class="pre">
+        os.environ['PYTHONINSPECT']
+       </span>
+      </tt>
+      will still be checked
+after execution of the
+      <tt class="docutils literal">
+       __main__
+      </tt>
+      module terminates
+     </li>
+    </ul>
+    <p>
+     The
+     <tt class="docutils literal">
+      Py_Initialize()
+     </tt>
+     style of initialization will continue to be
+supported. It will use (at least some elements of) the new API
+internally, but will continue to exhibit the same behaviour as it
+does today, ensuring that
+     <tt class="docutils literal">
+      sys.argv
+     </tt>
+     is not populated until a subsequent
+     <tt class="docutils literal">
+      PySys_SetArgv
+     </tt>
+     call. All APIs that currently support being called
+prior to
+     <tt class="docutils literal">
+      Py_Initialize()
+     </tt>
+     will
+continue to do so, and will also support being called prior to
+     <tt class="docutils literal">
+      Py_InitializeCore()
+     </tt>
+     .
+    </p>
+    <p>
+     To minimise unnecessary code churn, and to ensure the backwards compatibility
+is well tested, the main CPython executable may continue to use some elements
+of the old style initialization API. (very much TBC)
+    </p>
+   </div>
+  </div>
+  <div class="section" id="a-system-python-executable">
+   <h1>
+    <a class="toc-backref" href="#id32">
+     A System Python Executable
+    </a>
+   </h1>
+   <p>
+    When executing system utilities with administrative access to a system, many
+of the default behaviours of CPython are undesirable, as they may allow
+untrusted code to execute with elevated privileges. The most problematic
+aspects are the fact that user site directories are enabled,
+environment variables are trusted and that the directory containing the
+executed file is placed at the beginning of the import path.
+   </p>
+   <p>
+    Issue 16499 [
+    <a class="reference internal" href="#id6">
+     6
+    </a>
+    ] added a
+    <tt class="docutils literal">
+     <span class="pre">
+      -I
+     </span>
+    </tt>
+    option to change the behaviour of
+the normal CPython executable, but this is a hard to discover solution (and
+adds yet another option to an already complex CLI). This PEP proposes to
+instead add a separate
+    <tt class="docutils literal">
+     pysystem
+    </tt>
+    executable
+   </p>
+   <p>
+    Currently, providing a separate executable with different default behaviour
+would be prohibitively hard to maintain. One of the goals of this PEP is to
+make it possible to replace much of the hard to maintain bootstrapping code
+with more normal CPython code, as well as making it easier for a separate
+application to make use of key components of
+    <tt class="docutils literal">
+     Py_Main
+    </tt>
+    . Including this
+change in the PEP is designed to help avoid acceptance of a design that
+sounds good in theory but proves to be problematic in practice.
+   </p>
+   <p>
+    Cleanly supporting this kind of "alternate CLI" is the main reason for the
+proposed changes to better expose the core logic for deciding between the
+different execution modes supported by CPython:
+   </p>
+   <ul class="simple">
+    <li>
+     script execution
+    </li>
+    <li>
+     directory/zipfile execution
+    </li>
+    <li>
+     command execution ("-c" switch)
+    </li>
+    <li>
+     module or package execution ("-m" switch)
+    </li>
+    <li>
+     execution from stdin (non-interactive)
+    </li>
+    <li>
+     interactive stdin
+    </li>
+   </ul>
+   <p>
+    Actually implementing this may also reveal the need for some better
+argument parsing infrastructure for use during the initializing phase.
+   </p>
+  </div>
+  <div class="section" id="open-questions">
+   <h1>
+    <a class="toc-backref" href="#id33">
+     Open Questions
+    </a>
+   </h1>
+   <ul class="simple">
+    <li>
+     Error details for
+     <tt class="docutils literal">
+      Py_ReadMainInterpreterConfig
+     </tt>
+     and
+     <tt class="docutils literal">
+      Py_InitializeMainInterpreter
+     </tt>
+     (these should become clearer as the
+implementation progresses)
+    </li>
+    <li>
+     Is initialisation of the
+     <tt class="docutils literal">
+      PyMainInterpreterConfig
+     </tt>
+     struct too unwieldy to
+be maintainable? Would a Python dictionary be a better choice, despite
+being harder to work with from C code? Can we upgrade to requiring a C99
+compatible compiler?
+    </li>
+    <li>
+     Would it be better to manage the flag variables in
+     <tt class="docutils literal">
+      PyMainInterpreterConfig
+     </tt>
+     as Python integers or as "negative means false, positive means true, zero
+means not set" so the struct can be initialized with a simple
+     <tt class="docutils literal">
+      <span class="pre">
+       memset(&amp;config,
+      </span>
+      0,
+      <span class="pre">
+       sizeof(*config))
+      </span>
+     </tt>
+     , eliminating the need to update
+both PyMainInterpreterConfig and PyMainInterpreterConfig_INIT when adding
+new fields?
+    </li>
+    <li>
+     The name of the new system Python executable is a bikeshed waiting to be
+painted. The 3 options considered so far are
+     <tt class="docutils literal">
+      spython
+     </tt>
+     ,
+     <tt class="docutils literal">
+      pysystem
+     </tt>
+     and
+     <tt class="docutils literal">
+      <span class="pre">
+       python-minimal
+      </span>
+     </tt>
+     . The PEP text reflects my current preferred choice
+(
+     <tt class="docutils literal">
+      pysystem
+     </tt>
+     ).
+    </li>
+   </ul>
+  </div>
+  <div class="section" id="implementation">
+   <h1>
+    <a class="toc-backref" href="#id34">
+     Implementation
+    </a>
+   </h1>
+   <p>
+    The reference implementation is being developed as a feature branch in my
+BitBucket sandbox [
+    <a class="reference internal" href="#id2">
+     2
+    </a>
+    ]. Pull requests to fix the inevitably broken
+Windows builds are welcome, but the basic design is still in too much flux
+for other pull requests to be feasible just yet. Once the overall design
+settles down and it's a matter of migrating individual settings over to
+the new design, that level of collaboration should become more practical.
+   </p>
+  </div>
+  <div class="section" id="the-status-quo">
+   <h1>
+    <a class="toc-backref" href="#id35">
+     The Status Quo
+    </a>
+   </h1>
+   <p>
+    The current mechanisms for configuring the interpreter have accumulated in
+a fairly ad hoc fashion over the past 20+ years, leading to a rather
+inconsistent interface with varying levels of documentation.
+   </p>
+   <p>
+    (Note: some of the info below could probably be cleaned up and added to the
+C API documentation for at least 3.3. - it's all CPython specific, so it
+doesn't belong in the language reference)
+   </p>
+   <div class="section" id="ignoring-environment-variables">
+    <h2>
+     <a class="toc-backref" href="#id36">
+      Ignoring Environment Variables
+     </a>
+    </h2>
+    <p>
+     The
+     <tt class="docutils literal">
+      <span class="pre">
+       -E
+      </span>
+     </tt>
+     command line option allows all environment variables to be
+ignored when initializing the Python interpreter. An embedding application
+can enable this behaviour by setting
+     <tt class="docutils literal">
+      Py_IgnoreEnvironmentFlag
+     </tt>
+     before
+calling
+     <tt class="docutils literal">
+      Py_Initialize()
+     </tt>
+     .
+    </p>
+    <p>
+     In the CPython source code, the
+     <tt class="docutils literal">
+      Py_GETENV
+     </tt>
+     macro implicitly checks this
+flag, and always produces
+     <tt class="docutils literal">
+      NULL
+     </tt>
+     if it is set.
+    </p>
+    <p>
+     &lt;TBD: I believe PYTHONCASEOK is checked regardless of this setting &gt;
+&lt;TBD: Does -E also ignore Windows registry keys? &gt;
+    </p>
+   </div>
+   <div class="section" id="randomised-hashing">
+    <h2>
+     <a class="toc-backref" href="#id37">
+      Randomised Hashing
+     </a>
+    </h2>
+    <p>
+     The randomised hashing is controlled via the
+     <tt class="docutils literal">
+      <span class="pre">
+       -R
+      </span>
+     </tt>
+     command line option (in
+releases prior to 3.3), as well as the
+     <tt class="docutils literal">
+      PYTHONHASHSEED
+     </tt>
+     environment
+variable.
+    </p>
+    <p>
+     In Python 3.3, only the environment variable remains relevant. It can be
+used to disable randomised hashing (by using a seed value of 0) or else
+to force a specific hash value (e.g. for repeatability of testing, or
+to share hash values between processes)
+    </p>
+    <p>
+     However, embedding applications must use the
+     <tt class="docutils literal">
+      Py_HashRandomizationFlag
+     </tt>
+     to explicitly request hash randomisation (CPython sets it in
+     <tt class="docutils literal">
+      Py_Main()
+     </tt>
+     rather than in
+     <tt class="docutils literal">
+      Py_Initialize()
+     </tt>
+     ).
+    </p>
+    <p>
+     The new configuration API should make it straightforward for an
+embedding application to reuse the
+     <tt class="docutils literal">
+      PYTHONHASHSEED
+     </tt>
+     processing with
+a text based configuration setting provided by other means (e.g. a
+config file or separate environment variable).
+    </p>
+   </div>
+   <div class="section" id="locating-python-and-the-standard-library">
+    <h2>
+     <a class="toc-backref" href="#id38">
+      Locating Python and the standard library
+     </a>
+    </h2>
+    <p>
+     The location of the Python binary and the standard library is influenced
+by several elements. The algorithm used to perform the calculation is
+not documented anywhere other than in the source code [
+     <a class="reference internal" href="#id3">
+      3
+     </a>
+     ,4_]. Even that
+description is incomplete, as it failed to be updated for the virtual
+environment support added in Python 3.3 (detailed in
+     <a class="reference external" href="../pep-0405/index.html">
+      PEP 405
+     </a>
+     ).
+    </p>
+    <p>
+     These calculations are affected by the following function calls (made
+prior to calling
+     <tt class="docutils literal">
+      Py_Initialize()
+     </tt>
+     ) and environment variables:
+    </p>
+    <ul class="simple">
+     <li>
+      <tt class="docutils literal">
+       Py_SetProgramName()
+      </tt>
+     </li>
+     <li>
+      <tt class="docutils literal">
+       Py_SetPythonHome()
+      </tt>
+     </li>
+     <li>
+      <tt class="docutils literal">
+       PYTHONHOME
+      </tt>
+     </li>
+    </ul>
+    <p>
+     The filesystem is also inspected for
+     <tt class="docutils literal">
+      pyvenv.cfg
+     </tt>
+     files (see
+     <a class="reference external" href="../pep-0405/index.html">
+      PEP 405
+     </a>
+     ) or,
+failing that, a
+     <tt class="docutils literal">
+      lib/os.py
+     </tt>
+     (Windows) or
+     <tt class="docutils literal">
+      lib/python$VERSION/os.py
+     </tt>
+     file.
+    </p>
+    <p>
+     The build time settings for
+     <tt class="docutils literal">
+      PREFIX
+     </tt>
+     and
+     <tt class="docutils literal">
+      EXEC_PREFIX
+     </tt>
+     are also relevant,
+as are some registry settings on Windows. The hardcoded fallbacks are
+based on the layout of the CPython source tree and build output when
+working in a source checkout.
+    </p>
+   </div>
+   <div class="section" id="configuring-sys-path">
+    <h2>
+     <a class="toc-backref" href="#id39">
+      Configuring
+      <tt class="docutils literal">
+       sys.path
+      </tt>
+     </a>
+    </h2>
+    <p>
+     An embedding application may call
+     <tt class="docutils literal">
+      Py_SetPath()
+     </tt>
+     prior to
+     <tt class="docutils literal">
+      Py_Initialize()
+     </tt>
+     to completely override the calculation of
+     <tt class="docutils literal">
+      sys.path
+     </tt>
+     . It is not straightforward to only allow
+     <em>
+      some
+     </em>
+     of the
+calculations, as modifying
+     <tt class="docutils literal">
+      sys.path
+     </tt>
+     after initialization is
+already complete means those modifications will not be in effect
+when standard library modules are imported during the startup sequence.
+    </p>
+    <p>
+     If
+     <tt class="docutils literal">
+      Py_SetPath()
+     </tt>
+     is not used prior to the first call to
+     <tt class="docutils literal">
+      Py_GetPath()
+     </tt>
+     (implicit in
+     <tt class="docutils literal">
+      Py_Initialize()
+     </tt>
+     ), then it builds on the location data
+calculations above to calculate suitable path entries, along with
+the
+     <tt class="docutils literal">
+      PYTHONPATH
+     </tt>
+     environment variable.
+    </p>
+    <p>
+     &lt;TBD: On Windows, there's also a bunch of stuff to do with the registry&gt;
+    </p>
+    <p>
+     The
+     <tt class="docutils literal">
+      site
+     </tt>
+     module, which is implicitly imported at startup (unless
+disabled via the
+     <tt class="docutils literal">
+      <span class="pre">
+       -S
+      </span>
+     </tt>
+     option) adds additional paths to this initial
+set of paths, as described in its documentation [
+     <a class="reference internal" href="#id5">
+      5
+     </a>
+     ].
+    </p>
+    <p>
+     The
+     <tt class="docutils literal">
+      <span class="pre">
+       -s
+      </span>
+     </tt>
+     command line option can be used to exclude the user site
+directory from the list of directories added. Embedding applications
+can control this by setting the
+     <tt class="docutils literal">
+      Py_NoUserSiteDirectory
+     </tt>
+     global variable.
+    </p>
+    <p>
+     The following commands can be used to check the default path configurations
+for a given Python executable on a given system:
+    </p>
+    <ul class="simple">
+     <li>
+      <tt class="docutils literal">
+       ./python
+       <span class="pre">
+        -c
+       </span>
+       "import sys, pprint; pprint.pprint(sys.path)"
+      </tt>
+      - standard configuration
+     </li>
+     <li>
+      <tt class="docutils literal">
+       ./python
+       <span class="pre">
+        -s
+       </span>
+       <span class="pre">
+        -c
+       </span>
+       "import sys, pprint; pprint.pprint(sys.path)"
+      </tt>
+      - user site directory disabled
+     </li>
+     <li>
+      <tt class="docutils literal">
+       ./python
+       <span class="pre">
+        -S
+       </span>
+       <span class="pre">
+        -c
+       </span>
+       "import sys, pprint; pprint.pprint(sys.path)"
+      </tt>
+      - all site path modifications disabled
+     </li>
+    </ul>
+    <p>
+     (Note: you can see similar information using
+     <tt class="docutils literal">
+      <span class="pre">
+       -m
+      </span>
+      site
+     </tt>
+     instead of
+     <tt class="docutils literal">
+      <span class="pre">
+       -c
+      </span>
+     </tt>
+     ,
+but this is slightly misleading as it calls
+     <tt class="docutils literal">
+      os.abspath
+     </tt>
+     on all of the
+path entries, making relative path entries look absolute. Using the
+     <tt class="docutils literal">
+      site
+     </tt>
+     module also causes problems in the last case, as on Python versions prior to
+3.3, explicitly importing site will carry out the path modifications
+     <tt class="docutils literal">
+      <span class="pre">
+       -S
+      </span>
+     </tt>
+     avoids, while on 3.3+ combining
+     <tt class="docutils literal">
+      <span class="pre">
+       -m
+      </span>
+      site
+     </tt>
+     with
+     <tt class="docutils literal">
+      <span class="pre">
+       -S
+      </span>
+     </tt>
+     currently fails)
+    </p>
+    <p>
+     The calculation of
+     <tt class="docutils literal">
+      sys.path[0]
+     </tt>
+     is comparatively straightforward:
+    </p>
+    <ul class="simple">
+     <li>
+      For an ordinary script (Python source or compiled bytecode),
+      <tt class="docutils literal">
+       sys.path[0]
+      </tt>
+      will be the directory containing the script.
+     </li>
+     <li>
+      For a valid
+      <tt class="docutils literal">
+       sys.path
+      </tt>
+      entry (typically a zipfile or directory),
+      <tt class="docutils literal">
+       sys.path[0]
+      </tt>
+      will be that path
+     </li>
+     <li>
+      For an interactive session, running from stdin or when using the
+      <tt class="docutils literal">
+       <span class="pre">
+        -c
+       </span>
+      </tt>
+      or
+      <tt class="docutils literal">
+       <span class="pre">
+        -m
+       </span>
+      </tt>
+      switches,
+      <tt class="docutils literal">
+       sys.path[0]
+      </tt>
+      will be the empty string, which the import
+system interprets as allowing imports from the current directory
+     </li>
+    </ul>
+   </div>
+   <div class="section" id="configuring-sys-argv">
+    <h2>
+     <a class="toc-backref" href="#id40">
+      Configuring
+      <tt class="docutils literal">
+       sys.argv
+      </tt>
+     </a>
+    </h2>
+    <p>
+     Unlike most other settings discussed in this PEP,
+     <tt class="docutils literal">
+      sys.argv
+     </tt>
+     is not
+set implicitly by
+     <tt class="docutils literal">
+      Py_Initialize()
+     </tt>
+     . Instead, it must be set via an
+explicitly call to
+     <tt class="docutils literal">
+      Py_SetArgv()
+     </tt>
+     .
+    </p>
+    <p>
+     CPython calls this in
+     <tt class="docutils literal">
+      Py_Main()
+     </tt>
+     after calling
+     <tt class="docutils literal">
+      Py_Initialize()
+     </tt>
+     . The
+calculation of
+     <tt class="docutils literal">
+      sys.argv[1:]
+     </tt>
+     is straightforward: they're the command line
+arguments passed after the script name or the argument to the
+     <tt class="docutils literal">
+      <span class="pre">
+       -c
+      </span>
+     </tt>
+     or
+     <tt class="docutils literal">
+      <span class="pre">
+       -m
+      </span>
+     </tt>
+     options.
+    </p>
+    <p>
+     The calculation of
+     <tt class="docutils literal">
+      sys.argv[0]
+     </tt>
+     is a little more complicated:
+    </p>
+    <ul class="simple">
+     <li>
+      For an ordinary script (source or bytecode), it will be the script name
+     </li>
+     <li>
+      For a
+      <tt class="docutils literal">
+       sys.path
+      </tt>
+      entry (typically a zipfile or directory) it will
+initially be the zipfile or directory name, but will later be changed by
+the
+      <tt class="docutils literal">
+       runpy
+      </tt>
+      module to the full path to the imported
+      <tt class="docutils literal">
+       __main__
+      </tt>
+      module.
+     </li>
+     <li>
+      For a module specified with the
+      <tt class="docutils literal">
+       <span class="pre">
+        -m
+       </span>
+      </tt>
+      switch, it will initially be the
+string
+      <tt class="docutils literal">
+       <span class="pre">
+        "-m"
+       </span>
+      </tt>
+      , but will later be changed by the
+      <tt class="docutils literal">
+       runpy
+      </tt>
+      module to the
+full path to the executed module.
+     </li>
+     <li>
+      For a package specified with the
+      <tt class="docutils literal">
+       <span class="pre">
+        -m
+       </span>
+      </tt>
+      switch, it will initially be the
+string
+      <tt class="docutils literal">
+       <span class="pre">
+        "-m"
+       </span>
+      </tt>
+      , but will later be changed by the
+      <tt class="docutils literal">
+       runpy
+      </tt>
+      module to the
+full path to the executed
+      <tt class="docutils literal">
+       __main__
+      </tt>
+      submodule of the package.
+     </li>
+     <li>
+      For a command executed with
+      <tt class="docutils literal">
+       <span class="pre">
+        -c
+       </span>
+      </tt>
+      , it will be the string
+      <tt class="docutils literal">
+       <span class="pre">
+        "-c"
+       </span>
+      </tt>
+     </li>
+     <li>
+      For explicitly requested input from stdin, it will be the string
+      <tt class="docutils literal">
+       <span class="pre">
+        "-"
+       </span>
+      </tt>
+     </li>
+     <li>
+      Otherwise, it will be the empty string
+     </li>
+    </ul>
+    <p>
+     Embedding applications must call Py_SetArgv themselves. The CPython logic
+for doing so is part of
+     <tt class="docutils literal">
+      Py_Main()
+     </tt>
+     and is not exposed separately.
+However, the
+     <tt class="docutils literal">
+      runpy
+     </tt>
+     module does provide roughly equivalent logic in
+     <tt class="docutils literal">
+      runpy.run_module
+     </tt>
+     and
+     <tt class="docutils literal">
+      runpy.run_path
+     </tt>
+     .
+    </p>
+   </div>
+   <div class="section" id="other-configuration-settings">
+    <h2>
+     <a class="toc-backref" href="#id41">
+      Other configuration settings
+     </a>
+    </h2>
+    <p>
+     TBD: Cover the initialization of the following in more detail:
+    </p>
+    <ul class="simple">
+     <li>
+      Completely disabling the import system
+     </li>
+     <li>
+      The initial warning system state:
+*
+      <tt class="docutils literal">
+       sys.warnoptions
+      </tt>
+      * (-W option, PYTHONWARNINGS)
+     </li>
+     <li>
+      Arbitrary extended options (e.g. to automatically enable
+      <tt class="docutils literal">
+       faulthandler
+      </tt>
+      ):
+*
+      <tt class="docutils literal">
+       sys._xoptions
+      </tt>
+      * (-X option)
+     </li>
+     <li>
+      The filesystem encoding used by:
+*
+      <tt class="docutils literal">
+       sys.getfsencoding
+      </tt>
+      *
+      <tt class="docutils literal">
+       os.fsencode
+      </tt>
+      *
+      <tt class="docutils literal">
+       os.fsdecode
+      </tt>
+     </li>
+     <li>
+      The IO encoding and buffering used by:
+*
+      <tt class="docutils literal">
+       sys.stdin
+      </tt>
+      *
+      <tt class="docutils literal">
+       sys.stdout
+      </tt>
+      *
+      <tt class="docutils literal">
+       sys.stderr
+      </tt>
+      * (-u option, PYTHONIOENCODING, PYTHONUNBUFFEREDIO)
+     </li>
+     <li>
+      Whether or not to implicitly cache bytecode files:
+*
+      <tt class="docutils literal">
+       sys.dont_write_bytecode
+      </tt>
+      * (-B option, PYTHONDONTWRITEBYTECODE)
+     </li>
+     <li>
+      Whether or not to enforce correct case in filenames on case-insensitive
+platforms
+*
+      <tt class="docutils literal">
+       <span class="pre">
+        os.environ["PYTHONCASEOK"]
+       </span>
+      </tt>
+     </li>
+     <li>
+      The other settings exposed to Python code in
+      <tt class="docutils literal">
+       sys.flags
+      </tt>
+      :
+      <ul>
+       <li>
+        <tt class="docutils literal">
+         debug
+        </tt>
+        (Enable debugging output in the pgen parser)
+       </li>
+       <li>
+        <tt class="docutils literal">
+         inspect
+        </tt>
+        (Enter interactive interpreter after __main__ terminates)
+       </li>
+       <li>
+        <tt class="docutils literal">
+         interactive
+        </tt>
+        (Treat stdin as a tty)
+       </li>
+       <li>
+        <tt class="docutils literal">
+         optimize
+        </tt>
+        (__debug__ status, write .pyc or .pyo, strip doc strings)
+       </li>
+       <li>
+        <tt class="docutils literal">
+         no_user_site
+        </tt>
+        (don't add the user site directory to sys.path)
+       </li>
+       <li>
+        <tt class="docutils literal">
+         no_site
+        </tt>
+        (don't implicitly import site during startup)
+       </li>
+       <li>
+        <tt class="docutils literal">
+         ignore_environment
+        </tt>
+        (whether environment vars are used during config)
+       </li>
+       <li>
+        <tt class="docutils literal">
+         verbose
+        </tt>
+        (enable all sorts of random output)
+       </li>
+       <li>
+        <tt class="docutils literal">
+         bytes_warning
+        </tt>
+        (warnings/errors for implicit str/bytes interaction)
+       </li>
+       <li>
+        <tt class="docutils literal">
+         quiet
+        </tt>
+        (disable banner output even if verbose is also enabled or
+stdin is a tty and the interpreter is launched in interactive mode)
+       </li>
+      </ul>
+     </li>
+     <li>
+      Whether or not CPython's signal handlers should be installed
+     </li>
+    </ul>
+    <p>
+     Much of the configuration of CPython is currently handled through C level
+global variables:
+    </p>
+    <pre class="literal-block">
+Py_BytesWarningFlag (-b)
+Py_DebugFlag (-d option)
+Py_InspectFlag (-i option, PYTHONINSPECT)
+Py_InteractiveFlag (property of stdin, cannot be overridden)
+Py_OptimizeFlag (-O option, PYTHONOPTIMIZE)
+Py_DontWriteBytecodeFlag (-B option, PYTHONDONTWRITEBYTECODE)
+Py_NoUserSiteDirectory (-s option, PYTHONNOUSERSITE)
+Py_NoSiteFlag (-S option)
+Py_UnbufferedStdioFlag (-u, PYTHONUNBUFFEREDIO)
+Py_VerboseFlag (-v option, PYTHONVERBOSE)
+</pre>
+    <p>
+     For the above variables, the conversion of command line options and
+environment variables to C global variables is handled by
+     <tt class="docutils literal">
+      Py_Main
+     </tt>
+     ,
+so each embedding application must set those appropriately in order to
+change them from their defaults.
+    </p>
+    <p>
+     Some configuration can only be provided as OS level environment variables:
+    </p>
+    <pre class="literal-block">
+PYTHONSTARTUP
+PYTHONCASEOK
+PYTHONIOENCODING
+</pre>
+    <p>
+     The
+     <tt class="docutils literal">
+      Py_InitializeEx()
+     </tt>
+     API also accepts a boolean flag to indicate
+whether or not CPython's signal handlers should be installed.
+    </p>
+    <p>
+     Finally, some interactive behaviour (such as printing the introductory
+banner) is triggered only when standard input is reported as a terminal
+connection by the operating system.
+    </p>
+    <p>
+     TBD: Document how the "-x" option is handled (skips processing of the
+first comment line in the main script)
+    </p>
+    <p>
+     Also see detailed sequence of operations notes at [
+     <a class="reference internal" href="#id1">
+      1
+     </a>
+     ]
+    </p>
+   </div>
+  </div>
+  <div class="section" id="references">
+   <h1>
+    <a class="toc-backref" href="#id42">
+     References
+    </a>
+   </h1>
+   <table class="docutils footnote" frame="void" id="id1" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       [1]
+      </td>
+      <td>
+       CPython interpreter initialization notes
+(
+       <a class="reference external" href="http://wiki.python.org/moin/CPythonInterpreterInitialization">
+        http://wiki.python.org/moin/CPythonInterpreterInitialization
+       </a>
+       )
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id2" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       [2]
+      </td>
+      <td>
+       BitBucket Sandbox
+(
+       <a class="reference external" href="https://bitbucket.org/ncoghlan/cpython_sandbox/compare/pep432_modular_bootstrap..default#commits">
+        https://bitbucket.org/ncoghlan/cpython_sandbox/compare/pep432_modular_bootstrap..default#commits
+       </a>
+       )
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id3" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       [3]
+      </td>
+      <td>
+       *nix getpath implementation
+(
+       <a class="reference external" href="http://hg.python.org/cpython/file/default/Modules/getpath.c">
+        http://hg.python.org/cpython/file/default/Modules/getpath.c
+       </a>
+       )
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id4" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       [4]
+      </td>
+      <td>
+       Windows getpath implementation
+(
+       <a class="reference external" href="http://hg.python.org/cpython/file/default/PC/getpathp.c">
+        http://hg.python.org/cpython/file/default/PC/getpathp.c
+       </a>
+       )
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id5" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       [5]
+      </td>
+      <td>
+       Site module documentation
+(
+       <a class="reference external" href="http://docs.python.org/3/library/site.html">
+        http://docs.python.org/3/library/site.html
+       </a>
+       )
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id6" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       [6]
+      </td>
+      <td>
+       Proposed CLI option for isolated mode
+(
+       <a class="reference external" href="http://bugs.python.org/issue16499">
+        http://bugs.python.org/issue16499
+       </a>
+       )
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id7" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       [7]
+      </td>
+      <td>
+       Adding to sys.path on the command line
+(
+       <a class="reference external" href="http://mail.python.org/pipermail/python-ideas/2010-October/008299.html">
+        http://mail.python.org/pipermail/python-ideas/2010-October/008299.html
+       </a>
+       )
+(
+       <a class="reference external" href="http://mail.python.org/pipermail/python-ideas/2012-September/016128.html">
+        http://mail.python.org/pipermail/python-ideas/2012-September/016128.html
+       </a>
+       )
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id8" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       [8]
+      </td>
+      <td>
+       Control sys.path[0] initialisation
+(
+       <a class="reference external" href="http://bugs.python.org/issue13475">
+        http://bugs.python.org/issue13475
+       </a>
+       )
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id9" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       [9]
+      </td>
+      <td>
+       Enabling code coverage in subprocesses when testing
+(
+       <a class="reference external" href="http://bugs.python.org/issue14803">
+        http://bugs.python.org/issue14803
+       </a>
+       )
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id10" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       [10]
+      </td>
+      <td>
+       Problems with PYTHONIOENCODING in Blender
+(
+       <a class="reference external" href="http://bugs.python.org/issue16129">
+        http://bugs.python.org/issue16129
+       </a>
+       )
+      </td>
+     </tr>
+    </tbody>
+   </table>
+  </div>
+  <div class="section" id="copyright">
+   <h1>
+    <a class="toc-backref" href="#id43">
+     Copyright
+    </a>
+   </h1>
+   <p>
+    This document has been placed in the public domain.
+   </p>
+  </div>
+ </body>
+
+<!-- Mirrored from www.python.org/dev/peps/pep-0432/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 03 Sep 2015 04:33:21 GMT -->
+</html>Source: <a href="https://hg.python.org/peps/file/tip/pep-0432.txt">https://hg.python.org/peps/file/tip/pep-0432.txt</a>
+
+    </article>
+
+
+                </section>
+
+                
+
+
+<aside class="left-sidebar" role="secondary">
+
+    
+
+
+
+
+
+
+    
+
+
+
+
+
+        <div class="twitter-widget sidebar-widget">
+        <a class="twitter-timeline" data-dnt="true" href="https://twitter.com/ThePSF" data-widget-id="434113224703610882">Tweets by @ThePSF</a>
+        <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+    </div>
+
+    <div class="psf-sidebar-widget sidebar-widget">
+        <h3 class="widget-title">The PSF</h3>
+<p>The Python Software Foundation is the organization behind Python. Become a member of the PSF and help advance the software and our mission. </p>
+
+    </div>
+
+</aside>
+
+
+
+                
+                
+
+
+            </div><!-- end .container -->
+        </div><!-- end #content .content-wrapper -->
+
+        <!-- Footer and social media list -->
+        <footer id="site-map" class="main-footer" role="contentinfo">
+            <div class="main-footer-links">
+                <div class="container">
+
+                    
+                    <a id="back-to-top-1" class="jump-link" href="#python-network"><span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> Back to Top</a>
+
+                    
+
+<ul class="sitemap navigation menu do-not-print" role="tree" id="container">
+    
+    <li class="tier-1 element-1">
+        <a href="https://www.python.org/about/" >About</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/apps/" title="">Applications</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/quotes/" title="">Quotes</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/gettingstarted/" title="">Getting Started</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/help/" title="">Help</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-2">
+        <a href="https://www.python.org/downloads/" >Downloads</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/downloads/" title="">All releases</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/downloads/source/" title="">Source code</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/downloads/windows/" title="">Windows</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/downloads/mac-osx/" title="">Mac OS X</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/download/other/" title="">Other Platforms</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://docs.python.org/3/license.html" title="">License</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/download/alternatives" title="">Alternative Implementations</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-3">
+        <a href="https://www.python.org/doc/" >Documentation</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/doc/" title="">Docs</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/doc/av" title="">Audio/Visual Talks</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://wiki.python.org/moin/BeginnersGuide" title="">Beginner&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://docs.python.org/faq/" title="">FAQ</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="http://wiki.python.org/moin/Languages" title="">Non-English Docs</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="../index.html" title="">PEP Index</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://wiki.python.org/moin/PythonBooks" title="">Python Books</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-4">
+        <a href="https://www.python.org/community/" >Community</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/community/diversity/" title="">Diversity</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/community/irc/" title="">IRC</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/community/lists/" title="">Mailing Lists</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/workshops/" title="">Python Conferences</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/community/sigs/" title="">Special Interest Groups</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://wiki.python.org/moin/" title="">Python Wiki</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/community/logos/" title="">Python Logo</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://www.python.org/community/merchandise/" title="">Merchandise</a></li>
+    
+        <li class="tier-2 element-9" role="treeitem"><a href="https://www.python.org/community/awards" title="">Community Awards</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-5">
+        <a href="https://www.python.org/about/success/" title="success-stories">Success Stories</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/success/#arts" title="">Arts</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/success/#business" title="">Business</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/success/#education" title="">Education</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/success/#engineering" title="">Engineering</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/about/success/#government" title="">Government</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://www.python.org/about/success/#scientific" title="">Scientific</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/about/success/#software-development" title="">Software Development</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-6">
+        <a href="https://www.python.org/blogs/" title="News from around the Python world">News</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/blogs/" title="Python Insider Blog Posts">Python News</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://planetpython.org/" title="Planet Python">Community News</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="http://pyfound.blogspot.com/" title="PSF Blog">PSF News</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pycon.blogspot.com/" title="PyCon Blog">PyCon News</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-7">
+        <a href="https://www.python.org/events/" >Events</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/events/python-events/" title="">Python Events</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/events/python-user-group/" title="">User Group Events</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/events/python-events/past/" title="">Python Events Archive</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/events/python-user-group/past/" title="">User Group Events Archive</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://wiki.python.org/moin/PythonEventsCalendar#Submitting_an_Event" title="">Submit an Event</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-8">
+        <a href="https://www.python.org/dev/" >Contributing</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="http://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://bugs.python.org/" title="">Issue Tracker</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://mail.python.org/mailman/listinfo/python-dev" title="">python-dev list</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pythonmentors.com/" title="">Core Mentorship</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+</ul>
+
+
+                    <a id="back-to-top-2" class="jump-link" href="#python-network"><span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> Back to Top</a>
+                    
+
+                </div><!-- end .container -->
+            </div> <!-- end .main-footer-links -->
+
+            <div class="site-base">
+                <div class="container">
+                    
+                    <ul class="footer-links navigation menu do-not-print" role="tree">
+                        <li class="tier-1 element-1"><a href="https://www.python.org/about/help/">Help &amp; <span class="say-no-more">General</span> Contact</a></li>
+                        <li class="tier-1 element-2"><a href="https://www.python.org/community/diversity/">Diversity <span class="say-no-more">Initiatives</span></a></li>
+                        <li class="tier-1 element-3"><a href="https://github.com/python/pythondotorg/issues">Submit Website Bug</a></li>
+                        <!--<li class="tier-1 element-3"><a href="#"><span class="say-no-more">Website</span> Colophon</a></li>-->
+                    </ul>
+
+                    <div class="copyright">
+                        <p><small>
+                            <span class="pre">Copyright &copy;2001-2015.</span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/psf-landing/">Python Software Foundation</a></span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/about/legal/">Legal Statements</a></span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/privacy/">Privacy Policy</a></span>
+                        </small></p>
+                    </div>
+
+                </div><!-- end .container -->
+            </div><!-- end .site-base -->
+
+        </footer>
+
+    </div><!-- end #touchnav-wrapper -->
+
+    
+    <script src="../../../../ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="../../../static/js/libs/jquery-1.8.2.min.js"><\/script>')</script>
+
+    <script src="../../../static/js/libs/masonry.pkgd.min.js"></script>
+
+    <script type="text/javascript" src="../../../static/js/main-min.js" charset="utf-8"></script>
+    
+
+    <!--[if lte IE 7]>
+    <script type="text/javascript" src="/static/js/plugins/IE8-min.js" charset="utf-8"></script>
+    
+    
+    <![endif]-->
+
+    <!--[if lte IE 8]>
+    <script type="text/javascript" src="/static/js/plugins/getComputedStyle-min.js" charset="utf-8"></script>
+    
+    
+    <![endif]-->
+
+    
+
+    
+    
+
+</body>
+</html>

@@ -1,0 +1,6220 @@
+<!doctype html>
+<!--[if lt IE 7]>   <html class="no-js ie6 lt-ie7 lt-ie8 lt-ie9">   <![endif]-->
+<!--[if IE 7]>      <html class="no-js ie7 lt-ie8 lt-ie9">          <![endif]-->
+<!--[if IE 8]>      <html class="no-js ie8 lt-ie9">                 <![endif]-->
+<!--[if gt IE 8]><!--><html class="no-js" lang="en" dir="ltr">  <!--<![endif]-->
+
+
+<!-- Mirrored from www.python.org/dev/peps/pep-0492/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 03 Sep 2015 04:35:04 GMT -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <link rel="prefetch" href="../../../../ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js">
+
+    <meta name="application-name" content="Python.org">
+    <meta name="msapplication-tooltip" content="The official home of the Python Programming Language">
+    <meta name="apple-mobile-web-app-title" content="Python.org">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="format-detection" content="telephone=no">
+    <meta http-equiv="cleartype" content="on">
+    <meta http-equiv="imagetoolbar" content="false">
+
+    <script src="../../../static/js/libs/modernizr.js"></script>
+
+    <link href="../../../static/stylesheets/style.css" rel="stylesheet" type="text/css" title="default" />
+    <link href="../../../static/stylesheets/mq.css" rel="stylesheet" type="text/css" media="not print, braille, embossed, speech, tty" />
+    
+
+    <!--[if (lte IE 8)&(!IEMobile)]>
+    <link href="/static/stylesheets/no-mq.css" rel="stylesheet" type="text/css" media="screen" />
+    
+    
+    <![endif]-->
+
+    
+    <link rel="icon" type="image/x-icon" href="https://www.python.org/static/favicon.ico">
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="../../../static/apple-touch-icon-144x144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="../../../static/apple-touch-icon-114x114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="../../../static/apple-touch-icon-72x72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="../../../static/apple-touch-icon-precomposed.png">
+    <link rel="apple-touch-icon" href="../../../static/apple-touch-icon-precomposed.png">
+
+    
+    <meta name="msapplication-TileImage" content="/static/metro-icon-144x144-precomposed.png"><!-- white shape -->
+    <meta name="msapplication-TileColor" content="#3673a5"><!-- python blue -->
+    <meta name="msapplication-navbutton-color" content="#3673a5">
+
+    <meta property="og:site_name" content="Python.org">
+    <meta property="og:type" content="website">
+
+    <title>PEP 0492 -- Coroutines with async and await syntax | Python.org</title>
+    <meta property="og:title" content="Welcome to Python.org">
+
+    
+    <meta name="description" content="The official home of the Python Programming Language">
+    <meta name="og:description" content="The official home of the Python Programming Language">
+    <meta name="keywords" content="Python programming language object oriented web free open source software license documentation download community">
+    <meta property="og:tag" content="Python programming language object oriented web free open source software license documentation download community">
+    <meta property="og:published_time" content="">
+    <meta property="og:modified_time" content="">
+    <meta property="og:author" content="">
+    <meta property="og:section" content=""> 
+    <meta property="og:url" content="">
+    <meta property="og:image" content="">
+    <meta property="og:video" content="">
+
+    <link rel="author" href="https://www.python.org/static/humans.txt">
+
+    
+
+    
+    <script type="application/ld+json">
+     {
+       "@context": "http://schema.org",
+       "@type": "WebSite",
+       "url": "https://www.python.org/",
+       "potentialAction": {
+         "@type": "SearchAction",
+         "target": "https://www.python.org/search/?q={search_term_string}",
+         "query-input": "required name=search_term_string"
+       }
+     }
+    </script>
+
+    
+    <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-39055973-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+    </script>
+    
+</head>
+
+<body class="python pages pep-page">
+
+    <div id="touchnav-wrapper">
+
+        <div id="nojs" class="do-not-print">
+            <p><strong>Notice:</strong> While Javascript is not essential for this website, your interaction with the content will be limited. Please turn Javascript on for the full experience. </p>
+        </div>
+
+        <!--[if lt IE 8]>
+        <div id="oldie-warning" class="do-not-print">
+            <p><strong>Notice:</strong> Your browser is <em>ancient</em> and <a href="http://www.ie6countdown.com/">Microsoft agrees</a>. <a href="http://browsehappy.com/">Upgrade to a different browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to experience a better web.</p>
+        </div>
+        <![endif]-->
+
+        <!-- Sister Site Links -->
+        <div id="top" class="top-bar do-not-print">
+
+            <nav class="meta-navigation container" role="navigation">
+
+                
+                <div class="skip-link screen-reader-text">
+                    <a href="#content" title="Skip to content">Skip to content</a>
+                </div>
+
+                
+                <a id="close-python-network" class="jump-link" href="#python-network" aria-hidden="true">
+                    <span aria-hidden="true" class="icon-arrow-down"><span>&#9660;</span></span> Close
+                </a>
+
+                
+
+<ul class="menu" role="tree">
+    
+    <li class="python-meta ">
+        <a href="https://www.python.org/" title="The Python Programming Language" >Python</a>
+    </li>
+    
+    <li class="psf-meta ">
+        <a href="https://www.python.org/psf-landing/" title="The Python Software Foundation" >PSF</a>
+    </li>
+    
+    <li class="docs-meta ">
+        <a href="https://docs.python.org/" title="Python Documentation" >Docs</a>
+    </li>
+    
+    <li class="pypi-meta ">
+        <a href="https://pypi.python.org/" title="Python Package Index" >PyPI</a>
+    </li>
+    
+    <li class="jobs-meta ">
+        <a href="https://www.python.org/jobs/" title="Python Job Board" >Jobs</a>
+    </li>
+    
+    <li class="shop-meta ">
+        <a href="https://www.python.org/community/" title="Python Community" >Community</a>
+    </li>
+    
+</ul>
+
+
+                <a id="python-network" class="jump-link" href="#top" aria-hidden="true">
+                    <span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> The Python Network
+                </a>
+
+            </nav>
+
+        </div>
+
+        <!-- Header elements -->
+        <header class="main-header" role="banner">
+            <div class="container">
+
+                <h1 class="site-headline">
+                    <a href="https://www.python.org/"><img class="python-logo" src="../../../static/img/python-logo.png" alt="python&trade;"></a>
+                </h1>
+
+                <div class="options-bar do-not-print">
+
+                    
+                    <a id="site-map-link" class="jump-to-menu" href="#site-map"><span class="menu-icon">&equiv;</span> Menu</a><form class="search-the-site" action="https://www.python.org/search/" method="get">
+                        <fieldset title="Search Python.org">
+
+                            <span aria-hidden="true" class="icon-search"></span>
+
+                            <label class="screen-reader-text" for="id-search-field">Search This Site</label>
+                            <input id="id-search-field" name="q" type="search" role="textbox" class="search-field" placeholder="Search" value="" tabindex="1">
+
+                            <button type="submit" name="submit" id="submit" class="search-button" title="Submit this Search" tabindex="3">
+                                GO
+                            </button>
+
+                            
+                            <!--[if IE]><input type="text" style="display: none;" disabled="disabled" size="1" tabindex="4"><![endif]-->
+
+                        </fieldset>
+                    </form><span class="breaker"></span><div class="adjust-font-size" aria-hidden="true">
+                        <ul class="navigation menu" aria-label="Adjust Text Size on Page">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                <a href="#" class="action-trigger"><strong><small>A</small> A</strong></a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a class="text-shrink" title="Make Text Smaller" href="javascript:;">Smaller</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a class="text-grow" title="Make Text Larger" href="javascript:;">Larger</a></li>
+                                    <li class="tier-2 element-3" role="treeitem"><a class="text-reset" title="Reset any font size changes I have made" href="javascript:;">Reset</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div><div class="winkwink-nudgenudge">
+                        <ul class="navigation menu" aria-label="Social Media Navigation">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                <a href="#" class="action-trigger">Socialize</a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a href="http://plus.google.com/+Python"><span aria-hidden="true" class="icon-google-plus"></span>Google+</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a href="http://www.facebook.com/pythonlang?fref=ts"><span aria-hidden="true" class="icon-facebook"></span>Facebook</a></li>
+                                    <li class="tier-2 element-3" role="treeitem"><a href="http://twitter.com/ThePSF"><span aria-hidden="true" class="icon-twitter"></span>Twitter</a></li>
+                                    <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/irc/"><span aria-hidden="true" class="icon-freenode"></span>Chat on IRC</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div><div class="account-signin">
+                        <ul class="navigation menu" aria-label="Social Media Navigation">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                
+                                <a href="https://www.python.org/accounts/login/" title="Sign Up or Sign In to Python.org">Sign In</a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/accounts/signup/">Sign Up / Register</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/accounts/login/">Sign In</a></li>
+                                </ul>
+                                
+                            </li>
+                        </ul>
+                    </div>
+
+                </div><!-- end options-bar -->
+
+                <nav id="mainnav" class="python-navigation main-navigation do-not-print" role="navigation">
+                    
+                        
+<ul class="navigation menu" role="menubar" aria-label="Main Navigation">
+  
+    
+    
+    <li id="about" class="tier-1 element-1  " aria-haspopup="true">
+        <a href="https://www.python.org/about/" title="" class="">About</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/apps/" title="">Applications</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/quotes/" title="">Quotes</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/gettingstarted/" title="">Getting Started</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/help/" title="">Help</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="downloads" class="tier-1 element-2  " aria-haspopup="true">
+        <a href="https://www.python.org/downloads/" title="" class="">Downloads</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/downloads/" title="">All releases</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/downloads/source/" title="">Source code</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/downloads/windows/" title="">Windows</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/downloads/mac-osx/" title="">Mac OS X</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/download/other/" title="">Other Platforms</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://docs.python.org/3/license.html" title="">License</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/download/alternatives" title="">Alternative Implementations</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="documentation" class="tier-1 element-3  " aria-haspopup="true">
+        <a href="https://www.python.org/doc/" title="" class="">Documentation</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/doc/" title="">Docs</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/doc/av" title="">Audio/Visual Talks</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://wiki.python.org/moin/BeginnersGuide" title="">Beginner&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://docs.python.org/faq/" title="">FAQ</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="http://wiki.python.org/moin/Languages" title="">Non-English Docs</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="../index.html" title="">PEP Index</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://wiki.python.org/moin/PythonBooks" title="">Python Books</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="community" class="tier-1 element-4  " aria-haspopup="true">
+        <a href="https://www.python.org/community/" title="" class="">Community</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/community/diversity/" title="">Diversity</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/community/irc/" title="">IRC</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/community/lists/" title="">Mailing Lists</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/workshops/" title="">Python Conferences</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/community/sigs/" title="">Special Interest Groups</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://wiki.python.org/moin/" title="">Python Wiki</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/community/logos/" title="">Python Logo</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://www.python.org/community/merchandise/" title="">Merchandise</a></li>
+    
+        <li class="tier-2 element-9" role="treeitem"><a href="https://www.python.org/community/awards" title="">Community Awards</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="success-stories" class="tier-1 element-5  " aria-haspopup="true">
+        <a href="https://www.python.org/about/success/" title="success-stories" class="">Success Stories</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/success/#arts" title="">Arts</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/success/#business" title="">Business</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/success/#education" title="">Education</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/success/#engineering" title="">Engineering</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/about/success/#government" title="">Government</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://www.python.org/about/success/#scientific" title="">Scientific</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/about/success/#software-development" title="">Software Development</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="news" class="tier-1 element-6  " aria-haspopup="true">
+        <a href="https://www.python.org/blogs/" title="News from around the Python world" class="">News</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/blogs/" title="Python Insider Blog Posts">Python News</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://planetpython.org/" title="Planet Python">Community News</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="http://pyfound.blogspot.com/" title="PSF Blog">PSF News</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pycon.blogspot.com/" title="PyCon Blog">PyCon News</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="events" class="tier-1 element-7  " aria-haspopup="true">
+        <a href="https://www.python.org/events/" title="" class="">Events</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/events/python-events/" title="">Python Events</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/events/python-user-group/" title="">User Group Events</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/events/python-events/past/" title="">Python Events Archive</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/events/python-user-group/past/" title="">User Group Events Archive</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://wiki.python.org/moin/PythonEventsCalendar#Submitting_an_Event" title="">Submit an Event</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    
+  
+</ul>
+
+                    
+                </nav>
+
+                <div class="header-banner "> <!-- for optional "do-not-print" class -->
+                    
+                    
+                </div>
+
+                
+                
+
+             </div><!-- end .container -->
+        </header>
+
+        <div id="content" class="content-wrapper">
+            <!-- Main Content Column -->
+            <div class="container">
+
+                <section class="main-content with-left-sidebar" role="main">
+
+                    
+<ul class="breadcrumbs menu">
+    <li>
+        <a href="https://www.python.org/" title="The Python Programming Language">Python</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>
+        <a href="https://www.python.org/dev/">Python Developer's Guide</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>
+        <a href="../index.html">PEP Index</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>PEP 0492 -- Coroutines with async and await syntax</li>
+</ul>
+
+
+                    
+<style>
+   .pep-page pre {
+        padding: .5em;
+        background: inherit;
+        border-left: 0px;
+        -webkit-box-shadow: 0 0 0 0;
+        -moz-box-shadow: 0 0 0 0;
+        box-shadow: 0 0 0 0;
+   }
+</style>
+
+    
+    <article class="text">
+        
+
+        <header class="article-header">
+            <h1 class="page-title">PEP 0492 -- Coroutines with async and await syntax</h1>
+        </header>
+
+        <!--
+This HTML is auto-generated.  DO NOT EDIT THIS FILE!  If you are writing a new
+PEP, see http://www.python.org/dev/peps/pep-0001 for instructions and links
+to templates.  DO NOT USE THIS HTML FILE AS YOUR TEMPLATE!
+-->
+<html>
+ <body>
+  <table class="rfc2822 docutils field-list" frame="void" rules="none">
+   <col class="field-name">
+   </col>
+   <col class="field-body">
+   </col>
+   <tbody valign="top">
+    <tr class="field">
+     <th class="field-name">
+      PEP:
+     </th>
+     <td class="field-body">
+      492
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Title:
+     </th>
+     <td class="field-body">
+      Coroutines with async and await syntax
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Author:
+     </th>
+     <td class="field-body">
+      Yury Selivanov &lt;yselivanov at sprymix.com&gt;
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Discussions-To:
+     </th>
+     <td class="field-body">
+      &lt;
+      <a class="reference external" href="mailto:python-dev@python.org?subject=PEP%20492">
+       python-dev at python.org
+      </a>
+      &gt;
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Status:
+     </th>
+     <td class="field-body">
+      Final
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Type:
+     </th>
+     <td class="field-body">
+      Standards Track
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Created:
+     </th>
+     <td class="field-body">
+      09-Apr-2015
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Python-Version:
+     </th>
+     <td class="field-body">
+      3.5
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Post-History:
+     </th>
+     <td class="field-body">
+      17-Apr-2015, 21-Apr-2015, 27-Apr-2015, 29-Apr-2015, 05-May-2015
+     </td>
+    </tr>
+   </tbody>
+  </table>
+  <hr/>
+  <div class="contents topic" id="contents">
+   <p class="topic-title first">
+    Contents
+   </p>
+   <ul class="simple">
+    <li>
+     <a class="reference internal" href="#abstract" id="id44">
+      Abstract
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#api-design-and-implementation-note" id="id45">
+      API Design and Implementation Note
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#rationale-and-goals" id="id46">
+      Rationale and Goals
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#specification" id="id47">
+      Specification
+     </a>
+     <ul>
+      <li>
+       <a class="reference internal" href="#new-coroutine-declaration-syntax" id="id48">
+        New Coroutine Declaration Syntax
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#types-coroutine" id="id49">
+        types.coroutine()
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#await-expression" id="id50">
+        Await Expression
+       </a>
+       <ul>
+        <li>
+         <a class="reference internal" href="#updated-operator-precedence-table" id="id51">
+          Updated operator precedence table
+         </a>
+        </li>
+        <li>
+         <a class="reference internal" href="#examples-of-await-expressions" id="id52">
+          Examples of "await" expressions
+         </a>
+        </li>
+       </ul>
+      </li>
+      <li>
+       <a class="reference internal" href="#asynchronous-context-managers-and-async-with" id="id53">
+        Asynchronous Context Managers and "async with"
+       </a>
+       <ul>
+        <li>
+         <a class="reference internal" href="#new-syntax" id="id54">
+          New Syntax
+         </a>
+        </li>
+        <li>
+         <a class="reference internal" href="#example" id="id55">
+          Example
+         </a>
+        </li>
+       </ul>
+      </li>
+      <li>
+       <a class="reference internal" href="#asynchronous-iterators-and-async-for" id="id56">
+        Asynchronous Iterators and "async for"
+       </a>
+       <ul>
+        <li>
+         <a class="reference internal" href="#id10" id="id57">
+          New Syntax
+         </a>
+        </li>
+        <li>
+         <a class="reference internal" href="#example-1" id="id58">
+          Example 1
+         </a>
+        </li>
+        <li>
+         <a class="reference internal" href="#example-2" id="id59">
+          Example 2
+         </a>
+        </li>
+        <li>
+         <a class="reference internal" href="#why-stopasynciteration" id="id60">
+          Why StopAsyncIteration?
+         </a>
+        </li>
+       </ul>
+      </li>
+      <li>
+       <a class="reference internal" href="#coroutine-objects" id="id61">
+        Coroutine objects
+       </a>
+       <ul>
+        <li>
+         <a class="reference internal" href="#differences-from-generators" id="id62">
+          Differences from generators
+         </a>
+        </li>
+        <li>
+         <a class="reference internal" href="#coroutine-object-methods" id="id63">
+          Coroutine object methods
+         </a>
+        </li>
+       </ul>
+      </li>
+      <li>
+       <a class="reference internal" href="#debugging-features" id="id64">
+        Debugging Features
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#new-standard-library-functions" id="id65">
+        New Standard Library Functions
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#new-abstract-base-classes" id="id66">
+        New Abstract Base Classes
+       </a>
+      </li>
+     </ul>
+    </li>
+    <li>
+     <a class="reference internal" href="#glossary" id="id67">
+      Glossary
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#list-of-functions-and-methods" id="id68">
+      List of functions and methods
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#transition-plan" id="id69">
+      Transition Plan
+     </a>
+     <ul>
+      <li>
+       <a class="reference internal" href="#backwards-compatibility" id="id70">
+        Backwards Compatibility
+       </a>
+       <ul>
+        <li>
+         <a class="reference internal" href="#asyncio" id="id71">
+          asyncio
+         </a>
+        </li>
+        <li>
+         <a class="reference internal" href="#asyncio-migration-strategy" id="id72">
+          asyncio migration strategy
+         </a>
+        </li>
+        <li>
+         <a class="reference internal" href="#async-await-in-cpython-code-base" id="id73">
+          async/await in CPython code base
+         </a>
+        </li>
+       </ul>
+      </li>
+      <li>
+       <a class="reference internal" href="#grammar-updates" id="id74">
+        Grammar Updates
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#deprecation-plans" id="id75">
+        Deprecation Plans
+       </a>
+      </li>
+     </ul>
+    </li>
+    <li>
+     <a class="reference internal" href="#design-considerations" id="id76">
+      Design Considerations
+     </a>
+     <ul>
+      <li>
+       <a class="reference internal" href="#pep-3152" id="id77">
+        PEP 3152
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#coroutine-generators" id="id78">
+        Coroutine-generators
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#why-async-and-await-keywords" id="id79">
+        Why "async" and "await" keywords
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#why-aiter-returns-awaitable" id="id80">
+        Why "__aiter__" returns awaitable
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#importance-of-async-keyword" id="id81">
+        Importance of "async" keyword
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#why-async-def" id="id82">
+        Why "async def"
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#why-not-await-for-and-await-with" id="id83">
+        Why not "await for" and "await with"
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#why-async-def-and-not-def-async" id="id84">
+        Why "async def" and not "def async"
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#why-not-a-future-import" id="id85">
+        Why not a __future__ import
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#why-magic-methods-start-with-a" id="id86">
+        Why magic methods start with "a"
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#why-not-reuse-existing-magic-names" id="id87">
+        Why not reuse existing magic names
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#why-not-reuse-existing-for-and-with-statements" id="id88">
+        Why not reuse existing "for" and "with" statements
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#comprehensions" id="id89">
+        Comprehensions
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#async-lambda-functions" id="id90">
+        Async lambda functions
+       </a>
+      </li>
+     </ul>
+    </li>
+    <li>
+     <a class="reference internal" href="#performance" id="id91">
+      Performance
+     </a>
+     <ul>
+      <li>
+       <a class="reference internal" href="#overall-impact" id="id92">
+        Overall Impact
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#tokenizer-modifications" id="id93">
+        Tokenizer modifications
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#async-await" id="id94">
+        async/await
+       </a>
+      </li>
+     </ul>
+    </li>
+    <li>
+     <a class="reference internal" href="#reference-implementation" id="id95">
+      Reference Implementation
+     </a>
+     <ul>
+      <li>
+       <a class="reference internal" href="#list-of-high-level-changes-and-new-protocols" id="id96">
+        List of high-level changes and new protocols
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#working-example" id="id97">
+        Working example
+       </a>
+      </li>
+     </ul>
+    </li>
+    <li>
+     <a class="reference internal" href="#acceptance" id="id98">
+      Acceptance
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#implementation" id="id99">
+      Implementation
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#references" id="id100">
+      References
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#acknowledgments" id="id101">
+      Acknowledgments
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#copyright" id="id102">
+      Copyright
+     </a>
+    </li>
+   </ul>
+  </div>
+  <div class="section" id="abstract">
+   <h1>
+    <a class="toc-backref" href="#id44">
+     Abstract
+    </a>
+   </h1>
+   <p>
+    The growth of Internet and general connectivity has triggered the
+proportionate need for responsive and scalable code.  This proposal
+aims to answer that need by making writing explicitly asynchronous,
+concurrent Python code easier and more Pythonic.
+   </p>
+   <p>
+    It is proposed to make
+    <em>
+     coroutines
+    </em>
+    a proper standalone concept in
+Python, and introduce new supporting syntax.  The ultimate goal
+is to help establish a common, easily approachable, mental
+model of asynchronous programming in Python and make it as close to
+synchronous programming as possible.
+   </p>
+   <p>
+    This PEP assumes that the asynchronous tasks are scheduled and
+coordinated by an Event Loop similar to that of stdlib module
+    <tt class="docutils literal">
+     asyncio.events.AbstractEventLoop
+    </tt>
+    .  While the PEP is not tied to any
+specific Event Loop implementation, it is relevant only to the kind of
+coroutine that uses
+    <tt class="docutils literal">
+     yield
+    </tt>
+    as a signal to the scheduler, indicating
+that the coroutine will be waiting until an event (such as IO) is
+completed.
+   </p>
+   <p>
+    We believe that the changes proposed here will help keep Python
+relevant and competitive in a quickly growing area of asynchronous
+programming, as many other languages have adopted, or are planning to
+adopt, similar features:
+    <a class="footnote-reference" href="#id27" id="id1">
+     [2]
+    </a>
+    ,
+    <a class="footnote-reference" href="#id30" id="id2">
+     [5]
+    </a>
+    ,
+    <a class="footnote-reference" href="#id31" id="id3">
+     [6]
+    </a>
+    ,
+    <a class="footnote-reference" href="#id32" id="id4">
+     [7]
+    </a>
+    ,
+    <a class="footnote-reference" href="#id33" id="id5">
+     [8]
+    </a>
+    ,
+    <a class="footnote-reference" href="#id35" id="id6">
+     [10]
+    </a>
+    .
+   </p>
+  </div>
+  <div class="section" id="api-design-and-implementation-note">
+   <h1>
+    <a class="toc-backref" href="#id45">
+     API Design and Implementation Note
+    </a>
+   </h1>
+   <p>
+    Feedback on the initial beta release of Python 3.5 resulted in a redesign
+of the object model supporting this PEP to more clearly separate native
+coroutines from generators - rather than being a new kind of generator,
+native coroutines are now their own completely distinct type (implemented
+in
+    <a class="footnote-reference" href="#id42" id="id7">
+     [17]
+    </a>
+    ).
+   </p>
+   <p>
+    This change was implemented based primarily due to problems encountered
+attempting to integrate support for native coroutines into the Tornado web
+server (reported in
+    <a class="footnote-reference" href="#id43" id="id8">
+     [18]
+    </a>
+    ).
+   </p>
+  </div>
+  <div class="section" id="rationale-and-goals">
+   <h1>
+    <a class="toc-backref" href="#id46">
+     Rationale and Goals
+    </a>
+   </h1>
+   <p>
+    Current Python supports implementing coroutines via generators (
+    <a class="reference external" href="../pep-0342/index.html">
+     PEP
+342
+    </a>
+    ), further enhanced by the
+    <tt class="docutils literal">
+     yield from
+    </tt>
+    syntax introduced in
+    <a class="reference external" href="../pep-0380/index.html">
+     PEP
+380
+    </a>
+    . This approach has a number of shortcomings:
+   </p>
+   <ul class="simple">
+    <li>
+     It is easy to confuse coroutines with regular generators, since they
+share the same syntax; this is especially true for new developers.
+    </li>
+    <li>
+     Whether or not a function is a coroutine is determined by a presence
+of
+     <tt class="docutils literal">
+      yield
+     </tt>
+     or
+     <tt class="docutils literal">
+      yield from
+     </tt>
+     statements in its
+     <em>
+      body
+     </em>
+     , which can
+lead to unobvious errors when such statements appear in or disappear
+from function body during refactoring.
+    </li>
+    <li>
+     Support for asynchronous calls is limited to expressions where
+     <tt class="docutils literal">
+      yield
+     </tt>
+     is allowed syntactically, limiting the usefulness of
+syntactic features, such as
+     <tt class="docutils literal">
+      with
+     </tt>
+     and
+     <tt class="docutils literal">
+      for
+     </tt>
+     statements.
+    </li>
+   </ul>
+   <p>
+    This proposal makes coroutines a native Python language feature, and
+clearly separates them from generators.  This removes
+generator/coroutine ambiguity, and makes it possible to reliably define
+coroutines without reliance on a specific library.  This also enables
+linters and IDEs to improve static code analysis and refactoring.
+   </p>
+   <p>
+    Native coroutines and the associated new syntax features make it
+possible to define context manager and iteration protocols in
+asynchronous terms. As shown later in this proposal, the new
+    <tt class="docutils literal">
+     async
+with
+    </tt>
+    statement lets Python programs perform asynchronous calls when
+entering and exiting a runtime context, and the new
+    <tt class="docutils literal">
+     async for
+    </tt>
+    statement makes it possible to perform asynchronous calls in iterators.
+   </p>
+  </div>
+  <div class="section" id="specification">
+   <h1>
+    <a class="toc-backref" href="#id47">
+     Specification
+    </a>
+   </h1>
+   <p>
+    This proposal introduces new syntax and semantics to enhance coroutine
+support in Python.
+   </p>
+   <p>
+    This specification presumes knowledge of the implementation of
+coroutines in Python (
+    <a class="reference external" href="../pep-0342/index.html">
+     PEP 342
+    </a>
+    and
+    <a class="reference external" href="../pep-0380/index.html">
+     PEP 380
+    </a>
+    ).  Motivation for the syntax
+changes proposed here comes from the asyncio framework (
+    <a class="reference external" href="../pep-3156/index.html">
+     PEP 3156
+    </a>
+    ) and
+the "Cofunctions" proposal (
+    <a class="reference external" href="../pep-3152/index.html">
+     PEP 3152
+    </a>
+    , now rejected in favor of this
+specification).
+   </p>
+   <p>
+    From this point in this document we use the word
+    <em>
+     native coroutine
+    </em>
+    to
+refer to functions declared using the new syntax.
+    <em>
+     generator-based
+coroutine
+    </em>
+    is used where necessary to refer to coroutines that are
+based on generator syntax.
+    <em>
+     coroutine
+    </em>
+    is used in contexts where both
+definitions are applicable.
+   </p>
+   <div class="section" id="new-coroutine-declaration-syntax">
+    <h2>
+     <a class="toc-backref" href="#id48">
+      New Coroutine Declaration Syntax
+     </a>
+    </h2>
+    <p>
+     The following new syntax is used to declare a
+     <em>
+      native coroutine
+     </em>
+     :
+    </p>
+    <pre class="literal-block">
+async def read_data(db):
+    pass
+</pre>
+    <p>
+     Key properties of
+     <em>
+      coroutines
+     </em>
+     :
+    </p>
+    <ul class="simple">
+     <li>
+      <tt class="docutils literal">
+       async def
+      </tt>
+      functions are always coroutines, even if they do not
+contain
+      <tt class="docutils literal">
+       await
+      </tt>
+      expressions.
+     </li>
+     <li>
+      It is a
+      <tt class="docutils literal">
+       SyntaxError
+      </tt>
+      to have
+      <tt class="docutils literal">
+       yield
+      </tt>
+      or
+      <tt class="docutils literal">
+       yield from
+      </tt>
+      expressions in an
+      <tt class="docutils literal">
+       async
+      </tt>
+      function.
+     </li>
+     <li>
+      Internally, two new code object flags were introduced:
+      <ul>
+       <li>
+        <tt class="docutils literal">
+         CO_COROUTINE
+        </tt>
+        is used to mark
+        <em>
+         native coroutines
+        </em>
+        (defined with new syntax.)
+       </li>
+       <li>
+        <tt class="docutils literal">
+         CO_ITERABLE_COROUTINE
+        </tt>
+        is used to make
+        <em>
+         generator-based
+coroutines
+        </em>
+        compatible with
+        <em>
+         native coroutines
+        </em>
+        (set by
+        <a class="reference internal" href="#types-coroutine">
+         types.coroutine()
+        </a>
+        function).
+       </li>
+      </ul>
+     </li>
+     <li>
+      Regular generators, when called, return a
+      <em>
+       generator object
+      </em>
+      ;
+similarly, coroutines return a
+      <em>
+       coroutine
+      </em>
+      object.
+     </li>
+     <li>
+      <tt class="docutils literal">
+       StopIteration
+      </tt>
+      exceptions are not propagated out of coroutines,
+and are replaced with a
+      <tt class="docutils literal">
+       RuntimeError
+      </tt>
+      .  For regular generators
+such behavior requires a future import (see
+      <a class="reference external" href="../pep-0479/index.html">
+       PEP 479
+      </a>
+      ).
+     </li>
+     <li>
+      When a
+      <em>
+       coroutine
+      </em>
+      is garbage collected, a
+      <tt class="docutils literal">
+       RuntimeWarning
+      </tt>
+      is
+raised if it was never awaited on (see also
+      <a class="reference internal" href="#debugging-features">
+       Debugging Features
+      </a>
+      .)
+     </li>
+     <li>
+      See also
+      <a class="reference internal" href="#coroutine-objects">
+       Coroutine objects
+      </a>
+      section.
+     </li>
+    </ul>
+   </div>
+   <div class="section" id="types-coroutine">
+    <h2>
+     <a class="toc-backref" href="#id49">
+      types.coroutine()
+     </a>
+    </h2>
+    <p>
+     A new function
+     <tt class="docutils literal">
+      coroutine(fn)
+     </tt>
+     is added to the
+     <tt class="docutils literal">
+      types
+     </tt>
+     module.  It
+allows interoperability between existing
+     <em>
+      generator-based coroutines
+     </em>
+     in asyncio and
+     <em>
+      native coroutines
+     </em>
+     introduced by this PEP:
+    </p>
+    <pre class="literal-block">
+@types.coroutine
+def process_data(db):
+    data = yield from read_data(db)
+    ...
+</pre>
+    <p>
+     The function applies
+     <tt class="docutils literal">
+      CO_ITERABLE_COROUTINE
+     </tt>
+     flag to generator-
+function's code object, making it return a
+     <em>
+      coroutine
+     </em>
+     object.
+    </p>
+    <p>
+     If
+     <tt class="docutils literal">
+      fn
+     </tt>
+     is not a
+     <em>
+      generator function
+     </em>
+     , it is wrapped.  If it returns
+a
+     <em>
+      generator
+     </em>
+     , it will be wrapped in an
+     <em>
+      awaitable
+     </em>
+     proxy object
+(see below the definition of awaitable objects).
+    </p>
+    <p>
+     Note, that the
+     <tt class="docutils literal">
+      CO_COROUTINE
+     </tt>
+     flag is not applied by
+     <tt class="docutils literal">
+      types.coroutine()
+     </tt>
+     to make it possible to separate
+     <em>
+      native
+coroutines
+     </em>
+     defined with new syntax, from
+     <em>
+      generator-based coroutines
+     </em>
+     .
+    </p>
+   </div>
+   <div class="section" id="await-expression">
+    <h2>
+     <a class="toc-backref" href="#id50">
+      Await Expression
+     </a>
+    </h2>
+    <p>
+     The following new
+     <tt class="docutils literal">
+      await
+     </tt>
+     expression is used to obtain a result of
+coroutine execution:
+    </p>
+    <pre class="literal-block">
+async def read_data(db):
+    data = await db.fetch('SELECT ...')
+    ...
+</pre>
+    <p>
+     <tt class="docutils literal">
+      await
+     </tt>
+     , similarly to
+     <tt class="docutils literal">
+      yield from
+     </tt>
+     , suspends execution of
+     <tt class="docutils literal">
+      read_data
+     </tt>
+     coroutine until
+     <tt class="docutils literal">
+      db.fetch
+     </tt>
+     <em>
+      awaitable
+     </em>
+     completes and
+returns the result data.
+    </p>
+    <p>
+     It uses the
+     <tt class="docutils literal">
+      yield from
+     </tt>
+     implementation with an extra step of
+validating its argument.
+     <tt class="docutils literal">
+      await
+     </tt>
+     only accepts an
+     <em>
+      awaitable
+     </em>
+     , which
+can be one of:
+    </p>
+    <ul>
+     <li>
+      <p class="first">
+       A
+       <em>
+        native coroutine
+       </em>
+       object returned from a
+       <em>
+        native coroutine
+function
+       </em>
+       .
+      </p>
+     </li>
+     <li>
+      <p class="first">
+       A
+       <em>
+        generator-based coroutine
+       </em>
+       object returned from a function
+decorated with
+       <tt class="docutils literal">
+        types.coroutine()
+       </tt>
+       .
+      </p>
+     </li>
+     <li>
+      <p class="first">
+       An object with an
+       <tt class="docutils literal">
+        __await__
+       </tt>
+       method returning an iterator.
+      </p>
+      <p>
+       Any
+       <tt class="docutils literal">
+        yield from
+       </tt>
+       chain of calls ends with a
+       <tt class="docutils literal">
+        yield
+       </tt>
+       .  This is a
+fundamental mechanism of how
+       <em>
+        Futures
+       </em>
+       are implemented.  Since,
+internally, coroutines are a special kind of generators, every
+       <tt class="docutils literal">
+        await
+       </tt>
+       is suspended by a
+       <tt class="docutils literal">
+        yield
+       </tt>
+       somewhere down the chain of
+       <tt class="docutils literal">
+        await
+       </tt>
+       calls (please refer to
+       <a class="reference external" href="../pep-3156/index.html">
+        PEP 3156
+       </a>
+       for a detailed
+explanation.)
+      </p>
+      <p>
+       To enable this behavior for coroutines, a new magic method called
+       <tt class="docutils literal">
+        __await__
+       </tt>
+       is added.  In asyncio, for instance, to enable
+       <em>
+        Future
+       </em>
+       objects in
+       <tt class="docutils literal">
+        await
+       </tt>
+       statements, the only change is to add
+       <tt class="docutils literal">
+        __await__ = __iter__
+       </tt>
+       line to
+       <tt class="docutils literal">
+        asyncio.Future
+       </tt>
+       class.
+      </p>
+      <p>
+       Objects with
+       <tt class="docutils literal">
+        __await__
+       </tt>
+       method are called
+       <em>
+        Future-like
+       </em>
+       objects in
+the rest of this PEP.
+      </p>
+      <p>
+       Also, please note that
+       <tt class="docutils literal">
+        __aiter__
+       </tt>
+       method (see its definition
+below) cannot be used for this purpose.  It is a different protocol,
+and would be like using
+       <tt class="docutils literal">
+        __iter__
+       </tt>
+       instead of
+       <tt class="docutils literal">
+        __call__
+       </tt>
+       for
+regular callables.
+      </p>
+      <p>
+       It is a
+       <tt class="docutils literal">
+        TypeError
+       </tt>
+       if
+       <tt class="docutils literal">
+        __await__
+       </tt>
+       returns anything but an
+iterator.
+      </p>
+     </li>
+     <li>
+      <p class="first">
+       Objects defined with CPython C API with a
+       <tt class="docutils literal">
+        tp_as_async.am_await
+       </tt>
+       function, returning an
+       <em>
+        iterator
+       </em>
+       (similar to
+       <tt class="docutils literal">
+        __await__
+       </tt>
+       method).
+      </p>
+     </li>
+    </ul>
+    <p>
+     It is a
+     <tt class="docutils literal">
+      SyntaxError
+     </tt>
+     to use
+     <tt class="docutils literal">
+      await
+     </tt>
+     outside of an
+     <tt class="docutils literal">
+      async def
+     </tt>
+     function (like it is a
+     <tt class="docutils literal">
+      SyntaxError
+     </tt>
+     to use
+     <tt class="docutils literal">
+      yield
+     </tt>
+     outside of
+     <tt class="docutils literal">
+      def
+     </tt>
+     function.)
+    </p>
+    <p>
+     It is a
+     <tt class="docutils literal">
+      TypeError
+     </tt>
+     to pass anything other than an
+     <em>
+      awaitable
+     </em>
+     object
+to an
+     <tt class="docutils literal">
+      await
+     </tt>
+     expression.
+    </p>
+    <div class="section" id="updated-operator-precedence-table">
+     <h3>
+      <a class="toc-backref" href="#id51">
+       Updated operator precedence table
+      </a>
+     </h3>
+     <p>
+      <tt class="docutils literal">
+       await
+      </tt>
+      keyword is defined as follows:
+     </p>
+     <pre class="literal-block">
+power ::=  await ["**" u_expr]
+await ::=  ["await"] primary
+</pre>
+     <p>
+      where "primary" represents the most tightly bound operations of the
+language.  Its syntax is:
+     </p>
+     <pre class="literal-block">
+primary ::=  atom | attributeref | subscription | slicing | call
+</pre>
+     <p>
+      See Python Documentation
+      <a class="footnote-reference" href="#id37" id="id9">
+       [12]
+      </a>
+      and
+      <a class="reference internal" href="#grammar-updates">
+       Grammar Updates
+      </a>
+      section of this
+proposal for details.
+     </p>
+     <p>
+      The key
+      <tt class="docutils literal">
+       await
+      </tt>
+      difference from
+      <tt class="docutils literal">
+       yield
+      </tt>
+      and
+      <tt class="docutils literal">
+       yield from
+      </tt>
+      operators is that
+      <em>
+       await expressions
+      </em>
+      do not require parentheses around
+them most of the times.
+     </p>
+     <p>
+      Also,
+      <tt class="docutils literal">
+       yield from
+      </tt>
+      allows any expression as its argument, including
+expressions like
+      <tt class="docutils literal">
+       yield from a() + b()
+      </tt>
+      , that would be parsed as
+      <tt class="docutils literal">
+       yield from (a() +
+       <span class="pre">
+        b())
+       </span>
+      </tt>
+      , which is almost always a bug.  In general,
+the result of any arithmetic operation is not an
+      <em>
+       awaitable
+      </em>
+      object.
+To avoid this kind of mistakes, it was decided to make
+      <tt class="docutils literal">
+       await
+      </tt>
+      precedence lower than
+      <tt class="docutils literal">
+       []
+      </tt>
+      ,
+      <tt class="docutils literal">
+       ()
+      </tt>
+      , and
+      <tt class="docutils literal">
+       .
+      </tt>
+      , but higher than
+      <tt class="docutils literal">
+       **
+      </tt>
+      operators.
+     </p>
+     <table border="1" class="docutils">
+      <colgroup>
+       <col width="46%">
+       </col>
+       <col width="54%">
+       </col>
+      </colgroup>
+      <thead valign="bottom">
+       <tr>
+        <th class="head">
+         Operator
+        </th>
+        <th class="head">
+         Description
+        </th>
+       </tr>
+      </thead>
+      <tbody valign="top">
+       <tr>
+        <td>
+         <tt class="docutils literal">
+          yield
+         </tt>
+         <tt class="docutils literal">
+          x
+         </tt>
+         ,
+         <tt class="docutils literal">
+          yield from
+         </tt>
+         <tt class="docutils literal">
+          x
+         </tt>
+        </td>
+        <td>
+         Yield expression
+        </td>
+       </tr>
+       <tr>
+        <td>
+         <tt class="docutils literal">
+          lambda
+         </tt>
+        </td>
+        <td>
+         Lambda expression
+        </td>
+       </tr>
+       <tr>
+        <td>
+         <tt class="docutils literal">
+          if
+         </tt>
+         --
+         <tt class="docutils literal">
+          else
+         </tt>
+        </td>
+        <td>
+         Conditional expression
+        </td>
+       </tr>
+       <tr>
+        <td>
+         <tt class="docutils literal">
+          or
+         </tt>
+        </td>
+        <td>
+         Boolean OR
+        </td>
+       </tr>
+       <tr>
+        <td>
+         <tt class="docutils literal">
+          and
+         </tt>
+        </td>
+        <td>
+         Boolean AND
+        </td>
+       </tr>
+       <tr>
+        <td>
+         <tt class="docutils literal">
+          not
+         </tt>
+         <tt class="docutils literal">
+          x
+         </tt>
+        </td>
+        <td>
+         Boolean NOT
+        </td>
+       </tr>
+       <tr>
+        <td>
+         <tt class="docutils literal">
+          in
+         </tt>
+         ,
+         <tt class="docutils literal">
+          not in
+         </tt>
+         ,
+         <tt class="docutils literal">
+          is
+         </tt>
+         ,
+         <tt class="docutils literal">
+          is not
+         </tt>
+         ,
+         <tt class="docutils literal">
+          &lt;
+         </tt>
+         ,
+         <tt class="docutils literal">
+          &lt;=
+         </tt>
+         ,
+         <tt class="docutils literal">
+          &gt;
+         </tt>
+         ,
+         <tt class="docutils literal">
+          &gt;=
+         </tt>
+         ,
+         <tt class="docutils literal">
+          !=
+         </tt>
+         ,
+         <tt class="docutils literal">
+          ==
+         </tt>
+        </td>
+        <td>
+         Comparisons, including membership
+tests and identity tests
+        </td>
+       </tr>
+       <tr>
+        <td>
+         <tt class="docutils literal">
+          |
+         </tt>
+        </td>
+        <td>
+         Bitwise OR
+        </td>
+       </tr>
+       <tr>
+        <td>
+         <tt class="docutils literal">
+          ^
+         </tt>
+        </td>
+        <td>
+         Bitwise XOR
+        </td>
+       </tr>
+       <tr>
+        <td>
+         <tt class="docutils literal">
+          &amp;
+         </tt>
+        </td>
+        <td>
+         Bitwise AND
+        </td>
+       </tr>
+       <tr>
+        <td>
+         <tt class="docutils literal">
+          &lt;&lt;
+         </tt>
+         ,
+         <tt class="docutils literal">
+          &gt;&gt;
+         </tt>
+        </td>
+        <td>
+         Shifts
+        </td>
+       </tr>
+       <tr>
+        <td>
+         <tt class="docutils literal">
+          +
+         </tt>
+         ,
+         <tt class="docutils literal">
+          -
+         </tt>
+        </td>
+        <td>
+         Addition and subtraction
+        </td>
+       </tr>
+       <tr>
+        <td>
+         <tt class="docutils literal">
+          *
+         </tt>
+         ,
+         <tt class="docutils literal">
+          @
+         </tt>
+         ,
+         <tt class="docutils literal">
+          /
+         </tt>
+         ,
+         <tt class="docutils literal">
+          //
+         </tt>
+         ,
+         <tt class="docutils literal">
+          %
+         </tt>
+        </td>
+        <td>
+         Multiplication, matrix
+multiplication, division,
+remainder
+        </td>
+       </tr>
+       <tr>
+        <td>
+         <tt class="docutils literal">
+          +x
+         </tt>
+         ,
+         <tt class="docutils literal">
+          <span class="pre">
+           -x
+          </span>
+         </tt>
+         ,
+         <tt class="docutils literal">
+          ~x
+         </tt>
+        </td>
+        <td>
+         Positive, negative, bitwise NOT
+        </td>
+       </tr>
+       <tr>
+        <td>
+         <tt class="docutils literal">
+          **
+         </tt>
+        </td>
+        <td>
+         Exponentiation
+        </td>
+       </tr>
+       <tr>
+        <td>
+         <tt class="docutils literal">
+          await
+         </tt>
+         <tt class="docutils literal">
+          x
+         </tt>
+        </td>
+        <td>
+         Await expression
+        </td>
+       </tr>
+       <tr>
+        <td>
+         <tt class="docutils literal">
+          x[index]
+         </tt>
+         ,
+         <tt class="docutils literal">
+          x[index:index]
+         </tt>
+         ,
+         <tt class="docutils literal">
+          <span class="pre">
+           x(arguments...)
+          </span>
+         </tt>
+         ,
+         <tt class="docutils literal">
+          x.attribute
+         </tt>
+        </td>
+        <td>
+         Subscription, slicing,
+call, attribute reference
+        </td>
+       </tr>
+       <tr>
+        <td>
+         <tt class="docutils literal">
+          <span class="pre">
+           (expressions...)
+          </span>
+         </tt>
+         ,
+         <tt class="docutils literal">
+          <span class="pre">
+           [expressions...]
+          </span>
+         </tt>
+         ,
+         <tt class="docutils literal">
+          {key:
+          <span class="pre">
+           value...}
+          </span>
+         </tt>
+         ,
+         <tt class="docutils literal">
+          <span class="pre">
+           {expressions...}
+          </span>
+         </tt>
+        </td>
+        <td>
+         Binding or tuple display,
+list display,
+dictionary display,
+set display
+        </td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="section" id="examples-of-await-expressions">
+     <h3>
+      <a class="toc-backref" href="#id52">
+       Examples of "await" expressions
+      </a>
+     </h3>
+     <p>
+      Valid syntax examples:
+     </p>
+     <table border="1" class="docutils">
+      <colgroup>
+       <col width="49%">
+       </col>
+       <col width="51%">
+       </col>
+      </colgroup>
+      <thead valign="bottom">
+       <tr>
+        <th class="head">
+         Expression
+        </th>
+        <th class="head">
+         Will be parsed as
+        </th>
+       </tr>
+      </thead>
+      <tbody valign="top">
+       <tr>
+        <td>
+         <tt class="docutils literal">
+          if await fut: pass
+         </tt>
+        </td>
+        <td>
+         <tt class="docutils literal">
+          if (await fut): pass
+         </tt>
+        </td>
+       </tr>
+       <tr>
+        <td>
+         <tt class="docutils literal">
+          if await fut + 1: pass
+         </tt>
+        </td>
+        <td>
+         <tt class="docutils literal">
+          if (await fut) + 1: pass
+         </tt>
+        </td>
+       </tr>
+       <tr>
+        <td>
+         <tt class="docutils literal">
+          pair = await fut, 'spam'
+         </tt>
+        </td>
+        <td>
+         <tt class="docutils literal">
+          pair = (await fut), 'spam'
+         </tt>
+        </td>
+       </tr>
+       <tr>
+        <td>
+         <tt class="docutils literal">
+          with await fut,
+          <span class="pre">
+           open():
+          </span>
+          pass
+         </tt>
+        </td>
+        <td>
+         <tt class="docutils literal">
+          with (await fut),
+          <span class="pre">
+           open():
+          </span>
+          pass
+         </tt>
+        </td>
+       </tr>
+       <tr>
+        <td>
+         <tt class="docutils literal">
+          await
+          <span class="pre">
+           foo()['spam'].baz()()
+          </span>
+         </tt>
+        </td>
+        <td>
+         <tt class="docutils literal">
+          await (
+          <span class="pre">
+           foo()['spam'].baz()()
+          </span>
+          )
+         </tt>
+        </td>
+       </tr>
+       <tr>
+        <td>
+         <tt class="docutils literal">
+          return await coro()
+         </tt>
+        </td>
+        <td>
+         <tt class="docutils literal">
+          return ( await coro() )
+         </tt>
+        </td>
+       </tr>
+       <tr>
+        <td>
+         <tt class="docutils literal">
+          res = await coro() ** 2
+         </tt>
+        </td>
+        <td>
+         <tt class="docutils literal">
+          res = (await
+          <span class="pre">
+           coro())
+          </span>
+          ** 2
+         </tt>
+        </td>
+       </tr>
+       <tr>
+        <td>
+         <tt class="docutils literal">
+          func(a1=await
+          <span class="pre">
+           coro(),
+          </span>
+          a2=0)
+         </tt>
+        </td>
+        <td>
+         <tt class="docutils literal">
+          <span class="pre">
+           func(a1=(await
+          </span>
+          <span class="pre">
+           coro()),
+          </span>
+          a2=0)
+         </tt>
+        </td>
+       </tr>
+       <tr>
+        <td>
+         <tt class="docutils literal">
+          await foo() + await bar()
+         </tt>
+        </td>
+        <td>
+         <tt class="docutils literal">
+          (await
+          <span class="pre">
+           foo())
+          </span>
+          + (await
+          <span class="pre">
+           bar())
+          </span>
+         </tt>
+        </td>
+       </tr>
+       <tr>
+        <td>
+         <tt class="docutils literal">
+          <span class="pre">
+           -await
+          </span>
+          foo()
+         </tt>
+        </td>
+        <td>
+         <tt class="docutils literal">
+          <span class="pre">
+           -(await
+          </span>
+          <span class="pre">
+           foo())
+          </span>
+         </tt>
+        </td>
+       </tr>
+      </tbody>
+     </table>
+     <p>
+      Invalid syntax examples:
+     </p>
+     <table border="1" class="docutils">
+      <colgroup>
+       <col width="50%">
+       </col>
+       <col width="50%">
+       </col>
+      </colgroup>
+      <thead valign="bottom">
+       <tr>
+        <th class="head">
+         Expression
+        </th>
+        <th class="head">
+         Should be written as
+        </th>
+       </tr>
+      </thead>
+      <tbody valign="top">
+       <tr>
+        <td>
+         <tt class="docutils literal">
+          await await coro()
+         </tt>
+        </td>
+        <td>
+         <tt class="docutils literal">
+          await (await
+          <span class="pre">
+           coro())
+          </span>
+         </tt>
+        </td>
+       </tr>
+       <tr>
+        <td>
+         <tt class="docutils literal">
+          await
+          <span class="pre">
+           -coro()
+          </span>
+         </tt>
+        </td>
+        <td>
+         <tt class="docutils literal">
+          await
+          <span class="pre">
+           (-coro())
+          </span>
+         </tt>
+        </td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+   </div>
+   <div class="section" id="asynchronous-context-managers-and-async-with">
+    <h2>
+     <a class="toc-backref" href="#id53">
+      Asynchronous Context Managers and "async with"
+     </a>
+    </h2>
+    <p>
+     An
+     <em>
+      asynchronous context manager
+     </em>
+     is a context manager that is able to
+suspend execution in its
+     <em>
+      enter
+     </em>
+     and
+     <em>
+      exit
+     </em>
+     methods.
+    </p>
+    <p>
+     To make this possible, a new protocol for asynchronous context managers
+is proposed.  Two new magic methods are added:
+     <tt class="docutils literal">
+      __aenter__
+     </tt>
+     and
+     <tt class="docutils literal">
+      __aexit__
+     </tt>
+     . Both must return an
+     <em>
+      awaitable
+     </em>
+     .
+    </p>
+    <p>
+     An example of an asynchronous context manager:
+    </p>
+    <pre class="literal-block">
+class AsyncContextManager:
+    async def __aenter__(self):
+        await log('entering context')
+
+    async def __aexit__(self, exc_type, exc, tb):
+        await log('exiting context')
+</pre>
+    <div class="section" id="new-syntax">
+     <h3>
+      <a class="toc-backref" href="#id54">
+       New Syntax
+      </a>
+     </h3>
+     <p>
+      A new statement for asynchronous context managers is proposed:
+     </p>
+     <pre class="literal-block">
+async with EXPR as VAR:
+    BLOCK
+</pre>
+     <p>
+      which is semantically equivalent to:
+     </p>
+     <pre class="literal-block">
+mgr = (EXPR)
+aexit = type(mgr).__aexit__
+aenter = type(mgr).__aenter__(mgr)
+exc = True
+
+VAR = await aenter
+try:
+    BLOCK
+except:
+    if not await aexit(mgr, *sys.exc_info()):
+        raise
+else:
+    await aexit(mgr, None, None, None)
+</pre>
+     <p>
+      As with regular
+      <tt class="docutils literal">
+       with
+      </tt>
+      statements, it is possible to specify multiple
+context managers in a single
+      <tt class="docutils literal">
+       async with
+      </tt>
+      statement.
+     </p>
+     <p>
+      It is an error to pass a regular context manager without
+      <tt class="docutils literal">
+       __aenter__
+      </tt>
+      and
+      <tt class="docutils literal">
+       __aexit__
+      </tt>
+      methods to
+      <tt class="docutils literal">
+       async with
+      </tt>
+      .  It is a
+      <tt class="docutils literal">
+       SyntaxError
+      </tt>
+      to use
+      <tt class="docutils literal">
+       async with
+      </tt>
+      outside of an
+      <tt class="docutils literal">
+       async def
+      </tt>
+      function.
+     </p>
+    </div>
+    <div class="section" id="example">
+     <h3>
+      <a class="toc-backref" href="#id55">
+       Example
+      </a>
+     </h3>
+     <p>
+      With
+      <em>
+       asynchronous context managers
+      </em>
+      it is easy to implement proper
+database transaction managers for coroutines:
+     </p>
+     <pre class="literal-block">
+async def commit(session, data):
+    ...
+
+    async with session.transaction():
+        ...
+        await session.update(data)
+        ...
+</pre>
+     <p>
+      Code that needs locking also looks lighter:
+     </p>
+     <pre class="literal-block">
+async with lock:
+    ...
+</pre>
+     <p>
+      instead of:
+     </p>
+     <pre class="literal-block">
+with (yield from lock):
+    ...
+</pre>
+    </div>
+   </div>
+   <div class="section" id="asynchronous-iterators-and-async-for">
+    <h2>
+     <a class="toc-backref" href="#id56">
+      Asynchronous Iterators and "async for"
+     </a>
+    </h2>
+    <p>
+     An
+     <em>
+      asynchronous iterable
+     </em>
+     is able to call asynchronous code in its
+     <em>
+      iter
+     </em>
+     implementation, and
+     <em>
+      asynchronous iterator
+     </em>
+     can call
+asynchronous code in its
+     <em>
+      next
+     </em>
+     method.  To support asynchronous
+iteration:
+    </p>
+    <ol class="arabic simple">
+     <li>
+      An object must implement an
+      <tt class="docutils literal">
+       __aiter__
+      </tt>
+      method (or, if defined
+with CPython C API,
+      <tt class="docutils literal">
+       tp_as_async.am_aiter
+      </tt>
+      slot) returning an
+      <em>
+       awaitable
+      </em>
+      resulting in an
+      <em>
+       asynchronous iterator object
+      </em>
+      .
+     </li>
+     <li>
+      An
+      <em>
+       asynchronous iterator object
+      </em>
+      must implement an
+      <tt class="docutils literal">
+       __anext__
+      </tt>
+      method (or, if defined with CPython C API,
+      <tt class="docutils literal">
+       tp_as_async.am_anext
+      </tt>
+      slot) returning an
+      <em>
+       awaitable
+      </em>
+      .
+     </li>
+     <li>
+      To stop iteration
+      <tt class="docutils literal">
+       __anext__
+      </tt>
+      must raise a
+      <tt class="docutils literal">
+       StopAsyncIteration
+      </tt>
+      exception.
+     </li>
+    </ol>
+    <p>
+     An example of asynchronous iterable:
+    </p>
+    <pre class="literal-block">
+class AsyncIterable:
+    async def __aiter__(self):
+        return self
+
+    async def __anext__(self):
+        data = await self.fetch_data()
+        if data:
+            return data
+        else:
+            raise StopAsyncIteration
+
+    async def fetch_data(self):
+        ...
+</pre>
+    <div class="section" id="id10">
+     <h3>
+      <a class="toc-backref" href="#id57">
+       New Syntax
+      </a>
+     </h3>
+     <p>
+      A new statement for iterating through asynchronous iterators is
+proposed:
+     </p>
+     <pre class="literal-block">
+async for TARGET in ITER:
+    BLOCK
+else:
+    BLOCK2
+</pre>
+     <p>
+      which is semantically equivalent to:
+     </p>
+     <pre class="literal-block">
+iter = (ITER)
+iter = await type(iter).__aiter__(iter)
+running = True
+while running:
+    try:
+        TARGET = await type(iter).__anext__(iter)
+    except StopAsyncIteration:
+        running = False
+    else:
+        BLOCK
+else:
+    BLOCK2
+</pre>
+     <p>
+      It is a
+      <tt class="docutils literal">
+       TypeError
+      </tt>
+      to pass a regular iterable without
+      <tt class="docutils literal">
+       __aiter__
+      </tt>
+      method to
+      <tt class="docutils literal">
+       async for
+      </tt>
+      .  It is a
+      <tt class="docutils literal">
+       SyntaxError
+      </tt>
+      to use
+      <tt class="docutils literal">
+       async for
+      </tt>
+      outside of an
+      <tt class="docutils literal">
+       async def
+      </tt>
+      function.
+     </p>
+     <p>
+      As for with regular
+      <tt class="docutils literal">
+       for
+      </tt>
+      statement,
+      <tt class="docutils literal">
+       async for
+      </tt>
+      has an optional
+      <tt class="docutils literal">
+       else
+      </tt>
+      clause.
+     </p>
+    </div>
+    <div class="section" id="example-1">
+     <h3>
+      <a class="toc-backref" href="#id58">
+       Example 1
+      </a>
+     </h3>
+     <p>
+      With asynchronous iteration protocol it is possible to asynchronously
+buffer data during iteration:
+     </p>
+     <pre class="literal-block">
+async for data in cursor:
+    ...
+</pre>
+     <p>
+      Where
+      <tt class="docutils literal">
+       cursor
+      </tt>
+      is an asynchronous iterator that prefetches
+      <tt class="docutils literal">
+       N
+      </tt>
+      rows
+of data from a database after every
+      <tt class="docutils literal">
+       N
+      </tt>
+      iterations.
+     </p>
+     <p>
+      The following code illustrates new asynchronous iteration protocol:
+     </p>
+     <pre class="literal-block">
+class Cursor:
+    def __init__(self):
+        self.buffer = collections.deque()
+
+    async def _prefetch(self):
+        ...
+
+    async def __aiter__(self):
+        return self
+
+    async def __anext__(self):
+        if not self.buffer:
+            self.buffer = await self._prefetch()
+            if not self.buffer:
+                raise StopAsyncIteration
+        return self.buffer.popleft()
+</pre>
+     <p>
+      then the
+      <tt class="docutils literal">
+       Cursor
+      </tt>
+      class can be used as follows:
+     </p>
+     <pre class="literal-block">
+async for row in Cursor():
+    print(row)
+</pre>
+     <p>
+      which would be equivalent to the following code:
+     </p>
+     <pre class="literal-block">
+i = await Cursor().__aiter__()
+while True:
+    try:
+        row = await i.__anext__()
+    except StopAsyncIteration:
+        break
+    else:
+        print(row)
+</pre>
+    </div>
+    <div class="section" id="example-2">
+     <h3>
+      <a class="toc-backref" href="#id59">
+       Example 2
+      </a>
+     </h3>
+     <p>
+      The following is a utility class that transforms a regular iterable to
+an asynchronous one.  While this is not a very useful thing to do, the
+code illustrates the relationship between regular and asynchronous
+iterators.
+     </p>
+     <pre class="literal-block">
+class AsyncIteratorWrapper:
+    def __init__(self, obj):
+        self._it = iter(obj)
+
+    async def __aiter__(self):
+        return self
+
+    async def __anext__(self):
+        try:
+            value = next(self._it)
+        except StopIteration:
+            raise StopAsyncIteration
+        return value
+
+async for letter in AsyncIteratorWrapper("abc"):
+    print(letter)
+</pre>
+    </div>
+    <div class="section" id="why-stopasynciteration">
+     <h3>
+      <a class="toc-backref" href="#id60">
+       Why StopAsyncIteration?
+      </a>
+     </h3>
+     <p>
+      Coroutines are still based on generators internally.  So, before
+      <a class="reference external" href="../pep-0479/index.html">
+       PEP
+479
+      </a>
+      , there was no fundamental difference between
+     </p>
+     <pre class="literal-block">
+def g1():
+    yield from fut
+    return 'spam'
+</pre>
+     <p>
+      and
+     </p>
+     <pre class="literal-block">
+def g2():
+    yield from fut
+    raise StopIteration('spam')
+</pre>
+     <p>
+      And since
+      <a class="reference external" href="../pep-0479/index.html">
+       PEP 479
+      </a>
+      is accepted and enabled by default for coroutines,
+the following example will have its
+      <tt class="docutils literal">
+       StopIteration
+      </tt>
+      wrapped into a
+      <tt class="docutils literal">
+       RuntimeError
+      </tt>
+     </p>
+     <pre class="literal-block">
+async def a1():
+    await fut
+    raise StopIteration('spam')
+</pre>
+     <p>
+      The only way to tell the outside code that the iteration has ended is
+to raise something other than
+      <tt class="docutils literal">
+       StopIteration
+      </tt>
+      .  Therefore, a new
+built-in exception class
+      <tt class="docutils literal">
+       StopAsyncIteration
+      </tt>
+      was added.
+     </p>
+     <p>
+      Moreover, with semantics from
+      <a class="reference external" href="../pep-0479/index.html">
+       PEP 479
+      </a>
+      , all
+      <tt class="docutils literal">
+       StopIteration
+      </tt>
+      exceptions
+raised in coroutines are wrapped in
+      <tt class="docutils literal">
+       RuntimeError
+      </tt>
+      .
+     </p>
+    </div>
+   </div>
+   <div class="section" id="coroutine-objects">
+    <h2>
+     <a class="toc-backref" href="#id61">
+      Coroutine objects
+     </a>
+    </h2>
+    <div class="section" id="differences-from-generators">
+     <h3>
+      <a class="toc-backref" href="#id62">
+       Differences from generators
+      </a>
+     </h3>
+     <p>
+      This section applies only to
+      <em>
+       native coroutines
+      </em>
+      with
+      <tt class="docutils literal">
+       CO_COROUTINE
+      </tt>
+      flag, i.e. defined with the new
+      <tt class="docutils literal">
+       async def
+      </tt>
+      syntax.
+     </p>
+     <p>
+      <strong>
+       The behavior of existing *generator-based coroutines* in asyncio
+remains unchanged.
+      </strong>
+     </p>
+     <p>
+      Great effort has been made to make sure that coroutines and
+generators are treated as distinct concepts:
+     </p>
+     <ol class="arabic">
+      <li>
+       <p class="first">
+        <em>
+         Native coroutine
+        </em>
+        objects do not implement
+        <tt class="docutils literal">
+         __iter__
+        </tt>
+        and
+        <tt class="docutils literal">
+         __next__
+        </tt>
+        methods.  Therefore, they cannot be iterated over or
+passed to
+        <tt class="docutils literal">
+         iter()
+        </tt>
+        ,
+        <tt class="docutils literal">
+         list()
+        </tt>
+        ,
+        <tt class="docutils literal">
+         tuple()
+        </tt>
+        and other built-ins.
+They also cannot be used in a
+        <tt class="docutils literal">
+         <span class="pre">
+          for..in
+         </span>
+        </tt>
+        loop.
+       </p>
+       <p>
+        An attempt to use
+        <tt class="docutils literal">
+         __iter__
+        </tt>
+        or
+        <tt class="docutils literal">
+         __next__
+        </tt>
+        on a
+        <em>
+         native
+coroutine
+        </em>
+        object will result in a
+        <tt class="docutils literal">
+         TypeError
+        </tt>
+        .
+       </p>
+      </li>
+      <li>
+       <p class="first">
+        <em>
+         Plain generators
+        </em>
+        cannot
+        <tt class="docutils literal">
+         yield from
+        </tt>
+        <em>
+         native coroutines
+        </em>
+        :
+doing so will result in a
+        <tt class="docutils literal">
+         TypeError
+        </tt>
+        .
+       </p>
+      </li>
+      <li>
+       <p class="first">
+        <em>
+         generator-based coroutines
+        </em>
+        (for asyncio code must be decorated
+with
+        <tt class="docutils literal">
+         @asyncio.coroutine
+        </tt>
+        ) can
+        <tt class="docutils literal">
+         yield from
+        </tt>
+        <em>
+         native coroutine
+objects
+        </em>
+        .
+       </p>
+      </li>
+      <li>
+       <p class="first">
+        <tt class="docutils literal">
+         inspect.isgenerator()
+        </tt>
+        and
+        <tt class="docutils literal">
+         inspect.isgeneratorfunction()
+        </tt>
+        return
+        <tt class="docutils literal">
+         False
+        </tt>
+        for
+        <em>
+         native coroutine
+        </em>
+        objects and
+        <em>
+         native
+coroutine functions
+        </em>
+        .
+       </p>
+      </li>
+     </ol>
+    </div>
+    <div class="section" id="coroutine-object-methods">
+     <h3>
+      <a class="toc-backref" href="#id63">
+       Coroutine object methods
+      </a>
+     </h3>
+     <p>
+      Coroutines are based on generators internally, thus they share the
+implementation.  Similarly to generator objects,
+      <em>
+       coroutines
+      </em>
+      have
+      <tt class="docutils literal">
+       throw()
+      </tt>
+      ,
+      <tt class="docutils literal">
+       send()
+      </tt>
+      and
+      <tt class="docutils literal">
+       close()
+      </tt>
+      methods.
+      <tt class="docutils literal">
+       StopIteration
+      </tt>
+      and
+      <tt class="docutils literal">
+       GeneratorExit
+      </tt>
+      play the same role for coroutines (although
+      <a class="reference external" href="../pep-0479/index.html">
+       PEP 479
+      </a>
+      is enabled by default for coroutines).  See
+      <a class="reference external" href="../pep-0342/index.html">
+       PEP 342
+      </a>
+      ,
+      <a class="reference external" href="../pep-0380/index.html">
+       PEP 380
+      </a>
+      ,
+and Python Documentation
+      <a class="footnote-reference" href="#id36" id="id11">
+       [11]
+      </a>
+      for details.
+     </p>
+     <p>
+      <tt class="docutils literal">
+       throw()
+      </tt>
+      ,
+      <tt class="docutils literal">
+       send()
+      </tt>
+      methods for
+      <em>
+       coroutines
+      </em>
+      are used to push
+values and raise errors into
+      <em>
+       Future-like
+      </em>
+      objects.
+     </p>
+    </div>
+   </div>
+   <div class="section" id="debugging-features">
+    <h2>
+     <a class="toc-backref" href="#id64">
+      Debugging Features
+     </a>
+    </h2>
+    <p>
+     A common beginner mistake is forgetting to use
+     <tt class="docutils literal">
+      yield from
+     </tt>
+     on
+coroutines:
+    </p>
+    <pre class="literal-block">
+@asyncio.coroutine
+def useful():
+    asyncio.sleep(1) # this will do noting without 'yield from'
+</pre>
+    <p>
+     For debugging this kind of mistakes there is a special debug mode in
+asyncio, in which
+     <tt class="docutils literal">
+      @coroutine
+     </tt>
+     decorator wraps all functions with a
+special object with a destructor logging a warning.  Whenever a wrapped
+generator gets garbage collected, a detailed logging message is
+generated with information about where exactly the decorator function
+was defined, stack trace of where it was collected, etc.  Wrapper
+object also provides a convenient
+     <tt class="docutils literal">
+      __repr__
+     </tt>
+     function with detailed
+information about the generator.
+    </p>
+    <p>
+     The only problem is how to enable these debug capabilities.  Since
+debug facilities should be a no-op in production mode,
+     <tt class="docutils literal">
+      @coroutine
+     </tt>
+     decorator makes the decision of whether to wrap or not to wrap based on
+an OS environment variable
+     <tt class="docutils literal">
+      PYTHONASYNCIODEBUG
+     </tt>
+     .  This way it is
+possible to run asyncio programs with asyncio's own functions
+instrumented.
+     <tt class="docutils literal">
+      EventLoop.set_debug
+     </tt>
+     , a different debug facility, has
+no impact on
+     <tt class="docutils literal">
+      @coroutine
+     </tt>
+     decorator's behavior.
+    </p>
+    <p>
+     With this proposal, coroutines is a native, distinct from generators,
+concept.
+     <em>
+      In addition
+     </em>
+     to a
+     <tt class="docutils literal">
+      RuntimeWarning
+     </tt>
+     being raised on
+coroutines that were never awaited, it is proposed to add two new
+functions to the
+     <tt class="docutils literal">
+      sys
+     </tt>
+     module:
+     <tt class="docutils literal">
+      set_coroutine_wrapper
+     </tt>
+     and
+     <tt class="docutils literal">
+      get_coroutine_wrapper
+     </tt>
+     .  This is to enable advanced debugging
+facilities in asyncio and other frameworks (such as displaying where
+exactly coroutine was created, and a more detailed stack trace of where
+it was garbage collected).
+    </p>
+   </div>
+   <div class="section" id="new-standard-library-functions">
+    <h2>
+     <a class="toc-backref" href="#id65">
+      New Standard Library Functions
+     </a>
+    </h2>
+    <ul class="simple">
+     <li>
+      <tt class="docutils literal">
+       types.coroutine(gen)
+      </tt>
+      .  See
+      <a class="reference internal" href="#types-coroutine">
+       types.coroutine()
+      </a>
+      section for
+details.
+     </li>
+     <li>
+      <tt class="docutils literal">
+       inspect.iscoroutine(obj)
+      </tt>
+      returns
+      <tt class="docutils literal">
+       True
+      </tt>
+      if
+      <tt class="docutils literal">
+       obj
+      </tt>
+      is a
+      <em>
+       native coroutine
+      </em>
+      object.
+     </li>
+     <li>
+      <tt class="docutils literal">
+       inspect.iscoroutinefunction(obj)
+      </tt>
+      returns
+      <tt class="docutils literal">
+       True
+      </tt>
+      if
+      <tt class="docutils literal">
+       obj
+      </tt>
+      is a
+      <em>
+       native coroutine function
+      </em>
+      .
+     </li>
+     <li>
+      <tt class="docutils literal">
+       inspect.isawaitable(obj)
+      </tt>
+      returns
+      <tt class="docutils literal">
+       True
+      </tt>
+      if
+      <tt class="docutils literal">
+       obj
+      </tt>
+      is an
+      <em>
+       awaitable
+      </em>
+      .
+     </li>
+     <li>
+      <tt class="docutils literal">
+       inspect.getcoroutinestate(coro)
+      </tt>
+      returns the current state of
+a
+      <em>
+       native coroutine object
+      </em>
+      (mirrors
+      <tt class="docutils literal">
+       inspect.getfgeneratorstate(gen)
+      </tt>
+      ).
+     </li>
+     <li>
+      <tt class="docutils literal">
+       inspect.getcoroutinelocals(coro)
+      </tt>
+      returns the mapping of a
+      <em>
+       native coroutine object's
+      </em>
+      local variables to their values
+(mirrors
+      <tt class="docutils literal">
+       inspect.getgeneratorlocals(gen)
+      </tt>
+      ).
+     </li>
+     <li>
+      <tt class="docutils literal">
+       sys.set_coroutine_wrapper(wrapper)
+      </tt>
+      allows to intercept creation of
+      <em>
+       native coroutine
+      </em>
+      objects.
+      <tt class="docutils literal">
+       wrapper
+      </tt>
+      must be either a callable that
+accepts one argument (a
+      <em>
+       coroutine
+      </em>
+      object), or
+      <tt class="docutils literal">
+       None
+      </tt>
+      .
+      <tt class="docutils literal">
+       None
+      </tt>
+      resets the wrapper.  If called twice, the new wrapper replaces the
+previous one. The function is thread-specific.  See
+      <a class="reference internal" href="#debugging-features">
+       Debugging
+Features
+      </a>
+      for more details.
+     </li>
+     <li>
+      <tt class="docutils literal">
+       sys.get_coroutine_wrapper()
+      </tt>
+      returns the current wrapper object.
+Returns
+      <tt class="docutils literal">
+       None
+      </tt>
+      if no wrapper was set.  The function is
+thread-specific.  See
+      <a class="reference internal" href="#debugging-features">
+       Debugging Features
+      </a>
+      for more details.
+     </li>
+    </ul>
+   </div>
+   <div class="section" id="new-abstract-base-classes">
+    <h2>
+     <a class="toc-backref" href="#id66">
+      New Abstract Base Classes
+     </a>
+    </h2>
+    <p>
+     In order to allow better integration with existing frameworks (such as
+Tornado, see
+     <a class="footnote-reference" href="#id38" id="id12">
+      [13]
+     </a>
+     ) and compilers (such as Cython, see
+     <a class="footnote-reference" href="#id41" id="id13">
+      [16]
+     </a>
+     ), two new
+Abstract Base Classes (ABC) are added:
+    </p>
+    <ul>
+     <li>
+      <p class="first">
+       <tt class="docutils literal">
+        collections.abc.Awaitable
+       </tt>
+       ABC for
+       <em>
+        Future-like
+       </em>
+       classes, that
+implement
+       <tt class="docutils literal">
+        __await__
+       </tt>
+       method.
+      </p>
+     </li>
+     <li>
+      <p class="first">
+       <tt class="docutils literal">
+        collections.abc.Coroutine
+       </tt>
+       ABC for
+       <em>
+        coroutine
+       </em>
+       objects, that
+implement
+       <tt class="docutils literal">
+        send(value)
+       </tt>
+       ,
+       <tt class="docutils literal">
+        throw(type, exc, tb)
+       </tt>
+       ,
+       <tt class="docutils literal">
+        close()
+       </tt>
+       and
+       <tt class="docutils literal">
+        __await__()
+       </tt>
+       methods.
+      </p>
+      <p>
+       Note that generator-based coroutines with
+       <tt class="docutils literal">
+        CO_ITERABLE_COROUTINE
+       </tt>
+       flag do not implement
+       <tt class="docutils literal">
+        __await__
+       </tt>
+       method, and therefore are not
+instances of
+       <tt class="docutils literal">
+        collections.abc.Coroutine
+       </tt>
+       and
+       <tt class="docutils literal">
+        collections.abc.Awaitable
+       </tt>
+       ABCs:
+      </p>
+      <pre class="literal-block">
+@types.coroutine
+def gencoro():
+    yield
+
+assert not isinstance(gencoro(), collections.abc.Coroutine)
+
+# however:
+assert inspect.isawaitable(gencoro())
+</pre>
+     </li>
+    </ul>
+    <p>
+     To allow easy testing if objects support asynchronous iteration, two
+more ABCs are added:
+    </p>
+    <ul class="simple">
+     <li>
+      <tt class="docutils literal">
+       collections.abc.AsyncIterable
+      </tt>
+      -- tests for
+      <tt class="docutils literal">
+       __aiter__
+      </tt>
+      method.
+     </li>
+     <li>
+      <tt class="docutils literal">
+       collections.abc.AsyncIterator
+      </tt>
+      -- tests for
+      <tt class="docutils literal">
+       __aiter__
+      </tt>
+      and
+      <tt class="docutils literal">
+       __anext__
+      </tt>
+      methods.
+     </li>
+    </ul>
+   </div>
+  </div>
+  <div class="section" id="glossary">
+   <h1>
+    <a class="toc-backref" href="#id67">
+     Glossary
+    </a>
+   </h1>
+   <dl class="docutils">
+    <dt>
+     Native coroutine function
+    </dt>
+    <dd>
+     A coroutine function is declared with
+     <tt class="docutils literal">
+      async def
+     </tt>
+     . It uses
+     <tt class="docutils literal">
+      await
+     </tt>
+     and
+     <tt class="docutils literal">
+      return value
+     </tt>
+     ; see
+     <a class="reference internal" href="#new-coroutine-declaration-syntax">
+      New Coroutine Declaration
+Syntax
+     </a>
+     for details.
+    </dd>
+    <dt>
+     Native coroutine
+    </dt>
+    <dd>
+     Returned from a native coroutine function. See
+     <a class="reference internal" href="#await-expression">
+      Await Expression
+     </a>
+     for details.
+    </dd>
+    <dt>
+     Generator-based coroutine function
+    </dt>
+    <dd>
+     Coroutines based on generator syntax.  Most common example are
+functions decorated with
+     <tt class="docutils literal">
+      @asyncio.coroutine
+     </tt>
+     .
+    </dd>
+    <dt>
+     Generator-based coroutine
+    </dt>
+    <dd>
+     Returned from a generator-based coroutine function.
+    </dd>
+    <dt>
+     Coroutine
+    </dt>
+    <dd>
+     Either
+     <em>
+      native coroutine
+     </em>
+     or
+     <em>
+      generator-based coroutine
+     </em>
+     .
+    </dd>
+    <dt>
+     Coroutine object
+    </dt>
+    <dd>
+     Either
+     <em>
+      native coroutine
+     </em>
+     object or
+     <em>
+      generator-based coroutine
+     </em>
+     object.
+    </dd>
+    <dt>
+     Future-like object
+    </dt>
+    <dd>
+     An object with an
+     <tt class="docutils literal">
+      __await__
+     </tt>
+     method, or a C object with
+     <tt class="docutils literal">
+      <span class="pre">
+       tp_as_async-&gt;am_await
+      </span>
+     </tt>
+     function, returning an
+     <em>
+      iterator
+     </em>
+     .  Can be
+consumed by an
+     <tt class="docutils literal">
+      await
+     </tt>
+     expression in a coroutine. A coroutine
+waiting for a Future-like object is suspended until the Future-like
+object's
+     <tt class="docutils literal">
+      __await__
+     </tt>
+     completes, and returns the result.  See
+     <a class="reference internal" href="#await-expression">
+      Await Expression
+     </a>
+     for details.
+    </dd>
+    <dt>
+     Awaitable
+    </dt>
+    <dd>
+     A
+     <em>
+      Future-like
+     </em>
+     object or a
+     <em>
+      coroutine
+     </em>
+     object.  See
+     <a class="reference internal" href="#await-expression">
+      Await
+Expression
+     </a>
+     for details.
+    </dd>
+    <dt>
+     Asynchronous context manager
+    </dt>
+    <dd>
+     An asynchronous context manager has
+     <tt class="docutils literal">
+      __aenter__
+     </tt>
+     and
+     <tt class="docutils literal">
+      __aexit__
+     </tt>
+     methods and can be used with
+     <tt class="docutils literal">
+      async with
+     </tt>
+     .  See
+     <a class="reference internal" href="#asynchronous-context-managers-and-async-with">
+      Asynchronous
+Context Managers and "async with"
+     </a>
+     for details.
+    </dd>
+    <dt>
+     Asynchronous iterable
+    </dt>
+    <dd>
+     An object with an
+     <tt class="docutils literal">
+      __aiter__
+     </tt>
+     method, which must return an
+     <em>
+      asynchronous iterator
+     </em>
+     object.  Can be used with
+     <tt class="docutils literal">
+      async for
+     </tt>
+     .
+See
+     <a class="reference internal" href="#asynchronous-iterators-and-async-for">
+      Asynchronous Iterators and "async for"
+     </a>
+     for details.
+    </dd>
+    <dt>
+     Asynchronous iterator
+    </dt>
+    <dd>
+     An asynchronous iterator has an
+     <tt class="docutils literal">
+      __anext__
+     </tt>
+     method.  See
+     <a class="reference internal" href="#asynchronous-iterators-and-async-for">
+      Asynchronous Iterators and "async for"
+     </a>
+     for details.
+    </dd>
+   </dl>
+  </div>
+  <div class="section" id="list-of-functions-and-methods">
+   <h1>
+    <a class="toc-backref" href="#id68">
+     List of functions and methods
+    </a>
+   </h1>
+   <table border="1" class="docutils">
+    <colgroup>
+     <col width="25%">
+     </col>
+     <col width="51%">
+     </col>
+     <col width="25%">
+     </col>
+    </colgroup>
+    <thead valign="bottom">
+     <tr>
+      <th class="head">
+       Method
+      </th>
+      <th class="head">
+       Can contain
+      </th>
+      <th class="head">
+       Can't contain
+      </th>
+     </tr>
+    </thead>
+    <tbody valign="top">
+     <tr>
+      <td>
+       async def func
+      </td>
+      <td>
+       await, return value
+      </td>
+      <td>
+       yield, yield from
+      </td>
+     </tr>
+     <tr>
+      <td>
+       async def __a*__
+      </td>
+      <td>
+       await, return value
+      </td>
+      <td>
+       yield, yield from
+      </td>
+     </tr>
+     <tr>
+      <td>
+       def __a*__
+      </td>
+      <td>
+       return awaitable
+      </td>
+      <td>
+       await
+      </td>
+     </tr>
+     <tr>
+      <td>
+       def __await__
+      </td>
+      <td>
+       yield, yield from, return iterable
+      </td>
+      <td>
+       await
+      </td>
+     </tr>
+     <tr>
+      <td>
+       generator
+      </td>
+      <td>
+       yield, yield from, return value
+      </td>
+      <td>
+       await
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <p>
+    Where:
+   </p>
+   <ul class="simple">
+    <li>
+     "async def func": native coroutine;
+    </li>
+    <li>
+     "async def __a*__":
+     <tt class="docutils literal">
+      __aiter__
+     </tt>
+     ,
+     <tt class="docutils literal">
+      __anext__
+     </tt>
+     ,
+     <tt class="docutils literal">
+      __aenter__
+     </tt>
+     ,
+     <tt class="docutils literal">
+      __aexit__
+     </tt>
+     defined with the
+     <tt class="docutils literal">
+      async
+     </tt>
+     keyword;
+    </li>
+    <li>
+     "def __a*__":
+     <tt class="docutils literal">
+      __aiter__
+     </tt>
+     ,
+     <tt class="docutils literal">
+      __anext__
+     </tt>
+     ,
+     <tt class="docutils literal">
+      __aenter__
+     </tt>
+     ,
+     <tt class="docutils literal">
+      __aexit__
+     </tt>
+     defined without the
+     <tt class="docutils literal">
+      async
+     </tt>
+     keyword, must return an
+     <em>
+      awaitable
+     </em>
+     ;
+    </li>
+    <li>
+     "def __await__":
+     <tt class="docutils literal">
+      __await__
+     </tt>
+     method to implement
+     <em>
+      Future-like
+     </em>
+     objects;
+    </li>
+    <li>
+     generator: a "regular" generator, function defined with
+     <tt class="docutils literal">
+      def
+     </tt>
+     and
+which contains a least one
+     <tt class="docutils literal">
+      yield
+     </tt>
+     or
+     <tt class="docutils literal">
+      yield from
+     </tt>
+     expression.
+    </li>
+   </ul>
+  </div>
+  <div class="section" id="transition-plan">
+   <h1>
+    <a class="toc-backref" href="#id69">
+     Transition Plan
+    </a>
+   </h1>
+   <p>
+    To avoid backwards compatibility issues with
+    <tt class="docutils literal">
+     async
+    </tt>
+    and
+    <tt class="docutils literal">
+     await
+    </tt>
+    keywords, it was decided to modify
+    <tt class="docutils literal">
+     tokenizer.c
+    </tt>
+    in such a way, that
+it:
+   </p>
+   <ul class="simple">
+    <li>
+     recognizes
+     <tt class="docutils literal">
+      async def
+     </tt>
+     <tt class="docutils literal">
+      NAME
+     </tt>
+     tokens combination;
+    </li>
+    <li>
+     while tokenizing
+     <tt class="docutils literal">
+      async def
+     </tt>
+     block, it replaces
+     <tt class="docutils literal">
+      'async'
+     </tt>
+     <tt class="docutils literal">
+      NAME
+     </tt>
+     token with
+     <tt class="docutils literal">
+      ASYNC
+     </tt>
+     , and
+     <tt class="docutils literal">
+      'await'
+     </tt>
+     <tt class="docutils literal">
+      NAME
+     </tt>
+     token with
+     <tt class="docutils literal">
+      AWAIT
+     </tt>
+     ;
+    </li>
+    <li>
+     while tokenizing
+     <tt class="docutils literal">
+      def
+     </tt>
+     block, it yields
+     <tt class="docutils literal">
+      'async'
+     </tt>
+     and
+     <tt class="docutils literal">
+      'await'
+     </tt>
+     <tt class="docutils literal">
+      NAME
+     </tt>
+     tokens as is.
+    </li>
+   </ul>
+   <p>
+    This approach allows for seamless combination of new syntax features
+(all of them available only in
+    <tt class="docutils literal">
+     async
+    </tt>
+    functions) with any existing
+code.
+   </p>
+   <p>
+    An example of having "async def" and "async" attribute in one piece of
+code:
+   </p>
+   <pre class="literal-block">
+class Spam:
+    async = 42
+
+async def ham():
+    print(getattr(Spam, 'async'))
+
+# The coroutine can be executed and will print '42'
+</pre>
+   <div class="section" id="backwards-compatibility">
+    <h2>
+     <a class="toc-backref" href="#id70">
+      Backwards Compatibility
+     </a>
+    </h2>
+    <p>
+     This proposal preserves 100% backwards compatibility.
+    </p>
+    <div class="section" id="asyncio">
+     <h3>
+      <a class="toc-backref" href="#id71">
+       asyncio
+      </a>
+     </h3>
+     <p>
+      <tt class="docutils literal">
+       asyncio
+      </tt>
+      module was adapted and tested to work with coroutines and
+new statements.  Backwards compatibility is 100% preserved, i.e. all
+existing code will work as-is.
+     </p>
+     <p>
+      The required changes are mainly:
+     </p>
+     <ol class="arabic simple">
+      <li>
+       Modify
+       <tt class="docutils literal">
+        @asyncio.coroutine
+       </tt>
+       decorator to use new
+       <tt class="docutils literal">
+        types.coroutine()
+       </tt>
+       function.
+      </li>
+      <li>
+       Add
+       <tt class="docutils literal">
+        __await__ = __iter__
+       </tt>
+       line to
+       <tt class="docutils literal">
+        asyncio.Future
+       </tt>
+       class.
+      </li>
+      <li>
+       Add
+       <tt class="docutils literal">
+        ensure_future()
+       </tt>
+       as an alias for
+       <tt class="docutils literal">
+        async()
+       </tt>
+       function.
+Deprecate
+       <tt class="docutils literal">
+        async()
+       </tt>
+       function.
+      </li>
+     </ol>
+    </div>
+    <div class="section" id="asyncio-migration-strategy">
+     <h3>
+      <a class="toc-backref" href="#id72">
+       asyncio migration strategy
+      </a>
+     </h3>
+     <p>
+      Because
+      <em>
+       plain generators
+      </em>
+      cannot
+      <tt class="docutils literal">
+       yield from
+      </tt>
+      <em>
+       native coroutine
+objects
+      </em>
+      (see
+      <a class="reference internal" href="#differences-from-generators">
+       Differences from generators
+      </a>
+      section for more details),
+it is advised to make sure that all generator-based coroutines are
+decorated with
+      <tt class="docutils literal">
+       @asyncio.coroutine
+      </tt>
+      <em>
+       before
+      </em>
+      starting to use the new
+syntax.
+     </p>
+    </div>
+    <div class="section" id="async-await-in-cpython-code-base">
+     <h3>
+      <a class="toc-backref" href="#id73">
+       async/await in CPython code base
+      </a>
+     </h3>
+     <p>
+      There is no use of
+      <tt class="docutils literal">
+       await
+      </tt>
+      names in CPython.
+     </p>
+     <p>
+      <tt class="docutils literal">
+       async
+      </tt>
+      is mostly used by asyncio.  We are addressing this by
+renaming
+      <tt class="docutils literal">
+       async()
+      </tt>
+      function to
+      <tt class="docutils literal">
+       ensure_future()
+      </tt>
+      (see
+      <a class="reference internal" href="#asyncio">
+       asyncio
+      </a>
+      section for details.)
+     </p>
+     <p>
+      Another use of
+      <tt class="docutils literal">
+       async
+      </tt>
+      keyword is in
+      <tt class="docutils literal">
+       Lib/xml/dom/xmlbuilder.py
+      </tt>
+      ,
+to define an
+      <tt class="docutils literal">
+       async = False
+      </tt>
+      attribute for
+      <tt class="docutils literal">
+       DocumentLS
+      </tt>
+      class.
+There is no documentation or tests for it, it is not used anywhere else
+in CPython.  It is replaced with a getter, that raises a
+      <tt class="docutils literal">
+       DeprecationWarning
+      </tt>
+      , advising to use
+      <tt class="docutils literal">
+       async_
+      </tt>
+      attribute instead.
+'async' attribute is not documented and is not used in CPython code
+base.
+     </p>
+    </div>
+   </div>
+   <div class="section" id="grammar-updates">
+    <h2>
+     <a class="toc-backref" href="#id74">
+      Grammar Updates
+     </a>
+    </h2>
+    <p>
+     Grammar changes are fairly minimal:
+    </p>
+    <pre class="literal-block">
+decorated: decorators (classdef | funcdef | async_funcdef)
+async_funcdef: ASYNC funcdef
+
+compound_stmt: (if_stmt | while_stmt | for_stmt | try_stmt | with_stmt
+                | funcdef | classdef | decorated | async_stmt)
+
+async_stmt: ASYNC (funcdef | with_stmt | for_stmt)
+
+power: atom_expr ['**' factor]
+atom_expr: [AWAIT] atom trailer*
+</pre>
+   </div>
+   <div class="section" id="deprecation-plans">
+    <h2>
+     <a class="toc-backref" href="#id75">
+      Deprecation Plans
+     </a>
+    </h2>
+    <p>
+     <tt class="docutils literal">
+      async
+     </tt>
+     and
+     <tt class="docutils literal">
+      await
+     </tt>
+     names will be softly deprecated in CPython 3.5
+and 3.6. In 3.7 we will transform them to proper keywords.  Making
+     <tt class="docutils literal">
+      async
+     </tt>
+     and
+     <tt class="docutils literal">
+      await
+     </tt>
+     proper keywords before 3.7 might make it harder
+for people to port their code to Python 3.
+    </p>
+   </div>
+  </div>
+  <div class="section" id="design-considerations">
+   <h1>
+    <a class="toc-backref" href="#id76">
+     Design Considerations
+    </a>
+   </h1>
+   <div class="section" id="pep-3152">
+    <h2>
+     <a class="reference external" href="../pep-3152/index.html">
+      PEP 3152
+     </a>
+    </h2>
+    <p>
+     <a class="reference external" href="../pep-3152/index.html">
+      PEP 3152
+     </a>
+     by Gregory Ewing proposes a different mechanism for coroutines
+(called "cofunctions").  Some key points:
+    </p>
+    <ol class="arabic">
+     <li>
+      <p class="first">
+       A new keyword
+       <tt class="docutils literal">
+        codef
+       </tt>
+       to declare a
+       <em>
+        cofunction
+       </em>
+       .
+       <em>
+        Cofunction
+       </em>
+       is
+always a generator, even if there is no
+       <tt class="docutils literal">
+        cocall
+       </tt>
+       expressions
+inside it.  Maps to
+       <tt class="docutils literal">
+        async def
+       </tt>
+       in this proposal.
+      </p>
+     </li>
+     <li>
+      <p class="first">
+       A new keyword
+       <tt class="docutils literal">
+        cocall
+       </tt>
+       to call a
+       <em>
+        cofunction
+       </em>
+       .  Can only be used
+inside a
+       <em>
+        cofunction
+       </em>
+       .  Maps to
+       <tt class="docutils literal">
+        await
+       </tt>
+       in this proposal (with
+some differences, see below.)
+      </p>
+     </li>
+     <li>
+      <p class="first">
+       It is not possible to call a
+       <em>
+        cofunction
+       </em>
+       without a
+       <tt class="docutils literal">
+        cocall
+       </tt>
+       keyword.
+      </p>
+     </li>
+     <li>
+      <p class="first">
+       <tt class="docutils literal">
+        cocall
+       </tt>
+       grammatically requires parentheses after it:
+      </p>
+      <pre class="literal-block">
+atom: cocall | &lt;existing alternatives for atom&gt;
+cocall: 'cocall' atom cotrailer* '(' [arglist] ')'
+cotrailer: '[' subscriptlist ']' | '.' NAME
+</pre>
+     </li>
+     <li>
+      <p class="first">
+       <tt class="docutils literal">
+        cocall
+        <span class="pre">
+         f(*args,
+        </span>
+        **kwds)
+       </tt>
+       is semantically equivalent to
+       <tt class="docutils literal">
+        yield from
+        <span class="pre">
+         f.__cocall__(*args,
+        </span>
+        **kwds)
+       </tt>
+       .
+      </p>
+     </li>
+    </ol>
+    <p>
+     Differences from this proposal:
+    </p>
+    <ol class="arabic">
+     <li>
+      <p class="first">
+       There is no equivalent of
+       <tt class="docutils literal">
+        __cocall__
+       </tt>
+       in this PEP, which is
+called and its result is passed to
+       <tt class="docutils literal">
+        yield from
+       </tt>
+       in the
+       <tt class="docutils literal">
+        cocall
+       </tt>
+       expression.
+       <tt class="docutils literal">
+        await
+       </tt>
+       keyword expects an
+       <em>
+        awaitable
+       </em>
+       object,
+validates the type, and executes
+       <tt class="docutils literal">
+        yield from
+       </tt>
+       on it.  Although,
+       <tt class="docutils literal">
+        __await__
+       </tt>
+       method is similar to
+       <tt class="docutils literal">
+        __cocall__
+       </tt>
+       , but is only used
+to define
+       <em>
+        Future-like
+       </em>
+       objects.
+      </p>
+     </li>
+     <li>
+      <p class="first">
+       <tt class="docutils literal">
+        await
+       </tt>
+       is defined in almost the same way as
+       <tt class="docutils literal">
+        yield from
+       </tt>
+       in the
+grammar (it is later enforced that
+       <tt class="docutils literal">
+        await
+       </tt>
+       can only be inside
+       <tt class="docutils literal">
+        async def
+       </tt>
+       ).  It is possible to simply write
+       <tt class="docutils literal">
+        await future
+       </tt>
+       ,
+whereas
+       <tt class="docutils literal">
+        cocall
+       </tt>
+       always requires parentheses.
+      </p>
+     </li>
+     <li>
+      <p class="first">
+       To make asyncio work with
+       <a class="reference external" href="../pep-3152/index.html">
+        PEP 3152
+       </a>
+       it would be required to modify
+       <tt class="docutils literal">
+        @asyncio.coroutine
+       </tt>
+       decorator to wrap all functions in an object
+with a
+       <tt class="docutils literal">
+        __cocall__
+       </tt>
+       method, or to implement
+       <tt class="docutils literal">
+        __cocall__
+       </tt>
+       on
+generators.  To call
+       <em>
+        cofunctions
+       </em>
+       from existing generator-based
+coroutines it would be required to use
+       <tt class="docutils literal">
+        costart(cofunc, *args,
+**kwargs)
+       </tt>
+       built-in.
+      </p>
+     </li>
+     <li>
+      <p class="first">
+       Since it is impossible to call a
+       <em>
+        cofunction
+       </em>
+       without a
+       <tt class="docutils literal">
+        cocall
+       </tt>
+       keyword, it automatically prevents the common mistake of forgetting
+to use
+       <tt class="docutils literal">
+        yield from
+       </tt>
+       on generator-based coroutines.  This proposal
+addresses this problem with a different approach, see
+       <a class="reference internal" href="#debugging-features">
+        Debugging
+Features
+       </a>
+       .
+      </p>
+     </li>
+     <li>
+      <p class="first">
+       A shortcoming of requiring a
+       <tt class="docutils literal">
+        cocall
+       </tt>
+       keyword to call a coroutine
+is that if is decided to implement coroutine-generators --
+coroutines with
+       <tt class="docutils literal">
+        yield
+       </tt>
+       or
+       <tt class="docutils literal">
+        async yield
+       </tt>
+       expressions -- we
+wouldn't need a
+       <tt class="docutils literal">
+        cocall
+       </tt>
+       keyword to call them.  So we'll end up
+having
+       <tt class="docutils literal">
+        __cocall__
+       </tt>
+       and no
+       <tt class="docutils literal">
+        __call__
+       </tt>
+       for regular coroutines,
+and having
+       <tt class="docutils literal">
+        __call__
+       </tt>
+       and no
+       <tt class="docutils literal">
+        __cocall__
+       </tt>
+       for coroutine-
+generators.
+      </p>
+     </li>
+     <li>
+      <p class="first">
+       Requiring parentheses grammatically also introduces a whole lot
+of new problems.
+      </p>
+      <p>
+       The following code:
+      </p>
+      <pre class="literal-block">
+await fut
+await function_returning_future()
+await asyncio.gather(coro1(arg1, arg2), coro2(arg1, arg2))
+</pre>
+      <p>
+       would look like:
+      </p>
+      <pre class="literal-block">
+cocall fut()  # or cocall costart(fut)
+cocall (function_returning_future())()
+cocall asyncio.gather(costart(coro1, arg1, arg2),
+                      costart(coro2, arg1, arg2))
+</pre>
+     </li>
+     <li>
+      <p class="first">
+       There are no equivalents of
+       <tt class="docutils literal">
+        async for
+       </tt>
+       and
+       <tt class="docutils literal">
+        async with
+       </tt>
+       in
+       <a class="reference external" href="../pep-3152/index.html">
+        PEP
+3152
+       </a>
+       .
+      </p>
+     </li>
+    </ol>
+   </div>
+   <div class="section" id="coroutine-generators">
+    <h2>
+     <a class="toc-backref" href="#id78">
+      Coroutine-generators
+     </a>
+    </h2>
+    <p>
+     With
+     <tt class="docutils literal">
+      async for
+     </tt>
+     keyword it is desirable to have a concept of a
+     <em>
+      coroutine-generator
+     </em>
+     -- a coroutine with
+     <tt class="docutils literal">
+      yield
+     </tt>
+     and
+     <tt class="docutils literal">
+      yield from
+     </tt>
+     expressions.  To avoid any ambiguity with regular generators, we would
+likely require to have an
+     <tt class="docutils literal">
+      async
+     </tt>
+     keyword before
+     <tt class="docutils literal">
+      yield
+     </tt>
+     , and
+     <tt class="docutils literal">
+      async yield from
+     </tt>
+     would raise a
+     <tt class="docutils literal">
+      StopAsyncIteration
+     </tt>
+     exception.
+    </p>
+    <p>
+     While it is possible to implement coroutine-generators, we believe that
+they are out of scope of this proposal.  It is an advanced concept that
+should be carefully considered and balanced, with a non-trivial changes
+in the implementation of current generator objects.  This is a matter
+for a separate PEP.
+    </p>
+   </div>
+   <div class="section" id="why-async-and-await-keywords">
+    <h2>
+     <a class="toc-backref" href="#id79">
+      Why "async" and "await" keywords
+     </a>
+    </h2>
+    <p>
+     async/await is not a new concept in programming languages:
+    </p>
+    <ul class="simple">
+     <li>
+      C# has it since long time ago
+      <a class="footnote-reference" href="#id30" id="id14">
+       [5]
+      </a>
+      ;
+     </li>
+     <li>
+      proposal to add async/await in ECMAScript 7
+      <a class="footnote-reference" href="#id27" id="id15">
+       [2]
+      </a>
+      ;
+see also Traceur project
+      <a class="footnote-reference" href="#id34" id="id16">
+       [9]
+      </a>
+      ;
+     </li>
+     <li>
+      Facebook's Hack/HHVM
+      <a class="footnote-reference" href="#id31" id="id17">
+       [6]
+      </a>
+      ;
+     </li>
+     <li>
+      Google's Dart language
+      <a class="footnote-reference" href="#id32" id="id18">
+       [7]
+      </a>
+      ;
+     </li>
+     <li>
+      Scala
+      <a class="footnote-reference" href="#id33" id="id19">
+       [8]
+      </a>
+      ;
+     </li>
+     <li>
+      proposal to add async/await to C++
+      <a class="footnote-reference" href="#id35" id="id20">
+       [10]
+      </a>
+      ;
+     </li>
+     <li>
+      and many other less popular languages.
+     </li>
+    </ul>
+    <p>
+     This is a huge benefit, as some users already have experience with
+async/await, and because it makes working with many languages in one
+project easier (Python with ECMAScript 7 for instance).
+    </p>
+   </div>
+   <div class="section" id="why-aiter-returns-awaitable">
+    <h2>
+     <a class="toc-backref" href="#id80">
+      Why "__aiter__" returns awaitable
+     </a>
+    </h2>
+    <p>
+     In principle,
+     <tt class="docutils literal">
+      __aiter__
+     </tt>
+     could be a regular function.  There are
+several good reasons to make it a coroutine:
+    </p>
+    <ul class="simple">
+     <li>
+      as most of the
+      <tt class="docutils literal">
+       __anext__
+      </tt>
+      ,
+      <tt class="docutils literal">
+       __aenter__
+      </tt>
+      , and
+      <tt class="docutils literal">
+       __aexit__
+      </tt>
+      methods are coroutines, users would often make a mistake defining it
+as
+      <tt class="docutils literal">
+       async
+      </tt>
+      anyways;
+     </li>
+     <li>
+      there might be a need to run some asynchronous operations in
+      <tt class="docutils literal">
+       __aiter__
+      </tt>
+      , for instance to prepare DB queries or do some file
+operation.
+     </li>
+    </ul>
+   </div>
+   <div class="section" id="importance-of-async-keyword">
+    <h2>
+     <a class="toc-backref" href="#id81">
+      Importance of "async" keyword
+     </a>
+    </h2>
+    <p>
+     While it is possible to just implement
+     <tt class="docutils literal">
+      await
+     </tt>
+     expression and treat
+all functions with at least one
+     <tt class="docutils literal">
+      await
+     </tt>
+     as coroutines, this approach
+makes APIs design, code refactoring and its long time support harder.
+    </p>
+    <p>
+     Let's pretend that Python only has
+     <tt class="docutils literal">
+      await
+     </tt>
+     keyword:
+    </p>
+    <pre class="literal-block">
+def useful():
+    ...
+    await log(...)
+    ...
+
+def important():
+    await useful()
+</pre>
+    <p>
+     If
+     <tt class="docutils literal">
+      useful()
+     </tt>
+     function is refactored and someone removes all
+     <tt class="docutils literal">
+      await
+     </tt>
+     expressions from it, it would become a regular python
+function, and all code that depends on it, including
+     <tt class="docutils literal">
+      important()
+     </tt>
+     would be broken.  To mitigate this issue a decorator similar to
+     <tt class="docutils literal">
+      @asyncio.coroutine
+     </tt>
+     has to be introduced.
+    </p>
+   </div>
+   <div class="section" id="why-async-def">
+    <h2>
+     <a class="toc-backref" href="#id82">
+      Why "async def"
+     </a>
+    </h2>
+    <p>
+     For some people bare
+     <tt class="docutils literal">
+      async
+      <span class="pre">
+       name():
+      </span>
+      pass
+     </tt>
+     syntax might look more
+appealing than
+     <tt class="docutils literal">
+      async def
+      <span class="pre">
+       name():
+      </span>
+      pass
+     </tt>
+     .  It is certainly easier to
+type.  But on the other hand, it breaks the symmetry between
+     <tt class="docutils literal">
+      async
+def
+     </tt>
+     ,
+     <tt class="docutils literal">
+      async with
+     </tt>
+     and
+     <tt class="docutils literal">
+      async for
+     </tt>
+     , where
+     <tt class="docutils literal">
+      async
+     </tt>
+     is a modifier,
+stating that the statement is asynchronous.  It is also more consistent
+with the existing grammar.
+    </p>
+   </div>
+   <div class="section" id="why-not-await-for-and-await-with">
+    <h2>
+     <a class="toc-backref" href="#id83">
+      Why not "await for" and "await with"
+     </a>
+    </h2>
+    <p>
+     <tt class="docutils literal">
+      async
+     </tt>
+     is an adjective, and hence it is a better choice for a
+     <em>
+      statement qualifier
+     </em>
+     keyword.
+     <tt class="docutils literal">
+      await for/with
+     </tt>
+     would imply that
+something is awaiting for a completion of a
+     <tt class="docutils literal">
+      for
+     </tt>
+     or
+     <tt class="docutils literal">
+      with
+     </tt>
+     statement.
+    </p>
+   </div>
+   <div class="section" id="why-async-def-and-not-def-async">
+    <h2>
+     <a class="toc-backref" href="#id84">
+      Why "async def" and not "def async"
+     </a>
+    </h2>
+    <p>
+     <tt class="docutils literal">
+      async
+     </tt>
+     keyword is a
+     <em>
+      statement qualifier
+     </em>
+     .  A good analogy to it are
+"static", "public", "unsafe" keywords from other languages.  "async
+for" is an asynchronous "for" statement, "async with" is an
+asynchronous "with" statement, "async def" is an asynchronous function.
+    </p>
+    <p>
+     Having "async" after the main statement keyword might introduce some
+confusion, like "for async item in iterator" can be read as "for each
+asynchronous item in iterator".
+    </p>
+    <p>
+     Having
+     <tt class="docutils literal">
+      async
+     </tt>
+     keyword before
+     <tt class="docutils literal">
+      def
+     </tt>
+     ,
+     <tt class="docutils literal">
+      with
+     </tt>
+     and
+     <tt class="docutils literal">
+      for
+     </tt>
+     also
+makes the language grammar simpler.  And "async def" better separates
+coroutines from regular functions visually.
+    </p>
+   </div>
+   <div class="section" id="why-not-a-future-import">
+    <h2>
+     <a class="toc-backref" href="#id85">
+      Why not a __future__ import
+     </a>
+    </h2>
+    <p>
+     <a class="reference internal" href="#transition-plan">
+      Transition Plan
+     </a>
+     section explains how tokenizer is modified to treat
+     <tt class="docutils literal">
+      async
+     </tt>
+     and
+     <tt class="docutils literal">
+      await
+     </tt>
+     as keywords
+     <em>
+      only
+     </em>
+     in
+     <tt class="docutils literal">
+      async def
+     </tt>
+     blocks.
+Hence
+     <tt class="docutils literal">
+      async def
+     </tt>
+     fills the role that a module level compiler
+declaration like
+     <tt class="docutils literal">
+      from __future__ import async_await
+     </tt>
+     would otherwise
+fill.
+    </p>
+   </div>
+   <div class="section" id="why-magic-methods-start-with-a">
+    <h2>
+     <a class="toc-backref" href="#id86">
+      Why magic methods start with "a"
+     </a>
+    </h2>
+    <p>
+     New asynchronous magic methods
+     <tt class="docutils literal">
+      __aiter__
+     </tt>
+     ,
+     <tt class="docutils literal">
+      __anext__
+     </tt>
+     ,
+     <tt class="docutils literal">
+      __aenter__
+     </tt>
+     , and
+     <tt class="docutils literal">
+      __aexit__
+     </tt>
+     all start with the same prefix "a".
+An alternative proposal is to use "async" prefix, so that
+     <tt class="docutils literal">
+      __aiter__
+     </tt>
+     becomes
+     <tt class="docutils literal">
+      __async_iter__
+     </tt>
+     . However, to align new magic methods with
+the existing ones, such as
+     <tt class="docutils literal">
+      __radd__
+     </tt>
+     and
+     <tt class="docutils literal">
+      __iadd__
+     </tt>
+     it was decided
+to use a shorter version.
+    </p>
+   </div>
+   <div class="section" id="why-not-reuse-existing-magic-names">
+    <h2>
+     <a class="toc-backref" href="#id87">
+      Why not reuse existing magic names
+     </a>
+    </h2>
+    <p>
+     An alternative idea about new asynchronous iterators and context
+managers was to reuse existing magic methods, by adding an
+     <tt class="docutils literal">
+      async
+     </tt>
+     keyword to their declarations:
+    </p>
+    <pre class="literal-block">
+class CM:
+    async def __enter__(self): # instead of __aenter__
+        ...
+</pre>
+    <p>
+     This approach has the following downsides:
+    </p>
+    <ul class="simple">
+     <li>
+      it would not be possible to create an object that works in both
+      <tt class="docutils literal">
+       with
+      </tt>
+      and
+      <tt class="docutils literal">
+       async with
+      </tt>
+      statements;
+     </li>
+     <li>
+      it would break backwards compatibility, as nothing prohibits from
+returning a Future-like objects from
+      <tt class="docutils literal">
+       __enter__
+      </tt>
+      and/or
+      <tt class="docutils literal">
+       __exit__
+      </tt>
+      in Python &lt;= 3.4;
+     </li>
+     <li>
+      one of the main points of this proposal is to make native coroutines
+as simple and foolproof as possible, hence the clear separation of
+the protocols.
+     </li>
+    </ul>
+   </div>
+   <div class="section" id="why-not-reuse-existing-for-and-with-statements">
+    <h2>
+     <a class="toc-backref" href="#id88">
+      Why not reuse existing "for" and "with" statements
+     </a>
+    </h2>
+    <p>
+     The vision behind existing generator-based coroutines and this proposal
+is to make it easy for users to see where the code might be suspended.
+Making existing "for" and "with" statements to recognize asynchronous
+iterators and context managers will inevitably create implicit suspend
+points, making it harder to reason about the code.
+    </p>
+   </div>
+   <div class="section" id="comprehensions">
+    <h2>
+     <a class="toc-backref" href="#id89">
+      Comprehensions
+     </a>
+    </h2>
+    <p>
+     Syntax for asynchronous comprehensions could be provided, but this
+construct is outside of the scope of this PEP.
+    </p>
+   </div>
+   <div class="section" id="async-lambda-functions">
+    <h2>
+     <a class="toc-backref" href="#id90">
+      Async lambda functions
+     </a>
+    </h2>
+    <p>
+     Syntax for asynchronous lambda functions could be provided, but this
+construct is outside of the scope of this PEP.
+    </p>
+   </div>
+  </div>
+  <div class="section" id="performance">
+   <h1>
+    <a class="toc-backref" href="#id91">
+     Performance
+    </a>
+   </h1>
+   <div class="section" id="overall-impact">
+    <h2>
+     <a class="toc-backref" href="#id92">
+      Overall Impact
+     </a>
+    </h2>
+    <p>
+     This proposal introduces no observable performance impact.  Here is an
+output of python's official set of benchmarks
+     <a class="footnote-reference" href="#id29" id="id21">
+      [4]
+     </a>
+     :
+    </p>
+    <pre class="literal-block">
+python perf.py -r -b default ../cpython/python.exe ../cpython-aw/python.exe
+
+[skipped]
+
+Report on Darwin ysmac 14.3.0 Darwin Kernel Version 14.3.0:
+Mon Mar 23 11:59:05 PDT 2015; root:xnu-2782.20.48~5/RELEASE_X86_64
+x86_64 i386
+
+Total CPU cores: 8
+
+### etree_iterparse ###
+Min: 0.365359 -&gt; 0.349168: 1.05x faster
+Avg: 0.396924 -&gt; 0.379735: 1.05x faster
+Significant (t=9.71)
+Stddev: 0.01225 -&gt; 0.01277: 1.0423x larger
+
+The following not significant results are hidden, use -v to show them:
+django_v2, 2to3, etree_generate, etree_parse, etree_process, fastpickle,
+fastunpickle, json_dump_v2, json_load, nbody, regex_v8, tornado_http.
+</pre>
+   </div>
+   <div class="section" id="tokenizer-modifications">
+    <h2>
+     <a class="toc-backref" href="#id93">
+      Tokenizer modifications
+     </a>
+    </h2>
+    <p>
+     There is no observable slowdown of parsing python files with the
+modified tokenizer: parsing of one 12Mb file
+(
+     <tt class="docutils literal">
+      Lib/test/test_binop.py
+     </tt>
+     repeated 1000 times) takes the same amount
+of time.
+    </p>
+   </div>
+   <div class="section" id="async-await">
+    <h2>
+     <a class="toc-backref" href="#id94">
+      async/await
+     </a>
+    </h2>
+    <p>
+     The following micro-benchmark was used to determine performance
+difference between "async" functions and generators:
+    </p>
+    <pre class="literal-block">
+import sys
+import time
+
+def binary(n):
+    if n &lt;= 0:
+        return 1
+    l = yield from binary(n - 1)
+    r = yield from binary(n - 1)
+    return l + 1 + r
+
+async def abinary(n):
+    if n &lt;= 0:
+        return 1
+    l = await abinary(n - 1)
+    r = await abinary(n - 1)
+    return l + 1 + r
+
+def timeit(func, depth, repeat):
+    t0 = time.time()
+    for _ in range(repeat):
+        o = func(depth)
+        try:
+            while True:
+                o.send(None)
+        except StopIteration:
+            pass
+    t1 = time.time()
+    print('{}({}) * {}: total {:.3f}s'.format(
+        func.__name__, depth, repeat, t1-t0))
+</pre>
+    <p>
+     The result is that there is no observable performance difference:
+    </p>
+    <pre class="literal-block">
+binary(19) * 30: total 53.321s
+abinary(19) * 30: total 55.073s
+
+binary(19) * 30: total 53.361s
+abinary(19) * 30: total 51.360s
+
+binary(19) * 30: total 49.438s
+abinary(19) * 30: total 51.047s
+</pre>
+    <p>
+     Note that depth of 19 means 1,048,575 calls.
+    </p>
+   </div>
+  </div>
+  <div class="section" id="reference-implementation">
+   <h1>
+    <a class="toc-backref" href="#id95">
+     Reference Implementation
+    </a>
+   </h1>
+   <p>
+    The reference implementation can be found here:
+    <a class="footnote-reference" href="#id28" id="id22">
+     [3]
+    </a>
+    .
+   </p>
+   <div class="section" id="list-of-high-level-changes-and-new-protocols">
+    <h2>
+     <a class="toc-backref" href="#id96">
+      List of high-level changes and new protocols
+     </a>
+    </h2>
+    <ol class="arabic simple">
+     <li>
+      New syntax for defining coroutines:
+      <tt class="docutils literal">
+       async def
+      </tt>
+      and new
+      <tt class="docutils literal">
+       await
+      </tt>
+      keyword.
+     </li>
+     <li>
+      New
+      <tt class="docutils literal">
+       __await__
+      </tt>
+      method for Future-like objects, and new
+      <tt class="docutils literal">
+       tp_as_async.am_await
+      </tt>
+      slot in
+      <tt class="docutils literal">
+       PyTypeObject
+      </tt>
+      .
+     </li>
+     <li>
+      New syntax for asynchronous context managers:
+      <tt class="docutils literal">
+       async with
+      </tt>
+      .  And
+associated protocol with
+      <tt class="docutils literal">
+       __aenter__
+      </tt>
+      and
+      <tt class="docutils literal">
+       __aexit__
+      </tt>
+      methods.
+     </li>
+     <li>
+      New syntax for asynchronous iteration:
+      <tt class="docutils literal">
+       async for
+      </tt>
+      .  And
+associated protocol with
+      <tt class="docutils literal">
+       __aiter__
+      </tt>
+      ,
+      <tt class="docutils literal">
+       __aexit__
+      </tt>
+      and new built-
+in exception
+      <tt class="docutils literal">
+       StopAsyncIteration
+      </tt>
+      .  New
+      <tt class="docutils literal">
+       tp_as_async.am_aiter
+      </tt>
+      and
+      <tt class="docutils literal">
+       tp_as_async.am_anext
+      </tt>
+      slots in
+      <tt class="docutils literal">
+       PyTypeObject
+      </tt>
+      .
+     </li>
+     <li>
+      New AST nodes:
+      <tt class="docutils literal">
+       AsyncFunctionDef
+      </tt>
+      ,
+      <tt class="docutils literal">
+       AsyncFor
+      </tt>
+      ,
+      <tt class="docutils literal">
+       AsyncWith
+      </tt>
+      ,
+      <tt class="docutils literal">
+       Await
+      </tt>
+      .
+     </li>
+     <li>
+      New functions:
+      <tt class="docutils literal">
+       sys.set_coroutine_wrapper(callback)
+      </tt>
+      ,
+      <tt class="docutils literal">
+       sys.get_coroutine_wrapper()
+      </tt>
+      ,
+      <tt class="docutils literal">
+       types.coroutine(gen)
+      </tt>
+      ,
+      <tt class="docutils literal">
+       inspect.iscoroutinefunction(func)
+      </tt>
+      ,
+      <tt class="docutils literal">
+       inspect.iscoroutine(obj)
+      </tt>
+      ,
+      <tt class="docutils literal">
+       inspect.isawaitable(obj)
+      </tt>
+      ,
+      <tt class="docutils literal">
+       inspect.getcoroutinestate(coro)
+      </tt>
+      ,
+and
+      <tt class="docutils literal">
+       inspect.getcoroutinelocals(coro)
+      </tt>
+      .
+     </li>
+     <li>
+      New
+      <tt class="docutils literal">
+       CO_COROUTINE
+      </tt>
+      and
+      <tt class="docutils literal">
+       CO_ITERABLE_COROUTINE
+      </tt>
+      bit flags for code
+objects.
+     </li>
+     <li>
+      New ABCs:
+      <tt class="docutils literal">
+       collections.abc.Awaitable
+      </tt>
+      ,
+      <tt class="docutils literal">
+       collections.abc.Coroutine
+      </tt>
+      ,
+      <tt class="docutils literal">
+       collections.abc.AsyncIterable
+      </tt>
+      , and
+      <tt class="docutils literal">
+       collections.abc.AsyncIterator
+      </tt>
+      .
+     </li>
+     <li>
+      C API changes: new
+      <tt class="docutils literal">
+       PyCoro_Type
+      </tt>
+      (exposed to Python as
+      <tt class="docutils literal">
+       types.CoroutineType
+      </tt>
+      ) and
+      <tt class="docutils literal">
+       PyCoroObject
+      </tt>
+      .
+      <tt class="docutils literal">
+       <span class="pre">
+        PyCoro_CheckExact(*o)
+       </span>
+      </tt>
+      to test if
+      <tt class="docutils literal">
+       o
+      </tt>
+      is a
+      <em>
+       native coroutine
+      </em>
+      .
+     </li>
+    </ol>
+    <p>
+     While the list of changes and new things is not short, it is important
+to understand, that most users will not use these features directly.
+It is intended to be used in frameworks and libraries to provide users
+with convenient to use and unambiguous APIs with
+     <tt class="docutils literal">
+      async def
+     </tt>
+     ,
+     <tt class="docutils literal">
+      await
+     </tt>
+     ,
+     <tt class="docutils literal">
+      async for
+     </tt>
+     and
+     <tt class="docutils literal">
+      async with
+     </tt>
+     syntax.
+    </p>
+   </div>
+   <div class="section" id="working-example">
+    <h2>
+     <a class="toc-backref" href="#id97">
+      Working example
+     </a>
+    </h2>
+    <p>
+     All concepts proposed in this PEP are implemented
+     <a class="footnote-reference" href="#id28" id="id23">
+      [3]
+     </a>
+     and can be
+tested.
+    </p>
+    <pre class="literal-block">
+import asyncio
+
+async def echo_server():
+    print('Serving on localhost:8000')
+    await asyncio.start_server(handle_connection,
+                               'localhost', 8000)
+
+async def handle_connection(reader, writer):
+    print('New connection...')
+
+    while True:
+        data = await reader.read(8192)
+
+        if not data:
+            break
+
+        print('Sending {:.10}... back'.format(repr(data)))
+        writer.write(data)
+
+loop = asyncio.get_event_loop()
+loop.run_until_complete(echo_server())
+try:
+    loop.run_forever()
+finally:
+    loop.close()
+</pre>
+   </div>
+  </div>
+  <div class="section" id="acceptance">
+   <h1>
+    <a class="toc-backref" href="#id98">
+     Acceptance
+    </a>
+   </h1>
+   <p>
+    <a class="reference external" href="index.html">
+     PEP 492
+    </a>
+    was accepted by Guido, Tuesday, May 5, 2015
+    <a class="footnote-reference" href="#id39" id="id24">
+     [14]
+    </a>
+    .
+   </p>
+  </div>
+  <div class="section" id="implementation">
+   <h1>
+    <a class="toc-backref" href="#id99">
+     Implementation
+    </a>
+   </h1>
+   <p>
+    The implementation is tracked in issue 24017
+    <a class="footnote-reference" href="#id40" id="id25">
+     [15]
+    </a>
+    . It was
+committed on May 11, 2015.
+   </p>
+  </div>
+  <div class="section" id="references">
+   <h1>
+    <a class="toc-backref" href="#id100">
+     References
+    </a>
+   </h1>
+   <table class="docutils footnote" frame="void" id="id26" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       [1]
+      </td>
+      <td>
+       <a class="reference external" href="https://docs.python.org/3/library/asyncio-task.html#asyncio.coroutine">
+        https://docs.python.org/3/library/asyncio-task.html#asyncio.coroutine
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id27" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       [2]
+      </td>
+      <td>
+       <em>
+        (
+        <a class="fn-backref" href="#id1">
+         1
+        </a>
+        ,
+        <a class="fn-backref" href="#id15">
+         2
+        </a>
+        )
+       </em>
+       <a class="reference external" href="http://wiki.ecmascript.org/doku.php?id=strawman:async_functions">
+        http://wiki.ecmascript.org/doku.php?id=strawman:async_functions
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id28" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       [3]
+      </td>
+      <td>
+       <em>
+        (
+        <a class="fn-backref" href="#id22">
+         1
+        </a>
+        ,
+        <a class="fn-backref" href="#id23">
+         2
+        </a>
+        )
+       </em>
+       <a class="reference external" href="https://github.com/1st1/cpython/tree/await">
+        https://github.com/1st1/cpython/tree/await
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id29" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id21">
+        [4]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="https://hg.python.org/benchmarks">
+        https://hg.python.org/benchmarks
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id30" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       [5]
+      </td>
+      <td>
+       <em>
+        (
+        <a class="fn-backref" href="#id2">
+         1
+        </a>
+        ,
+        <a class="fn-backref" href="#id14">
+         2
+        </a>
+        )
+       </em>
+       <a class="reference external" href="https://msdn.microsoft.com/en-us/library/hh191443.aspx">
+        https://msdn.microsoft.com/en-us/library/hh191443.aspx
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id31" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       [6]
+      </td>
+      <td>
+       <em>
+        (
+        <a class="fn-backref" href="#id3">
+         1
+        </a>
+        ,
+        <a class="fn-backref" href="#id17">
+         2
+        </a>
+        )
+       </em>
+       <a class="reference external" href="http://docs.hhvm.com/manual/en/hack.async.php">
+        http://docs.hhvm.com/manual/en/hack.async.php
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id32" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       [7]
+      </td>
+      <td>
+       <em>
+        (
+        <a class="fn-backref" href="#id4">
+         1
+        </a>
+        ,
+        <a class="fn-backref" href="#id18">
+         2
+        </a>
+        )
+       </em>
+       <a class="reference external" href="https://www.dartlang.org/articles/await-async/">
+        https://www.dartlang.org/articles/await-async/
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id33" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       [8]
+      </td>
+      <td>
+       <em>
+        (
+        <a class="fn-backref" href="#id5">
+         1
+        </a>
+        ,
+        <a class="fn-backref" href="#id19">
+         2
+        </a>
+        )
+       </em>
+       <a class="reference external" href="http://docs.scala-lang.org/sips/pending/async.html">
+        http://docs.scala-lang.org/sips/pending/async.html
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id34" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id16">
+        [9]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="https://github.com/google/traceur-compiler/wiki/LanguageFeatures#async-functions-experimental">
+        https://github.com/google/traceur-compiler/wiki/LanguageFeatures#async-functions-experimental
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id35" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       [10]
+      </td>
+      <td>
+       <em>
+        (
+        <a class="fn-backref" href="#id6">
+         1
+        </a>
+        ,
+        <a class="fn-backref" href="#id20">
+         2
+        </a>
+        )
+       </em>
+       <a class="reference external" href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2013/n3722.pdf">
+        http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2013/n3722.pdf
+       </a>
+       (PDF)
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id36" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id11">
+        [11]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="https://docs.python.org/3/reference/expressions.html#generator-iterator-methods">
+        https://docs.python.org/3/reference/expressions.html#generator-iterator-methods
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id37" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id9">
+        [12]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="https://docs.python.org/3/reference/expressions.html#primaries">
+        https://docs.python.org/3/reference/expressions.html#primaries
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id38" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id12">
+        [13]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="https://mail.python.org/pipermail/python-dev/2015-May/139851.html">
+        https://mail.python.org/pipermail/python-dev/2015-May/139851.html
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id39" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id24">
+        [14]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="https://mail.python.org/pipermail/python-dev/2015-May/139844.html">
+        https://mail.python.org/pipermail/python-dev/2015-May/139844.html
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id40" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id25">
+        [15]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="http://bugs.python.org/issue24017">
+        http://bugs.python.org/issue24017
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id41" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id13">
+        [16]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="https://github.com/python/asyncio/issues/233">
+        https://github.com/python/asyncio/issues/233
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id42" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id7">
+        [17]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="https://hg.python.org/cpython/rev/7a0a1a4ac639">
+        https://hg.python.org/cpython/rev/7a0a1a4ac639
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id43" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id8">
+        [18]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="http://bugs.python.org/issue24400">
+        http://bugs.python.org/issue24400
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+  </div>
+  <div class="section" id="acknowledgments">
+   <h1>
+    <a class="toc-backref" href="#id101">
+     Acknowledgments
+    </a>
+   </h1>
+   <p>
+    I thank Guido van Rossum, Victor Stinner, Elvis Pranskevichus, Andrew
+Svetlov, Łukasz Langa, Greg Ewing, Stephen J. Turnbull, Jim J. Jewett,
+Brett Cannon, Nick Coghlan, Steven D'Aprano, Paul Moore, Nathaniel
+Smith, Ethan Furman, Stefan Behnel, Paul Sokolovsky, Victor Petrovykh,
+and many others for their feedback, ideas, edits, criticism, code
+reviews, and discussions around this PEP.
+   </p>
+  </div>
+  <div class="section" id="copyright">
+   <h1>
+    <a class="toc-backref" href="#id102">
+     Copyright
+    </a>
+   </h1>
+   <p>
+    This document has been placed in the public domain.
+   </p>
+   <!-- Local Variables:
+mode: indented-text
+indent-tabs-mode: nil
+sentence-end-double-space: t
+fill-column: 70
+coding: utf-8
+End: -->
+  </div>
+ </body>
+
+<!-- Mirrored from www.python.org/dev/peps/pep-0492/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 03 Sep 2015 04:35:09 GMT -->
+</html>Source: <a href="https://hg.python.org/peps/file/tip/pep-0492.txt">https://hg.python.org/peps/file/tip/pep-0492.txt</a>
+
+    </article>
+
+
+                </section>
+
+                
+
+
+<aside class="left-sidebar" role="secondary">
+
+    
+
+
+
+
+
+
+    
+
+
+
+
+
+        <div class="twitter-widget sidebar-widget">
+        <a class="twitter-timeline" data-dnt="true" href="https://twitter.com/ThePSF" data-widget-id="434113224703610882">Tweets by @ThePSF</a>
+        <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+    </div>
+
+    <div class="psf-sidebar-widget sidebar-widget">
+        <h3 class="widget-title">The PSF</h3>
+<p>The Python Software Foundation is the organization behind Python. Become a member of the PSF and help advance the software and our mission. </p>
+
+    </div>
+
+</aside>
+
+
+
+                
+                
+
+
+            </div><!-- end .container -->
+        </div><!-- end #content .content-wrapper -->
+
+        <!-- Footer and social media list -->
+        <footer id="site-map" class="main-footer" role="contentinfo">
+            <div class="main-footer-links">
+                <div class="container">
+
+                    
+                    <a id="back-to-top-1" class="jump-link" href="#python-network"><span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> Back to Top</a>
+
+                    
+
+<ul class="sitemap navigation menu do-not-print" role="tree" id="container">
+    
+    <li class="tier-1 element-1">
+        <a href="https://www.python.org/about/" >About</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/apps/" title="">Applications</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/quotes/" title="">Quotes</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/gettingstarted/" title="">Getting Started</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/help/" title="">Help</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-2">
+        <a href="https://www.python.org/downloads/" >Downloads</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/downloads/" title="">All releases</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/downloads/source/" title="">Source code</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/downloads/windows/" title="">Windows</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/downloads/mac-osx/" title="">Mac OS X</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/download/other/" title="">Other Platforms</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://docs.python.org/3/license.html" title="">License</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/download/alternatives" title="">Alternative Implementations</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-3">
+        <a href="https://www.python.org/doc/" >Documentation</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/doc/" title="">Docs</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/doc/av" title="">Audio/Visual Talks</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://wiki.python.org/moin/BeginnersGuide" title="">Beginner&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://docs.python.org/faq/" title="">FAQ</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="http://wiki.python.org/moin/Languages" title="">Non-English Docs</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="../index.html" title="">PEP Index</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://wiki.python.org/moin/PythonBooks" title="">Python Books</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-4">
+        <a href="https://www.python.org/community/" >Community</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/community/diversity/" title="">Diversity</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/community/irc/" title="">IRC</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/community/lists/" title="">Mailing Lists</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/workshops/" title="">Python Conferences</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/community/sigs/" title="">Special Interest Groups</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://wiki.python.org/moin/" title="">Python Wiki</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/community/logos/" title="">Python Logo</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://www.python.org/community/merchandise/" title="">Merchandise</a></li>
+    
+        <li class="tier-2 element-9" role="treeitem"><a href="https://www.python.org/community/awards" title="">Community Awards</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-5">
+        <a href="https://www.python.org/about/success/" title="success-stories">Success Stories</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/success/#arts" title="">Arts</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/success/#business" title="">Business</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/success/#education" title="">Education</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/success/#engineering" title="">Engineering</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/about/success/#government" title="">Government</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://www.python.org/about/success/#scientific" title="">Scientific</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/about/success/#software-development" title="">Software Development</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-6">
+        <a href="https://www.python.org/blogs/" title="News from around the Python world">News</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/blogs/" title="Python Insider Blog Posts">Python News</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://planetpython.org/" title="Planet Python">Community News</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="http://pyfound.blogspot.com/" title="PSF Blog">PSF News</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pycon.blogspot.com/" title="PyCon Blog">PyCon News</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-7">
+        <a href="https://www.python.org/events/" >Events</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/events/python-events/" title="">Python Events</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/events/python-user-group/" title="">User Group Events</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/events/python-events/past/" title="">Python Events Archive</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/events/python-user-group/past/" title="">User Group Events Archive</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://wiki.python.org/moin/PythonEventsCalendar#Submitting_an_Event" title="">Submit an Event</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-8">
+        <a href="https://www.python.org/dev/" >Contributing</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="http://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://bugs.python.org/" title="">Issue Tracker</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://mail.python.org/mailman/listinfo/python-dev" title="">python-dev list</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pythonmentors.com/" title="">Core Mentorship</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+</ul>
+
+
+                    <a id="back-to-top-2" class="jump-link" href="#python-network"><span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> Back to Top</a>
+                    
+
+                </div><!-- end .container -->
+            </div> <!-- end .main-footer-links -->
+
+            <div class="site-base">
+                <div class="container">
+                    
+                    <ul class="footer-links navigation menu do-not-print" role="tree">
+                        <li class="tier-1 element-1"><a href="https://www.python.org/about/help/">Help &amp; <span class="say-no-more">General</span> Contact</a></li>
+                        <li class="tier-1 element-2"><a href="https://www.python.org/community/diversity/">Diversity <span class="say-no-more">Initiatives</span></a></li>
+                        <li class="tier-1 element-3"><a href="https://github.com/python/pythondotorg/issues">Submit Website Bug</a></li>
+                        <!--<li class="tier-1 element-3"><a href="#"><span class="say-no-more">Website</span> Colophon</a></li>-->
+                    </ul>
+
+                    <div class="copyright">
+                        <p><small>
+                            <span class="pre">Copyright &copy;2001-2015.</span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/psf-landing/">Python Software Foundation</a></span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/about/legal/">Legal Statements</a></span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/privacy/">Privacy Policy</a></span>
+                        </small></p>
+                    </div>
+
+                </div><!-- end .container -->
+            </div><!-- end .site-base -->
+
+        </footer>
+
+    </div><!-- end #touchnav-wrapper -->
+
+    
+    <script src="../../../../ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="../../../static/js/libs/jquery-1.8.2.min.js"><\/script>')</script>
+
+    <script src="../../../static/js/libs/masonry.pkgd.min.js"></script>
+
+    <script type="text/javascript" src="../../../static/js/main-min.js" charset="utf-8"></script>
+    
+
+    <!--[if lte IE 7]>
+    <script type="text/javascript" src="/static/js/plugins/IE8-min.js" charset="utf-8"></script>
+    
+    
+    <![endif]-->
+
+    <!--[if lte IE 8]>
+    <script type="text/javascript" src="/static/js/plugins/getComputedStyle-min.js" charset="utf-8"></script>
+    
+    
+    <![endif]-->
+
+    
+
+    
+    
+
+</body>
+</html>

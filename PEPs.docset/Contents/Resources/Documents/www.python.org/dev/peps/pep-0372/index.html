@@ -1,0 +1,1690 @@
+<!doctype html>
+<!--[if lt IE 7]>   <html class="no-js ie6 lt-ie7 lt-ie8 lt-ie9">   <![endif]-->
+<!--[if IE 7]>      <html class="no-js ie7 lt-ie8 lt-ie9">          <![endif]-->
+<!--[if IE 8]>      <html class="no-js ie8 lt-ie9">                 <![endif]-->
+<!--[if gt IE 8]><!--><html class="no-js" lang="en" dir="ltr">  <!--<![endif]-->
+
+
+<!-- Mirrored from www.python.org/dev/peps/pep-0372/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 03 Sep 2015 04:34:24 GMT -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <link rel="prefetch" href="../../../../ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js">
+
+    <meta name="application-name" content="Python.org">
+    <meta name="msapplication-tooltip" content="The official home of the Python Programming Language">
+    <meta name="apple-mobile-web-app-title" content="Python.org">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="format-detection" content="telephone=no">
+    <meta http-equiv="cleartype" content="on">
+    <meta http-equiv="imagetoolbar" content="false">
+
+    <script src="../../../static/js/libs/modernizr.js"></script>
+
+    <link href="../../../static/stylesheets/style.css" rel="stylesheet" type="text/css" title="default" />
+    <link href="../../../static/stylesheets/mq.css" rel="stylesheet" type="text/css" media="not print, braille, embossed, speech, tty" />
+    
+
+    <!--[if (lte IE 8)&(!IEMobile)]>
+    <link href="/static/stylesheets/no-mq.css" rel="stylesheet" type="text/css" media="screen" />
+    
+    
+    <![endif]-->
+
+    
+    <link rel="icon" type="image/x-icon" href="https://www.python.org/static/favicon.ico">
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="../../../static/apple-touch-icon-144x144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="../../../static/apple-touch-icon-114x114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="../../../static/apple-touch-icon-72x72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="../../../static/apple-touch-icon-precomposed.png">
+    <link rel="apple-touch-icon" href="../../../static/apple-touch-icon-precomposed.png">
+
+    
+    <meta name="msapplication-TileImage" content="/static/metro-icon-144x144-precomposed.png"><!-- white shape -->
+    <meta name="msapplication-TileColor" content="#3673a5"><!-- python blue -->
+    <meta name="msapplication-navbutton-color" content="#3673a5">
+
+    <meta property="og:site_name" content="Python.org">
+    <meta property="og:type" content="website">
+
+    <title>PEP 0372 -- Adding an ordered dictionary to collections | Python.org</title>
+    <meta property="og:title" content="Welcome to Python.org">
+
+    
+    <meta name="description" content="The official home of the Python Programming Language">
+    <meta name="og:description" content="The official home of the Python Programming Language">
+    <meta name="keywords" content="Python programming language object oriented web free open source software license documentation download community">
+    <meta property="og:tag" content="Python programming language object oriented web free open source software license documentation download community">
+    <meta property="og:published_time" content="">
+    <meta property="og:modified_time" content="">
+    <meta property="og:author" content="">
+    <meta property="og:section" content=""> 
+    <meta property="og:url" content="">
+    <meta property="og:image" content="">
+    <meta property="og:video" content="">
+
+    <link rel="author" href="https://www.python.org/static/humans.txt">
+
+    
+
+    
+    <script type="application/ld+json">
+     {
+       "@context": "http://schema.org",
+       "@type": "WebSite",
+       "url": "https://www.python.org/",
+       "potentialAction": {
+         "@type": "SearchAction",
+         "target": "https://www.python.org/search/?q={search_term_string}",
+         "query-input": "required name=search_term_string"
+       }
+     }
+    </script>
+
+    
+    <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-39055973-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+    </script>
+    
+</head>
+
+<body class="python pages pep-page">
+
+    <div id="touchnav-wrapper">
+
+        <div id="nojs" class="do-not-print">
+            <p><strong>Notice:</strong> While Javascript is not essential for this website, your interaction with the content will be limited. Please turn Javascript on for the full experience. </p>
+        </div>
+
+        <!--[if lt IE 8]>
+        <div id="oldie-warning" class="do-not-print">
+            <p><strong>Notice:</strong> Your browser is <em>ancient</em> and <a href="http://www.ie6countdown.com/">Microsoft agrees</a>. <a href="http://browsehappy.com/">Upgrade to a different browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to experience a better web.</p>
+        </div>
+        <![endif]-->
+
+        <!-- Sister Site Links -->
+        <div id="top" class="top-bar do-not-print">
+
+            <nav class="meta-navigation container" role="navigation">
+
+                
+                <div class="skip-link screen-reader-text">
+                    <a href="#content" title="Skip to content">Skip to content</a>
+                </div>
+
+                
+                <a id="close-python-network" class="jump-link" href="#python-network" aria-hidden="true">
+                    <span aria-hidden="true" class="icon-arrow-down"><span>&#9660;</span></span> Close
+                </a>
+
+                
+
+<ul class="menu" role="tree">
+    
+    <li class="python-meta ">
+        <a href="https://www.python.org/" title="The Python Programming Language" >Python</a>
+    </li>
+    
+    <li class="psf-meta ">
+        <a href="https://www.python.org/psf-landing/" title="The Python Software Foundation" >PSF</a>
+    </li>
+    
+    <li class="docs-meta ">
+        <a href="https://docs.python.org/" title="Python Documentation" >Docs</a>
+    </li>
+    
+    <li class="pypi-meta ">
+        <a href="https://pypi.python.org/" title="Python Package Index" >PyPI</a>
+    </li>
+    
+    <li class="jobs-meta ">
+        <a href="https://www.python.org/jobs/" title="Python Job Board" >Jobs</a>
+    </li>
+    
+    <li class="shop-meta ">
+        <a href="https://www.python.org/community/" title="Python Community" >Community</a>
+    </li>
+    
+</ul>
+
+
+                <a id="python-network" class="jump-link" href="#top" aria-hidden="true">
+                    <span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> The Python Network
+                </a>
+
+            </nav>
+
+        </div>
+
+        <!-- Header elements -->
+        <header class="main-header" role="banner">
+            <div class="container">
+
+                <h1 class="site-headline">
+                    <a href="https://www.python.org/"><img class="python-logo" src="../../../static/img/python-logo.png" alt="python&trade;"></a>
+                </h1>
+
+                <div class="options-bar do-not-print">
+
+                    
+                    <a id="site-map-link" class="jump-to-menu" href="#site-map"><span class="menu-icon">&equiv;</span> Menu</a><form class="search-the-site" action="https://www.python.org/search/" method="get">
+                        <fieldset title="Search Python.org">
+
+                            <span aria-hidden="true" class="icon-search"></span>
+
+                            <label class="screen-reader-text" for="id-search-field">Search This Site</label>
+                            <input id="id-search-field" name="q" type="search" role="textbox" class="search-field" placeholder="Search" value="" tabindex="1">
+
+                            <button type="submit" name="submit" id="submit" class="search-button" title="Submit this Search" tabindex="3">
+                                GO
+                            </button>
+
+                            
+                            <!--[if IE]><input type="text" style="display: none;" disabled="disabled" size="1" tabindex="4"><![endif]-->
+
+                        </fieldset>
+                    </form><span class="breaker"></span><div class="adjust-font-size" aria-hidden="true">
+                        <ul class="navigation menu" aria-label="Adjust Text Size on Page">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                <a href="#" class="action-trigger"><strong><small>A</small> A</strong></a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a class="text-shrink" title="Make Text Smaller" href="javascript:;">Smaller</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a class="text-grow" title="Make Text Larger" href="javascript:;">Larger</a></li>
+                                    <li class="tier-2 element-3" role="treeitem"><a class="text-reset" title="Reset any font size changes I have made" href="javascript:;">Reset</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div><div class="winkwink-nudgenudge">
+                        <ul class="navigation menu" aria-label="Social Media Navigation">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                <a href="#" class="action-trigger">Socialize</a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a href="http://plus.google.com/+Python"><span aria-hidden="true" class="icon-google-plus"></span>Google+</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a href="http://www.facebook.com/pythonlang?fref=ts"><span aria-hidden="true" class="icon-facebook"></span>Facebook</a></li>
+                                    <li class="tier-2 element-3" role="treeitem"><a href="http://twitter.com/ThePSF"><span aria-hidden="true" class="icon-twitter"></span>Twitter</a></li>
+                                    <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/irc/"><span aria-hidden="true" class="icon-freenode"></span>Chat on IRC</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div><div class="account-signin">
+                        <ul class="navigation menu" aria-label="Social Media Navigation">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                
+                                <a href="https://www.python.org/accounts/login/" title="Sign Up or Sign In to Python.org">Sign In</a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/accounts/signup/">Sign Up / Register</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/accounts/login/">Sign In</a></li>
+                                </ul>
+                                
+                            </li>
+                        </ul>
+                    </div>
+
+                </div><!-- end options-bar -->
+
+                <nav id="mainnav" class="python-navigation main-navigation do-not-print" role="navigation">
+                    
+                        
+<ul class="navigation menu" role="menubar" aria-label="Main Navigation">
+  
+    
+    
+    <li id="about" class="tier-1 element-1  " aria-haspopup="true">
+        <a href="https://www.python.org/about/" title="" class="">About</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/apps/" title="">Applications</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/quotes/" title="">Quotes</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/gettingstarted/" title="">Getting Started</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/help/" title="">Help</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="downloads" class="tier-1 element-2  " aria-haspopup="true">
+        <a href="https://www.python.org/downloads/" title="" class="">Downloads</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/downloads/" title="">All releases</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/downloads/source/" title="">Source code</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/downloads/windows/" title="">Windows</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/downloads/mac-osx/" title="">Mac OS X</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/download/other/" title="">Other Platforms</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://docs.python.org/3/license.html" title="">License</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/download/alternatives" title="">Alternative Implementations</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="documentation" class="tier-1 element-3  " aria-haspopup="true">
+        <a href="https://www.python.org/doc/" title="" class="">Documentation</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/doc/" title="">Docs</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/doc/av" title="">Audio/Visual Talks</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://wiki.python.org/moin/BeginnersGuide" title="">Beginner&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://docs.python.org/faq/" title="">FAQ</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="http://wiki.python.org/moin/Languages" title="">Non-English Docs</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="../index.html" title="">PEP Index</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://wiki.python.org/moin/PythonBooks" title="">Python Books</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="community" class="tier-1 element-4  " aria-haspopup="true">
+        <a href="https://www.python.org/community/" title="" class="">Community</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/community/diversity/" title="">Diversity</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/community/irc/" title="">IRC</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/community/lists/" title="">Mailing Lists</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/workshops/" title="">Python Conferences</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/community/sigs/" title="">Special Interest Groups</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://wiki.python.org/moin/" title="">Python Wiki</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/community/logos/" title="">Python Logo</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://www.python.org/community/merchandise/" title="">Merchandise</a></li>
+    
+        <li class="tier-2 element-9" role="treeitem"><a href="https://www.python.org/community/awards" title="">Community Awards</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="success-stories" class="tier-1 element-5  " aria-haspopup="true">
+        <a href="https://www.python.org/about/success/" title="success-stories" class="">Success Stories</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/success/#arts" title="">Arts</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/success/#business" title="">Business</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/success/#education" title="">Education</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/success/#engineering" title="">Engineering</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/about/success/#government" title="">Government</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://www.python.org/about/success/#scientific" title="">Scientific</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/about/success/#software-development" title="">Software Development</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="news" class="tier-1 element-6  " aria-haspopup="true">
+        <a href="https://www.python.org/blogs/" title="News from around the Python world" class="">News</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/blogs/" title="Python Insider Blog Posts">Python News</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://planetpython.org/" title="Planet Python">Community News</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="http://pyfound.blogspot.com/" title="PSF Blog">PSF News</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pycon.blogspot.com/" title="PyCon Blog">PyCon News</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="events" class="tier-1 element-7  " aria-haspopup="true">
+        <a href="https://www.python.org/events/" title="" class="">Events</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/events/python-events/" title="">Python Events</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/events/python-user-group/" title="">User Group Events</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/events/python-events/past/" title="">Python Events Archive</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/events/python-user-group/past/" title="">User Group Events Archive</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://wiki.python.org/moin/PythonEventsCalendar#Submitting_an_Event" title="">Submit an Event</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    
+  
+</ul>
+
+                    
+                </nav>
+
+                <div class="header-banner "> <!-- for optional "do-not-print" class -->
+                    
+                    
+                </div>
+
+                
+                
+
+             </div><!-- end .container -->
+        </header>
+
+        <div id="content" class="content-wrapper">
+            <!-- Main Content Column -->
+            <div class="container">
+
+                <section class="main-content with-left-sidebar" role="main">
+
+                    
+<ul class="breadcrumbs menu">
+    <li>
+        <a href="https://www.python.org/" title="The Python Programming Language">Python</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>
+        <a href="https://www.python.org/dev/">Python Developer's Guide</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>
+        <a href="../index.html">PEP Index</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>PEP 0372 -- Adding an ordered dictionary to collections</li>
+</ul>
+
+
+                    
+<style>
+   .pep-page pre {
+        padding: .5em;
+        background: inherit;
+        border-left: 0px;
+        -webkit-box-shadow: 0 0 0 0;
+        -moz-box-shadow: 0 0 0 0;
+        box-shadow: 0 0 0 0;
+   }
+</style>
+
+    
+    <article class="text">
+        
+
+        <header class="article-header">
+            <h1 class="page-title">PEP 0372 -- Adding an ordered dictionary to collections</h1>
+        </header>
+
+        <!--
+This HTML is auto-generated.  DO NOT EDIT THIS FILE!  If you are writing a new
+PEP, see http://www.python.org/dev/peps/pep-0001 for instructions and links
+to templates.  DO NOT USE THIS HTML FILE AS YOUR TEMPLATE!
+-->
+<html>
+ <body>
+  <table class="rfc2822 docutils field-list" frame="void" rules="none">
+   <col class="field-name">
+   </col>
+   <col class="field-body">
+   </col>
+   <tbody valign="top">
+    <tr class="field">
+     <th class="field-name">
+      PEP:
+     </th>
+     <td class="field-body">
+      372
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Title:
+     </th>
+     <td class="field-body">
+      Adding an ordered dictionary to collections
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Author:
+     </th>
+     <td class="field-body">
+      Armin Ronacher &lt;armin.ronacher at active-4.com&gt;
+Raymond Hettinger &lt;python at rcn.com&gt;
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Status:
+     </th>
+     <td class="field-body">
+      Final
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Type:
+     </th>
+     <td class="field-body">
+      Standards Track
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Created:
+     </th>
+     <td class="field-body">
+      15-Jun-2008
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Python-Version:
+     </th>
+     <td class="field-body">
+      2.7, 3.1
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Post-History:
+     </th>
+     <td class="field-body">
+     </td>
+    </tr>
+   </tbody>
+  </table>
+  <hr/>
+  <div class="contents topic" id="contents">
+   <p class="topic-title first">
+    Contents
+   </p>
+   <ul class="simple">
+    <li>
+     <a class="reference internal" href="#abstract" id="id18">
+      Abstract
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#patch" id="id19">
+      Patch
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#rationale" id="id20">
+      Rationale
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#ordered-dict-api" id="id21">
+      Ordered Dict API
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#questions-and-answers" id="id22">
+      Questions and Answers
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#reference-implementation" id="id23">
+      Reference Implementation
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#future-directions" id="id24">
+      Future Directions
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#references" id="id25">
+      References
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#copyright" id="id26">
+      Copyright
+     </a>
+    </li>
+   </ul>
+  </div>
+  <div class="section" id="abstract">
+   <h1>
+    <a class="toc-backref" href="#id18">
+     Abstract
+    </a>
+   </h1>
+   <p>
+    This PEP proposes an ordered dictionary as a new data structure for
+the
+    <tt class="docutils literal">
+     collections
+    </tt>
+    module, called "OrderedDict" in this PEP.  The
+proposed API incorporates the experiences gained from working with
+similar implementations that exist in various real-world applications
+and other programming languages.
+   </p>
+  </div>
+  <div class="section" id="patch">
+   <h1>
+    <a class="toc-backref" href="#id19">
+     Patch
+    </a>
+   </h1>
+   <p>
+    A working Py3.1 patch including tests and documentation is at:
+   </p>
+   <blockquote>
+    <a class="reference external" href="http://bugs.python.org/issue5397">
+     OrderedDict patch
+    </a>
+   </blockquote>
+   <p>
+    The check-in was in revisions: 70101 and 70102
+   </p>
+  </div>
+  <div class="section" id="rationale">
+   <h1>
+    <a class="toc-backref" href="#id20">
+     Rationale
+    </a>
+   </h1>
+   <p>
+    In current Python versions, the widely used built-in dict type does
+not specify an order for the key/value pairs stored.  This makes it
+hard to use dictionaries as data storage for some specific use cases.
+   </p>
+   <p>
+    Some dynamic programming languages like PHP and Ruby 1.9 guarantee a
+certain order on iteration.  In those languages, and existing Python
+ordered-dict implementations, the ordering of items is defined by the
+time of insertion of the key.  New keys are appended at the end, but
+keys that are overwritten are not moved to the end.
+   </p>
+   <p>
+    The following example shows the behavior for simple assignments:
+   </p>
+   <blockquote>
+    <pre class="doctest-block">
+&gt;&gt;&gt; d = OrderedDict()
+&gt;&gt;&gt; d['parrot'] = 'dead'
+&gt;&gt;&gt; d['penguin'] = 'exploded'
+&gt;&gt;&gt; d.items()
+[('parrot', 'dead'), ('penguin', 'exploded')]
+</pre>
+   </blockquote>
+   <p>
+    That the ordering is preserved makes an OrderedDict useful for a couple of
+situations:
+   </p>
+   <ul>
+    <li>
+     <p class="first">
+      XML/HTML processing libraries currently drop the ordering of
+attributes, use a list instead of a dict which makes filtering
+cumbersome, or implement their own ordered dictionary.  This affects
+ElementTree, html5lib, Genshi and many more libraries.
+     </p>
+    </li>
+    <li>
+     <p class="first">
+      There are many ordered dict implementations in various libraries
+and applications, most of them subtly incompatible with each other.
+Furthermore, subclassing dict is a non-trivial task and many
+implementations don't override all the methods properly which can
+lead to unexpected results.
+     </p>
+     <p>
+      Additionally, many ordered dicts are implemented in an inefficient
+way, making many operations more complex then they have to be.
+     </p>
+    </li>
+    <li>
+     <p class="first">
+      <a class="reference external" href="../pep-3115/index.html">
+       PEP 3115
+      </a>
+      allows metaclasses to change the mapping object used for
+the class body.  An ordered dict could be used to create ordered
+member declarations similar to C structs.  This could be useful, for
+example, for future
+      <tt class="docutils literal">
+       ctypes
+      </tt>
+      releases as well as ORMs that define
+database tables as classes, like the one the Django framework ships.
+Django currently uses an ugly hack to restore the ordering of
+members in database models.
+     </p>
+    </li>
+    <li>
+     <p class="first">
+      The RawConfigParser class accepts a
+      <tt class="docutils literal">
+       dict_type
+      </tt>
+      argument that
+allows an application to set the type of dictionary used internally.
+The motivation for this addition was expressly to allow users to
+provide an ordered dictionary.
+      <a class="footnote-reference" href="#id3" id="id1">
+       [1]
+      </a>
+     </p>
+    </li>
+    <li>
+     <p class="first">
+      Code ported from other programming languages such as PHP often
+depends on an ordered dict.  Having an implementation of an
+ordering-preserving dictionary in the standard library could ease
+the transition and improve the compatibility of different libraries.
+     </p>
+    </li>
+   </ul>
+  </div>
+  <div class="section" id="ordered-dict-api">
+   <h1>
+    <a class="toc-backref" href="#id21">
+     Ordered Dict API
+    </a>
+   </h1>
+   <p>
+    The ordered dict API would be mostly compatible with dict and existing
+ordered dicts.  Note: this PEP refers to the 2.7 and 3.0 dictionary
+API as described in collections.Mapping abstract base class.
+   </p>
+   <p>
+    The constructor and
+    <tt class="docutils literal">
+     update()
+    </tt>
+    both accept iterables of tuples as
+well as mappings like a dict does.  Unlike a regular dictionary,
+the insertion order is preserved.
+   </p>
+   <blockquote>
+    <pre class="doctest-block">
+&gt;&gt;&gt; d = OrderedDict([('a', 'b'), ('c', 'd')])
+&gt;&gt;&gt; d.update({'foo': 'bar'})
+&gt;&gt;&gt; d
+collections.OrderedDict([('a', 'b'), ('c', 'd'), ('foo', 'bar')])
+</pre>
+   </blockquote>
+   <p>
+    If ordered dicts are updated from regular dicts, the ordering of new
+keys is of course undefined.
+   </p>
+   <p>
+    All iteration methods as well as
+    <tt class="docutils literal">
+     keys()
+    </tt>
+    ,
+    <tt class="docutils literal">
+     values()
+    </tt>
+    and
+    <tt class="docutils literal">
+     items()
+    </tt>
+    return the values ordered by the time the key was
+first inserted:
+   </p>
+   <blockquote>
+    <pre class="doctest-block">
+&gt;&gt;&gt; d['spam'] = 'eggs'
+&gt;&gt;&gt; d.keys()
+['a', 'c', 'foo', 'spam']
+&gt;&gt;&gt; d.values()
+['b', 'd', 'bar', 'eggs']
+&gt;&gt;&gt; d.items()
+[('a', 'b'), ('c', 'd'), ('foo', 'bar'), ('spam', 'eggs')]
+</pre>
+   </blockquote>
+   <p>
+    New methods not available on dict:
+   </p>
+   <dl class="docutils">
+    <dt>
+     <tt class="docutils literal">
+      OrderedDict.__reversed__()
+     </tt>
+    </dt>
+    <dd>
+     Supports reverse iteration by key.
+    </dd>
+   </dl>
+  </div>
+  <div class="section" id="questions-and-answers">
+   <h1>
+    <a class="toc-backref" href="#id22">
+     Questions and Answers
+    </a>
+   </h1>
+   <p>
+    What happens if an existing key is reassigned?
+   </p>
+   <blockquote>
+    The key is not moved but assigned a new value in place.  This is
+consistent with existing implementations.
+   </blockquote>
+   <p>
+    What happens if keys appear multiple times in the list passed to the
+constructor?
+   </p>
+   <blockquote>
+    <p>
+     The same as for regular dicts -- the latter item overrides the
+former.  This has the side-effect that the position of the first
+key is used because only the value is actually overwritten:
+    </p>
+    <pre class="literal-block">
+&gt;&gt;&gt; OrderedDict([('a', 1), ('b', 2), ('a', 3)])
+collections.OrderedDict([('a', 3), ('b', 2)])
+</pre>
+    <p>
+     This behavior is consistent with existing implementations in
+Python, the PHP array and the hashmap in Ruby 1.9.
+    </p>
+   </blockquote>
+   <p>
+    Is the ordered dict a dict subclass?  Why?
+   </p>
+   <blockquote>
+    Yes.  Like
+    <tt class="docutils literal">
+     defaultdict
+    </tt>
+    , an ordered dictionary `` subclasses
+    <tt class="docutils literal">
+     dict
+    </tt>
+    .
+Being a dict subclass make some of the methods faster (like
+    <tt class="docutils literal">
+     __getitem__
+    </tt>
+    and
+    <tt class="docutils literal">
+     __len__
+    </tt>
+    ).  More importantly, being a dict
+subclass lets ordered dictionaries be usable with tools like json that
+insist on having dict inputs by testing isinstance(d, dict).
+   </blockquote>
+   <p>
+    Do any limitations arise from subclassing dict?
+   </p>
+   <blockquote>
+    Yes.  Since the API for dicts is different in Py2.x and Py3.x, the
+OrderedDict API must also be different.  So, the Py2.7 version will need
+to override iterkeys, itervalues, and iteritems.
+   </blockquote>
+   <p>
+    Does
+    <tt class="docutils literal">
+     OrderedDict.popitem()
+    </tt>
+    return a particular key/value pair?
+   </p>
+   <blockquote>
+    Yes.  It pops-off the most recently inserted new key and its
+corresponding value.  This corresponds to the usual LIFO behavior
+exhibited by traditional push/pop pairs.  It is semantically
+equivalent to
+    <tt class="docutils literal">
+     <span class="pre">
+      k=list(od)[-1];
+     </span>
+     v=od[k]; del od[k]; return (k,v)
+    </tt>
+    .
+The actual implementation is more efficient and pops directly
+from a sorted list of keys.
+   </blockquote>
+   <p>
+    Does OrderedDict support indexing, slicing, and whatnot?
+   </p>
+   <blockquote>
+    <p>
+     As a matter of fact,
+     <tt class="docutils literal">
+      OrderedDict
+     </tt>
+     does not implement the
+     <tt class="docutils literal">
+      Sequence
+     </tt>
+     interface.  Rather, it is a
+     <tt class="docutils literal">
+      MutableMapping
+     </tt>
+     that remembers
+the order of key insertion.  The only sequence-like addition is
+support for
+     <tt class="docutils literal">
+      reversed
+     </tt>
+     .
+    </p>
+    <p>
+     An further advantage of not allowing indexing is that it leaves open
+the possibility of a fast C implementation using linked lists.
+    </p>
+   </blockquote>
+   <p>
+    Does OrderedDict support alternate sort orders such as alphabetical?
+   </p>
+   <blockquote>
+    No.  Those wanting different sort orders really need to be using another
+technique.  The OrderedDict is all about recording insertion order.   If any
+other order is of interest, then another structure (like an in-memory
+dbm) is likely a better fit.
+   </blockquote>
+   <p>
+    How well does OrderedDict work with the json module, PyYAML, and ConfigParser?
+   </p>
+   <blockquote>
+    <p>
+     For json, the good news is that json's encoder respects OrderedDict's iteration order:
+    </p>
+    <pre class="literal-block">
+&gt;&gt;&gt; items = [('one', 1), ('two', 2), ('three',3), ('four',4), ('five',5)]
+&gt;&gt;&gt; json.dumps(OrderedDict(items))
+'{"one": 1, "two": 2, "three": 3, "four": 4, "five": 5}'
+</pre>
+    <p>
+     In Py2.6, the object_hook for json decoders passes-in an already built
+dictionary so order is lost before the object hook sees it.  This
+problem is being fixed for Python 2.7/3.1 by adding a new hook that
+preserves order (see
+     <a class="reference external" href="http://bugs.python.org/issue5381">
+      http://bugs.python.org/issue5381
+     </a>
+     ).
+With the new hook, order can be preserved:
+    </p>
+    <pre class="literal-block">
+&gt;&gt;&gt; jtext = '{"one": 1, "two": 2, "three": 3, "four": 4, "five": 5}'
+&gt;&gt;&gt; json.loads(jtext, object_pairs_hook=OrderedDict)
+OrderedDict({'one': 1, 'two': 2, 'three': 3, 'four': 4, 'five': 5})
+</pre>
+    <p>
+     For PyYAML, a full round-trip is problem free:
+    </p>
+    <pre class="literal-block">
+&gt;&gt;&gt; ytext = yaml.dump(OrderedDict(items))
+&gt;&gt;&gt; print ytext
+!!python/object/apply:collections.OrderedDict
+- - [one, 1]
+  - [two, 2]
+  - [three, 3]
+  - [four, 4]
+  - [five, 5]
+
+&gt;&gt;&gt; yaml.load(ytext)
+OrderedDict({'one': 1, 'two': 2, 'three': 3, 'four': 4, 'five': 5})
+</pre>
+    <p>
+     For the ConfigParser module, round-tripping is also problem free.  Custom
+dicts were added in Py2.6 specifically to support ordered dictionaries:
+    </p>
+    <pre class="literal-block">
+&gt;&gt;&gt; config = ConfigParser(dict_type=OrderedDict)
+&gt;&gt;&gt; config.read('myconfig.ini')
+&gt;&gt;&gt; config.remove_option('Log', 'error')
+&gt;&gt;&gt; config.write(open('myconfig.ini', 'w'))
+</pre>
+   </blockquote>
+   <p>
+    How does OrderedDict handle equality testing?
+   </p>
+   <blockquote>
+    <p>
+     Comparing two ordered dictionaries implies that the test will be
+order-sensitive so that list
+     <tt class="docutils literal">
+      <span class="pre">
+       (od1.items())==list(od2.items())
+      </span>
+     </tt>
+     .
+    </p>
+    <p>
+     When ordered dicts are compared with other Mappings, their order
+insensitive comparison is used.  This allows ordered dictionaries
+to be substituted anywhere regular dictionaries are used.
+    </p>
+   </blockquote>
+   <p>
+    How __repr__ format will maintain order during an repr/eval round-trip?
+   </p>
+   <blockquote>
+    OrderedDict([('a', 1), ('b', 2)])
+   </blockquote>
+   <p>
+    What are the trade-offs of the possible underlying data structures?
+   </p>
+   <blockquote>
+    <ul class="simple">
+     <li>
+      Keeping a sorted list of keys is fast for all operations except
+__delitem__() which becomes an O(n) exercise.  This data structure leads
+to very simple code and little wasted space.
+     </li>
+     <li>
+      Keeping a separate dictionary to record insertion sequence numbers makes
+the code a little bit more complex.  All of the basic operations are O(1)
+but the constant factor is increased for __setitem__() and __delitem__()
+meaning that every use case will have to pay for this speedup (since all
+buildup go through __setitem__). Also, the first traveral incurs a
+one-time
+      <tt class="docutils literal">
+       O(n log n)
+      </tt>
+      sorting cost.  The storage costs are double that
+for the sorted-list-of-keys approach.
+     </li>
+     <li>
+      A version written in C could use a linked list.  The code would be more
+complex than the other two approaches but it would conserve space and
+would keep the same big-oh performance as regular dictionaries.  It is
+the fastest and most space efficient.
+     </li>
+    </ul>
+   </blockquote>
+  </div>
+  <div class="section" id="reference-implementation">
+   <h1>
+    <a class="toc-backref" href="#id23">
+     Reference Implementation
+    </a>
+   </h1>
+   <p>
+    An implementation with tests and documentation is at:
+   </p>
+   <blockquote>
+    <a class="reference external" href="http://bugs.python.org/issue5397">
+     OrderedDict patch
+    </a>
+   </blockquote>
+   <p>
+    The proposed version has several merits:
+   </p>
+   <ul class="simple">
+    <li>
+     Strict compliance with the MutableMapping API and no new methods
+so that the learning curve is near zero.  It is simply a dictionary
+that remembers insertion order.
+    </li>
+    <li>
+     Generally good performance.  The big-oh times are the same as regular
+dictionaries except that key deletion is O(n).
+    </li>
+   </ul>
+   <p>
+    Other implementations of ordered dicts in various Python projects or
+standalone libraries, that inspired the API proposed here, are:
+   </p>
+   <ul class="simple">
+    <li>
+     <a class="reference external" href="http://dev.pocoo.org/hg/sandbox/raw-file/tip/odict.py">
+      odict in Python
+     </a>
+     <a class="footnote-reference" href="#id4" id="id5">
+      [2]
+     </a>
+    </li>
+    <li>
+     <a class="reference external" href="http://babel.edgewall.org/browser/trunk/babel/util.py?rev=374#L178">
+      odict in Babel
+     </a>
+     <a class="footnote-reference" href="#id6" id="id7">
+      [3]
+     </a>
+    </li>
+    <li>
+     <a class="reference external" href="http://code.djangoproject.com/browser/django/trunk/django/utils/datastructures.py?rev=7140#L53">
+      OrderedDict in Django
+     </a>
+     <a class="footnote-reference" href="#id8" id="id9">
+      [4]
+     </a>
+    </li>
+    <li>
+     <a class="reference external" href="http://www.voidspace.org.uk/python/odict.html">
+      The odict module
+     </a>
+     <a class="footnote-reference" href="#id10" id="id11">
+      [5]
+     </a>
+    </li>
+    <li>
+     <a class="reference external" href="http://www.xs4all.nl/~anthon/Python/ordereddict/">
+      ordereddict
+     </a>
+     <a class="footnote-reference" href="#id12" id="id13">
+      [6]
+     </a>
+     (a C implementation of the odict module)
+    </li>
+    <li>
+     <a class="reference external" href="http://pypi.python.org/pypi/StableDict/0.2">
+      StableDict
+     </a>
+     <a class="footnote-reference" href="#id14" id="id15">
+      [7]
+     </a>
+    </li>
+    <li>
+     <a class="reference external" href="http://codespeak.net/svn/user/arigo/hack/pyfuse/OrderedDict.py">
+      Armin Rigo's OrderedDict
+     </a>
+     <a class="footnote-reference" href="#id16" id="id17">
+      [8]
+     </a>
+    </li>
+   </ul>
+  </div>
+  <div class="section" id="future-directions">
+   <h1>
+    <a class="toc-backref" href="#id24">
+     Future Directions
+    </a>
+   </h1>
+   <p>
+    With the availability of an ordered dict in the standard library,
+other libraries may take advantage of that.  For example, ElementTree
+could return odicts in the future that retain the attribute ordering
+of the source file.
+   </p>
+  </div>
+  <div class="section" id="references">
+   <h1>
+    <a class="toc-backref" href="#id25">
+     References
+    </a>
+   </h1>
+   <table class="docutils footnote" frame="void" id="id3" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id1">
+        [1]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="http://bugs.python.org/issue1371075">
+        http://bugs.python.org/issue1371075
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id4" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id5">
+        [2]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="http://dev.pocoo.org/hg/sandbox/raw-file/tip/odict.py">
+        http://dev.pocoo.org/hg/sandbox/raw-file/tip/odict.py
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id6" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id7">
+        [3]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="http://babel.edgewall.org/browser/trunk/babel/util.py?rev=374#L178">
+        http://babel.edgewall.org/browser/trunk/babel/util.py?rev=374#L178
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id8" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id9">
+        [4]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="http://code.djangoproject.com/browser/django/trunk/django/utils/datastructures.py?rev=7140#L53">
+        http://code.djangoproject.com/browser/django/trunk/django/utils/datastructures.py?rev=7140#L53
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id10" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id11">
+        [5]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="http://www.voidspace.org.uk/python/odict.html">
+        http://www.voidspace.org.uk/python/odict.html
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id12" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id13">
+        [6]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="http://www.xs4all.nl/~anthon/Python/ordereddict/">
+        http://www.xs4all.nl/~anthon/Python/ordereddict/
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id14" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id15">
+        [7]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="http://pypi.python.org/pypi/StableDict/0.2">
+        http://pypi.python.org/pypi/StableDict/0.2
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id16" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id17">
+        [8]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="http://codespeak.net/svn/user/arigo/hack/pyfuse/OrderedDict.py">
+        http://codespeak.net/svn/user/arigo/hack/pyfuse/OrderedDict.py
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+  </div>
+  <div class="section" id="copyright">
+   <h1>
+    <a class="toc-backref" href="#id26">
+     Copyright
+    </a>
+   </h1>
+   <p>
+    This document has been placed in the public domain.
+   </p>
+   <!-- Local Variables:
+mode: indented-text
+indent-tabs-mode: nil
+sentence-end-double-space: t
+fill-column: 70
+coding: utf-8
+End: -->
+  </div>
+ </body>
+
+<!-- Mirrored from www.python.org/dev/peps/pep-0372/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 03 Sep 2015 04:34:24 GMT -->
+</html>Source: <a href="https://hg.python.org/peps/file/tip/pep-0372.txt">https://hg.python.org/peps/file/tip/pep-0372.txt</a>
+
+    </article>
+
+
+                </section>
+
+                
+
+
+<aside class="left-sidebar" role="secondary">
+
+    
+
+
+
+
+
+
+    
+
+
+
+
+
+        <div class="twitter-widget sidebar-widget">
+        <a class="twitter-timeline" data-dnt="true" href="https://twitter.com/ThePSF" data-widget-id="434113224703610882">Tweets by @ThePSF</a>
+        <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+    </div>
+
+    <div class="psf-sidebar-widget sidebar-widget">
+        <h3 class="widget-title">The PSF</h3>
+<p>The Python Software Foundation is the organization behind Python. Become a member of the PSF and help advance the software and our mission. </p>
+
+    </div>
+
+</aside>
+
+
+
+                
+                
+
+
+            </div><!-- end .container -->
+        </div><!-- end #content .content-wrapper -->
+
+        <!-- Footer and social media list -->
+        <footer id="site-map" class="main-footer" role="contentinfo">
+            <div class="main-footer-links">
+                <div class="container">
+
+                    
+                    <a id="back-to-top-1" class="jump-link" href="#python-network"><span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> Back to Top</a>
+
+                    
+
+<ul class="sitemap navigation menu do-not-print" role="tree" id="container">
+    
+    <li class="tier-1 element-1">
+        <a href="https://www.python.org/about/" >About</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/apps/" title="">Applications</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/quotes/" title="">Quotes</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/gettingstarted/" title="">Getting Started</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/help/" title="">Help</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-2">
+        <a href="https://www.python.org/downloads/" >Downloads</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/downloads/" title="">All releases</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/downloads/source/" title="">Source code</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/downloads/windows/" title="">Windows</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/downloads/mac-osx/" title="">Mac OS X</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/download/other/" title="">Other Platforms</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://docs.python.org/3/license.html" title="">License</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/download/alternatives" title="">Alternative Implementations</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-3">
+        <a href="https://www.python.org/doc/" >Documentation</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/doc/" title="">Docs</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/doc/av" title="">Audio/Visual Talks</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://wiki.python.org/moin/BeginnersGuide" title="">Beginner&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://docs.python.org/faq/" title="">FAQ</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="http://wiki.python.org/moin/Languages" title="">Non-English Docs</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="../index.html" title="">PEP Index</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://wiki.python.org/moin/PythonBooks" title="">Python Books</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-4">
+        <a href="https://www.python.org/community/" >Community</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/community/diversity/" title="">Diversity</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/community/irc/" title="">IRC</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/community/lists/" title="">Mailing Lists</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/workshops/" title="">Python Conferences</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/community/sigs/" title="">Special Interest Groups</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://wiki.python.org/moin/" title="">Python Wiki</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/community/logos/" title="">Python Logo</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://www.python.org/community/merchandise/" title="">Merchandise</a></li>
+    
+        <li class="tier-2 element-9" role="treeitem"><a href="https://www.python.org/community/awards" title="">Community Awards</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-5">
+        <a href="https://www.python.org/about/success/" title="success-stories">Success Stories</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/success/#arts" title="">Arts</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/success/#business" title="">Business</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/success/#education" title="">Education</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/success/#engineering" title="">Engineering</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/about/success/#government" title="">Government</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://www.python.org/about/success/#scientific" title="">Scientific</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/about/success/#software-development" title="">Software Development</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-6">
+        <a href="https://www.python.org/blogs/" title="News from around the Python world">News</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/blogs/" title="Python Insider Blog Posts">Python News</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://planetpython.org/" title="Planet Python">Community News</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="http://pyfound.blogspot.com/" title="PSF Blog">PSF News</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pycon.blogspot.com/" title="PyCon Blog">PyCon News</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-7">
+        <a href="https://www.python.org/events/" >Events</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/events/python-events/" title="">Python Events</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/events/python-user-group/" title="">User Group Events</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/events/python-events/past/" title="">Python Events Archive</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/events/python-user-group/past/" title="">User Group Events Archive</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://wiki.python.org/moin/PythonEventsCalendar#Submitting_an_Event" title="">Submit an Event</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-8">
+        <a href="https://www.python.org/dev/" >Contributing</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="http://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://bugs.python.org/" title="">Issue Tracker</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://mail.python.org/mailman/listinfo/python-dev" title="">python-dev list</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pythonmentors.com/" title="">Core Mentorship</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+</ul>
+
+
+                    <a id="back-to-top-2" class="jump-link" href="#python-network"><span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> Back to Top</a>
+                    
+
+                </div><!-- end .container -->
+            </div> <!-- end .main-footer-links -->
+
+            <div class="site-base">
+                <div class="container">
+                    
+                    <ul class="footer-links navigation menu do-not-print" role="tree">
+                        <li class="tier-1 element-1"><a href="https://www.python.org/about/help/">Help &amp; <span class="say-no-more">General</span> Contact</a></li>
+                        <li class="tier-1 element-2"><a href="https://www.python.org/community/diversity/">Diversity <span class="say-no-more">Initiatives</span></a></li>
+                        <li class="tier-1 element-3"><a href="https://github.com/python/pythondotorg/issues">Submit Website Bug</a></li>
+                        <!--<li class="tier-1 element-3"><a href="#"><span class="say-no-more">Website</span> Colophon</a></li>-->
+                    </ul>
+
+                    <div class="copyright">
+                        <p><small>
+                            <span class="pre">Copyright &copy;2001-2015.</span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/psf-landing/">Python Software Foundation</a></span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/about/legal/">Legal Statements</a></span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/privacy/">Privacy Policy</a></span>
+                        </small></p>
+                    </div>
+
+                </div><!-- end .container -->
+            </div><!-- end .site-base -->
+
+        </footer>
+
+    </div><!-- end #touchnav-wrapper -->
+
+    
+    <script src="../../../../ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="../../../static/js/libs/jquery-1.8.2.min.js"><\/script>')</script>
+
+    <script src="../../../static/js/libs/masonry.pkgd.min.js"></script>
+
+    <script type="text/javascript" src="../../../static/js/main-min.js" charset="utf-8"></script>
+    
+
+    <!--[if lte IE 7]>
+    <script type="text/javascript" src="/static/js/plugins/IE8-min.js" charset="utf-8"></script>
+    
+    
+    <![endif]-->
+
+    <!--[if lte IE 8]>
+    <script type="text/javascript" src="/static/js/plugins/getComputedStyle-min.js" charset="utf-8"></script>
+    
+    
+    <![endif]-->
+
+    
+
+    
+    
+
+</body>
+</html>

@@ -1,0 +1,2047 @@
+<!doctype html>
+<!--[if lt IE 7]>   <html class="no-js ie6 lt-ie7 lt-ie8 lt-ie9">   <![endif]-->
+<!--[if IE 7]>      <html class="no-js ie7 lt-ie8 lt-ie9">          <![endif]-->
+<!--[if IE 8]>      <html class="no-js ie8 lt-ie9">                 <![endif]-->
+<!--[if gt IE 8]><!--><html class="no-js" lang="en" dir="ltr">  <!--<![endif]-->
+
+
+<!-- Mirrored from www.python.org/dev/peps/pep-0386/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 03 Sep 2015 04:37:52 GMT -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <link rel="prefetch" href="../../../../ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js">
+
+    <meta name="application-name" content="Python.org">
+    <meta name="msapplication-tooltip" content="The official home of the Python Programming Language">
+    <meta name="apple-mobile-web-app-title" content="Python.org">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="format-detection" content="telephone=no">
+    <meta http-equiv="cleartype" content="on">
+    <meta http-equiv="imagetoolbar" content="false">
+
+    <script src="../../../static/js/libs/modernizr.js"></script>
+
+    <link href="../../../static/stylesheets/style.css" rel="stylesheet" type="text/css" title="default" />
+    <link href="../../../static/stylesheets/mq.css" rel="stylesheet" type="text/css" media="not print, braille, embossed, speech, tty" />
+    
+
+    <!--[if (lte IE 8)&(!IEMobile)]>
+    <link href="/static/stylesheets/no-mq.css" rel="stylesheet" type="text/css" media="screen" />
+    
+    
+    <![endif]-->
+
+    
+    <link rel="icon" type="image/x-icon" href="https://www.python.org/static/favicon.ico">
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="../../../static/apple-touch-icon-144x144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="../../../static/apple-touch-icon-114x114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="../../../static/apple-touch-icon-72x72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="../../../static/apple-touch-icon-precomposed.png">
+    <link rel="apple-touch-icon" href="../../../static/apple-touch-icon-precomposed.png">
+
+    
+    <meta name="msapplication-TileImage" content="/static/metro-icon-144x144-precomposed.png"><!-- white shape -->
+    <meta name="msapplication-TileColor" content="#3673a5"><!-- python blue -->
+    <meta name="msapplication-navbutton-color" content="#3673a5">
+
+    <meta property="og:site_name" content="Python.org">
+    <meta property="og:type" content="website">
+
+    <title>PEP 0386 -- Changing the version comparison module in Distutils | Python.org</title>
+    <meta property="og:title" content="Welcome to Python.org">
+
+    
+    <meta name="description" content="The official home of the Python Programming Language">
+    <meta name="og:description" content="The official home of the Python Programming Language">
+    <meta name="keywords" content="Python programming language object oriented web free open source software license documentation download community">
+    <meta property="og:tag" content="Python programming language object oriented web free open source software license documentation download community">
+    <meta property="og:published_time" content="">
+    <meta property="og:modified_time" content="">
+    <meta property="og:author" content="">
+    <meta property="og:section" content=""> 
+    <meta property="og:url" content="">
+    <meta property="og:image" content="">
+    <meta property="og:video" content="">
+
+    <link rel="author" href="https://www.python.org/static/humans.txt">
+
+    
+
+    
+    <script type="application/ld+json">
+     {
+       "@context": "http://schema.org",
+       "@type": "WebSite",
+       "url": "https://www.python.org/",
+       "potentialAction": {
+         "@type": "SearchAction",
+         "target": "https://www.python.org/search/?q={search_term_string}",
+         "query-input": "required name=search_term_string"
+       }
+     }
+    </script>
+
+    
+    <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-39055973-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+    </script>
+    
+</head>
+
+<body class="python pages pep-page">
+
+    <div id="touchnav-wrapper">
+
+        <div id="nojs" class="do-not-print">
+            <p><strong>Notice:</strong> While Javascript is not essential for this website, your interaction with the content will be limited. Please turn Javascript on for the full experience. </p>
+        </div>
+
+        <!--[if lt IE 8]>
+        <div id="oldie-warning" class="do-not-print">
+            <p><strong>Notice:</strong> Your browser is <em>ancient</em> and <a href="http://www.ie6countdown.com/">Microsoft agrees</a>. <a href="http://browsehappy.com/">Upgrade to a different browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to experience a better web.</p>
+        </div>
+        <![endif]-->
+
+        <!-- Sister Site Links -->
+        <div id="top" class="top-bar do-not-print">
+
+            <nav class="meta-navigation container" role="navigation">
+
+                
+                <div class="skip-link screen-reader-text">
+                    <a href="#content" title="Skip to content">Skip to content</a>
+                </div>
+
+                
+                <a id="close-python-network" class="jump-link" href="#python-network" aria-hidden="true">
+                    <span aria-hidden="true" class="icon-arrow-down"><span>&#9660;</span></span> Close
+                </a>
+
+                
+
+<ul class="menu" role="tree">
+    
+    <li class="python-meta ">
+        <a href="https://www.python.org/" title="The Python Programming Language" >Python</a>
+    </li>
+    
+    <li class="psf-meta ">
+        <a href="https://www.python.org/psf-landing/" title="The Python Software Foundation" >PSF</a>
+    </li>
+    
+    <li class="docs-meta ">
+        <a href="https://docs.python.org/" title="Python Documentation" >Docs</a>
+    </li>
+    
+    <li class="pypi-meta ">
+        <a href="https://pypi.python.org/" title="Python Package Index" >PyPI</a>
+    </li>
+    
+    <li class="jobs-meta ">
+        <a href="https://www.python.org/jobs/" title="Python Job Board" >Jobs</a>
+    </li>
+    
+    <li class="shop-meta ">
+        <a href="https://www.python.org/community/" title="Python Community" >Community</a>
+    </li>
+    
+</ul>
+
+
+                <a id="python-network" class="jump-link" href="#top" aria-hidden="true">
+                    <span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> The Python Network
+                </a>
+
+            </nav>
+
+        </div>
+
+        <!-- Header elements -->
+        <header class="main-header" role="banner">
+            <div class="container">
+
+                <h1 class="site-headline">
+                    <a href="https://www.python.org/"><img class="python-logo" src="../../../static/img/python-logo.png" alt="python&trade;"></a>
+                </h1>
+
+                <div class="options-bar do-not-print">
+
+                    
+                    <a id="site-map-link" class="jump-to-menu" href="#site-map"><span class="menu-icon">&equiv;</span> Menu</a><form class="search-the-site" action="https://www.python.org/search/" method="get">
+                        <fieldset title="Search Python.org">
+
+                            <span aria-hidden="true" class="icon-search"></span>
+
+                            <label class="screen-reader-text" for="id-search-field">Search This Site</label>
+                            <input id="id-search-field" name="q" type="search" role="textbox" class="search-field" placeholder="Search" value="" tabindex="1">
+
+                            <button type="submit" name="submit" id="submit" class="search-button" title="Submit this Search" tabindex="3">
+                                GO
+                            </button>
+
+                            
+                            <!--[if IE]><input type="text" style="display: none;" disabled="disabled" size="1" tabindex="4"><![endif]-->
+
+                        </fieldset>
+                    </form><span class="breaker"></span><div class="adjust-font-size" aria-hidden="true">
+                        <ul class="navigation menu" aria-label="Adjust Text Size on Page">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                <a href="#" class="action-trigger"><strong><small>A</small> A</strong></a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a class="text-shrink" title="Make Text Smaller" href="javascript:;">Smaller</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a class="text-grow" title="Make Text Larger" href="javascript:;">Larger</a></li>
+                                    <li class="tier-2 element-3" role="treeitem"><a class="text-reset" title="Reset any font size changes I have made" href="javascript:;">Reset</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div><div class="winkwink-nudgenudge">
+                        <ul class="navigation menu" aria-label="Social Media Navigation">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                <a href="#" class="action-trigger">Socialize</a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a href="http://plus.google.com/+Python"><span aria-hidden="true" class="icon-google-plus"></span>Google+</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a href="http://www.facebook.com/pythonlang?fref=ts"><span aria-hidden="true" class="icon-facebook"></span>Facebook</a></li>
+                                    <li class="tier-2 element-3" role="treeitem"><a href="http://twitter.com/ThePSF"><span aria-hidden="true" class="icon-twitter"></span>Twitter</a></li>
+                                    <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/irc/"><span aria-hidden="true" class="icon-freenode"></span>Chat on IRC</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div><div class="account-signin">
+                        <ul class="navigation menu" aria-label="Social Media Navigation">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                
+                                <a href="https://www.python.org/accounts/login/" title="Sign Up or Sign In to Python.org">Sign In</a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/accounts/signup/">Sign Up / Register</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/accounts/login/">Sign In</a></li>
+                                </ul>
+                                
+                            </li>
+                        </ul>
+                    </div>
+
+                </div><!-- end options-bar -->
+
+                <nav id="mainnav" class="python-navigation main-navigation do-not-print" role="navigation">
+                    
+                        
+<ul class="navigation menu" role="menubar" aria-label="Main Navigation">
+  
+    
+    
+    <li id="about" class="tier-1 element-1  " aria-haspopup="true">
+        <a href="https://www.python.org/about/" title="" class="">About</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/apps/" title="">Applications</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/quotes/" title="">Quotes</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/gettingstarted/" title="">Getting Started</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/help/" title="">Help</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="downloads" class="tier-1 element-2  " aria-haspopup="true">
+        <a href="https://www.python.org/downloads/" title="" class="">Downloads</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/downloads/" title="">All releases</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/downloads/source/" title="">Source code</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/downloads/windows/" title="">Windows</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/downloads/mac-osx/" title="">Mac OS X</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/download/other/" title="">Other Platforms</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://docs.python.org/3/license.html" title="">License</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/download/alternatives" title="">Alternative Implementations</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="documentation" class="tier-1 element-3  " aria-haspopup="true">
+        <a href="https://www.python.org/doc/" title="" class="">Documentation</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/doc/" title="">Docs</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/doc/av" title="">Audio/Visual Talks</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://wiki.python.org/moin/BeginnersGuide" title="">Beginner&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://docs.python.org/faq/" title="">FAQ</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="http://wiki.python.org/moin/Languages" title="">Non-English Docs</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="../index.html" title="">PEP Index</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://wiki.python.org/moin/PythonBooks" title="">Python Books</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="community" class="tier-1 element-4  " aria-haspopup="true">
+        <a href="https://www.python.org/community/" title="" class="">Community</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/community/diversity/" title="">Diversity</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/community/irc/" title="">IRC</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/community/lists/" title="">Mailing Lists</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/workshops/" title="">Python Conferences</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/community/sigs/" title="">Special Interest Groups</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://wiki.python.org/moin/" title="">Python Wiki</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/community/logos/" title="">Python Logo</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://www.python.org/community/merchandise/" title="">Merchandise</a></li>
+    
+        <li class="tier-2 element-9" role="treeitem"><a href="https://www.python.org/community/awards" title="">Community Awards</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="success-stories" class="tier-1 element-5  " aria-haspopup="true">
+        <a href="https://www.python.org/about/success/" title="success-stories" class="">Success Stories</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/success/#arts" title="">Arts</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/success/#business" title="">Business</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/success/#education" title="">Education</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/success/#engineering" title="">Engineering</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/about/success/#government" title="">Government</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://www.python.org/about/success/#scientific" title="">Scientific</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/about/success/#software-development" title="">Software Development</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="news" class="tier-1 element-6  " aria-haspopup="true">
+        <a href="https://www.python.org/blogs/" title="News from around the Python world" class="">News</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/blogs/" title="Python Insider Blog Posts">Python News</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://planetpython.org/" title="Planet Python">Community News</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="http://pyfound.blogspot.com/" title="PSF Blog">PSF News</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pycon.blogspot.com/" title="PyCon Blog">PyCon News</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="events" class="tier-1 element-7  " aria-haspopup="true">
+        <a href="https://www.python.org/events/" title="" class="">Events</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/events/python-events/" title="">Python Events</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/events/python-user-group/" title="">User Group Events</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/events/python-events/past/" title="">Python Events Archive</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/events/python-user-group/past/" title="">User Group Events Archive</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://wiki.python.org/moin/PythonEventsCalendar#Submitting_an_Event" title="">Submit an Event</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    
+  
+</ul>
+
+                    
+                </nav>
+
+                <div class="header-banner "> <!-- for optional "do-not-print" class -->
+                    
+                    
+                </div>
+
+                
+                
+
+             </div><!-- end .container -->
+        </header>
+
+        <div id="content" class="content-wrapper">
+            <!-- Main Content Column -->
+            <div class="container">
+
+                <section class="main-content with-left-sidebar" role="main">
+
+                    
+<ul class="breadcrumbs menu">
+    <li>
+        <a href="https://www.python.org/" title="The Python Programming Language">Python</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>
+        <a href="https://www.python.org/dev/">Python Developer's Guide</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>
+        <a href="../index.html">PEP Index</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>PEP 0386 -- Changing the version comparison module in Distutils</li>
+</ul>
+
+
+                    
+<style>
+   .pep-page pre {
+        padding: .5em;
+        background: inherit;
+        border-left: 0px;
+        -webkit-box-shadow: 0 0 0 0;
+        -moz-box-shadow: 0 0 0 0;
+        box-shadow: 0 0 0 0;
+   }
+</style>
+
+    
+    <article class="text">
+        
+
+        <header class="article-header">
+            <h1 class="page-title">PEP 0386 -- Changing the version comparison module in Distutils</h1>
+        </header>
+
+        <!--
+This HTML is auto-generated.  DO NOT EDIT THIS FILE!  If you are writing a new
+PEP, see http://www.python.org/dev/peps/pep-0001 for instructions and links
+to templates.  DO NOT USE THIS HTML FILE AS YOUR TEMPLATE!
+-->
+<html>
+ <body>
+  <table class="rfc2822 docutils field-list" frame="void" rules="none">
+   <col class="field-name">
+   </col>
+   <col class="field-body">
+   </col>
+   <tbody valign="top">
+    <tr class="field">
+     <th class="field-name">
+      PEP:
+     </th>
+     <td class="field-body">
+      386
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Title:
+     </th>
+     <td class="field-body">
+      Changing the version comparison module in Distutils
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Author:
+     </th>
+     <td class="field-body">
+      Tarek Ziadé &lt;tarek at ziade.org&gt;
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Status:
+     </th>
+     <td class="field-body">
+      Superseded
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Type:
+     </th>
+     <td class="field-body">
+      Standards Track
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Created:
+     </th>
+     <td class="field-body">
+      4-June-2009
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Superseded-By:
+     </th>
+     <td class="field-body">
+      440
+     </td>
+    </tr>
+   </tbody>
+  </table>
+  <hr/>
+  <div class="contents topic" id="contents">
+   <p class="topic-title first">
+    Contents
+   </p>
+   <ul class="simple">
+    <li>
+     <a class="reference internal" href="#abstract" id="id12">
+      Abstract
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#motivation" id="id13">
+      Motivation
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#requisites-and-current-status" id="id14">
+      Requisites and current status
+     </a>
+     <ul>
+      <li>
+       <a class="reference internal" href="#distutils" id="id15">
+        Distutils
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#setuptools" id="id16">
+        Setuptools
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#caveats-of-existing-systems" id="id17">
+        Caveats of existing systems
+       </a>
+      </li>
+     </ul>
+    </li>
+    <li>
+     <a class="reference internal" href="#the-new-versioning-algorithm" id="id18">
+      The new versioning algorithm
+     </a>
+     <ul>
+      <li>
+       <a class="reference internal" href="#normalizedversion" id="id19">
+        NormalizedVersion
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#suggest-normalized-version" id="id20">
+        suggest_normalized_version
+       </a>
+      </li>
+     </ul>
+    </li>
+    <li>
+     <a class="reference internal" href="#roadmap" id="id21">
+      Roadmap
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#references" id="id22">
+      References
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#acknowledgments" id="id23">
+      Acknowledgments
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#copyright" id="id24">
+      Copyright
+     </a>
+    </li>
+   </ul>
+  </div>
+  <div class="section" id="abstract">
+   <h1>
+    <a class="toc-backref" href="#id12">
+     Abstract
+    </a>
+   </h1>
+   <p>
+    Note: This PEP has been superseded by the version identification and
+dependency specification scheme defined in
+    <a class="reference external" href="../pep-0440/index.html">
+     PEP 440
+    </a>
+    .
+   </p>
+   <p>
+    This PEP proposed a new version comparison schema system in Distutils.
+   </p>
+  </div>
+  <div class="section" id="motivation">
+   <h1>
+    <a class="toc-backref" href="#id13">
+     Motivation
+    </a>
+   </h1>
+   <p>
+    In Python there are no real restrictions yet on how a project should manage its
+versions, and how they should be incremented.
+   </p>
+   <p>
+    Distutils provides a
+    <cite>
+     version
+    </cite>
+    distribution meta-data field but it is freeform and
+current users, such as PyPI usually consider the latest version pushed as the
+    <cite>
+     latest
+    </cite>
+    one, regardless of the expected semantics.
+   </p>
+   <p>
+    Distutils will soon extend its capabilities to allow distributions to express a
+dependency on other distributions through the
+    <tt class="docutils literal">
+     <span class="pre">
+      Requires-Dist
+     </span>
+    </tt>
+    metadata field
+(see
+    <a class="reference external" href="../pep-0345/index.html">
+     PEP 345
+    </a>
+    ) and it will optionally allow use of that field to
+restrict the dependency to a set of compatible versions. Notice that this field
+is replacing
+    <tt class="docutils literal">
+     Requires
+    </tt>
+    that was expressing dependencies on modules and packages.
+   </p>
+   <p>
+    The
+    <tt class="docutils literal">
+     <span class="pre">
+      Requires-Dist
+     </span>
+    </tt>
+    field will allow a distribution to define a dependency on
+another package and optionally restrict this dependency to a set of
+compatible versions, so one may write:
+   </p>
+   <pre class="literal-block">
+Requires-Dist: zope.interface (&gt;3.5.0)
+</pre>
+   <p>
+    This means that the distribution requires
+    <tt class="docutils literal">
+     zope.interface
+    </tt>
+    with a version
+greater than
+    <tt class="docutils literal">
+     3.5.0
+    </tt>
+    .
+   </p>
+   <p>
+    This also means that Python projects will need to follow the same convention
+as the tool that will be used to install them, so they are able to compare
+versions.
+   </p>
+   <p>
+    That is why this PEP proposes, for the sake of interoperability, a standard
+schema to express version information and its comparison semantics.
+   </p>
+   <p>
+    Furthermore, this will make OS packagers' work easier when repackaging standards
+compliant distributions, because as of now it can be difficult to decide how two
+distribution versions compare.
+   </p>
+  </div>
+  <div class="section" id="requisites-and-current-status">
+   <h1>
+    <a class="toc-backref" href="#id14">
+     Requisites and current status
+    </a>
+   </h1>
+   <p>
+    It is not in the scope of this PEP to provide a universal versioning schema
+intended to support all or even most of existing versioning schemas. There
+will always be competing grammars, either mandated by distro or project
+policies or by historical reasons that we cannot expect to change.
+   </p>
+   <p>
+    The proposed schema should be able to express the usual versioning semantics,
+so it's possible to parse any alternative versioning schema and transform it
+into a compliant one. This is how OS packagers usually deal with the existing
+version schemas and is a preferable alternative than supporting an arbitrary
+set of versioning schemas.
+   </p>
+   <p>
+    Conformance to usual practice and conventions, as well as a simplicity are a
+plus, to ease frictionless adoption and painless transition. Practicality beats
+purity, sometimes.
+   </p>
+   <p>
+    Projects have very different versioning needs, but the following are widely
+considered important semantics:
+   </p>
+   <ol class="arabic simple">
+    <li>
+     it should be possible to express more than one versioning level
+(usually this is expressed as major and minor revision and, sometimes,
+also a micro revision).
+    </li>
+    <li>
+     a significant number of projects need special meaning versions for
+"pre-releases" (such as "alpha", "beta", "rc"), and these have widely
+used aliases ("a" stands for "alpha", "b" for "beta" and "c" for "rc").
+And these pre-release versions make it impossible to use a simple
+alphanumerical ordering of the version string components.
+(Example: 3.1a1 &lt; 3.1)
+    </li>
+    <li>
+     some projects also need "post-releases" of regular versions,
+mainly for installer work which can't be clearly expressed otherwise.
+    </li>
+    <li>
+     development versions allow packagers of unreleased work to avoid version
+clash with later regular releases.
+    </li>
+   </ol>
+   <p>
+    For people that want to go further and use a tool to manage their version
+numbers, the two major ones are:
+   </p>
+   <ul class="simple">
+    <li>
+     The current Distutils system
+     <a class="footnote-reference" href="#id10" id="id1">
+      [1]
+     </a>
+    </li>
+    <li>
+     Setuptools
+     <a class="footnote-reference" href="#id11" id="id2">
+      [2]
+     </a>
+    </li>
+   </ul>
+   <div class="section" id="distutils">
+    <h2>
+     <a class="toc-backref" href="#id15">
+      Distutils
+     </a>
+    </h2>
+    <p>
+     Distutils currently provides a
+     <tt class="docutils literal">
+      StrictVersion
+     </tt>
+     and a
+     <tt class="docutils literal">
+      LooseVersion
+     </tt>
+     class
+that can be used to manage versions.
+    </p>
+    <p>
+     The
+     <tt class="docutils literal">
+      LooseVersion
+     </tt>
+     class is quite lax. From Distutils doc:
+    </p>
+    <pre class="literal-block">
+Version numbering for anarchists and software realists.
+Implements the standard interface for version number classes as
+described above.  A version number consists of a series of numbers,
+separated by either periods or strings of letters.  When comparing
+version numbers, the numeric components will be compared
+numerically, and the alphabetic components lexically.  The following
+are all valid version numbers, in no particular order:
+
+    1.5.1
+    1.5.2b2
+    161
+    3.10a
+    8.02
+    3.4j
+    1996.07.12
+    3.2.pl0
+    3.1.1.6
+    2g6
+    11g
+    0.960923
+    2.2beta29
+    1.13++
+    5.5.kw
+    2.0b1pl0
+
+In fact, there is no such thing as an invalid version number under
+this scheme; the rules for comparison are simple and predictable,
+but may not always give the results you want (for some definition
+of "want").
+</pre>
+    <p>
+     This class makes any version string valid, and provides an algorithm to sort
+them numerically then lexically. It means that anything can be used to version
+your project:
+    </p>
+    <pre class="literal-block">
+&gt;&gt;&gt; from distutils.version import LooseVersion as V
+&gt;&gt;&gt; v1 = V('FunkyVersion')
+&gt;&gt;&gt; v2 = V('GroovieVersion')
+&gt;&gt;&gt; v1 &gt; v2
+False
+</pre>
+    <p>
+     The problem with this is that while it allows expressing any
+nesting level it doesn't allow giving special meaning to versions
+(pre and post-releases as well as development versions), as expressed in
+requisites 2, 3 and 4.
+    </p>
+    <p>
+     The
+     <tt class="docutils literal">
+      StrictVersion
+     </tt>
+     class is more strict. From the doc:
+    </p>
+    <pre class="literal-block">
+Version numbering for meticulous retentive and software idealists.
+Implements the standard interface for version number classes as
+described above.  A version number consists of two or three
+dot-separated numeric components, with an optional "pre-release" tag
+on the end.  The pre-release tag consists of the letter 'a' or 'b'
+followed by a number.  If the numeric components of two version
+numbers are equal, then one with a pre-release tag will always
+be deemed earlier (lesser) than one without.
+
+The following are valid version numbers (shown in the order that
+would be obtained by sorting according to the supplied cmp function):
+
+    0.4       0.4.0  (these two are equivalent)
+    0.4.1
+    0.5a1
+    0.5b3
+    0.5
+    0.9.6
+    1.0
+    1.0.4a3
+    1.0.4b1
+    1.0.4
+
+The following are examples of invalid version numbers:
+
+    1
+    2.7.2.2
+    1.3.a4
+    1.3pl1
+    1.3c4
+</pre>
+    <p>
+     This class enforces a few rules, and makes a decent tool to work with version
+numbers:
+    </p>
+    <pre class="literal-block">
+&gt;&gt;&gt; from distutils.version import StrictVersion as V
+&gt;&gt;&gt; v2 = V('GroovieVersion')
+Traceback (most recent call last):
+...
+ValueError: invalid version number 'GroovieVersion'
+&gt;&gt;&gt; v2 = V('1.1')
+&gt;&gt;&gt; v3 = V('1.3')
+&gt;&gt;&gt; v2 &lt; v3
+True
+</pre>
+    <p>
+     It adds pre-release versions, and some structure, but lacks a few semantic
+elements to make it usable, such as development releases or post-release tags,
+as expressed in requisites 3 and 4.
+    </p>
+    <p>
+     Also, note that Distutils version classes have been present for years
+but are not really used in the community.
+    </p>
+   </div>
+   <div class="section" id="setuptools">
+    <h2>
+     <a class="toc-backref" href="#id16">
+      Setuptools
+     </a>
+    </h2>
+    <p>
+     Setuptools provides another version comparison tool
+     <a class="footnote-reference" href="#setuptools-version" id="id3">
+      [3]
+     </a>
+     which does not enforce any rules for the version, but tries to provide a better
+algorithm to convert the strings to sortable keys, with a
+     <tt class="docutils literal">
+      parse_version
+     </tt>
+     function.
+    </p>
+    <p>
+     From the doc:
+    </p>
+    <pre class="literal-block">
+Convert a version string to a chronologically-sortable key
+
+This is a rough cross between Distutils' StrictVersion and LooseVersion;
+if you give it versions that would work with StrictVersion, then it behaves
+the same; otherwise it acts like a slightly-smarter LooseVersion. It is
+*possible* to create pathological version coding schemes that will fool
+this parser, but they should be very rare in practice.
+
+The returned value will be a tuple of strings.  Numeric portions of the
+version are padded to 8 digits so they will compare numerically, but
+without relying on how numbers compare relative to strings.  Dots are
+dropped, but dashes are retained.  Trailing zeros between alpha segments
+or dashes are suppressed, so that e.g. "2.4.0" is considered the same as
+"2.4". Alphanumeric parts are lower-cased.
+
+The algorithm assumes that strings like "-" and any alpha string that
+alphabetically follows "final"  represents a "patch level".  So, "2.4-1"
+is assumed to be a branch or patch of "2.4", and therefore "2.4.1" is
+considered newer than "2.4-1", which in turn is newer than "2.4".
+
+Strings like "a", "b", "c", "alpha", "beta", "candidate" and so on (that
+come before "final" alphabetically) are assumed to be pre-release versions,
+so that the version "2.4" is considered newer than "2.4a1".
+
+Finally, to handle miscellaneous cases, the strings "pre", "preview", and
+"rc" are treated as if they were "c", i.e. as though they were release
+candidates, and therefore are not as new as a version string that does not
+contain them, and "dev" is replaced with an '@' so that it sorts lower than
+than any other pre-release tag.
+</pre>
+    <p>
+     In other words,
+     <tt class="docutils literal">
+      parse_version
+     </tt>
+     will return a tuple for each version string,
+that is compatible with
+     <tt class="docutils literal">
+      StrictVersion
+     </tt>
+     but also accept arbitrary version and
+deal with them so they can be compared:
+    </p>
+    <pre class="literal-block">
+&gt;&gt;&gt; from pkg_resources import parse_version as V
+&gt;&gt;&gt; V('1.2')
+('00000001', '00000002', '*final')
+&gt;&gt;&gt; V('1.2b2')
+('00000001', '00000002', '*b', '00000002', '*final')
+&gt;&gt;&gt; V('FunkyVersion')
+('*funkyversion', '*final')
+</pre>
+    <p>
+     In this schema practicality takes priority over purity, but as a result it
+doesn't enforce any policy and leads to very complex semantics due to the lack
+of a clear standard. It just tries to adapt to widely used conventions.
+    </p>
+   </div>
+   <div class="section" id="caveats-of-existing-systems">
+    <h2>
+     <a class="toc-backref" href="#id17">
+      Caveats of existing systems
+     </a>
+    </h2>
+    <p>
+     The major problem with the described version comparison tools is that they are
+too permissive and, at the same time, aren't capable of expressing some of the
+required semantics. Many of the versions on PyPI
+     <a class="footnote-reference" href="#pypi" id="id4">
+      [4]
+     </a>
+     are obviously not
+useful versions, which makes it difficult for users to grok the versioning that
+a particular package was using and to provide tools on top of PyPI.
+    </p>
+    <p>
+     Distutils classes are not really used in Python projects, but the
+Setuptools function is quite widespread because it's used by tools like
+     <cite>
+      easy_install
+     </cite>
+     <a class="footnote-reference" href="#ezinstall" id="id5">
+      [6]
+     </a>
+     ,
+     <cite>
+      pip
+     </cite>
+     <a class="footnote-reference" href="#pip" id="id6">
+      [5]
+     </a>
+     or
+     <cite>
+      zc.buildout
+     </cite>
+     <a class="footnote-reference" href="#zc-buildout" id="id7">
+      [7]
+     </a>
+     to install dependencies of a given project.
+    </p>
+    <p>
+     While Setuptools
+     <em>
+      does
+     </em>
+     provide a mechanism for comparing/sorting versions,
+it is much preferable if the versioning spec is such that a human can make a
+reasonable attempt at that sorting without having to run it against some code.
+    </p>
+    <p>
+     Also there's a problem with the use of dates at the "major" version number
+(e.g. a version string "20090421") with RPMs: it means that any attempt to
+switch to a more typical "major.minor..." version scheme is problematic because
+it will always sort less than "20090421".
+    </p>
+    <p>
+     Last, the meaning of
+     <tt class="docutils literal">
+      -
+     </tt>
+     is specific to Setuptools, while it is avoided in
+some packaging systems like the one used by Debian or Ubuntu.
+    </p>
+   </div>
+  </div>
+  <div class="section" id="the-new-versioning-algorithm">
+   <h1>
+    <a class="toc-backref" href="#id18">
+     The new versioning algorithm
+    </a>
+   </h1>
+   <p>
+    During Pycon, members of the Python, Ubuntu and Fedora community worked on
+a version standard that would be acceptable for everyone.
+   </p>
+   <p>
+    It's currently called
+    <cite>
+     verlib
+    </cite>
+    and a prototype lives at
+    <a class="footnote-reference" href="#prototype" id="id8">
+     [10]
+    </a>
+    .
+   </p>
+   <p>
+    The pseudo-format supported is:
+   </p>
+   <pre class="literal-block">
+N.N[.N]+[{a|b|c|rc}N[.N]+][.postN][.devN]
+</pre>
+   <p>
+    The real regular expression is:
+   </p>
+   <pre class="literal-block">
+expr = r"""^
+(?P&lt;version&gt;\d+\.\d+)         # minimum 'N.N'
+(?P&lt;extraversion&gt;(?:\.\d+)*)  # any number of extra '.N' segments
+(?:
+    (?P&lt;prerel&gt;[abc]|rc)         # 'a' = alpha, 'b' = beta
+                                 # 'c' or 'rc' = release candidate
+    (?P&lt;prerelversion&gt;\d+(?:\.\d+)*)
+)?
+(?P&lt;postdev&gt;(\.post(?P&lt;post&gt;\d+))?(\.dev(?P&lt;dev&gt;\d+))?)?
+$"""
+</pre>
+   <p>
+    Some examples probably make it clearer:
+   </p>
+   <pre class="literal-block">
+&gt;&gt;&gt; from verlib import NormalizedVersion as V
+&gt;&gt;&gt; (V('1.0a1')
+...  &lt; V('1.0a2.dev456')
+...  &lt; V('1.0a2')
+...  &lt; V('1.0a2.1.dev456')
+...  &lt; V('1.0a2.1')
+...  &lt; V('1.0b1.dev456')
+...  &lt; V('1.0b2')
+...  &lt; V('1.0b2.post345')
+...  &lt; V('1.0c1.dev456')
+...  &lt; V('1.0c1')
+...  &lt; V('1.0.dev456')
+...  &lt; V('1.0')
+...  &lt; V('1.0.post456.dev34')
+...  &lt; V('1.0.post456'))
+True
+</pre>
+   <p>
+    The trailing
+    <tt class="docutils literal">
+     .dev123
+    </tt>
+    is for pre-releases. The
+    <tt class="docutils literal">
+     .post123
+    </tt>
+    is for
+post-releases -- which apparently are used by a number of projects out there
+(e.g. Twisted
+    <a class="footnote-reference" href="#twisted" id="id9">
+     [8]
+    </a>
+    ). For example
+    <em>
+     after
+    </em>
+    a
+    <tt class="docutils literal">
+     1.2.0
+    </tt>
+    release there might
+be a
+    <tt class="docutils literal">
+     <span class="pre">
+      1.2.0-r678
+     </span>
+    </tt>
+    release. We used
+    <tt class="docutils literal">
+     post
+    </tt>
+    instead of
+    <tt class="docutils literal">
+     r
+    </tt>
+    because the
+    <tt class="docutils literal">
+     r
+    </tt>
+    is ambiguous as to whether it indicates a pre- or post-release.
+   </p>
+   <p>
+    <tt class="docutils literal">
+     .post456.dev34
+    </tt>
+    indicates a dev marker for a post release, that sorts
+before a
+    <tt class="docutils literal">
+     .post456
+    </tt>
+    marker. This can be used to do development versions
+of post releases.
+   </p>
+   <p>
+    Pre-releases can use
+    <tt class="docutils literal">
+     a
+    </tt>
+    for "alpha",
+    <tt class="docutils literal">
+     b
+    </tt>
+    for "beta" and
+    <tt class="docutils literal">
+     c
+    </tt>
+    for
+"release candidate".
+    <tt class="docutils literal">
+     rc
+    </tt>
+    is an alternative notation for "release candidate"
+that is added to make the version scheme compatible with Python's own version
+scheme.
+    <tt class="docutils literal">
+     rc
+    </tt>
+    sorts after
+    <tt class="docutils literal">
+     c
+    </tt>
+    :
+   </p>
+   <pre class="literal-block">
+&gt;&gt;&gt; from verlib import NormalizedVersion as V
+&gt;&gt;&gt; (V('1.0a1')
+...  &lt; V('1.0a2')
+...  &lt; V('1.0b3')
+...  &lt; V('1.0c1')
+...  &lt; V('1.0rc2')
+...  &lt; V('1.0'))
+True
+</pre>
+   <p>
+    Note that
+    <tt class="docutils literal">
+     c
+    </tt>
+    is the preferred marker for third party projects.
+   </p>
+   <p>
+    <tt class="docutils literal">
+     verlib
+    </tt>
+    provides a
+    <tt class="docutils literal">
+     NormalizedVersion
+    </tt>
+    class and a
+    <tt class="docutils literal">
+     suggest_normalized_version
+    </tt>
+    function.
+   </p>
+   <div class="section" id="normalizedversion">
+    <h2>
+     <a class="toc-backref" href="#id19">
+      NormalizedVersion
+     </a>
+    </h2>
+    <p>
+     The
+     <cite>
+      NormalizedVersion
+     </cite>
+     class is used to hold a version and to compare it with
+others. It takes a string as an argument, that contains the representation of
+the version:
+    </p>
+    <pre class="literal-block">
+&gt;&gt;&gt; from verlib import NormalizedVersion
+&gt;&gt;&gt; version = NormalizedVersion('1.0')
+</pre>
+    <p>
+     The version can be represented as a string:
+    </p>
+    <pre class="literal-block">
+&gt;&gt;&gt; str(version)
+'1.0'
+</pre>
+    <p>
+     Or compared with others:
+    </p>
+    <pre class="literal-block">
+&gt;&gt;&gt; NormalizedVersion('1.0') &gt; NormalizedVersion('0.9')
+True
+&gt;&gt;&gt; NormalizedVersion('1.0') &lt; NormalizedVersion('1.1')
+True
+</pre>
+    <p>
+     A class method called
+     <tt class="docutils literal">
+      from_parts
+     </tt>
+     is available if you want to create an
+instance by providing the parts that composes the version.
+    </p>
+    <p>
+     Examples
+    </p>
+    <pre class="literal-block">
+&gt;&gt;&gt; version = NormalizedVersion.from_parts((1, 0))
+&gt;&gt;&gt; str(version)
+'1.0'
+
+&gt;&gt;&gt; version = NormalizedVersion.from_parts((1, 0), ('c', 4))
+&gt;&gt;&gt; str(version)
+'1.0c4'
+
+&gt;&gt;&gt; version = NormalizedVersion.from_parts((1, 0), ('c', 4), ('dev', 34))
+&gt;&gt;&gt; str(version)
+'1.0c4.dev34'
+</pre>
+   </div>
+   <div class="section" id="suggest-normalized-version">
+    <h2>
+     <a class="toc-backref" href="#id20">
+      suggest_normalized_version
+     </a>
+    </h2>
+    <p>
+     <tt class="docutils literal">
+      suggest_normalized_version
+     </tt>
+     is a function that suggests a normalized version
+close to the given version string. If you have a version string that isn't
+normalized (i.e.
+     <tt class="docutils literal">
+      NormalizedVersion
+     </tt>
+     doesn't like it) then you might be able
+to get an equivalent (or close) normalized version from this function.
+    </p>
+    <p>
+     This does a number of simple normalizations to the given string, based
+on an observation of versions currently in use on PyPI.
+    </p>
+    <p>
+     Given a dump of those versions on January 6th 2010, the function has given those
+results out of the 8821 distributions PyPI had:
+    </p>
+    <ul class="simple">
+     <li>
+      7822 (88.67%) already match
+      <tt class="docutils literal">
+       NormalizedVersion
+      </tt>
+      without any change
+     </li>
+     <li>
+      717 (8.13%) match when using this suggestion method
+     </li>
+     <li>
+      282 (3.20%) don't match at all.
+     </li>
+    </ul>
+    <p>
+     The 3.20% of projects that are incompatible with
+     <tt class="docutils literal">
+      NormalizedVersion
+     </tt>
+     and cannot be transformed into a compatible form, are for most of them date-based
+version schemes, versions with custom markers, or dummy versions. Examples:
+    </p>
+    <ul class="simple">
+     <li>
+      working proof of concept
+     </li>
+     <li>
+      1 (first draft)
+     </li>
+     <li>
+      unreleased.unofficialdev
+     </li>
+     <li>
+      0.1.alphadev
+     </li>
+     <li>
+      2008-03-29_r219
+     </li>
+     <li>
+      etc.
+     </li>
+    </ul>
+    <p>
+     When a tool needs to work with versions, a strategy is to use
+     <tt class="docutils literal">
+      suggest_normalized_version
+     </tt>
+     on the versions string. If this function returns
+     <tt class="docutils literal">
+      None
+     </tt>
+     , it means that the provided version is not close enough to the
+standard scheme. If it returns a version that slightly differs from
+the original version, it's a suggested normalized version. Last, if it
+returns the same string, it means that the version matches the scheme.
+    </p>
+    <p>
+     Here's an example of usage:
+    </p>
+    <pre class="literal-block">
+&gt;&gt;&gt; from verlib import suggest_normalized_version, NormalizedVersion
+&gt;&gt;&gt; import warnings
+&gt;&gt;&gt; def validate_version(version):
+...     rversion = suggest_normalized_version(version)
+...     if rversion is None:
+...         raise ValueError('Cannot work with "%s"' % version)
+...     if rversion != version:
+...         warnings.warn('"%s" is not a normalized version.\n'
+...                       'It has been transformed into "%s" '
+...                       'for interoperability.' % (version, rversion))
+...     return NormalizedVersion(rversion)
+...
+
+&gt;&gt;&gt; validate_version('2.4-rc1')
+__main__:8: UserWarning: "2.4-rc1" is not a normalized version.
+It has been transformed into "2.4c1" for interoperability.
+NormalizedVersion('2.4c1')
+
+&gt;&gt;&gt; validate_version('2.4c1')
+NormalizedVersion('2.4c1')
+
+&gt;&gt;&gt; validate_version('foo')
+Traceback (most recent call last):
+File "&lt;stdin&gt;", line 1, in &lt;module&gt;
+File "&lt;stdin&gt;", line 4, in validate_version
+ValueError: Cannot work with "foo"
+</pre>
+   </div>
+  </div>
+  <div class="section" id="roadmap">
+   <h1>
+    <a class="toc-backref" href="#id21">
+     Roadmap
+    </a>
+   </h1>
+   <p>
+    Distutils will deprecate its existing versions class in favor of
+    <tt class="docutils literal">
+     NormalizedVersion
+    </tt>
+    . The
+    <tt class="docutils literal">
+     verlib
+    </tt>
+    module presented in this PEP will be
+renamed to
+    <tt class="docutils literal">
+     version
+    </tt>
+    and placed into the
+    <tt class="docutils literal">
+     distutils
+    </tt>
+    package.
+   </p>
+  </div>
+  <div class="section" id="references">
+   <h1>
+    <a class="toc-backref" href="#id22">
+     References
+    </a>
+   </h1>
+   <table class="docutils footnote" frame="void" id="id10" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id1">
+        [1]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="http://docs.python.org/distutils">
+        http://docs.python.org/distutils
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id11" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id2">
+        [2]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="http://peak.telecommunity.com/DevCenter/setuptools">
+        http://peak.telecommunity.com/DevCenter/setuptools
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="setuptools-version" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id3">
+        [3]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="http://peak.telecommunity.com/DevCenter/setuptools#specifying-your-project-s-version">
+        http://peak.telecommunity.com/DevCenter/setuptools#specifying-your-project-s-version
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="pypi" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id4">
+        [4]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="http://pypi.python.org/pypi">
+        http://pypi.python.org/pypi
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="pip" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id6">
+        [5]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="http://pypi.python.org/pypi/pip">
+        http://pypi.python.org/pypi/pip
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="ezinstall" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id5">
+        [6]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="http://peak.telecommunity.com/DevCenter/EasyInstall">
+        http://peak.telecommunity.com/DevCenter/EasyInstall
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="zc-buildout" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id7">
+        [7]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="http://pypi.python.org/pypi/zc.buildout">
+        http://pypi.python.org/pypi/zc.buildout
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="twisted" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id9">
+        [8]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="http://twistedmatrix.com/trac/">
+        http://twistedmatrix.com/trac/
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="requires" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       [9]
+      </td>
+      <td>
+       <a class="reference external" href="http://peak.telecommunity.com/DevCenter/setuptools">
+        http://peak.telecommunity.com/DevCenter/setuptools
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="prototype" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id8">
+        [10]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="http://bitbucket.org/tarek/distutilsversion/">
+        http://bitbucket.org/tarek/distutilsversion/
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+  </div>
+  <div class="section" id="acknowledgments">
+   <h1>
+    <a class="toc-backref" href="#id23">
+     Acknowledgments
+    </a>
+   </h1>
+   <p>
+    Trent Mick, Matthias Klose, Phillip Eby, David Lyon, and many people at Pycon
+and Distutils-SIG.
+   </p>
+  </div>
+  <div class="section" id="copyright">
+   <h1>
+    <a class="toc-backref" href="#id24">
+     Copyright
+    </a>
+   </h1>
+   <p>
+    This document has been placed in the public domain.
+   </p>
+   <!-- Local Variables:
+mode: indented-text
+indent-tabs-mode: nil
+sentence-end-double-space: t
+fill-column: 70
+coding: utf-8
+End: -->
+  </div>
+ </body>
+
+<!-- Mirrored from www.python.org/dev/peps/pep-0386/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 03 Sep 2015 04:37:52 GMT -->
+</html>Source: <a href="https://hg.python.org/peps/file/tip/pep-0386.txt">https://hg.python.org/peps/file/tip/pep-0386.txt</a>
+
+    </article>
+
+
+                </section>
+
+                
+
+
+<aside class="left-sidebar" role="secondary">
+
+    
+
+
+
+
+
+
+    
+
+
+
+
+
+        <div class="twitter-widget sidebar-widget">
+        <a class="twitter-timeline" data-dnt="true" href="https://twitter.com/ThePSF" data-widget-id="434113224703610882">Tweets by @ThePSF</a>
+        <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+    </div>
+
+    <div class="psf-sidebar-widget sidebar-widget">
+        <h3 class="widget-title">The PSF</h3>
+<p>The Python Software Foundation is the organization behind Python. Become a member of the PSF and help advance the software and our mission. </p>
+
+    </div>
+
+</aside>
+
+
+
+                
+                
+
+
+            </div><!-- end .container -->
+        </div><!-- end #content .content-wrapper -->
+
+        <!-- Footer and social media list -->
+        <footer id="site-map" class="main-footer" role="contentinfo">
+            <div class="main-footer-links">
+                <div class="container">
+
+                    
+                    <a id="back-to-top-1" class="jump-link" href="#python-network"><span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> Back to Top</a>
+
+                    
+
+<ul class="sitemap navigation menu do-not-print" role="tree" id="container">
+    
+    <li class="tier-1 element-1">
+        <a href="https://www.python.org/about/" >About</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/apps/" title="">Applications</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/quotes/" title="">Quotes</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/gettingstarted/" title="">Getting Started</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/help/" title="">Help</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-2">
+        <a href="https://www.python.org/downloads/" >Downloads</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/downloads/" title="">All releases</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/downloads/source/" title="">Source code</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/downloads/windows/" title="">Windows</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/downloads/mac-osx/" title="">Mac OS X</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/download/other/" title="">Other Platforms</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://docs.python.org/3/license.html" title="">License</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/download/alternatives" title="">Alternative Implementations</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-3">
+        <a href="https://www.python.org/doc/" >Documentation</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/doc/" title="">Docs</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/doc/av" title="">Audio/Visual Talks</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://wiki.python.org/moin/BeginnersGuide" title="">Beginner&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://docs.python.org/faq/" title="">FAQ</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="http://wiki.python.org/moin/Languages" title="">Non-English Docs</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="../index.html" title="">PEP Index</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://wiki.python.org/moin/PythonBooks" title="">Python Books</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-4">
+        <a href="https://www.python.org/community/" >Community</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/community/diversity/" title="">Diversity</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/community/irc/" title="">IRC</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/community/lists/" title="">Mailing Lists</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/workshops/" title="">Python Conferences</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/community/sigs/" title="">Special Interest Groups</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://wiki.python.org/moin/" title="">Python Wiki</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/community/logos/" title="">Python Logo</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://www.python.org/community/merchandise/" title="">Merchandise</a></li>
+    
+        <li class="tier-2 element-9" role="treeitem"><a href="https://www.python.org/community/awards" title="">Community Awards</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-5">
+        <a href="https://www.python.org/about/success/" title="success-stories">Success Stories</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/success/#arts" title="">Arts</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/success/#business" title="">Business</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/success/#education" title="">Education</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/success/#engineering" title="">Engineering</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/about/success/#government" title="">Government</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://www.python.org/about/success/#scientific" title="">Scientific</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/about/success/#software-development" title="">Software Development</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-6">
+        <a href="https://www.python.org/blogs/" title="News from around the Python world">News</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/blogs/" title="Python Insider Blog Posts">Python News</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://planetpython.org/" title="Planet Python">Community News</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="http://pyfound.blogspot.com/" title="PSF Blog">PSF News</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pycon.blogspot.com/" title="PyCon Blog">PyCon News</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-7">
+        <a href="https://www.python.org/events/" >Events</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/events/python-events/" title="">Python Events</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/events/python-user-group/" title="">User Group Events</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/events/python-events/past/" title="">Python Events Archive</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/events/python-user-group/past/" title="">User Group Events Archive</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://wiki.python.org/moin/PythonEventsCalendar#Submitting_an_Event" title="">Submit an Event</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-8">
+        <a href="https://www.python.org/dev/" >Contributing</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="http://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://bugs.python.org/" title="">Issue Tracker</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://mail.python.org/mailman/listinfo/python-dev" title="">python-dev list</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pythonmentors.com/" title="">Core Mentorship</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+</ul>
+
+
+                    <a id="back-to-top-2" class="jump-link" href="#python-network"><span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> Back to Top</a>
+                    
+
+                </div><!-- end .container -->
+            </div> <!-- end .main-footer-links -->
+
+            <div class="site-base">
+                <div class="container">
+                    
+                    <ul class="footer-links navigation menu do-not-print" role="tree">
+                        <li class="tier-1 element-1"><a href="https://www.python.org/about/help/">Help &amp; <span class="say-no-more">General</span> Contact</a></li>
+                        <li class="tier-1 element-2"><a href="https://www.python.org/community/diversity/">Diversity <span class="say-no-more">Initiatives</span></a></li>
+                        <li class="tier-1 element-3"><a href="https://github.com/python/pythondotorg/issues">Submit Website Bug</a></li>
+                        <!--<li class="tier-1 element-3"><a href="#"><span class="say-no-more">Website</span> Colophon</a></li>-->
+                    </ul>
+
+                    <div class="copyright">
+                        <p><small>
+                            <span class="pre">Copyright &copy;2001-2015.</span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/psf-landing/">Python Software Foundation</a></span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/about/legal/">Legal Statements</a></span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/privacy/">Privacy Policy</a></span>
+                        </small></p>
+                    </div>
+
+                </div><!-- end .container -->
+            </div><!-- end .site-base -->
+
+        </footer>
+
+    </div><!-- end #touchnav-wrapper -->
+
+    
+    <script src="../../../../ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="../../../static/js/libs/jquery-1.8.2.min.js"><\/script>')</script>
+
+    <script src="../../../static/js/libs/masonry.pkgd.min.js"></script>
+
+    <script type="text/javascript" src="../../../static/js/main-min.js" charset="utf-8"></script>
+    
+
+    <!--[if lte IE 7]>
+    <script type="text/javascript" src="/static/js/plugins/IE8-min.js" charset="utf-8"></script>
+    
+    
+    <![endif]-->
+
+    <!--[if lte IE 8]>
+    <script type="text/javascript" src="/static/js/plugins/getComputedStyle-min.js" charset="utf-8"></script>
+    
+    
+    <![endif]-->
+
+    
+
+    
+    
+
+</body>
+</html>

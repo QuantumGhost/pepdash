@@ -1,0 +1,2668 @@
+<!doctype html>
+<!--[if lt IE 7]>   <html class="no-js ie6 lt-ie7 lt-ie8 lt-ie9">   <![endif]-->
+<!--[if IE 7]>      <html class="no-js ie7 lt-ie8 lt-ie9">          <![endif]-->
+<!--[if IE 8]>      <html class="no-js ie8 lt-ie9">                 <![endif]-->
+<!--[if gt IE 8]><!--><html class="no-js" lang="en" dir="ltr">  <!--<![endif]-->
+
+
+<!-- Mirrored from www.python.org/dev/peps/pep-3116/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 03 Sep 2015 04:35:21 GMT -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <link rel="prefetch" href="../../../../ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js">
+
+    <meta name="application-name" content="Python.org">
+    <meta name="msapplication-tooltip" content="The official home of the Python Programming Language">
+    <meta name="apple-mobile-web-app-title" content="Python.org">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="format-detection" content="telephone=no">
+    <meta http-equiv="cleartype" content="on">
+    <meta http-equiv="imagetoolbar" content="false">
+
+    <script src="../../../static/js/libs/modernizr.js"></script>
+
+    <link href="../../../static/stylesheets/style.css" rel="stylesheet" type="text/css" title="default" />
+    <link href="../../../static/stylesheets/mq.css" rel="stylesheet" type="text/css" media="not print, braille, embossed, speech, tty" />
+    
+
+    <!--[if (lte IE 8)&(!IEMobile)]>
+    <link href="/static/stylesheets/no-mq.css" rel="stylesheet" type="text/css" media="screen" />
+    
+    
+    <![endif]-->
+
+    
+    <link rel="icon" type="image/x-icon" href="https://www.python.org/static/favicon.ico">
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="../../../static/apple-touch-icon-144x144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="../../../static/apple-touch-icon-114x114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="../../../static/apple-touch-icon-72x72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="../../../static/apple-touch-icon-precomposed.png">
+    <link rel="apple-touch-icon" href="../../../static/apple-touch-icon-precomposed.png">
+
+    
+    <meta name="msapplication-TileImage" content="/static/metro-icon-144x144-precomposed.png"><!-- white shape -->
+    <meta name="msapplication-TileColor" content="#3673a5"><!-- python blue -->
+    <meta name="msapplication-navbutton-color" content="#3673a5">
+
+    <meta property="og:site_name" content="Python.org">
+    <meta property="og:type" content="website">
+
+    <title>PEP 3116 -- New I/O | Python.org</title>
+    <meta property="og:title" content="Welcome to Python.org">
+
+    
+    <meta name="description" content="The official home of the Python Programming Language">
+    <meta name="og:description" content="The official home of the Python Programming Language">
+    <meta name="keywords" content="Python programming language object oriented web free open source software license documentation download community">
+    <meta property="og:tag" content="Python programming language object oriented web free open source software license documentation download community">
+    <meta property="og:published_time" content="">
+    <meta property="og:modified_time" content="">
+    <meta property="og:author" content="">
+    <meta property="og:section" content=""> 
+    <meta property="og:url" content="">
+    <meta property="og:image" content="">
+    <meta property="og:video" content="">
+
+    <link rel="author" href="https://www.python.org/static/humans.txt">
+
+    
+
+    
+    <script type="application/ld+json">
+     {
+       "@context": "http://schema.org",
+       "@type": "WebSite",
+       "url": "https://www.python.org/",
+       "potentialAction": {
+         "@type": "SearchAction",
+         "target": "https://www.python.org/search/?q={search_term_string}",
+         "query-input": "required name=search_term_string"
+       }
+     }
+    </script>
+
+    
+    <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-39055973-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+    </script>
+    
+</head>
+
+<body class="python pages pep-page">
+
+    <div id="touchnav-wrapper">
+
+        <div id="nojs" class="do-not-print">
+            <p><strong>Notice:</strong> While Javascript is not essential for this website, your interaction with the content will be limited. Please turn Javascript on for the full experience. </p>
+        </div>
+
+        <!--[if lt IE 8]>
+        <div id="oldie-warning" class="do-not-print">
+            <p><strong>Notice:</strong> Your browser is <em>ancient</em> and <a href="http://www.ie6countdown.com/">Microsoft agrees</a>. <a href="http://browsehappy.com/">Upgrade to a different browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to experience a better web.</p>
+        </div>
+        <![endif]-->
+
+        <!-- Sister Site Links -->
+        <div id="top" class="top-bar do-not-print">
+
+            <nav class="meta-navigation container" role="navigation">
+
+                
+                <div class="skip-link screen-reader-text">
+                    <a href="#content" title="Skip to content">Skip to content</a>
+                </div>
+
+                
+                <a id="close-python-network" class="jump-link" href="#python-network" aria-hidden="true">
+                    <span aria-hidden="true" class="icon-arrow-down"><span>&#9660;</span></span> Close
+                </a>
+
+                
+
+<ul class="menu" role="tree">
+    
+    <li class="python-meta ">
+        <a href="https://www.python.org/" title="The Python Programming Language" >Python</a>
+    </li>
+    
+    <li class="psf-meta ">
+        <a href="https://www.python.org/psf-landing/" title="The Python Software Foundation" >PSF</a>
+    </li>
+    
+    <li class="docs-meta ">
+        <a href="https://docs.python.org/" title="Python Documentation" >Docs</a>
+    </li>
+    
+    <li class="pypi-meta ">
+        <a href="https://pypi.python.org/" title="Python Package Index" >PyPI</a>
+    </li>
+    
+    <li class="jobs-meta ">
+        <a href="https://www.python.org/jobs/" title="Python Job Board" >Jobs</a>
+    </li>
+    
+    <li class="shop-meta ">
+        <a href="https://www.python.org/community/" title="Python Community" >Community</a>
+    </li>
+    
+</ul>
+
+
+                <a id="python-network" class="jump-link" href="#top" aria-hidden="true">
+                    <span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> The Python Network
+                </a>
+
+            </nav>
+
+        </div>
+
+        <!-- Header elements -->
+        <header class="main-header" role="banner">
+            <div class="container">
+
+                <h1 class="site-headline">
+                    <a href="https://www.python.org/"><img class="python-logo" src="../../../static/img/python-logo.png" alt="python&trade;"></a>
+                </h1>
+
+                <div class="options-bar do-not-print">
+
+                    
+                    <a id="site-map-link" class="jump-to-menu" href="#site-map"><span class="menu-icon">&equiv;</span> Menu</a><form class="search-the-site" action="https://www.python.org/search/" method="get">
+                        <fieldset title="Search Python.org">
+
+                            <span aria-hidden="true" class="icon-search"></span>
+
+                            <label class="screen-reader-text" for="id-search-field">Search This Site</label>
+                            <input id="id-search-field" name="q" type="search" role="textbox" class="search-field" placeholder="Search" value="" tabindex="1">
+
+                            <button type="submit" name="submit" id="submit" class="search-button" title="Submit this Search" tabindex="3">
+                                GO
+                            </button>
+
+                            
+                            <!--[if IE]><input type="text" style="display: none;" disabled="disabled" size="1" tabindex="4"><![endif]-->
+
+                        </fieldset>
+                    </form><span class="breaker"></span><div class="adjust-font-size" aria-hidden="true">
+                        <ul class="navigation menu" aria-label="Adjust Text Size on Page">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                <a href="#" class="action-trigger"><strong><small>A</small> A</strong></a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a class="text-shrink" title="Make Text Smaller" href="javascript:;">Smaller</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a class="text-grow" title="Make Text Larger" href="javascript:;">Larger</a></li>
+                                    <li class="tier-2 element-3" role="treeitem"><a class="text-reset" title="Reset any font size changes I have made" href="javascript:;">Reset</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div><div class="winkwink-nudgenudge">
+                        <ul class="navigation menu" aria-label="Social Media Navigation">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                <a href="#" class="action-trigger">Socialize</a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a href="http://plus.google.com/+Python"><span aria-hidden="true" class="icon-google-plus"></span>Google+</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a href="http://www.facebook.com/pythonlang?fref=ts"><span aria-hidden="true" class="icon-facebook"></span>Facebook</a></li>
+                                    <li class="tier-2 element-3" role="treeitem"><a href="http://twitter.com/ThePSF"><span aria-hidden="true" class="icon-twitter"></span>Twitter</a></li>
+                                    <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/irc/"><span aria-hidden="true" class="icon-freenode"></span>Chat on IRC</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div><div class="account-signin">
+                        <ul class="navigation menu" aria-label="Social Media Navigation">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                
+                                <a href="https://www.python.org/accounts/login/" title="Sign Up or Sign In to Python.org">Sign In</a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/accounts/signup/">Sign Up / Register</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/accounts/login/">Sign In</a></li>
+                                </ul>
+                                
+                            </li>
+                        </ul>
+                    </div>
+
+                </div><!-- end options-bar -->
+
+                <nav id="mainnav" class="python-navigation main-navigation do-not-print" role="navigation">
+                    
+                        
+<ul class="navigation menu" role="menubar" aria-label="Main Navigation">
+  
+    
+    
+    <li id="about" class="tier-1 element-1  " aria-haspopup="true">
+        <a href="https://www.python.org/about/" title="" class="">About</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/apps/" title="">Applications</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/quotes/" title="">Quotes</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/gettingstarted/" title="">Getting Started</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/help/" title="">Help</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="downloads" class="tier-1 element-2  " aria-haspopup="true">
+        <a href="https://www.python.org/downloads/" title="" class="">Downloads</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/downloads/" title="">All releases</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/downloads/source/" title="">Source code</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/downloads/windows/" title="">Windows</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/downloads/mac-osx/" title="">Mac OS X</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/download/other/" title="">Other Platforms</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://docs.python.org/3/license.html" title="">License</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/download/alternatives" title="">Alternative Implementations</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="documentation" class="tier-1 element-3  " aria-haspopup="true">
+        <a href="https://www.python.org/doc/" title="" class="">Documentation</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/doc/" title="">Docs</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/doc/av" title="">Audio/Visual Talks</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://wiki.python.org/moin/BeginnersGuide" title="">Beginner&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://docs.python.org/faq/" title="">FAQ</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="http://wiki.python.org/moin/Languages" title="">Non-English Docs</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="../index.html" title="">PEP Index</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://wiki.python.org/moin/PythonBooks" title="">Python Books</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="community" class="tier-1 element-4  " aria-haspopup="true">
+        <a href="https://www.python.org/community/" title="" class="">Community</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/community/diversity/" title="">Diversity</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/community/irc/" title="">IRC</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/community/lists/" title="">Mailing Lists</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/workshops/" title="">Python Conferences</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/community/sigs/" title="">Special Interest Groups</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://wiki.python.org/moin/" title="">Python Wiki</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/community/logos/" title="">Python Logo</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://www.python.org/community/merchandise/" title="">Merchandise</a></li>
+    
+        <li class="tier-2 element-9" role="treeitem"><a href="https://www.python.org/community/awards" title="">Community Awards</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="success-stories" class="tier-1 element-5  " aria-haspopup="true">
+        <a href="https://www.python.org/about/success/" title="success-stories" class="">Success Stories</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/success/#arts" title="">Arts</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/success/#business" title="">Business</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/success/#education" title="">Education</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/success/#engineering" title="">Engineering</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/about/success/#government" title="">Government</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://www.python.org/about/success/#scientific" title="">Scientific</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/about/success/#software-development" title="">Software Development</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="news" class="tier-1 element-6  " aria-haspopup="true">
+        <a href="https://www.python.org/blogs/" title="News from around the Python world" class="">News</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/blogs/" title="Python Insider Blog Posts">Python News</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://planetpython.org/" title="Planet Python">Community News</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="http://pyfound.blogspot.com/" title="PSF Blog">PSF News</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pycon.blogspot.com/" title="PyCon Blog">PyCon News</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="events" class="tier-1 element-7  " aria-haspopup="true">
+        <a href="https://www.python.org/events/" title="" class="">Events</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/events/python-events/" title="">Python Events</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/events/python-user-group/" title="">User Group Events</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/events/python-events/past/" title="">Python Events Archive</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/events/python-user-group/past/" title="">User Group Events Archive</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://wiki.python.org/moin/PythonEventsCalendar#Submitting_an_Event" title="">Submit an Event</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    
+  
+</ul>
+
+                    
+                </nav>
+
+                <div class="header-banner "> <!-- for optional "do-not-print" class -->
+                    
+                    
+                </div>
+
+                
+                
+
+             </div><!-- end .container -->
+        </header>
+
+        <div id="content" class="content-wrapper">
+            <!-- Main Content Column -->
+            <div class="container">
+
+                <section class="main-content with-left-sidebar" role="main">
+
+                    
+<ul class="breadcrumbs menu">
+    <li>
+        <a href="https://www.python.org/" title="The Python Programming Language">Python</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>
+        <a href="https://www.python.org/dev/">Python Developer's Guide</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>
+        <a href="../index.html">PEP Index</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>PEP 3116 -- New I/O</li>
+</ul>
+
+
+                    
+<style>
+   .pep-page pre {
+        padding: .5em;
+        background: inherit;
+        border-left: 0px;
+        -webkit-box-shadow: 0 0 0 0;
+        -moz-box-shadow: 0 0 0 0;
+        box-shadow: 0 0 0 0;
+   }
+</style>
+
+    
+    <article class="text">
+        
+
+        <header class="article-header">
+            <h1 class="page-title">PEP 3116 -- New I/O</h1>
+        </header>
+
+        <!--
+This HTML is auto-generated.  DO NOT EDIT THIS FILE!  If you are writing a new
+PEP, see http://www.python.org/dev/peps/pep-0001 for instructions and links
+to templates.  DO NOT USE THIS HTML FILE AS YOUR TEMPLATE!
+-->
+<html>
+ <body>
+  <table class="rfc2822 docutils field-list" frame="void" rules="none">
+   <col class="field-name">
+   </col>
+   <col class="field-body">
+   </col>
+   <tbody valign="top">
+    <tr class="field">
+     <th class="field-name">
+      PEP:
+     </th>
+     <td class="field-body">
+      3116
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Title:
+     </th>
+     <td class="field-body">
+      New I/O
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Author:
+     </th>
+     <td class="field-body">
+      Daniel Stutzbach &lt;daniel at stutzbachenterprises.com&gt;,
+Guido van Rossum &lt;guido at python.org&gt;,
+Mike Verdone &lt;mike.verdone at gmail.com&gt;
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Status:
+     </th>
+     <td class="field-body">
+      Final
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Type:
+     </th>
+     <td class="field-body">
+      Standards Track
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Created:
+     </th>
+     <td class="field-body">
+      26-Feb-2007
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Python-Version:
+     </th>
+     <td class="field-body">
+      3.0
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Post-History:
+     </th>
+     <td class="field-body">
+      26-Feb-2007
+     </td>
+    </tr>
+   </tbody>
+  </table>
+  <hr/>
+  <div class="contents topic" id="contents">
+   <p class="topic-title first">
+    Contents
+   </p>
+   <ul class="simple">
+    <li>
+     <a class="reference internal" href="#rationale-and-goals" id="id2">
+      Rationale and Goals
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#specification" id="id3">
+      Specification
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#raw-i-o" id="id4">
+      Raw I/O
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#buffered-i-o" id="id5">
+      Buffered I/O
+     </a>
+     <ul>
+      <li>
+       <a class="reference internal" href="#bufferedreader" id="id6">
+        <tt class="docutils literal">
+         BufferedReader
+        </tt>
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#bufferedwriter" id="id7">
+        <tt class="docutils literal">
+         BufferedWriter
+        </tt>
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#bufferedrwpair" id="id8">
+        <tt class="docutils literal">
+         BufferedRWPair
+        </tt>
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#bufferedrandom" id="id9">
+        <tt class="docutils literal">
+         BufferedRandom
+        </tt>
+       </a>
+      </li>
+     </ul>
+    </li>
+    <li>
+     <a class="reference internal" href="#text-i-o" id="id10">
+      Text I/O
+     </a>
+     <ul>
+      <li>
+       <a class="reference internal" href="#unicode-encoding-decoding-issues" id="id11">
+        Unicode encoding/decoding Issues
+       </a>
+      </li>
+     </ul>
+    </li>
+    <li>
+     <a class="reference internal" href="#non-blocking-i-o" id="id12">
+      Non-blocking I/O
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#the-open-built-in-function" id="id13">
+      The
+      <tt class="docutils literal">
+       open()
+      </tt>
+      Built-in Function
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#copyright" id="id14">
+      Copyright
+     </a>
+    </li>
+   </ul>
+  </div>
+  <div class="section" id="rationale-and-goals">
+   <h1>
+    <a class="toc-backref" href="#id2">
+     Rationale and Goals
+    </a>
+   </h1>
+   <p>
+    Python allows for a variety of stream-like (a.k.a. file-like) objects
+that can be used via
+    <tt class="docutils literal">
+     read()
+    </tt>
+    and
+    <tt class="docutils literal">
+     write()
+    </tt>
+    calls.  Anything that
+provides
+    <tt class="docutils literal">
+     read()
+    </tt>
+    and
+    <tt class="docutils literal">
+     write()
+    </tt>
+    is stream-like.  However, more
+exotic and extremely useful functions like
+    <tt class="docutils literal">
+     readline()
+    </tt>
+    or
+    <tt class="docutils literal">
+     seek()
+    </tt>
+    may or may not be available on every stream-like object.
+Python needs a specification for basic byte-based I/O streams to which
+we can add buffering and text-handling features.
+   </p>
+   <p>
+    Once we have a defined raw byte-based I/O interface, we can add
+buffering and text handling layers on top of any byte-based I/O class.
+The same buffering and text handling logic can be used for files,
+sockets, byte arrays, or custom I/O classes developed by Python
+programmers.  Developing a standard definition of a stream lets us
+separate stream-based operations like
+    <tt class="docutils literal">
+     read()
+    </tt>
+    and
+    <tt class="docutils literal">
+     write()
+    </tt>
+    from
+implementation specific operations like
+    <tt class="docutils literal">
+     fileno()
+    </tt>
+    and
+    <tt class="docutils literal">
+     isatty()
+    </tt>
+    .
+It encourages programmers to write code that uses streams as streams
+and not require that all streams support file-specific or
+socket-specific operations.
+   </p>
+   <p>
+    The new I/O spec is intended to be similar to the Java I/O libraries,
+but generally less confusing.  Programmers who don't want to muck
+about in the new I/O world can expect that the
+    <tt class="docutils literal">
+     open()
+    </tt>
+    factory
+method will produce an object backwards-compatible with old-style file
+objects.
+   </p>
+  </div>
+  <div class="section" id="specification">
+   <h1>
+    <a class="toc-backref" href="#id3">
+     Specification
+    </a>
+   </h1>
+   <p>
+    The Python I/O Library will consist of three layers: a raw I/O layer,
+a buffered I/O layer, and a text I/O layer.  Each layer is defined by
+an abstract base class, which may have multiple implementations.  The
+raw I/O and buffered I/O layers deal with units of bytes, while the
+text I/O layer deals with units of characters.
+   </p>
+  </div>
+  <div class="section" id="raw-i-o">
+   <h1>
+    <a class="toc-backref" href="#id4">
+     Raw I/O
+    </a>
+   </h1>
+   <p>
+    The abstract base class for raw I/O is RawIOBase.  It has several
+methods which are wrappers around the appropriate operating system
+calls.  If one of these functions would not make sense on the object,
+the implementation must raise an IOError exception.  For example, if a
+file is opened read-only, the
+    <tt class="docutils literal">
+     .write()
+    </tt>
+    method will raise an
+    <tt class="docutils literal">
+     IOError
+    </tt>
+    .  As another example, if the object represents a socket,
+then
+    <tt class="docutils literal">
+     .seek()
+    </tt>
+    ,
+    <tt class="docutils literal">
+     .tell()
+    </tt>
+    , and
+    <tt class="docutils literal">
+     .truncate()
+    </tt>
+    will raise an
+    <tt class="docutils literal">
+     IOError
+    </tt>
+    .  Generally, a call to one of these functions maps to
+exactly one operating system call.
+   </p>
+   <blockquote>
+    <p>
+     <tt class="docutils literal">
+      .read(n: int)
+      <span class="pre">
+       -&gt;
+      </span>
+      bytes
+     </tt>
+    </p>
+    <blockquote>
+     Read up to
+     <tt class="docutils literal">
+      n
+     </tt>
+     bytes from the object and return them.  Fewer
+than
+     <tt class="docutils literal">
+      n
+     </tt>
+     bytes may be returned if the operating system call
+returns fewer than
+     <tt class="docutils literal">
+      n
+     </tt>
+     bytes.  If 0 bytes are returned, this
+indicates end of file.  If the object is in non-blocking mode
+and no bytes are available, the call returns
+     <tt class="docutils literal">
+      None
+     </tt>
+     .
+    </blockquote>
+    <p>
+     <tt class="docutils literal">
+      .readinto(b: bytes)
+      <span class="pre">
+       -&gt;
+      </span>
+      int
+     </tt>
+    </p>
+    <blockquote>
+     Read up to
+     <tt class="docutils literal">
+      len(b)
+     </tt>
+     bytes from the object and stores them in
+     <tt class="docutils literal">
+      b
+     </tt>
+     , returning the number of bytes read.  Like .read, fewer
+than
+     <tt class="docutils literal">
+      len(b)
+     </tt>
+     bytes may be read, and 0 indicates end of file.
+     <tt class="docutils literal">
+      None
+     </tt>
+     is returned if a non-blocking object has no bytes
+available.  The length of
+     <tt class="docutils literal">
+      b
+     </tt>
+     is never changed.
+    </blockquote>
+    <p>
+     <tt class="docutils literal">
+      .write(b: bytes)
+      <span class="pre">
+       -&gt;
+      </span>
+      int
+     </tt>
+    </p>
+    <blockquote>
+     Returns number of bytes written, which may be
+     <tt class="docutils literal">
+      &lt; len(b)
+     </tt>
+     .
+    </blockquote>
+    <p>
+     <tt class="docutils literal">
+      .seek(pos: int, whence: int = 0)
+      <span class="pre">
+       -&gt;
+      </span>
+      int
+     </tt>
+    </p>
+    <p>
+     <tt class="docutils literal">
+      .tell()
+      <span class="pre">
+       -&gt;
+      </span>
+      int
+     </tt>
+    </p>
+    <p>
+     <tt class="docutils literal">
+      .truncate(n: int = None)
+      <span class="pre">
+       -&gt;
+      </span>
+      int
+     </tt>
+    </p>
+    <p>
+     <tt class="docutils literal">
+      .close()
+      <span class="pre">
+       -&gt;
+      </span>
+      None
+     </tt>
+    </p>
+   </blockquote>
+   <p>
+    Additionally, it defines a few other methods:
+   </p>
+   <blockquote>
+    <p>
+     <tt class="docutils literal">
+      .readable()
+      <span class="pre">
+       -&gt;
+      </span>
+      bool
+     </tt>
+    </p>
+    <blockquote>
+     Returns
+     <tt class="docutils literal">
+      True
+     </tt>
+     if the object was opened for reading,
+     <tt class="docutils literal">
+      False
+     </tt>
+     otherwise.  If
+     <tt class="docutils literal">
+      False
+     </tt>
+     ,
+     <tt class="docutils literal">
+      .read()
+     </tt>
+     will raise an
+     <tt class="docutils literal">
+      IOError
+     </tt>
+     if called.
+    </blockquote>
+    <p>
+     <tt class="docutils literal">
+      .writable()
+      <span class="pre">
+       -&gt;
+      </span>
+      bool
+     </tt>
+    </p>
+    <blockquote>
+     Returns
+     <tt class="docutils literal">
+      True
+     </tt>
+     if the object was opened for writing,
+     <tt class="docutils literal">
+      False
+     </tt>
+     otherwise.  If
+     <tt class="docutils literal">
+      False
+     </tt>
+     ,
+     <tt class="docutils literal">
+      .write()
+     </tt>
+     and
+     <tt class="docutils literal">
+      .truncate()
+     </tt>
+     will raise an
+     <tt class="docutils literal">
+      IOError
+     </tt>
+     if called.
+    </blockquote>
+    <p>
+     <tt class="docutils literal">
+      .seekable()
+      <span class="pre">
+       -&gt;
+      </span>
+      bool
+     </tt>
+    </p>
+    <blockquote>
+     Returns
+     <tt class="docutils literal">
+      True
+     </tt>
+     if the object supports random access (such as
+disk files), or
+     <tt class="docutils literal">
+      False
+     </tt>
+     if the object only supports
+sequential access (such as sockets, pipes, and ttys).  If
+     <tt class="docutils literal">
+      False
+     </tt>
+     ,
+     <tt class="docutils literal">
+      .seek()
+     </tt>
+     ,
+     <tt class="docutils literal">
+      .tell()
+     </tt>
+     , and
+     <tt class="docutils literal">
+      .truncate()
+     </tt>
+     will
+raise an IOError if called.
+    </blockquote>
+    <p>
+     <tt class="docutils literal">
+      .__enter__()
+      <span class="pre">
+       -&gt;
+      </span>
+      ContextManager
+     </tt>
+    </p>
+    <blockquote>
+     Context management protocol.  Returns
+     <tt class="docutils literal">
+      self
+     </tt>
+     .
+    </blockquote>
+    <p>
+     <tt class="docutils literal">
+      <span class="pre">
+       .__exit__(...)
+      </span>
+      <span class="pre">
+       -&gt;
+      </span>
+      None
+     </tt>
+    </p>
+    <blockquote>
+     Context management protocol.  Same as
+     <tt class="docutils literal">
+      .close()
+     </tt>
+     .
+    </blockquote>
+   </blockquote>
+   <p>
+    If and only if a
+    <tt class="docutils literal">
+     RawIOBase
+    </tt>
+    implementation operates on an
+underlying file descriptor, it must additionally provide a
+    <tt class="docutils literal">
+     .fileno()
+    </tt>
+    member function.  This could be defined specifically by
+the implementation, or a mix-in class could be used (need to decide
+about this).
+   </p>
+   <blockquote>
+    <p>
+     <tt class="docutils literal">
+      .fileno()
+      <span class="pre">
+       -&gt;
+      </span>
+      int
+     </tt>
+    </p>
+    <blockquote>
+     Returns the underlying file descriptor (an integer)
+    </blockquote>
+   </blockquote>
+   <p>
+    Initially, three implementations will be provided that implement the
+    <tt class="docutils literal">
+     RawIOBase
+    </tt>
+    interface:
+    <tt class="docutils literal">
+     FileIO
+    </tt>
+    ,
+    <tt class="docutils literal">
+     SocketIO
+    </tt>
+    (in the socket
+module), and
+    <tt class="docutils literal">
+     ByteIO
+    </tt>
+    .  Each implementation must determine whether
+the object supports random access as the information provided by the
+user may not be sufficient (consider
+    <tt class="docutils literal">
+     <span class="pre">
+      open("/dev/tty",
+     </span>
+     "rw")
+    </tt>
+    or
+    <tt class="docutils literal">
+     <span class="pre">
+      open("/tmp/named-pipe",
+     </span>
+     "rw")
+    </tt>
+    ).  As an example,
+    <tt class="docutils literal">
+     FileIO
+    </tt>
+    can
+determine this by calling the
+    <tt class="docutils literal">
+     seek()
+    </tt>
+    system call; if it returns an
+error, the object does not support random access.  Each implementation
+may provided additional methods appropriate to its type.  The
+    <tt class="docutils literal">
+     ByteIO
+    </tt>
+    object is analogous to Python 2's
+    <tt class="docutils literal">
+     cStringIO
+    </tt>
+    library,
+but operating on the new bytes type instead of strings.
+   </p>
+  </div>
+  <div class="section" id="buffered-i-o">
+   <h1>
+    <a class="toc-backref" href="#id5">
+     Buffered I/O
+    </a>
+   </h1>
+   <p>
+    The next layer is the Buffered I/O layer which provides more efficient
+access to file-like objects.  The abstract base class for all Buffered
+I/O implementations is
+    <tt class="docutils literal">
+     BufferedIOBase
+    </tt>
+    , which provides similar methods
+to RawIOBase:
+   </p>
+   <blockquote>
+    <p>
+     <tt class="docutils literal">
+      .read(n: int =
+      <span class="pre">
+       -1)
+      </span>
+      <span class="pre">
+       -&gt;
+      </span>
+      bytes
+     </tt>
+    </p>
+    <blockquote>
+     Returns the next
+     <tt class="docutils literal">
+      n
+     </tt>
+     bytes from the object.  It may return
+fewer than
+     <tt class="docutils literal">
+      n
+     </tt>
+     bytes if end-of-file is reached or the object is
+non-blocking.  0 bytes indicates end-of-file.  This method may
+make multiple calls to
+     <tt class="docutils literal">
+      RawIOBase.read()
+     </tt>
+     to gather the bytes,
+or may make no calls to
+     <tt class="docutils literal">
+      RawIOBase.read()
+     </tt>
+     if all of the needed
+bytes are already buffered.
+    </blockquote>
+    <p>
+     <tt class="docutils literal">
+      .readinto(b: bytes)
+      <span class="pre">
+       -&gt;
+      </span>
+      int
+     </tt>
+    </p>
+    <p>
+     <tt class="docutils literal">
+      .write(b: bytes)
+      <span class="pre">
+       -&gt;
+      </span>
+      int
+     </tt>
+    </p>
+    <blockquote>
+     Write
+     <tt class="docutils literal">
+      b
+     </tt>
+     bytes to the buffer.  The bytes are not guaranteed to
+be written to the Raw I/O object immediately; they may be
+buffered.  Returns
+     <tt class="docutils literal">
+      len(b)
+     </tt>
+     .
+    </blockquote>
+    <p>
+     <tt class="docutils literal">
+      .seek(pos: int, whence: int = 0)
+      <span class="pre">
+       -&gt;
+      </span>
+      int
+     </tt>
+    </p>
+    <p>
+     <tt class="docutils literal">
+      .tell()
+      <span class="pre">
+       -&gt;
+      </span>
+      int
+     </tt>
+    </p>
+    <p>
+     <tt class="docutils literal">
+      .truncate(pos: int = None)
+      <span class="pre">
+       -&gt;
+      </span>
+      int
+     </tt>
+    </p>
+    <p>
+     <tt class="docutils literal">
+      .flush()
+      <span class="pre">
+       -&gt;
+      </span>
+      None
+     </tt>
+    </p>
+    <p>
+     <tt class="docutils literal">
+      .close()
+      <span class="pre">
+       -&gt;
+      </span>
+      None
+     </tt>
+    </p>
+    <p>
+     <tt class="docutils literal">
+      .readable()
+      <span class="pre">
+       -&gt;
+      </span>
+      bool
+     </tt>
+    </p>
+    <p>
+     <tt class="docutils literal">
+      .writable()
+      <span class="pre">
+       -&gt;
+      </span>
+      bool
+     </tt>
+    </p>
+    <p>
+     <tt class="docutils literal">
+      .seekable()
+      <span class="pre">
+       -&gt;
+      </span>
+      bool
+     </tt>
+    </p>
+    <p>
+     <tt class="docutils literal">
+      .__enter__()
+      <span class="pre">
+       -&gt;
+      </span>
+      ContextManager
+     </tt>
+    </p>
+    <p>
+     <tt class="docutils literal">
+      <span class="pre">
+       .__exit__(...)
+      </span>
+      <span class="pre">
+       -&gt;
+      </span>
+      None
+     </tt>
+    </p>
+   </blockquote>
+   <p>
+    Additionally, the abstract base class provides one member variable:
+   </p>
+   <blockquote>
+    <p>
+     <tt class="docutils literal">
+      .raw
+     </tt>
+    </p>
+    <blockquote>
+     A reference to the underlying
+     <tt class="docutils literal">
+      RawIOBase
+     </tt>
+     object.
+    </blockquote>
+   </blockquote>
+   <p>
+    The
+    <tt class="docutils literal">
+     BufferedIOBase
+    </tt>
+    methods signatures are mostly identical to that
+of
+    <tt class="docutils literal">
+     RawIOBase
+    </tt>
+    (exceptions:
+    <tt class="docutils literal">
+     write()
+    </tt>
+    returns
+    <tt class="docutils literal">
+     None
+    </tt>
+    ,
+    <tt class="docutils literal">
+     read()
+    </tt>
+    's argument is optional), but may have different semantics.
+In particular,
+    <tt class="docutils literal">
+     BufferedIOBase
+    </tt>
+    implementations may read more data
+than requested or delay writing data using buffers.  For the most
+part, this will be transparent to the user (unless, for example, they
+open the same file through a different descriptor).  Also, raw reads
+may return a short read without any particular reason; buffered reads
+will only return a short read if EOF is reached; and raw writes may
+return a short count (even when non-blocking I/O is not enabled!),
+while buffered writes will raise
+    <tt class="docutils literal">
+     IOError
+    </tt>
+    when not all bytes could
+be written or buffered.
+   </p>
+   <p>
+    There are four implementations of the
+    <tt class="docutils literal">
+     BufferedIOBase
+    </tt>
+    abstract base
+class, described below.
+   </p>
+   <div class="section" id="bufferedreader">
+    <h2>
+     <a class="toc-backref" href="#id6">
+      <tt class="docutils literal">
+       BufferedReader
+      </tt>
+     </a>
+    </h2>
+    <p>
+     The
+     <tt class="docutils literal">
+      BufferedReader
+     </tt>
+     implementation is for sequential-access
+read-only objects.  Its
+     <tt class="docutils literal">
+      .flush()
+     </tt>
+     method is a no-op.
+    </p>
+   </div>
+   <div class="section" id="bufferedwriter">
+    <h2>
+     <a class="toc-backref" href="#id7">
+      <tt class="docutils literal">
+       BufferedWriter
+      </tt>
+     </a>
+    </h2>
+    <p>
+     The
+     <tt class="docutils literal">
+      BufferedWriter
+     </tt>
+     implementation is for sequential-access
+write-only objects.  Its
+     <tt class="docutils literal">
+      .flush()
+     </tt>
+     method forces all cached data to
+be written to the underlying RawIOBase object.
+    </p>
+   </div>
+   <div class="section" id="bufferedrwpair">
+    <h2>
+     <a class="toc-backref" href="#id8">
+      <tt class="docutils literal">
+       BufferedRWPair
+      </tt>
+     </a>
+    </h2>
+    <p>
+     The
+     <tt class="docutils literal">
+      BufferedRWPair
+     </tt>
+     implementation is for sequential-access
+read-write objects such as sockets and ttys.  As the read and write
+streams of these objects are completely independent, it could be
+implemented by simply incorporating a
+     <tt class="docutils literal">
+      BufferedReader
+     </tt>
+     and
+     <tt class="docutils literal">
+      BufferedWriter
+     </tt>
+     instance.  It provides a
+     <tt class="docutils literal">
+      .flush()
+     </tt>
+     method that
+has the same semantics as a
+     <tt class="docutils literal">
+      BufferedWriter
+     </tt>
+     's
+     <tt class="docutils literal">
+      .flush()
+     </tt>
+     method.
+    </p>
+   </div>
+   <div class="section" id="bufferedrandom">
+    <h2>
+     <a class="toc-backref" href="#id9">
+      <tt class="docutils literal">
+       BufferedRandom
+      </tt>
+     </a>
+    </h2>
+    <p>
+     The
+     <tt class="docutils literal">
+      BufferedRandom
+     </tt>
+     implementation is for all random-access
+objects, whether they are read-only, write-only, or read-write.
+Compared to the previous classes that operate on sequential-access
+objects, the
+     <tt class="docutils literal">
+      BufferedRandom
+     </tt>
+     class must contend with the user
+calling
+     <tt class="docutils literal">
+      .seek()
+     </tt>
+     to reposition the stream.  Therefore, an instance
+of
+     <tt class="docutils literal">
+      BufferedRandom
+     </tt>
+     must keep track of both the logical and true
+position within the object.  It provides a
+     <tt class="docutils literal">
+      .flush()
+     </tt>
+     method that
+forces all cached write data to be written to the underlying
+     <tt class="docutils literal">
+      RawIOBase
+     </tt>
+     object and all cached read data to be forgotten (so that
+future reads are forced to go back to the disk).
+    </p>
+    <p>
+     <em>
+      Q: Do we want to mandate in the specification that switching between
+reading and writing on a read-write object implies a .flush()?  Or is
+that an implementation convenience that users should not rely on?
+     </em>
+    </p>
+    <p>
+     For a read-only
+     <tt class="docutils literal">
+      BufferedRandom
+     </tt>
+     object,
+     <tt class="docutils literal">
+      .writable()
+     </tt>
+     returns
+     <tt class="docutils literal">
+      False
+     </tt>
+     and the
+     <tt class="docutils literal">
+      .write()
+     </tt>
+     and
+     <tt class="docutils literal">
+      .truncate()
+     </tt>
+     methods throw
+     <tt class="docutils literal">
+      IOError
+     </tt>
+     .
+    </p>
+    <p>
+     For a write-only
+     <tt class="docutils literal">
+      BufferedRandom
+     </tt>
+     object,
+     <tt class="docutils literal">
+      .readable()
+     </tt>
+     returns
+     <tt class="docutils literal">
+      False
+     </tt>
+     and the
+     <tt class="docutils literal">
+      .read()
+     </tt>
+     method throws
+     <tt class="docutils literal">
+      IOError
+     </tt>
+     .
+    </p>
+   </div>
+  </div>
+  <div class="section" id="text-i-o">
+   <h1>
+    <a class="toc-backref" href="#id10">
+     Text I/O
+    </a>
+   </h1>
+   <p>
+    The text I/O layer provides functions to read and write strings from
+streams.  Some new features include universal newlines and character
+set encoding and decoding.  The Text I/O layer is defined by a
+    <tt class="docutils literal">
+     TextIOBase
+    </tt>
+    abstract base class.  It provides several methods that
+are similar to the
+    <tt class="docutils literal">
+     BufferedIOBase
+    </tt>
+    methods, but operate on a
+per-character basis instead of a per-byte basis.  These methods are:
+   </p>
+   <blockquote>
+    <p>
+     <tt class="docutils literal">
+      .read(n: int =
+      <span class="pre">
+       -1)
+      </span>
+      <span class="pre">
+       -&gt;
+      </span>
+      str
+     </tt>
+    </p>
+    <p>
+     <tt class="docutils literal">
+      .write(s: str)
+      <span class="pre">
+       -&gt;
+      </span>
+      int
+     </tt>
+    </p>
+    <p>
+     <tt class="docutils literal">
+      .tell()
+      <span class="pre">
+       -&gt;
+      </span>
+      object
+     </tt>
+    </p>
+    <blockquote>
+     Return a cookie describing the current file position.
+The only supported use for the cookie is with .seek()
+with whence set to 0 (i.e. absolute seek).
+    </blockquote>
+    <p>
+     <tt class="docutils literal">
+      .seek(pos: object, whence: int = 0)
+      <span class="pre">
+       -&gt;
+      </span>
+      int
+     </tt>
+    </p>
+    <blockquote>
+     Seek to position
+     <tt class="docutils literal">
+      pos
+     </tt>
+     .  If
+     <tt class="docutils literal">
+      pos
+     </tt>
+     is non-zero, it must
+be a cookie returned from
+     <tt class="docutils literal">
+      .tell()
+     </tt>
+     and
+     <tt class="docutils literal">
+      whence
+     </tt>
+     must be zero.
+    </blockquote>
+    <p>
+     <tt class="docutils literal">
+      .truncate(pos: object = None)
+      <span class="pre">
+       -&gt;
+      </span>
+      int
+     </tt>
+    </p>
+    <blockquote>
+     Like
+     <tt class="docutils literal">
+      BufferedIOBase.truncate()
+     </tt>
+     , except that
+     <tt class="docutils literal">
+      pos
+     </tt>
+     (if
+not
+     <tt class="docutils literal">
+      None
+     </tt>
+     ) must be a cookie previously returned by
+     <tt class="docutils literal">
+      .tell()
+     </tt>
+     .
+    </blockquote>
+   </blockquote>
+   <p>
+    Unlike with raw I/O, the units for .seek() are not specified - some
+implementations (e.g.
+    <tt class="docutils literal">
+     StringIO
+    </tt>
+    ) use characters and others
+(e.g.
+    <tt class="docutils literal">
+     TextIOWrapper
+    </tt>
+    ) use bytes.  The special case for zero is to
+allow going to the start or end of a stream without a prior
+    <tt class="docutils literal">
+     .tell()
+    </tt>
+    .  An implementation could include stream encoder state in
+the cookie returned from
+    <tt class="docutils literal">
+     .tell()
+    </tt>
+    .
+   </p>
+   <p>
+    <tt class="docutils literal">
+     TextIOBase
+    </tt>
+    implementations also provide several methods that are
+pass-throughs to the underlaying
+    <tt class="docutils literal">
+     BufferedIOBase
+    </tt>
+    objects:
+   </p>
+   <blockquote>
+    <p>
+     <tt class="docutils literal">
+      .flush()
+      <span class="pre">
+       -&gt;
+      </span>
+      None
+     </tt>
+    </p>
+    <p>
+     <tt class="docutils literal">
+      .close()
+      <span class="pre">
+       -&gt;
+      </span>
+      None
+     </tt>
+    </p>
+    <p>
+     <tt class="docutils literal">
+      .readable()
+      <span class="pre">
+       -&gt;
+      </span>
+      bool
+     </tt>
+    </p>
+    <p>
+     <tt class="docutils literal">
+      .writable()
+      <span class="pre">
+       -&gt;
+      </span>
+      bool
+     </tt>
+    </p>
+    <p>
+     <tt class="docutils literal">
+      .seekable()
+      <span class="pre">
+       -&gt;
+      </span>
+      bool
+     </tt>
+    </p>
+   </blockquote>
+   <p>
+    <tt class="docutils literal">
+     TextIOBase
+    </tt>
+    class implementations additionally provide the
+following methods:
+   </p>
+   <blockquote>
+    <p>
+     <tt class="docutils literal">
+      .readline()
+      <span class="pre">
+       -&gt;
+      </span>
+      str
+     </tt>
+    </p>
+    <blockquote>
+     Read until newline or EOF and return the line, or
+     <tt class="docutils literal">
+      ""
+     </tt>
+     if
+EOF hit immediately.
+    </blockquote>
+    <p>
+     <tt class="docutils literal">
+      .__iter__()
+      <span class="pre">
+       -&gt;
+      </span>
+      Iterator
+     </tt>
+    </p>
+    <blockquote>
+     Returns an iterator that returns lines from the file (which
+happens to be
+     <tt class="docutils literal">
+      self
+     </tt>
+     ).
+    </blockquote>
+    <p>
+     <tt class="docutils literal">
+      .next()
+      <span class="pre">
+       -&gt;
+      </span>
+      str
+     </tt>
+    </p>
+    <blockquote>
+     Same as
+     <tt class="docutils literal">
+      readline()
+     </tt>
+     except raises
+     <tt class="docutils literal">
+      StopIteration
+     </tt>
+     if EOF
+hit immediately.
+    </blockquote>
+   </blockquote>
+   <p>
+    Two implementations will be provided by the Python library.  The
+primary implementation,
+    <tt class="docutils literal">
+     TextIOWrapper
+    </tt>
+    , wraps a Buffered I/O
+object.  Each
+    <tt class="docutils literal">
+     TextIOWrapper
+    </tt>
+    object has a property named
+"
+    <tt class="docutils literal">
+     .buffer
+    </tt>
+    " that provides a reference to the underlying
+    <tt class="docutils literal">
+     BufferedIOBase
+    </tt>
+    object.  Its initializer has the following
+signature:
+   </p>
+   <blockquote>
+    <p>
+     <tt class="docutils literal">
+      .__init__(self, buffer, encoding=None, errors=None, newline=None, line_buffering=False)
+     </tt>
+    </p>
+    <blockquote>
+     <p>
+      <tt class="docutils literal">
+       buffer
+      </tt>
+      is a reference to the
+      <tt class="docutils literal">
+       BufferedIOBase
+      </tt>
+      object to
+be wrapped with the
+      <tt class="docutils literal">
+       TextIOWrapper
+      </tt>
+      .
+     </p>
+     <p>
+      <tt class="docutils literal">
+       encoding
+      </tt>
+      refers to an encoding to be used for translating
+between the byte-representation and character-representation.
+If it is
+      <tt class="docutils literal">
+       None
+      </tt>
+      , then the system's locale setting will be
+used as the default.
+     </p>
+     <p>
+      <tt class="docutils literal">
+       errors
+      </tt>
+      is an optional string indicating error handling.
+It may be set whenever
+      <tt class="docutils literal">
+       encoding
+      </tt>
+      may be set.  It defaults
+to
+      <tt class="docutils literal">
+       'strict'
+      </tt>
+      .
+     </p>
+     <p>
+      <tt class="docutils literal">
+       newline
+      </tt>
+      can be
+      <tt class="docutils literal">
+       None
+      </tt>
+      ,
+      <tt class="docutils literal">
+       ''
+      </tt>
+      ,
+      <tt class="docutils literal">
+       '\n'
+      </tt>
+      ,
+      <tt class="docutils literal">
+       '\r'
+      </tt>
+      , or
+      <tt class="docutils literal">
+       '\r\n'
+      </tt>
+      ; all other values are illegal.  It controls the
+handling of line endings.  It works as follows:
+     </p>
+     <ul class="simple">
+      <li>
+       On input, if
+       <tt class="docutils literal">
+        newline
+       </tt>
+       is
+       <tt class="docutils literal">
+        None
+       </tt>
+       , universal newlines
+mode is enabled.  Lines in the input can end in
+       <tt class="docutils literal">
+        '\n'
+       </tt>
+       ,
+       <tt class="docutils literal">
+        '\r'
+       </tt>
+       , or
+       <tt class="docutils literal">
+        '\r\n'
+       </tt>
+       , and these are translated into
+       <tt class="docutils literal">
+        '\n'
+       </tt>
+       before being returned to the caller.  If it is
+       <tt class="docutils literal">
+        ''
+       </tt>
+       , universal newline mode is enabled, but line endings
+are returned to the caller untranslated.  If it has any of
+the other legal values, input lines are only terminated by
+the given string, and the line ending is returned to the
+caller untranslated.  (In other words, translation to
+       <tt class="docutils literal">
+        '\n'
+       </tt>
+       only occurs if
+       <tt class="docutils literal">
+        newline
+       </tt>
+       is
+       <tt class="docutils literal">
+        None
+       </tt>
+       .)
+      </li>
+      <li>
+       On output, if
+       <tt class="docutils literal">
+        newline
+       </tt>
+       is
+       <tt class="docutils literal">
+        None
+       </tt>
+       , any
+       <tt class="docutils literal">
+        '\n'
+       </tt>
+       characters written are translated to the system default
+line separator,
+       <tt class="docutils literal">
+        os.linesep
+       </tt>
+       .  If
+       <tt class="docutils literal">
+        newline
+       </tt>
+       is
+       <tt class="docutils literal">
+        ''
+       </tt>
+       ,
+no translation takes place.  If
+       <tt class="docutils literal">
+        newline
+       </tt>
+       is any of the
+other legal values, any
+       <tt class="docutils literal">
+        '\n'
+       </tt>
+       characters written are
+translated to the given string.  (Note that the rules
+guiding translation are different for output than for
+input.)
+      </li>
+     </ul>
+     <p>
+      <tt class="docutils literal">
+       line_buffering
+      </tt>
+      , if True, causes
+      <tt class="docutils literal">
+       write()
+      </tt>
+      calls to imply
+a
+      <tt class="docutils literal">
+       flush()
+      </tt>
+      if the string written contains at least one
+      <tt class="docutils literal">
+       '\n'
+      </tt>
+      or
+      <tt class="docutils literal">
+       '\r'
+      </tt>
+      character.  This is set by
+      <tt class="docutils literal">
+       open()
+      </tt>
+      when it detects that the underlying stream is a TTY device,
+or when a
+      <tt class="docutils literal">
+       buffering
+      </tt>
+      argument of
+      <tt class="docutils literal">
+       1
+      </tt>
+      is passed.
+     </p>
+     <p>
+      Further notes on the
+      <tt class="docutils literal">
+       newline
+      </tt>
+      parameter:
+     </p>
+     <ul class="simple">
+      <li>
+       <tt class="docutils literal">
+        '\r'
+       </tt>
+       support is still needed for some OSX applications
+that produce files using
+       <tt class="docutils literal">
+        '\r'
+       </tt>
+       line endings; Excel (when
+exporting to text) and Adobe Illustrator EPS files are the
+most common examples.
+      </li>
+      <li>
+       If translation is enabled, it happens regardless of which
+method is called for reading or writing.  For example,
+       <tt class="docutils literal">
+        f.read()
+       </tt>
+       will always produce the same result as
+       <tt class="docutils literal">
+        <span class="pre">
+         ''.join(f.readlines())
+        </span>
+       </tt>
+       .
+      </li>
+      <li>
+       If universal newlines without translation are requested on
+input (i.e.
+       <tt class="docutils literal">
+        <span class="pre">
+         newline=''
+        </span>
+       </tt>
+       ), if a system read operation
+returns a buffer ending in
+       <tt class="docutils literal">
+        '\r'
+       </tt>
+       , another system read
+operation is done to determine whether it is followed by
+       <tt class="docutils literal">
+        '\n'
+       </tt>
+       or not.  In universal newlines mode with
+translation, the second system read operation may be
+postponed until the next read request, and if the following
+system read operation returns a buffer starting with
+       <tt class="docutils literal">
+        '\n'
+       </tt>
+       , that character is simply discarded.
+      </li>
+     </ul>
+    </blockquote>
+   </blockquote>
+   <p>
+    Another implementation,
+    <tt class="docutils literal">
+     StringIO
+    </tt>
+    , creates a file-like
+    <tt class="docutils literal">
+     TextIO
+    </tt>
+    implementation without an underlying Buffered I/O object.  While
+similar functionality could be provided by wrapping a
+    <tt class="docutils literal">
+     BytesIO
+    </tt>
+    object in a
+    <tt class="docutils literal">
+     TextIOWrapper
+    </tt>
+    , the
+    <tt class="docutils literal">
+     StringIO
+    </tt>
+    object allows for much
+greater efficiency as it does not need to actually performing encoding
+and decoding.  A String I/O object can just store the encoded string
+as-is.  The
+    <tt class="docutils literal">
+     StringIO
+    </tt>
+    object's
+    <tt class="docutils literal">
+     __init__
+    </tt>
+    signature takes an
+optional string specifying the initial value; the initial position is
+always 0.  It does not support encodings or newline translations; you
+always read back exactly the characters you wrote.
+   </p>
+   <div class="section" id="unicode-encoding-decoding-issues">
+    <h2>
+     <a class="toc-backref" href="#id11">
+      Unicode encoding/decoding Issues
+     </a>
+    </h2>
+    <p>
+     We should allow allow changing the encoding and error-handling
+setting later.  The behavior of Text I/O operations in the face of
+Unicode problems and ambiguities (e.g. diacritics, surrogates, invalid
+bytes in an encoding) should be the same as that of the unicode
+     <tt class="docutils literal">
+      encode()
+     </tt>
+     /
+     <tt class="docutils literal">
+      decode()
+     </tt>
+     methods.
+     <tt class="docutils literal">
+      UnicodeError
+     </tt>
+     may be raised.
+    </p>
+    <p>
+     Implementation note: we should be able to reuse much of the
+infrastructure provided by the
+     <tt class="docutils literal">
+      codecs
+     </tt>
+     module.  If it doesn't
+provide the exact APIs we need, we should refactor it to avoid
+reinventing the wheel.
+    </p>
+   </div>
+  </div>
+  <div class="section" id="non-blocking-i-o">
+   <h1>
+    <a class="toc-backref" href="#id12">
+     Non-blocking I/O
+    </a>
+   </h1>
+   <p>
+    Non-blocking I/O is fully supported on the Raw I/O level only.  If a
+raw object is in non-blocking mode and an operation would block, then
+    <tt class="docutils literal">
+     .read()
+    </tt>
+    and
+    <tt class="docutils literal">
+     .readinto()
+    </tt>
+    return
+    <tt class="docutils literal">
+     None
+    </tt>
+    , while
+    <tt class="docutils literal">
+     .write()
+    </tt>
+    returns 0.  In order to put an object in non-blocking mode,
+the user must extract the fileno and do it by hand.
+   </p>
+   <p>
+    At the Buffered I/O and Text I/O layers, if a read or write fails due
+a non-blocking condition, they raise an
+    <tt class="docutils literal">
+     IOError
+    </tt>
+    with
+    <tt class="docutils literal">
+     errno
+    </tt>
+    set
+to
+    <tt class="docutils literal">
+     EAGAIN
+    </tt>
+    .
+   </p>
+   <p>
+    Originally, we considered propagating up the Raw I/O behavior, but
+many corner cases and problems were raised.  To address these issues,
+significant changes would need to have been made to the Buffered I/O
+and Text I/O layers.  For example, what should
+    <tt class="docutils literal">
+     .flush()
+    </tt>
+    do on a
+Buffered non-blocking object?  How would the user instruct the object
+to "Write as much as you can from your buffer, but don't block"?  A
+non-blocking
+    <tt class="docutils literal">
+     .flush()
+    </tt>
+    that doesn't necessarily flush all available
+data is counter-intuitive.  Since non-blocking and blocking objects
+would have such different semantics at these layers, it was agreed to
+abandon efforts to combine them into a single type.
+   </p>
+  </div>
+  <div class="section" id="the-open-built-in-function">
+   <h1>
+    <a class="toc-backref" href="#id13">
+     The
+     <tt class="docutils literal">
+      open()
+     </tt>
+     Built-in Function
+    </a>
+   </h1>
+   <p>
+    The
+    <tt class="docutils literal">
+     open()
+    </tt>
+    built-in function is specified by the following
+pseudo-code:
+   </p>
+   <pre class="literal-block">
+def open(filename, mode="r", buffering=None, *,
+         encoding=None, errors=None, newline=None):
+    assert isinstance(filename, (str, int))
+    assert isinstance(mode, str)
+    assert buffering is None or isinstance(buffering, int)
+    assert encoding is None or isinstance(encoding, str)
+    assert newline in (None, "", "\n", "\r", "\r\n")
+    modes = set(mode)
+    if modes - set("arwb+t") or len(mode) &gt; len(modes):
+        raise ValueError("invalid mode: %r" % mode)
+    reading = "r" in modes
+    writing = "w" in modes
+    binary = "b" in modes
+    appending = "a" in modes
+    updating = "+" in modes
+    text = "t" in modes or not binary
+    if text and binary:
+        raise ValueError("can't have text and binary mode at once")
+    if reading + writing + appending &gt; 1:
+        raise ValueError("can't have read/write/append mode at once")
+    if not (reading or writing or appending):
+        raise ValueError("must have exactly one of read/write/append mode")
+    if binary and encoding is not None:
+        raise ValueError("binary modes doesn't take an encoding arg")
+    if binary and errors is not None:
+        raise ValueError("binary modes doesn't take an errors arg")
+    if binary and newline is not None:
+        raise ValueError("binary modes doesn't take a newline arg")
+    # XXX Need to spec the signature for FileIO()
+    raw = FileIO(filename, mode)
+    line_buffering = (buffering == 1 or buffering is None and raw.isatty())
+    if line_buffering or buffering is None:
+        buffering = 8*1024  # International standard buffer size
+        # XXX Try setting it to fstat().st_blksize
+    if buffering &lt; 0:
+        raise ValueError("invalid buffering size")
+    if buffering == 0:
+        if binary:
+            return raw
+        raise ValueError("can't have unbuffered text I/O")
+    if updating:
+        buffer = BufferedRandom(raw, buffering)
+    elif writing or appending:
+        buffer = BufferedWriter(raw, buffering)
+    else:
+        assert reading
+        buffer = BufferedReader(raw, buffering)
+    if binary:
+        return buffer
+    assert text
+    return TextIOWrapper(buffer, encoding, errors, newline, line_buffering)
+</pre>
+  </div>
+  <div class="section" id="copyright">
+   <h1>
+    <a class="toc-backref" href="#id14">
+     Copyright
+    </a>
+   </h1>
+   <p>
+    This document has been placed in the public domain.
+   </p>
+   <!-- Local Variables:
+mode: indented-text
+indent-tabs-mode: nil
+sentence-end-double-space: t
+fill-column: 70
+coding: utf-8
+End: -->
+  </div>
+ </body>
+
+<!-- Mirrored from www.python.org/dev/peps/pep-3116/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 03 Sep 2015 04:35:22 GMT -->
+</html>Source: <a href="https://hg.python.org/peps/file/tip/pep-3116.txt">https://hg.python.org/peps/file/tip/pep-3116.txt</a>
+
+    </article>
+
+
+                </section>
+
+                
+
+
+<aside class="left-sidebar" role="secondary">
+
+    
+
+
+
+
+
+
+    
+
+
+
+
+
+        <div class="twitter-widget sidebar-widget">
+        <a class="twitter-timeline" data-dnt="true" href="https://twitter.com/ThePSF" data-widget-id="434113224703610882">Tweets by @ThePSF</a>
+        <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+    </div>
+
+    <div class="psf-sidebar-widget sidebar-widget">
+        <h3 class="widget-title">The PSF</h3>
+<p>The Python Software Foundation is the organization behind Python. Become a member of the PSF and help advance the software and our mission. </p>
+
+    </div>
+
+</aside>
+
+
+
+                
+                
+
+
+            </div><!-- end .container -->
+        </div><!-- end #content .content-wrapper -->
+
+        <!-- Footer and social media list -->
+        <footer id="site-map" class="main-footer" role="contentinfo">
+            <div class="main-footer-links">
+                <div class="container">
+
+                    
+                    <a id="back-to-top-1" class="jump-link" href="#python-network"><span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> Back to Top</a>
+
+                    
+
+<ul class="sitemap navigation menu do-not-print" role="tree" id="container">
+    
+    <li class="tier-1 element-1">
+        <a href="https://www.python.org/about/" >About</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/apps/" title="">Applications</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/quotes/" title="">Quotes</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/gettingstarted/" title="">Getting Started</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/help/" title="">Help</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-2">
+        <a href="https://www.python.org/downloads/" >Downloads</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/downloads/" title="">All releases</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/downloads/source/" title="">Source code</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/downloads/windows/" title="">Windows</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/downloads/mac-osx/" title="">Mac OS X</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/download/other/" title="">Other Platforms</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://docs.python.org/3/license.html" title="">License</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/download/alternatives" title="">Alternative Implementations</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-3">
+        <a href="https://www.python.org/doc/" >Documentation</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/doc/" title="">Docs</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/doc/av" title="">Audio/Visual Talks</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://wiki.python.org/moin/BeginnersGuide" title="">Beginner&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://docs.python.org/faq/" title="">FAQ</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="http://wiki.python.org/moin/Languages" title="">Non-English Docs</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="../index.html" title="">PEP Index</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://wiki.python.org/moin/PythonBooks" title="">Python Books</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-4">
+        <a href="https://www.python.org/community/" >Community</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/community/diversity/" title="">Diversity</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/community/irc/" title="">IRC</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/community/lists/" title="">Mailing Lists</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/workshops/" title="">Python Conferences</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/community/sigs/" title="">Special Interest Groups</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://wiki.python.org/moin/" title="">Python Wiki</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/community/logos/" title="">Python Logo</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://www.python.org/community/merchandise/" title="">Merchandise</a></li>
+    
+        <li class="tier-2 element-9" role="treeitem"><a href="https://www.python.org/community/awards" title="">Community Awards</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-5">
+        <a href="https://www.python.org/about/success/" title="success-stories">Success Stories</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/success/#arts" title="">Arts</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/success/#business" title="">Business</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/success/#education" title="">Education</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/success/#engineering" title="">Engineering</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/about/success/#government" title="">Government</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://www.python.org/about/success/#scientific" title="">Scientific</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/about/success/#software-development" title="">Software Development</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-6">
+        <a href="https://www.python.org/blogs/" title="News from around the Python world">News</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/blogs/" title="Python Insider Blog Posts">Python News</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://planetpython.org/" title="Planet Python">Community News</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="http://pyfound.blogspot.com/" title="PSF Blog">PSF News</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pycon.blogspot.com/" title="PyCon Blog">PyCon News</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-7">
+        <a href="https://www.python.org/events/" >Events</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/events/python-events/" title="">Python Events</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/events/python-user-group/" title="">User Group Events</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/events/python-events/past/" title="">Python Events Archive</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/events/python-user-group/past/" title="">User Group Events Archive</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://wiki.python.org/moin/PythonEventsCalendar#Submitting_an_Event" title="">Submit an Event</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-8">
+        <a href="https://www.python.org/dev/" >Contributing</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="http://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://bugs.python.org/" title="">Issue Tracker</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://mail.python.org/mailman/listinfo/python-dev" title="">python-dev list</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pythonmentors.com/" title="">Core Mentorship</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+</ul>
+
+
+                    <a id="back-to-top-2" class="jump-link" href="#python-network"><span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> Back to Top</a>
+                    
+
+                </div><!-- end .container -->
+            </div> <!-- end .main-footer-links -->
+
+            <div class="site-base">
+                <div class="container">
+                    
+                    <ul class="footer-links navigation menu do-not-print" role="tree">
+                        <li class="tier-1 element-1"><a href="https://www.python.org/about/help/">Help &amp; <span class="say-no-more">General</span> Contact</a></li>
+                        <li class="tier-1 element-2"><a href="https://www.python.org/community/diversity/">Diversity <span class="say-no-more">Initiatives</span></a></li>
+                        <li class="tier-1 element-3"><a href="https://github.com/python/pythondotorg/issues">Submit Website Bug</a></li>
+                        <!--<li class="tier-1 element-3"><a href="#"><span class="say-no-more">Website</span> Colophon</a></li>-->
+                    </ul>
+
+                    <div class="copyright">
+                        <p><small>
+                            <span class="pre">Copyright &copy;2001-2015.</span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/psf-landing/">Python Software Foundation</a></span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/about/legal/">Legal Statements</a></span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/privacy/">Privacy Policy</a></span>
+                        </small></p>
+                    </div>
+
+                </div><!-- end .container -->
+            </div><!-- end .site-base -->
+
+        </footer>
+
+    </div><!-- end #touchnav-wrapper -->
+
+    
+    <script src="../../../../ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="../../../static/js/libs/jquery-1.8.2.min.js"><\/script>')</script>
+
+    <script src="../../../static/js/libs/masonry.pkgd.min.js"></script>
+
+    <script type="text/javascript" src="../../../static/js/main-min.js" charset="utf-8"></script>
+    
+
+    <!--[if lte IE 7]>
+    <script type="text/javascript" src="/static/js/plugins/IE8-min.js" charset="utf-8"></script>
+    
+    
+    <![endif]-->
+
+    <!--[if lte IE 8]>
+    <script type="text/javascript" src="/static/js/plugins/getComputedStyle-min.js" charset="utf-8"></script>
+    
+    
+    <![endif]-->
+
+    
+
+    
+    
+
+</body>
+</html>

@@ -1,0 +1,1341 @@
+<!doctype html>
+<!--[if lt IE 7]>   <html class="no-js ie6 lt-ie7 lt-ie8 lt-ie9">   <![endif]-->
+<!--[if IE 7]>      <html class="no-js ie7 lt-ie8 lt-ie9">          <![endif]-->
+<!--[if IE 8]>      <html class="no-js ie8 lt-ie9">                 <![endif]-->
+<!--[if gt IE 8]><!--><html class="no-js" lang="en" dir="ltr">  <!--<![endif]-->
+
+
+<!-- Mirrored from www.python.org/dev/peps/pep-0308/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 03 Sep 2015 04:34:13 GMT -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <link rel="prefetch" href="../../../../ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js">
+
+    <meta name="application-name" content="Python.org">
+    <meta name="msapplication-tooltip" content="The official home of the Python Programming Language">
+    <meta name="apple-mobile-web-app-title" content="Python.org">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="format-detection" content="telephone=no">
+    <meta http-equiv="cleartype" content="on">
+    <meta http-equiv="imagetoolbar" content="false">
+
+    <script src="../../../static/js/libs/modernizr.js"></script>
+
+    <link href="../../../static/stylesheets/style.css" rel="stylesheet" type="text/css" title="default" />
+    <link href="../../../static/stylesheets/mq.css" rel="stylesheet" type="text/css" media="not print, braille, embossed, speech, tty" />
+    
+
+    <!--[if (lte IE 8)&(!IEMobile)]>
+    <link href="/static/stylesheets/no-mq.css" rel="stylesheet" type="text/css" media="screen" />
+    
+    
+    <![endif]-->
+
+    
+    <link rel="icon" type="image/x-icon" href="https://www.python.org/static/favicon.ico">
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="../../../static/apple-touch-icon-144x144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="../../../static/apple-touch-icon-114x114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="../../../static/apple-touch-icon-72x72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="../../../static/apple-touch-icon-precomposed.png">
+    <link rel="apple-touch-icon" href="../../../static/apple-touch-icon-precomposed.png">
+
+    
+    <meta name="msapplication-TileImage" content="/static/metro-icon-144x144-precomposed.png"><!-- white shape -->
+    <meta name="msapplication-TileColor" content="#3673a5"><!-- python blue -->
+    <meta name="msapplication-navbutton-color" content="#3673a5">
+
+    <meta property="og:site_name" content="Python.org">
+    <meta property="og:type" content="website">
+
+    <title>PEP 308 -- Conditional Expressions | Python.org</title>
+    <meta property="og:title" content="Welcome to Python.org">
+
+    
+    <meta name="description" content="The official home of the Python Programming Language">
+    <meta name="og:description" content="The official home of the Python Programming Language">
+    <meta name="keywords" content="Python programming language object oriented web free open source software license documentation download community">
+    <meta property="og:tag" content="Python programming language object oriented web free open source software license documentation download community">
+    <meta property="og:published_time" content="">
+    <meta property="og:modified_time" content="">
+    <meta property="og:author" content="">
+    <meta property="og:section" content=""> 
+    <meta property="og:url" content="">
+    <meta property="og:image" content="">
+    <meta property="og:video" content="">
+
+    <link rel="author" href="https://www.python.org/static/humans.txt">
+
+    
+
+    
+    <script type="application/ld+json">
+     {
+       "@context": "http://schema.org",
+       "@type": "WebSite",
+       "url": "https://www.python.org/",
+       "potentialAction": {
+         "@type": "SearchAction",
+         "target": "https://www.python.org/search/?q={search_term_string}",
+         "query-input": "required name=search_term_string"
+       }
+     }
+    </script>
+
+    
+    <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-39055973-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+    </script>
+    
+</head>
+
+<body class="python pages pep-page">
+
+    <div id="touchnav-wrapper">
+
+        <div id="nojs" class="do-not-print">
+            <p><strong>Notice:</strong> While Javascript is not essential for this website, your interaction with the content will be limited. Please turn Javascript on for the full experience. </p>
+        </div>
+
+        <!--[if lt IE 8]>
+        <div id="oldie-warning" class="do-not-print">
+            <p><strong>Notice:</strong> Your browser is <em>ancient</em> and <a href="http://www.ie6countdown.com/">Microsoft agrees</a>. <a href="http://browsehappy.com/">Upgrade to a different browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to experience a better web.</p>
+        </div>
+        <![endif]-->
+
+        <!-- Sister Site Links -->
+        <div id="top" class="top-bar do-not-print">
+
+            <nav class="meta-navigation container" role="navigation">
+
+                
+                <div class="skip-link screen-reader-text">
+                    <a href="#content" title="Skip to content">Skip to content</a>
+                </div>
+
+                
+                <a id="close-python-network" class="jump-link" href="#python-network" aria-hidden="true">
+                    <span aria-hidden="true" class="icon-arrow-down"><span>&#9660;</span></span> Close
+                </a>
+
+                
+
+<ul class="menu" role="tree">
+    
+    <li class="python-meta ">
+        <a href="https://www.python.org/" title="The Python Programming Language" >Python</a>
+    </li>
+    
+    <li class="psf-meta ">
+        <a href="https://www.python.org/psf-landing/" title="The Python Software Foundation" >PSF</a>
+    </li>
+    
+    <li class="docs-meta ">
+        <a href="https://docs.python.org/" title="Python Documentation" >Docs</a>
+    </li>
+    
+    <li class="pypi-meta ">
+        <a href="https://pypi.python.org/" title="Python Package Index" >PyPI</a>
+    </li>
+    
+    <li class="jobs-meta ">
+        <a href="https://www.python.org/jobs/" title="Python Job Board" >Jobs</a>
+    </li>
+    
+    <li class="shop-meta ">
+        <a href="https://www.python.org/community/" title="Python Community" >Community</a>
+    </li>
+    
+</ul>
+
+
+                <a id="python-network" class="jump-link" href="#top" aria-hidden="true">
+                    <span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> The Python Network
+                </a>
+
+            </nav>
+
+        </div>
+
+        <!-- Header elements -->
+        <header class="main-header" role="banner">
+            <div class="container">
+
+                <h1 class="site-headline">
+                    <a href="https://www.python.org/"><img class="python-logo" src="../../../static/img/python-logo.png" alt="python&trade;"></a>
+                </h1>
+
+                <div class="options-bar do-not-print">
+
+                    
+                    <a id="site-map-link" class="jump-to-menu" href="#site-map"><span class="menu-icon">&equiv;</span> Menu</a><form class="search-the-site" action="https://www.python.org/search/" method="get">
+                        <fieldset title="Search Python.org">
+
+                            <span aria-hidden="true" class="icon-search"></span>
+
+                            <label class="screen-reader-text" for="id-search-field">Search This Site</label>
+                            <input id="id-search-field" name="q" type="search" role="textbox" class="search-field" placeholder="Search" value="" tabindex="1">
+
+                            <button type="submit" name="submit" id="submit" class="search-button" title="Submit this Search" tabindex="3">
+                                GO
+                            </button>
+
+                            
+                            <!--[if IE]><input type="text" style="display: none;" disabled="disabled" size="1" tabindex="4"><![endif]-->
+
+                        </fieldset>
+                    </form><span class="breaker"></span><div class="adjust-font-size" aria-hidden="true">
+                        <ul class="navigation menu" aria-label="Adjust Text Size on Page">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                <a href="#" class="action-trigger"><strong><small>A</small> A</strong></a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a class="text-shrink" title="Make Text Smaller" href="javascript:;">Smaller</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a class="text-grow" title="Make Text Larger" href="javascript:;">Larger</a></li>
+                                    <li class="tier-2 element-3" role="treeitem"><a class="text-reset" title="Reset any font size changes I have made" href="javascript:;">Reset</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div><div class="winkwink-nudgenudge">
+                        <ul class="navigation menu" aria-label="Social Media Navigation">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                <a href="#" class="action-trigger">Socialize</a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a href="http://plus.google.com/+Python"><span aria-hidden="true" class="icon-google-plus"></span>Google+</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a href="http://www.facebook.com/pythonlang?fref=ts"><span aria-hidden="true" class="icon-facebook"></span>Facebook</a></li>
+                                    <li class="tier-2 element-3" role="treeitem"><a href="http://twitter.com/ThePSF"><span aria-hidden="true" class="icon-twitter"></span>Twitter</a></li>
+                                    <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/irc/"><span aria-hidden="true" class="icon-freenode"></span>Chat on IRC</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div><div class="account-signin">
+                        <ul class="navigation menu" aria-label="Social Media Navigation">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                
+                                <a href="https://www.python.org/accounts/login/" title="Sign Up or Sign In to Python.org">Sign In</a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/accounts/signup/">Sign Up / Register</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/accounts/login/">Sign In</a></li>
+                                </ul>
+                                
+                            </li>
+                        </ul>
+                    </div>
+
+                </div><!-- end options-bar -->
+
+                <nav id="mainnav" class="python-navigation main-navigation do-not-print" role="navigation">
+                    
+                        
+<ul class="navigation menu" role="menubar" aria-label="Main Navigation">
+  
+    
+    
+    <li id="about" class="tier-1 element-1  " aria-haspopup="true">
+        <a href="https://www.python.org/about/" title="" class="">About</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/apps/" title="">Applications</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/quotes/" title="">Quotes</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/gettingstarted/" title="">Getting Started</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/help/" title="">Help</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="downloads" class="tier-1 element-2  " aria-haspopup="true">
+        <a href="https://www.python.org/downloads/" title="" class="">Downloads</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/downloads/" title="">All releases</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/downloads/source/" title="">Source code</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/downloads/windows/" title="">Windows</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/downloads/mac-osx/" title="">Mac OS X</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/download/other/" title="">Other Platforms</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://docs.python.org/3/license.html" title="">License</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/download/alternatives" title="">Alternative Implementations</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="documentation" class="tier-1 element-3  " aria-haspopup="true">
+        <a href="https://www.python.org/doc/" title="" class="">Documentation</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/doc/" title="">Docs</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/doc/av" title="">Audio/Visual Talks</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://wiki.python.org/moin/BeginnersGuide" title="">Beginner&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://docs.python.org/faq/" title="">FAQ</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="http://wiki.python.org/moin/Languages" title="">Non-English Docs</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="../index.html" title="">PEP Index</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://wiki.python.org/moin/PythonBooks" title="">Python Books</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="community" class="tier-1 element-4  " aria-haspopup="true">
+        <a href="https://www.python.org/community/" title="" class="">Community</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/community/diversity/" title="">Diversity</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/community/irc/" title="">IRC</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/community/lists/" title="">Mailing Lists</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/workshops/" title="">Python Conferences</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/community/sigs/" title="">Special Interest Groups</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://wiki.python.org/moin/" title="">Python Wiki</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/community/logos/" title="">Python Logo</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://www.python.org/community/merchandise/" title="">Merchandise</a></li>
+    
+        <li class="tier-2 element-9" role="treeitem"><a href="https://www.python.org/community/awards" title="">Community Awards</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="success-stories" class="tier-1 element-5  " aria-haspopup="true">
+        <a href="https://www.python.org/about/success/" title="success-stories" class="">Success Stories</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/success/#arts" title="">Arts</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/success/#business" title="">Business</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/success/#education" title="">Education</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/success/#engineering" title="">Engineering</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/about/success/#government" title="">Government</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://www.python.org/about/success/#scientific" title="">Scientific</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/about/success/#software-development" title="">Software Development</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="news" class="tier-1 element-6  " aria-haspopup="true">
+        <a href="https://www.python.org/blogs/" title="News from around the Python world" class="">News</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/blogs/" title="Python Insider Blog Posts">Python News</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://planetpython.org/" title="Planet Python">Community News</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="http://pyfound.blogspot.com/" title="PSF Blog">PSF News</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pycon.blogspot.com/" title="PyCon Blog">PyCon News</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="events" class="tier-1 element-7  " aria-haspopup="true">
+        <a href="https://www.python.org/events/" title="" class="">Events</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/events/python-events/" title="">Python Events</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/events/python-user-group/" title="">User Group Events</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/events/python-events/past/" title="">Python Events Archive</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/events/python-user-group/past/" title="">User Group Events Archive</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://wiki.python.org/moin/PythonEventsCalendar#Submitting_an_Event" title="">Submit an Event</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    
+  
+</ul>
+
+                    
+                </nav>
+
+                <div class="header-banner "> <!-- for optional "do-not-print" class -->
+                    
+                    
+                </div>
+
+                
+                
+
+             </div><!-- end .container -->
+        </header>
+
+        <div id="content" class="content-wrapper">
+            <!-- Main Content Column -->
+            <div class="container">
+
+                <section class="main-content with-left-sidebar" role="main">
+
+                    
+<ul class="breadcrumbs menu">
+    <li>
+        <a href="https://www.python.org/" title="The Python Programming Language">Python</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>
+        <a href="https://www.python.org/dev/">Python Developer's Guide</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>
+        <a href="../index.html">PEP Index</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>PEP 308 -- Conditional Expressions</li>
+</ul>
+
+
+                    
+<style>
+   .pep-page pre {
+        padding: .5em;
+        background: inherit;
+        border-left: 0px;
+        -webkit-box-shadow: 0 0 0 0;
+        -moz-box-shadow: 0 0 0 0;
+        box-shadow: 0 0 0 0;
+   }
+</style>
+
+    
+    <article class="text">
+        
+
+        <header class="article-header">
+            <h1 class="page-title">PEP 308 -- Conditional Expressions</h1>
+        </header>
+
+        <html>
+ <body>
+  <div class="header">
+   <table border="0">
+    <tr>
+     <th>
+      PEP:
+     </th>
+     <td>
+      308
+     </td>
+    </tr>
+    <tr>
+     <th>
+      Title:
+     </th>
+     <td>
+      Conditional Expressions
+     </td>
+    </tr>
+    <tr>
+     <th>
+      Author:
+     </th>
+     <td>
+      Guido van Rossum, Raymond Hettinger
+     </td>
+    </tr>
+    <tr>
+     <th>
+      Status:
+     </th>
+     <td>
+      Final
+     </td>
+    </tr>
+    <tr>
+     <th>
+      Type:
+     </th>
+     <td>
+      Standards Track
+     </td>
+    </tr>
+    <tr>
+     <th>
+      Content-Type:
+     </th>
+     <td>
+      <a href="../pep-0009/index.html">
+       text/plain
+      </a>
+     </td>
+    </tr>
+    <tr>
+     <th>
+      Created:
+     </th>
+     <td>
+      7-Feb-2003
+     </td>
+    </tr>
+    <tr>
+     <th>
+      Post-History:
+     </th>
+     <td>
+      7-Feb-2003, 11-Feb-2003
+     </td>
+    </tr>
+   </table>
+  </div>
+  <div class="content">
+   <h3>
+    Adding a conditional expression
+   </h3>
+   <pre>
+    On 9/29/2005, Guido decided to add conditional expressions in the
+    form of "X if C else Y". [1]
+
+    The motivating use case was the prevalance of error-prone attempts
+    to achieve the same effect using "and" and "or". [2]
+    
+    Previous community efforts to add a conditional expression were
+    stymied by a lack of consensus on the best syntax.  That issue was
+    resolved by simply deferring to a BDFL best judgment call.
+
+    The decision was validated by reviewing how the syntax fared when
+    applied throughout the standard library (this review approximates a
+    sampling of real-world use cases, across a variety of applications,
+    written by a number of programmers with diverse backgrounds). [3]
+
+    The following change will be made to the grammar.  (The or_test
+    symbols is new, the others are modified.)
+
+        test: or_test ['if' or_test 'else' test] | lambdef
+        or_test: and_test ('or' and_test)*
+        ...
+        testlist_safe: or_test [(',' or_test)+ [',']]
+        ...
+        gen_for: 'for' exprlist 'in' or_test [gen_iter]
+
+    The new syntax nearly introduced a minor syntactical backwards
+    incompatibility.  In previous Python versions, the following is
+    legal:
+
+        [f for f in lambda x: x, lambda x: x**2 if f(1) == 1]
+
+    (I.e. a list comprehension where the sequence following 'in' is an
+    unparenthesized series of lambdas -- or just one lambda, even.)
+
+    In Python 3.0, the series of lambdas will have to be
+    parenthesized, e.g.:
+
+        [f for f in (lambda x: x, lambda x: x**2) if f(1) == 1]
+
+    This is because lambda binds less tight than the if-else
+    expression, but in this context, the lambda could already be
+    followed by an 'if' keyword that binds less tightly still (for
+    details, consider the grammar changes shown above).
+
+    However, in Python 2.5, a slightly different grammar is used that
+    is more backwards compatible, but constrains the grammar of a
+    lambda used in this position by forbidding the lambda's body to
+    contain an unparenthesized condition expression.  Examples:
+
+        [f for f in (1, lambda x: x if x &gt;= 0 else -1)]    # OK
+        [f for f in 1, (lambda x: x if x &gt;= 0 else -1)]    # OK
+        [f for f in 1, lambda x: (x if x &gt;= 0 else -1)]    # OK
+        [f for f in 1, lambda x: x if x &gt;= 0 else -1]      # INVALID
+
+
+</pre>
+   <h3>
+    References
+   </h3>
+   <pre>
+    [1] Pronouncement
+        <a href="http://mail.python.org/pipermail/python-dev/2005-September/056846.html">http://mail.python.org/pipermail/python-dev/2005-September/056846.html</a>
+
+    [2] Motivating use case:
+        <a href="http://mail.python.org/pipermail/python-dev/2005-September/056546.html">http://mail.python.org/pipermail/python-dev/2005-September/056546.html</a>
+        <a href="http://mail.python.org/pipermail/python-dev/2005-September/056510.html">http://mail.python.org/pipermail/python-dev/2005-September/056510.html</a>        
+
+    [3] Review in the context of real-world code fragments:
+        <a href="http://mail.python.org/pipermail/python-dev/2005-September/056803.html">http://mail.python.org/pipermail/python-dev/2005-September/056803.html</a>
+
+
+</pre>
+   <h3>
+    Introduction to earlier draft of the PEP (kept for historical purposes)
+   </h3>
+   <pre>
+    Requests for an if-then-else ("ternary") expression keep coming up
+    on comp.lang.python.  This PEP contains a concrete proposal of a
+    fairly Pythonic syntax.  This is the community's one chance: if
+    this PEP is approved with a clear majority, it will be implemented
+    in Python 2.4.  If not, the PEP will be augmented with a summary
+    of the reasons for rejection and the subject better not come up
+    again.  While the BDFL is co-author of this PEP, he is neither in
+    favor nor against this proposal; it is up to the community to
+    decide.  If the community can't decide, the BDFL will reject the
+    PEP.
+
+    After unprecedented community response (very good arguments were
+    made both pro and con) this PEP has been revised with the help of
+    Raymond Hettinger.  Without going through a complete revision
+    history, the main changes are a different proposed syntax, an
+    overview of proposed alternatives, the state of the curent
+    discussion, and a discussion of short-circuit behavior.
+
+    Following the discussion, a vote was held.  While there was an overall
+    interest in having some form of if-then-else expressions, no one
+    format was able to draw majority support.  Accordingly, the PEP was
+    rejected due to the lack of an overwhelming majority for change.
+    Also, a Python design principle has been to prefer the status quo
+    whenever there are doubts about which path to take.
+
+
+</pre>
+   <h3>
+    Proposal
+   </h3>
+   <pre>
+    The proposed syntax is as follows:
+
+	(if &lt;condition&gt;: &lt;expression1&gt; else: &lt;expression2&gt;) 
+
+    Note that the enclosing parentheses are not optional.
+    
+    The resulting expression is evaluated like this:
+
+    - First, &lt;condition&gt; is evaluated.
+
+    - If &lt;condition&gt; is true, &lt;expression1&gt; is evaluated and is the
+      result of the whole thing.
+
+    - If &lt;condition&gt; is false, &lt;expression2&gt; is evaluated and is the
+      result of the whole thing.
+
+    A natural extension of this syntax is to allow one or more 'elif'
+    parts:
+
+      (if &lt;cond1&gt;: &lt;expr1&gt; elif &lt;cond2&gt;: &lt;expr2&gt; ... else: &lt;exprN&gt;)
+
+    This will be implemented if the proposal is accepted.
+
+    The downsides to the proposal are:
+
+    * the required parentheses
+    * confusability with statement syntax
+    * additional semantic loading of colons
+
+    Note that at most one of &lt;expression1&gt; and &lt;expression2&gt; is
+    evaluated.  This is called a "short-circuit expression"; it is
+    similar to the way the second operand of 'and' / 'or' is only
+    evaluated if the first operand is true / false.
+
+    A common way to emulate an if-then-else expression is:
+
+        &lt;condition&gt; and &lt;expression1&gt; or &lt;expression2&gt;
+
+    However, this doesn't work the same way: it returns &lt;expression2&gt;
+    when &lt;expression1&gt; is false!  See FAQ 4.16 for alternatives that
+    work -- however, they are pretty ugly and require much more effort
+    to understand.
+
+
+</pre>
+   <h3>
+    Alternatives
+   </h3>
+   <pre>
+    Holger Krekel proposed a new, minimally invasive variant:
+
+        &lt;condition&gt; and &lt;expression1&gt; else &lt;expression2&gt;
+
+    The concept behind it is that a nearly complete ternary operator
+    already exists with and/or and this proposal is the least invasive
+    change that makes it complete.  Many respondants on the
+    newsgroup found this to be the most pleasing alternative.
+    However, a couple of respondants were able to post examples
+    that were mentally difficult to parse.  Later it was pointed
+    out that this construct works by having the "else" change the
+    existing meaning of "and".
+
+    As a result, there is increasing support for Christian Tismer's
+    proposed variant of the same idea:
+
+        &lt;condition&gt; then &lt;expression1&gt; else &lt;expression2&gt;
+
+    The advantages are simple visual parsing, no required parenthesis,
+    no change in the semantics of existing keywords, not as likely
+    as the proposal to be confused with statement syntax, and does
+    not further overload the colon.  The disadvantage is the
+    implementation costs of introducing a new keyword.  However,
+    unlike other new keywords, the word "then" seems unlikely to
+    have been used as a name in existing programs.
+
+    ---
+
+    Many C-derived languages use this syntax:
+
+        &lt;condition&gt; ? &lt;expression1&gt; : &lt;expression2&gt;
+
+    Eric Raymond even implemented this.  The BDFL rejected this for
+    several reasons: the colon already has many uses in Python (even
+    though it would actually not be ambiguous, because the question
+    mark requires a matching colon); for people not used to C-derived
+    language, it is hard to understand.
+
+    ---
+
+    The original version of this PEP proposed the following syntax:
+
+        &lt;expression1&gt; if &lt;condition&gt; else &lt;expression2&gt;
+
+    The out-of-order arrangement was found to be too uncomfortable
+    for many of participants in the discussion; especially when
+    &lt;expression1&gt; is long, it's easy to miss the conditional while
+    skimming.
+
+    ---
+
+    Some have suggested adding a new builtin instead of extending the
+    syntax of the language.  For example:
+
+        cond(&lt;condition&gt;, &lt;expression1&gt;, &lt;expression2&gt;)
+
+    This won't work the way a syntax extension will because both
+    expression1 and expression2 must be evaluated before the function
+    is called.  There's no way to short-circuit the expression
+    evaluation.  It could work if 'cond' (or some other name) were
+    made a keyword, but that has all the disadvantages of adding a new
+    keyword, plus confusing syntax: it *looks* like a function call so
+    a casual reader might expect both &lt;expression1&gt; and &lt;expression2&gt;
+    to be evaluated.
+
+
+</pre>
+   <h3>
+    Summary of the Current State of the Discussion
+   </h3>
+   <pre>
+    Groups are falling into one of three camps:
+
+    1.  Adopt a ternary operator built using punctuation characters:
+
+            &lt;condition&gt; ? &lt;expression1&gt; : &lt;expression2&gt;
+
+    2.  Adopt a ternary operator built using new or existing keywords.
+        The leading examples are:
+
+            &lt;condition&gt; then &lt;expression1&gt; else &lt;expression2&gt;
+            (if &lt;condition&gt;: &lt;expression1&gt; else: &lt;expression2&gt;) 
+
+    3.  Do nothing.
+
+    The first two positions are relatively similar.
+
+    Some find that any form of punctuation makes the language more
+    cryptic.  Others find that punctuation style is appropriate for
+    expressions rather than statements and helps avoid a COBOL style:
+    3 plus 4 times 5.
+
+    Adapting existing keywords attempts to improve on punctuation
+    through explicit meaning and a more tidy appearance.  The downside
+    is some loss of the economy-of-expression provided by punctuation
+    operators.  The other downside is that it creates some degree of
+    confusion between the two meanings and two usages of the keywords.
+
+    Those difficulties are overcome by options which introduce new
+    keywords which take more effort to implement.
+
+    The last position is doing nothing.  Arguments in favor include
+    keeping the language simple and concise; maintaining backwards
+    compatibility; and that any every use case can already be already
+    expressed in terms of "if" and "else".  Lambda expressions are an
+    exception as they require the conditional to be factored out into
+    a separate function definition.
+
+    The arguments against doing nothing are that the other choices
+    allow greater economy of expression and that current practices
+    show a propensity for erroneous uses of "and", "or", or one their
+    more complex, less visually unappealing workarounds.
+
+
+</pre>
+   <h3>
+    Short-Circuit Behavior
+   </h3>
+   <pre>
+    The principal difference between the ternary operator and the
+    cond() function is that the latter provides an expression form but
+    does not provide short-circuit evaluation.
+
+    Short-circuit evaluation is desirable on three occasions:
+                                                         
+    1. When an expression has side-effects
+    2. When one or both of the expressions are resource intensive
+    3. When the condition serves as a guard for the validity of the
+      expression.
+
+    #  Example where all three reasons apply
+    data = isinstance(source, file)  ?  source.readlines()
+                                     :  source.split()
+
+    1. readlines() moves the file pointer
+    2. for long sources, both alternatives take time
+    3. split() is only valid for strings and readlines() is only
+       valid for file objects.
+
+    Supporters of a cond() function point out that the need for
+    short-circuit evaluation is rare.  Scanning through existing code
+    directories, they found that if/else did not occur often; and of
+    those only a few contained expressions that could be helped by
+    cond() or a ternary operator; and that most of those had no need
+    for short-circuit evaluation.  Hence, cond() would suffice for
+    most needs and would spare efforts to alter the syntax of the
+    language.
+
+    More supporting evidence comes from scans of C code bases which
+    show that its ternary operator used very rarely (as a percentage
+    of lines of code).
+
+    A counter point to that analysis is that the availability of a
+    ternary operator helped the programmer in every case because it
+    spared the need to search for side-effects.  Further, it would
+    preclude errors arising from distant modifications which introduce
+    side-effects.  The latter case has become more of a reality with
+    the advent of properties where even attribute access can be given
+    side-effects.
+
+    The BDFL's position is that short-circuit behavior is essential
+    for an if-then-else construct to be added to the language.
+
+
+</pre>
+   <h3>
+    Detailed Results of Voting
+   </h3>
+   <pre>
+    Votes rejecting all options:  82
+    Votes with rank ordering:     436
+                                  ---
+    Total votes received:         518
+
+
+            ACCEPT                  REJECT                  TOTAL
+            ---------------------   ---------------------   -----
+            Rank1   Rank2   Rank3   Rank1   Rank2   Rank3
+    Letter  
+    A       51      33      19      18      20      20      161
+    B       45      46      21      9       24      23      168
+    C       94      54      29      20      20      18      235
+    D       71      40      31      5       28      31      206
+    E       7       7       10              3       5       32
+    F       14      19      10              7       17      67
+    G       7       6       10      1       2       4       30
+    H       20      22      17      4       10      25      98
+    I       16      20      9       5       5       20      75
+    J       6       17      5       1               10      39
+    K       1               6               4       13      24
+    L               1       2               3       3       9
+    M       7       3       4       2       5       11      32
+    N               2       3               4       2       11
+    O       1       6       5       1       4       9       26
+    P       5       3       6       1       5       7       27
+    Q       18      7       15      6       5       11      62
+    Z                                               1       1
+            ---     ---     ---     ---     ---     ---     ----
+    Total   363     286     202     73      149     230     1303
+    RejectAll                       82      82      82      246
+            ---     ---     ---     ---     ---     ---     ----
+    Total   363     286     202     155     231     312     1549
+
+
+    CHOICE KEY
+    ----------
+    A.  x if C else y
+    B.  if C then x else y
+    C.  (if C: x else: y)
+    D.  C ? x : y
+    E.  C ? x ! y
+    F.  cond(C, x, y)
+    G.  C ?? x || y
+    H.  C then x else y
+    I.  x when C else y
+    J.  C ? x else y
+    K.  C -&gt; x else y
+    L.  C -&gt; (x, y)
+    M.  [x if C else y]
+    N.  ifelse C: x else y
+    O.  &lt;if C then x else y&gt;
+    P.  C and x else y
+    Q.  any write-in vote
+
+
+    Detail for write-in votes and their ranking:
+    --------------------------------------------
+    3:  Q reject y x C elsethenif
+    2:  Q accept (C ? x ! y)
+    3:  Q reject ...
+    3:  Q accept  ? C : x : y
+    3:  Q accept (x if C, y otherwise)
+    3:  Q reject ...
+    3:  Q reject NONE
+    1:  Q accept   select : (&lt;c1&gt; : &lt;val1&gt;; [&lt;cx&gt; : &lt;valx&gt;; ]* elseval)
+    2:  Q reject if C: t else: f
+    3:  Q accept C selects x else y
+    2:  Q accept iff(C, x, y)    # "if-function"
+    1:  Q accept (y, x)[C]
+    1:  Q accept          C true: x false: y
+    3:  Q accept          C then: x else: y
+    3:  Q reject
+    3:  Q accept (if C: x elif C2: y else: z)
+    3:  Q accept C -&gt; x : y
+    1:  Q accept  x (if C), y
+    1:  Q accept if c: x else: y
+    3:  Q accept (c).{True:1, False:2}
+    2:  Q accept if c: x else: y
+    3:  Q accept (c).{True:1, False:2}
+    3:  Q accept if C: x else y
+    1:  Q accept  (x if C else y)
+    1:  Q accept ifelse(C, x, y)
+    2:  Q reject x or y &lt;- C
+    1:  Q accept (C ? x : y) required parens
+    1:  Q accept  iif(C, x, y)
+    1:  Q accept ?(C, x, y)
+    1:  Q accept switch-case
+    2:  Q accept multi-line if/else
+    1:  Q accept C: x else: y
+    2:  Q accept (C): x else: y
+    3:  Q accept if C: x else: y
+    1:  Q accept     x if C, else y
+    1:  Q reject choice: c1-&gt;a; c2-&gt;b; ...; z
+    3:  Q accept [if C then x else y]
+    3:  Q reject no other choice has x as the first element
+    1:  Q accept (x,y) ? C
+    3:  Q accept x if C else y (The "else y" being optional)
+    1:  Q accept (C ? x , y)
+    1:  Q accept  any outcome (i.e form or plain rejection) from a usability study
+    1:  Q reject (x if C else y)
+    1:  Q accept  (x if C else y)
+    2:  Q reject   NONE
+    3:  Q reject   NONE
+    3:  Q accept  (C ? x else y)
+    3:  Q accept  x when C else y
+    2:  Q accept  (x if C else y)
+    2:  Q accept cond(C1, x1, C2, x2, C3, x3,...)
+    1:  Q accept  (if C1: x elif C2: y else: z)
+    1:  Q reject cond(C, :x, :y)
+    3:  Q accept  (C and [x] or [y])[0]
+    2:  Q reject
+    3:  Q reject
+    3:  Q reject all else
+    1:  Q reject no-change
+    3:  Q reject deliberately omitted as I have no interest in any other proposal
+    2:  Q reject (C then x else Y)
+    1:  Q accept       if C: x else: y
+    1:  Q reject (if C then x else y)
+    3:  Q reject C?(x, y)
+
+
+</pre>
+   <h3>
+    Copyright
+   </h3>
+   <pre>
+    This document has been placed in the public domain.
+
+
+
+</pre>
+  </div>
+ </body>
+
+<!-- Mirrored from www.python.org/dev/peps/pep-0308/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 03 Sep 2015 04:34:13 GMT -->
+</html>Source: <a href="https://hg.python.org/peps/file/tip/pep-0308.txt">https://hg.python.org/peps/file/tip/pep-0308.txt</a>
+
+    </article>
+
+
+                </section>
+
+                
+
+
+<aside class="left-sidebar" role="secondary">
+
+    
+
+
+
+
+
+
+    
+
+
+
+
+
+        <div class="twitter-widget sidebar-widget">
+        <a class="twitter-timeline" data-dnt="true" href="https://twitter.com/ThePSF" data-widget-id="434113224703610882">Tweets by @ThePSF</a>
+        <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+    </div>
+
+    <div class="psf-sidebar-widget sidebar-widget">
+        <h3 class="widget-title">The PSF</h3>
+<p>The Python Software Foundation is the organization behind Python. Become a member of the PSF and help advance the software and our mission. </p>
+
+    </div>
+
+</aside>
+
+
+
+                
+                
+
+
+            </div><!-- end .container -->
+        </div><!-- end #content .content-wrapper -->
+
+        <!-- Footer and social media list -->
+        <footer id="site-map" class="main-footer" role="contentinfo">
+            <div class="main-footer-links">
+                <div class="container">
+
+                    
+                    <a id="back-to-top-1" class="jump-link" href="#python-network"><span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> Back to Top</a>
+
+                    
+
+<ul class="sitemap navigation menu do-not-print" role="tree" id="container">
+    
+    <li class="tier-1 element-1">
+        <a href="https://www.python.org/about/" >About</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/apps/" title="">Applications</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/quotes/" title="">Quotes</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/gettingstarted/" title="">Getting Started</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/help/" title="">Help</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-2">
+        <a href="https://www.python.org/downloads/" >Downloads</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/downloads/" title="">All releases</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/downloads/source/" title="">Source code</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/downloads/windows/" title="">Windows</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/downloads/mac-osx/" title="">Mac OS X</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/download/other/" title="">Other Platforms</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://docs.python.org/3/license.html" title="">License</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/download/alternatives" title="">Alternative Implementations</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-3">
+        <a href="https://www.python.org/doc/" >Documentation</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/doc/" title="">Docs</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/doc/av" title="">Audio/Visual Talks</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://wiki.python.org/moin/BeginnersGuide" title="">Beginner&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://docs.python.org/faq/" title="">FAQ</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="http://wiki.python.org/moin/Languages" title="">Non-English Docs</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="../index.html" title="">PEP Index</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://wiki.python.org/moin/PythonBooks" title="">Python Books</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-4">
+        <a href="https://www.python.org/community/" >Community</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/community/diversity/" title="">Diversity</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/community/irc/" title="">IRC</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/community/lists/" title="">Mailing Lists</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/workshops/" title="">Python Conferences</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/community/sigs/" title="">Special Interest Groups</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://wiki.python.org/moin/" title="">Python Wiki</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/community/logos/" title="">Python Logo</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://www.python.org/community/merchandise/" title="">Merchandise</a></li>
+    
+        <li class="tier-2 element-9" role="treeitem"><a href="https://www.python.org/community/awards" title="">Community Awards</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-5">
+        <a href="https://www.python.org/about/success/" title="success-stories">Success Stories</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/success/#arts" title="">Arts</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/success/#business" title="">Business</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/success/#education" title="">Education</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/success/#engineering" title="">Engineering</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/about/success/#government" title="">Government</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://www.python.org/about/success/#scientific" title="">Scientific</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/about/success/#software-development" title="">Software Development</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-6">
+        <a href="https://www.python.org/blogs/" title="News from around the Python world">News</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/blogs/" title="Python Insider Blog Posts">Python News</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://planetpython.org/" title="Planet Python">Community News</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="http://pyfound.blogspot.com/" title="PSF Blog">PSF News</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pycon.blogspot.com/" title="PyCon Blog">PyCon News</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-7">
+        <a href="https://www.python.org/events/" >Events</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/events/python-events/" title="">Python Events</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/events/python-user-group/" title="">User Group Events</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/events/python-events/past/" title="">Python Events Archive</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/events/python-user-group/past/" title="">User Group Events Archive</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://wiki.python.org/moin/PythonEventsCalendar#Submitting_an_Event" title="">Submit an Event</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-8">
+        <a href="https://www.python.org/dev/" >Contributing</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="http://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://bugs.python.org/" title="">Issue Tracker</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://mail.python.org/mailman/listinfo/python-dev" title="">python-dev list</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pythonmentors.com/" title="">Core Mentorship</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+</ul>
+
+
+                    <a id="back-to-top-2" class="jump-link" href="#python-network"><span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> Back to Top</a>
+                    
+
+                </div><!-- end .container -->
+            </div> <!-- end .main-footer-links -->
+
+            <div class="site-base">
+                <div class="container">
+                    
+                    <ul class="footer-links navigation menu do-not-print" role="tree">
+                        <li class="tier-1 element-1"><a href="https://www.python.org/about/help/">Help &amp; <span class="say-no-more">General</span> Contact</a></li>
+                        <li class="tier-1 element-2"><a href="https://www.python.org/community/diversity/">Diversity <span class="say-no-more">Initiatives</span></a></li>
+                        <li class="tier-1 element-3"><a href="https://github.com/python/pythondotorg/issues">Submit Website Bug</a></li>
+                        <!--<li class="tier-1 element-3"><a href="#"><span class="say-no-more">Website</span> Colophon</a></li>-->
+                    </ul>
+
+                    <div class="copyright">
+                        <p><small>
+                            <span class="pre">Copyright &copy;2001-2015.</span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/psf-landing/">Python Software Foundation</a></span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/about/legal/">Legal Statements</a></span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/privacy/">Privacy Policy</a></span>
+                        </small></p>
+                    </div>
+
+                </div><!-- end .container -->
+            </div><!-- end .site-base -->
+
+        </footer>
+
+    </div><!-- end #touchnav-wrapper -->
+
+    
+    <script src="../../../../ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="../../../static/js/libs/jquery-1.8.2.min.js"><\/script>')</script>
+
+    <script src="../../../static/js/libs/masonry.pkgd.min.js"></script>
+
+    <script type="text/javascript" src="../../../static/js/main-min.js" charset="utf-8"></script>
+    
+
+    <!--[if lte IE 7]>
+    <script type="text/javascript" src="/static/js/plugins/IE8-min.js" charset="utf-8"></script>
+    
+    
+    <![endif]-->
+
+    <!--[if lte IE 8]>
+    <script type="text/javascript" src="/static/js/plugins/getComputedStyle-min.js" charset="utf-8"></script>
+    
+    
+    <![endif]-->
+
+    
+
+    
+    
+
+</body>
+</html>

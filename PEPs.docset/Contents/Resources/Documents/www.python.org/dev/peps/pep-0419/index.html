@@ -1,0 +1,2301 @@
+<!doctype html>
+<!--[if lt IE 7]>   <html class="no-js ie6 lt-ie7 lt-ie8 lt-ie9">   <![endif]-->
+<!--[if IE 7]>      <html class="no-js ie7 lt-ie8 lt-ie9">          <![endif]-->
+<!--[if IE 8]>      <html class="no-js ie8 lt-ie9">                 <![endif]-->
+<!--[if gt IE 8]><!--><html class="no-js" lang="en" dir="ltr">  <!--<![endif]-->
+
+
+<!-- Mirrored from www.python.org/dev/peps/pep-0419/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 03 Sep 2015 04:36:55 GMT -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <link rel="prefetch" href="../../../../ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js">
+
+    <meta name="application-name" content="Python.org">
+    <meta name="msapplication-tooltip" content="The official home of the Python Programming Language">
+    <meta name="apple-mobile-web-app-title" content="Python.org">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="format-detection" content="telephone=no">
+    <meta http-equiv="cleartype" content="on">
+    <meta http-equiv="imagetoolbar" content="false">
+
+    <script src="../../../static/js/libs/modernizr.js"></script>
+
+    <link href="../../../static/stylesheets/style.css" rel="stylesheet" type="text/css" title="default" />
+    <link href="../../../static/stylesheets/mq.css" rel="stylesheet" type="text/css" media="not print, braille, embossed, speech, tty" />
+    
+
+    <!--[if (lte IE 8)&(!IEMobile)]>
+    <link href="/static/stylesheets/no-mq.css" rel="stylesheet" type="text/css" media="screen" />
+    
+    
+    <![endif]-->
+
+    
+    <link rel="icon" type="image/x-icon" href="https://www.python.org/static/favicon.ico">
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="../../../static/apple-touch-icon-144x144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="../../../static/apple-touch-icon-114x114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="../../../static/apple-touch-icon-72x72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="../../../static/apple-touch-icon-precomposed.png">
+    <link rel="apple-touch-icon" href="../../../static/apple-touch-icon-precomposed.png">
+
+    
+    <meta name="msapplication-TileImage" content="/static/metro-icon-144x144-precomposed.png"><!-- white shape -->
+    <meta name="msapplication-TileColor" content="#3673a5"><!-- python blue -->
+    <meta name="msapplication-navbutton-color" content="#3673a5">
+
+    <meta property="og:site_name" content="Python.org">
+    <meta property="og:type" content="website">
+
+    <title>PEP 0419 -- Protecting cleanup statements from interruptions | Python.org</title>
+    <meta property="og:title" content="Welcome to Python.org">
+
+    
+    <meta name="description" content="The official home of the Python Programming Language">
+    <meta name="og:description" content="The official home of the Python Programming Language">
+    <meta name="keywords" content="Python programming language object oriented web free open source software license documentation download community">
+    <meta property="og:tag" content="Python programming language object oriented web free open source software license documentation download community">
+    <meta property="og:published_time" content="">
+    <meta property="og:modified_time" content="">
+    <meta property="og:author" content="">
+    <meta property="og:section" content=""> 
+    <meta property="og:url" content="">
+    <meta property="og:image" content="">
+    <meta property="og:video" content="">
+
+    <link rel="author" href="https://www.python.org/static/humans.txt">
+
+    
+
+    
+    <script type="application/ld+json">
+     {
+       "@context": "http://schema.org",
+       "@type": "WebSite",
+       "url": "https://www.python.org/",
+       "potentialAction": {
+         "@type": "SearchAction",
+         "target": "https://www.python.org/search/?q={search_term_string}",
+         "query-input": "required name=search_term_string"
+       }
+     }
+    </script>
+
+    
+    <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-39055973-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+    </script>
+    
+</head>
+
+<body class="python pages pep-page">
+
+    <div id="touchnav-wrapper">
+
+        <div id="nojs" class="do-not-print">
+            <p><strong>Notice:</strong> While Javascript is not essential for this website, your interaction with the content will be limited. Please turn Javascript on for the full experience. </p>
+        </div>
+
+        <!--[if lt IE 8]>
+        <div id="oldie-warning" class="do-not-print">
+            <p><strong>Notice:</strong> Your browser is <em>ancient</em> and <a href="http://www.ie6countdown.com/">Microsoft agrees</a>. <a href="http://browsehappy.com/">Upgrade to a different browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to experience a better web.</p>
+        </div>
+        <![endif]-->
+
+        <!-- Sister Site Links -->
+        <div id="top" class="top-bar do-not-print">
+
+            <nav class="meta-navigation container" role="navigation">
+
+                
+                <div class="skip-link screen-reader-text">
+                    <a href="#content" title="Skip to content">Skip to content</a>
+                </div>
+
+                
+                <a id="close-python-network" class="jump-link" href="#python-network" aria-hidden="true">
+                    <span aria-hidden="true" class="icon-arrow-down"><span>&#9660;</span></span> Close
+                </a>
+
+                
+
+<ul class="menu" role="tree">
+    
+    <li class="python-meta ">
+        <a href="https://www.python.org/" title="The Python Programming Language" >Python</a>
+    </li>
+    
+    <li class="psf-meta ">
+        <a href="https://www.python.org/psf-landing/" title="The Python Software Foundation" >PSF</a>
+    </li>
+    
+    <li class="docs-meta ">
+        <a href="https://docs.python.org/" title="Python Documentation" >Docs</a>
+    </li>
+    
+    <li class="pypi-meta ">
+        <a href="https://pypi.python.org/" title="Python Package Index" >PyPI</a>
+    </li>
+    
+    <li class="jobs-meta ">
+        <a href="https://www.python.org/jobs/" title="Python Job Board" >Jobs</a>
+    </li>
+    
+    <li class="shop-meta ">
+        <a href="https://www.python.org/community/" title="Python Community" >Community</a>
+    </li>
+    
+</ul>
+
+
+                <a id="python-network" class="jump-link" href="#top" aria-hidden="true">
+                    <span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> The Python Network
+                </a>
+
+            </nav>
+
+        </div>
+
+        <!-- Header elements -->
+        <header class="main-header" role="banner">
+            <div class="container">
+
+                <h1 class="site-headline">
+                    <a href="https://www.python.org/"><img class="python-logo" src="../../../static/img/python-logo.png" alt="python&trade;"></a>
+                </h1>
+
+                <div class="options-bar do-not-print">
+
+                    
+                    <a id="site-map-link" class="jump-to-menu" href="#site-map"><span class="menu-icon">&equiv;</span> Menu</a><form class="search-the-site" action="https://www.python.org/search/" method="get">
+                        <fieldset title="Search Python.org">
+
+                            <span aria-hidden="true" class="icon-search"></span>
+
+                            <label class="screen-reader-text" for="id-search-field">Search This Site</label>
+                            <input id="id-search-field" name="q" type="search" role="textbox" class="search-field" placeholder="Search" value="" tabindex="1">
+
+                            <button type="submit" name="submit" id="submit" class="search-button" title="Submit this Search" tabindex="3">
+                                GO
+                            </button>
+
+                            
+                            <!--[if IE]><input type="text" style="display: none;" disabled="disabled" size="1" tabindex="4"><![endif]-->
+
+                        </fieldset>
+                    </form><span class="breaker"></span><div class="adjust-font-size" aria-hidden="true">
+                        <ul class="navigation menu" aria-label="Adjust Text Size on Page">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                <a href="#" class="action-trigger"><strong><small>A</small> A</strong></a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a class="text-shrink" title="Make Text Smaller" href="javascript:;">Smaller</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a class="text-grow" title="Make Text Larger" href="javascript:;">Larger</a></li>
+                                    <li class="tier-2 element-3" role="treeitem"><a class="text-reset" title="Reset any font size changes I have made" href="javascript:;">Reset</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div><div class="winkwink-nudgenudge">
+                        <ul class="navigation menu" aria-label="Social Media Navigation">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                <a href="#" class="action-trigger">Socialize</a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a href="http://plus.google.com/+Python"><span aria-hidden="true" class="icon-google-plus"></span>Google+</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a href="http://www.facebook.com/pythonlang?fref=ts"><span aria-hidden="true" class="icon-facebook"></span>Facebook</a></li>
+                                    <li class="tier-2 element-3" role="treeitem"><a href="http://twitter.com/ThePSF"><span aria-hidden="true" class="icon-twitter"></span>Twitter</a></li>
+                                    <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/irc/"><span aria-hidden="true" class="icon-freenode"></span>Chat on IRC</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div><div class="account-signin">
+                        <ul class="navigation menu" aria-label="Social Media Navigation">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                
+                                <a href="https://www.python.org/accounts/login/" title="Sign Up or Sign In to Python.org">Sign In</a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/accounts/signup/">Sign Up / Register</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/accounts/login/">Sign In</a></li>
+                                </ul>
+                                
+                            </li>
+                        </ul>
+                    </div>
+
+                </div><!-- end options-bar -->
+
+                <nav id="mainnav" class="python-navigation main-navigation do-not-print" role="navigation">
+                    
+                        
+<ul class="navigation menu" role="menubar" aria-label="Main Navigation">
+  
+    
+    
+    <li id="about" class="tier-1 element-1  " aria-haspopup="true">
+        <a href="https://www.python.org/about/" title="" class="">About</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/apps/" title="">Applications</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/quotes/" title="">Quotes</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/gettingstarted/" title="">Getting Started</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/help/" title="">Help</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="downloads" class="tier-1 element-2  " aria-haspopup="true">
+        <a href="https://www.python.org/downloads/" title="" class="">Downloads</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/downloads/" title="">All releases</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/downloads/source/" title="">Source code</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/downloads/windows/" title="">Windows</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/downloads/mac-osx/" title="">Mac OS X</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/download/other/" title="">Other Platforms</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://docs.python.org/3/license.html" title="">License</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/download/alternatives" title="">Alternative Implementations</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="documentation" class="tier-1 element-3  " aria-haspopup="true">
+        <a href="https://www.python.org/doc/" title="" class="">Documentation</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/doc/" title="">Docs</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/doc/av" title="">Audio/Visual Talks</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://wiki.python.org/moin/BeginnersGuide" title="">Beginner&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://docs.python.org/faq/" title="">FAQ</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="http://wiki.python.org/moin/Languages" title="">Non-English Docs</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="../index.html" title="">PEP Index</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://wiki.python.org/moin/PythonBooks" title="">Python Books</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="community" class="tier-1 element-4  " aria-haspopup="true">
+        <a href="https://www.python.org/community/" title="" class="">Community</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/community/diversity/" title="">Diversity</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/community/irc/" title="">IRC</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/community/lists/" title="">Mailing Lists</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/workshops/" title="">Python Conferences</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/community/sigs/" title="">Special Interest Groups</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://wiki.python.org/moin/" title="">Python Wiki</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/community/logos/" title="">Python Logo</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://www.python.org/community/merchandise/" title="">Merchandise</a></li>
+    
+        <li class="tier-2 element-9" role="treeitem"><a href="https://www.python.org/community/awards" title="">Community Awards</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="success-stories" class="tier-1 element-5  " aria-haspopup="true">
+        <a href="https://www.python.org/about/success/" title="success-stories" class="">Success Stories</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/success/#arts" title="">Arts</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/success/#business" title="">Business</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/success/#education" title="">Education</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/success/#engineering" title="">Engineering</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/about/success/#government" title="">Government</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://www.python.org/about/success/#scientific" title="">Scientific</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/about/success/#software-development" title="">Software Development</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="news" class="tier-1 element-6  " aria-haspopup="true">
+        <a href="https://www.python.org/blogs/" title="News from around the Python world" class="">News</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/blogs/" title="Python Insider Blog Posts">Python News</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://planetpython.org/" title="Planet Python">Community News</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="http://pyfound.blogspot.com/" title="PSF Blog">PSF News</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pycon.blogspot.com/" title="PyCon Blog">PyCon News</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="events" class="tier-1 element-7  " aria-haspopup="true">
+        <a href="https://www.python.org/events/" title="" class="">Events</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/events/python-events/" title="">Python Events</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/events/python-user-group/" title="">User Group Events</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/events/python-events/past/" title="">Python Events Archive</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/events/python-user-group/past/" title="">User Group Events Archive</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://wiki.python.org/moin/PythonEventsCalendar#Submitting_an_Event" title="">Submit an Event</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    
+  
+</ul>
+
+                    
+                </nav>
+
+                <div class="header-banner "> <!-- for optional "do-not-print" class -->
+                    
+                    
+                </div>
+
+                
+                
+
+             </div><!-- end .container -->
+        </header>
+
+        <div id="content" class="content-wrapper">
+            <!-- Main Content Column -->
+            <div class="container">
+
+                <section class="main-content with-left-sidebar" role="main">
+
+                    
+<ul class="breadcrumbs menu">
+    <li>
+        <a href="https://www.python.org/" title="The Python Programming Language">Python</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>
+        <a href="https://www.python.org/dev/">Python Developer's Guide</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>
+        <a href="../index.html">PEP Index</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>PEP 0419 -- Protecting cleanup statements from interruptions</li>
+</ul>
+
+
+                    
+<style>
+   .pep-page pre {
+        padding: .5em;
+        background: inherit;
+        border-left: 0px;
+        -webkit-box-shadow: 0 0 0 0;
+        -moz-box-shadow: 0 0 0 0;
+        box-shadow: 0 0 0 0;
+   }
+</style>
+
+    
+    <article class="text">
+        
+
+        <header class="article-header">
+            <h1 class="page-title">PEP 0419 -- Protecting cleanup statements from interruptions</h1>
+        </header>
+
+        <!--
+This HTML is auto-generated.  DO NOT EDIT THIS FILE!  If you are writing a new
+PEP, see http://www.python.org/dev/peps/pep-0001 for instructions and links
+to templates.  DO NOT USE THIS HTML FILE AS YOUR TEMPLATE!
+-->
+<html>
+ <body>
+  <table class="rfc2822 docutils field-list" frame="void" rules="none">
+   <col class="field-name">
+   </col>
+   <col class="field-body">
+   </col>
+   <tbody valign="top">
+    <tr class="field">
+     <th class="field-name">
+      PEP:
+     </th>
+     <td class="field-body">
+      419
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Title:
+     </th>
+     <td class="field-body">
+      Protecting cleanup statements from interruptions
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Author:
+     </th>
+     <td class="field-body">
+      Paul Colomiets &lt;paul at colomiets.name&gt;
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Status:
+     </th>
+     <td class="field-body">
+      Deferred
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Type:
+     </th>
+     <td class="field-body">
+      Standards Track
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Created:
+     </th>
+     <td class="field-body">
+      06-Apr-2012
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Python-Version:
+     </th>
+     <td class="field-body">
+      3.3
+     </td>
+    </tr>
+   </tbody>
+  </table>
+  <hr/>
+  <div class="contents topic" id="contents">
+   <p class="topic-title first">
+    Contents
+   </p>
+   <ul class="simple">
+    <li>
+     <a class="reference internal" href="#abstract" id="id9">
+      Abstract
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#pep-deferral" id="id10">
+      PEP Deferral
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#rationale" id="id11">
+      Rationale
+     </a>
+     <ul>
+      <li>
+       <a class="reference internal" href="#coroutine-use-case" id="id12">
+        Coroutine Use Case
+       </a>
+      </li>
+     </ul>
+    </li>
+    <li>
+     <a class="reference internal" href="#specification" id="id13">
+      Specification
+     </a>
+     <ul>
+      <li>
+       <a class="reference internal" href="#frame-flag-f-in-cleanup" id="id14">
+        Frame Flag 'f_in_cleanup'
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#function-sys-setcleanuphook" id="id15">
+        Function 'sys.setcleanuphook'
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#inspect-module-enhancements" id="id16">
+        Inspect Module Enhancements
+       </a>
+      </li>
+     </ul>
+    </li>
+    <li>
+     <a class="reference internal" href="#example" id="id17">
+      Example
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#unresolved-issues" id="id18">
+      Unresolved Issues
+     </a>
+     <ul>
+      <li>
+       <a class="reference internal" href="#interruption-inside-with-statement-expression" id="id19">
+        Interruption Inside With Statement Expression
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#exception-propagation" id="id20">
+        Exception Propagation
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#interruption-between-acquiring-resource-and-try-block" id="id21">
+        Interruption Between Acquiring Resource and Try Block
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#handling-eintr-inside-a-finally" id="id22">
+        Handling EINTR Inside a Finally
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#setting-interruption-context-inside-finally-itself" id="id23">
+        Setting Interruption Context Inside Finally Itself
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#modifying-keyboardinterrupt" id="id24">
+        Modifying KeyboardInterrupt
+       </a>
+      </li>
+     </ul>
+    </li>
+    <li>
+     <a class="reference internal" href="#alternative-python-implementations-support" id="id25">
+      Alternative Python Implementations Support
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#alternative-names" id="id26">
+      Alternative Names
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#alternative-proposals" id="id27">
+      Alternative Proposals
+     </a>
+     <ul>
+      <li>
+       <a class="reference internal" href="#propagating-f-in-cleanup-flag-automatically" id="id28">
+        Propagating 'f_in_cleanup' Flag Automatically
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#add-bytecodes-incr-cleanup-decr-cleanup" id="id29">
+        Add Bytecodes 'INCR_CLEANUP', 'DECR_CLEANUP'
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#expose-f-in-cleanup-as-a-counter" id="id30">
+        Expose 'f_in_cleanup' as a Counter
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#add-code-object-flag-co-cleanup" id="id31">
+        Add code object flag 'CO_CLEANUP'
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#have-cleanup-callback-on-frame-object-itself" id="id32">
+        Have Cleanup Callback on Frame Object Itself
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#no-cleanup-hook" id="id33">
+        No Cleanup Hook
+       </a>
+      </li>
+     </ul>
+    </li>
+    <li>
+     <a class="reference internal" href="#references" id="id34">
+      References
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#copyright" id="id35">
+      Copyright
+     </a>
+    </li>
+   </ul>
+  </div>
+  <div class="section" id="abstract">
+   <h1>
+    <a class="toc-backref" href="#id9">
+     Abstract
+    </a>
+   </h1>
+   <p>
+    This PEP proposes a way to protect Python code from being interrupted
+inside a finally clause or during context manager cleanup.
+   </p>
+  </div>
+  <div class="section" id="pep-deferral">
+   <h1>
+    <a class="toc-backref" href="#id10">
+     PEP Deferral
+    </a>
+   </h1>
+   <p>
+    Further exploration of the concepts covered in this PEP has been deferred
+for lack of a current champion interested in promoting the goals of the PEP
+and collecting and incorporating feedback, and with sufficient available
+time to do so effectively.
+   </p>
+  </div>
+  <div class="section" id="rationale">
+   <h1>
+    <a class="toc-backref" href="#id11">
+     Rationale
+    </a>
+   </h1>
+   <p>
+    Python has two nice ways to do cleanup.  One is a
+    <tt class="docutils literal">
+     finally
+    </tt>
+    statement and the other is a context manager (usually called using a
+    <tt class="docutils literal">
+     with
+    </tt>
+    statement).  However, neither is protected from interruption
+by
+    <tt class="docutils literal">
+     KeyboardInterrupt
+    </tt>
+    or
+    <tt class="docutils literal">
+     GeneratorExit
+    </tt>
+    caused by
+    <tt class="docutils literal">
+     generator.throw()
+    </tt>
+    .  For example:
+   </p>
+   <pre class="literal-block">
+lock.acquire()
+try:
+    print('starting')
+    do_something()
+finally:
+    print('finished')
+    lock.release()
+</pre>
+   <p>
+    If
+    <tt class="docutils literal">
+     KeyboardInterrupt
+    </tt>
+    occurs just after the second
+    <tt class="docutils literal">
+     print()
+    </tt>
+    call, the lock will not be released.  Similarly, the following code
+using the
+    <tt class="docutils literal">
+     with
+    </tt>
+    statement is affected:
+   </p>
+   <pre class="literal-block">
+from threading import Lock
+
+class MyLock:
+
+    def __init__(self):
+        self._lock_impl = Lock()
+
+    def __enter__(self):
+        self._lock_impl.acquire()
+        print("LOCKED")
+
+    def __exit__(self):
+        print("UNLOCKING")
+        self._lock_impl.release()
+
+lock = MyLock()
+with lock:
+    do_something
+</pre>
+   <p>
+    If
+    <tt class="docutils literal">
+     KeyboardInterrupt
+    </tt>
+    occurs near any of the
+    <tt class="docutils literal">
+     print()
+    </tt>
+    calls, the
+lock will never be released.
+   </p>
+   <div class="section" id="coroutine-use-case">
+    <h2>
+     <a class="toc-backref" href="#id12">
+      Coroutine Use Case
+     </a>
+    </h2>
+    <p>
+     A similar case occurs with coroutines.  Usually coroutine libraries
+want to interrupt the coroutine with a timeout.  The
+     <tt class="docutils literal">
+      generator.throw()
+     </tt>
+     method works for this use case, but there is no
+way of knowing if the coroutine is currently suspended from inside a
+     <tt class="docutils literal">
+      finally
+     </tt>
+     clause.
+    </p>
+    <p>
+     An example that uses yield-based coroutines follows.  The code looks
+similar using any of the popular coroutine libraries Monocle
+     <a class="footnote-reference" href="#id4" id="id1">
+      [1]
+     </a>
+     ,
+Bluelet
+     <a class="footnote-reference" href="#id5" id="id2">
+      [2]
+     </a>
+     , or Twisted
+     <a class="footnote-reference" href="#id6" id="id3">
+      [3]
+     </a>
+     .
+    </p>
+    <pre class="literal-block">
+def run_locked():
+    yield connection.sendall('LOCK')
+    try:
+        yield do_something()
+        yield do_something_else()
+    finally:
+        yield connection.sendall('UNLOCK')
+
+with timeout(5):
+    yield run_locked()
+</pre>
+    <p>
+     In the example above,
+     <tt class="docutils literal">
+      yield something
+     </tt>
+     means to pause executing the
+current coroutine and to execute coroutine
+     <tt class="docutils literal">
+      something
+     </tt>
+     until it
+finishes execution.  Therefore the coroutine library itself needs to
+maintain a stack of generators.  The
+     <tt class="docutils literal">
+      connection.sendall()
+     </tt>
+     call waits
+until the socket is writable and does a similar thing to what
+     <tt class="docutils literal">
+      socket.sendall()
+     </tt>
+     does.
+    </p>
+    <p>
+     The
+     <tt class="docutils literal">
+      with
+     </tt>
+     statement ensures that all code is executed within 5
+seconds timeout.  It does so by registering a callback in the main
+loop, which calls
+     <tt class="docutils literal">
+      generator.throw()
+     </tt>
+     on the top-most frame in the
+coroutine stack when a timeout happens.
+    </p>
+    <p>
+     The
+     <tt class="docutils literal">
+      greenlets
+     </tt>
+     extension works in a similar way, except that it
+doesn't need
+     <tt class="docutils literal">
+      yield
+     </tt>
+     to enter a new stack frame.  Otherwise
+considerations are similar.
+    </p>
+   </div>
+  </div>
+  <div class="section" id="specification">
+   <h1>
+    <a class="toc-backref" href="#id13">
+     Specification
+    </a>
+   </h1>
+   <div class="section" id="frame-flag-f-in-cleanup">
+    <h2>
+     <a class="toc-backref" href="#id14">
+      Frame Flag 'f_in_cleanup'
+     </a>
+    </h2>
+    <p>
+     A new flag on the frame object is proposed.  It is set to
+     <tt class="docutils literal">
+      True
+     </tt>
+     if
+this frame is currently executing a
+     <tt class="docutils literal">
+      finally
+     </tt>
+     clause.  Internally,
+the flag must be implemented as a counter of nested finally statements
+currently being executed.
+    </p>
+    <p>
+     The internal counter also needs to be incremented during execution of
+the
+     <tt class="docutils literal">
+      SETUP_WITH
+     </tt>
+     and
+     <tt class="docutils literal">
+      WITH_CLEANUP
+     </tt>
+     bytecodes, and decremented
+when execution for these bytecodes is finished.  This allows to also
+protect
+     <tt class="docutils literal">
+      __enter__()
+     </tt>
+     and
+     <tt class="docutils literal">
+      __exit__()
+     </tt>
+     methods.
+    </p>
+   </div>
+   <div class="section" id="function-sys-setcleanuphook">
+    <h2>
+     <a class="toc-backref" href="#id15">
+      Function 'sys.setcleanuphook'
+     </a>
+    </h2>
+    <p>
+     A new function for the
+     <tt class="docutils literal">
+      sys
+     </tt>
+     module is proposed.  This function sets
+a callback which is executed every time
+     <tt class="docutils literal">
+      f_in_cleanup
+     </tt>
+     becomes
+false.  Callbacks get a frame object as their sole argument, so that
+they can figure out where they are called from.
+    </p>
+    <p>
+     The setting is thread local and must be stored in the
+     <tt class="docutils literal">
+      PyThreadState
+     </tt>
+     structure.
+    </p>
+   </div>
+   <div class="section" id="inspect-module-enhancements">
+    <h2>
+     <a class="toc-backref" href="#id16">
+      Inspect Module Enhancements
+     </a>
+    </h2>
+    <p>
+     Two new functions are proposed for the
+     <tt class="docutils literal">
+      inspect
+     </tt>
+     module:
+     <tt class="docutils literal">
+      isframeincleanup()
+     </tt>
+     and
+     <tt class="docutils literal">
+      getcleanupframe()
+     </tt>
+     .
+    </p>
+    <p>
+     <tt class="docutils literal">
+      isframeincleanup()
+     </tt>
+     , given a frame or generator object as its sole
+argument, returns the value of the
+     <tt class="docutils literal">
+      f_in_cleanup
+     </tt>
+     attribute of a
+frame itself or of the
+     <tt class="docutils literal">
+      gi_frame
+     </tt>
+     attribute of a generator.
+    </p>
+    <p>
+     <tt class="docutils literal">
+      getcleanupframe()
+     </tt>
+     , given a frame object as its sole argument,
+returns the innermost frame which has a true value of
+     <tt class="docutils literal">
+      f_in_cleanup
+     </tt>
+     , or
+     <tt class="docutils literal">
+      None
+     </tt>
+     if no frames in the stack have a nonzero
+value for that attribute.  It starts to inspect from the specified
+frame and walks to outer frames using
+     <tt class="docutils literal">
+      f_back
+     </tt>
+     pointers, just like
+     <tt class="docutils literal">
+      getouterframes()
+     </tt>
+     does.
+    </p>
+   </div>
+  </div>
+  <div class="section" id="example">
+   <h1>
+    <a class="toc-backref" href="#id17">
+     Example
+    </a>
+   </h1>
+   <p>
+    An example implementation of a SIGINT handler that interrupts safely
+might look like:
+   </p>
+   <pre class="literal-block">
+import inspect, sys, functools
+
+def sigint_handler(sig, frame):
+    if inspect.getcleanupframe(frame) is None:
+        raise KeyboardInterrupt()
+    sys.setcleanuphook(functools.partial(sigint_handler, 0))
+</pre>
+   <p>
+    A coroutine example is out of scope of this document, because its
+implementation depends very much on a trampoline (or main loop) used
+by coroutine library.
+   </p>
+  </div>
+  <div class="section" id="unresolved-issues">
+   <h1>
+    <a class="toc-backref" href="#id18">
+     Unresolved Issues
+    </a>
+   </h1>
+   <div class="section" id="interruption-inside-with-statement-expression">
+    <h2>
+     <a class="toc-backref" href="#id19">
+      Interruption Inside With Statement Expression
+     </a>
+    </h2>
+    <p>
+     Given the statement
+    </p>
+    <pre class="literal-block">
+with open(filename):
+    do_something()
+</pre>
+    <p>
+     Python can be interrupted after
+     <tt class="docutils literal">
+      open()
+     </tt>
+     is called, but before the
+     <tt class="docutils literal">
+      SETUP_WITH
+     </tt>
+     bytecode is executed.  There are two possible
+decisions:
+    </p>
+    <ul>
+     <li>
+      <p class="first">
+       Protect
+       <tt class="docutils literal">
+        with
+       </tt>
+       expressions.  This would require another bytecode,
+since currently there is no way of recognizing the start of the
+       <tt class="docutils literal">
+        with
+       </tt>
+       expression.
+      </p>
+     </li>
+     <li>
+      <p class="first">
+       Let the user write a wrapper if he considers it important for the
+use-case.  A safe wrapper might look like this:
+      </p>
+      <pre class="literal-block">
+class FileWrapper(object):
+
+    def __init__(self, filename, mode):
+        self.filename = filename
+        self.mode = mode
+
+    def __enter__(self):
+        self.file = open(self.filename, self.mode)
+
+    def __exit__(self):
+        self.file.close()
+</pre>
+      <p>
+       Alternatively it can be written using the
+       <tt class="docutils literal">
+        contextmanager()
+       </tt>
+       decorator:
+      </p>
+      <pre class="literal-block">
+@contextmanager
+def open_wrapper(filename, mode):
+    file = open(filename, mode)
+    try:
+        yield file
+    finally:
+        file.close()
+</pre>
+      <p>
+       This code is safe, as the first part of the generator (before yield)
+is executed inside the
+       <tt class="docutils literal">
+        SETUP_WITH
+       </tt>
+       bytecode of the caller.
+      </p>
+     </li>
+    </ul>
+   </div>
+   <div class="section" id="exception-propagation">
+    <h2>
+     <a class="toc-backref" href="#id20">
+      Exception Propagation
+     </a>
+    </h2>
+    <p>
+     Sometimes a
+     <tt class="docutils literal">
+      finally
+     </tt>
+     clause or an
+     <tt class="docutils literal">
+      __enter__()
+     </tt>
+     /
+     <tt class="docutils literal">
+      __exit__()
+     </tt>
+     method can raise an exception.  Usually this is not a problem, since
+more important exceptions like
+     <tt class="docutils literal">
+      KeyboardInterrupt
+     </tt>
+     or
+     <tt class="docutils literal">
+      SystemExit
+     </tt>
+     should be raised instead.  But it may be nice to be able to keep the
+original exception inside a
+     <tt class="docutils literal">
+      __context__
+     </tt>
+     attribute.  So the cleanup
+hook signature may grow an exception argument:
+    </p>
+    <pre class="literal-block">
+def sigint_handler(sig, frame)
+    if inspect.getcleanupframe(frame) is None:
+        raise KeyboardInterrupt()
+    sys.setcleanuphook(retry_sigint)
+
+def retry_sigint(frame, exception=None):
+    if inspect.getcleanupframe(frame) is None:
+        raise KeyboardInterrupt() from exception
+</pre>
+    <div class="note">
+     <p class="first admonition-title">
+      Note
+     </p>
+     <p class="last">
+      There is no need to have three arguments like in the
+      <tt class="docutils literal">
+       __exit__
+      </tt>
+      method since there is a
+      <tt class="docutils literal">
+       __traceback__
+      </tt>
+      attribute in exception in
+Python 3.
+     </p>
+    </div>
+    <p>
+     However, this will set the
+     <tt class="docutils literal">
+      __cause__
+     </tt>
+     for the exception, which is
+not exactly what's intended.  So some hidden interpreter logic may be
+used to put a
+     <tt class="docutils literal">
+      __context__
+     </tt>
+     attribute on every exception raised in a
+cleanup hook.
+    </p>
+   </div>
+   <div class="section" id="interruption-between-acquiring-resource-and-try-block">
+    <h2>
+     <a class="toc-backref" href="#id21">
+      Interruption Between Acquiring Resource and Try Block
+     </a>
+    </h2>
+    <p>
+     The example from the first section is not totally safe.  Let's take a
+closer look:
+    </p>
+    <pre class="literal-block">
+lock.acquire()
+try:
+    do_something()
+finally:
+    lock.release()
+</pre>
+    <p>
+     The problem might occur if the code is interrupted just after
+     <tt class="docutils literal">
+      lock.acquire()
+     </tt>
+     is executed but before the
+     <tt class="docutils literal">
+      try
+     </tt>
+     block is
+entered.
+    </p>
+    <p>
+     There is no way the code can be fixed unmodified.  The actual fix
+depends very much on the use case.  Usually code can be fixed using a
+     <tt class="docutils literal">
+      with
+     </tt>
+     statement:
+    </p>
+    <pre class="literal-block">
+with lock:
+    do_something()
+</pre>
+    <p>
+     However, for coroutines one usually can't use the
+     <tt class="docutils literal">
+      with
+     </tt>
+     statement
+because you need to
+     <tt class="docutils literal">
+      yield
+     </tt>
+     for both the acquire and release
+operations.  So the code might be rewritten like this:
+    </p>
+    <pre class="literal-block">
+try:
+    yield lock.acquire()
+    do_something()
+finally:
+    yield lock.release()
+</pre>
+    <p>
+     The actual locking code might need more code to support this use case,
+but the implementation is usually trivial, like this: check if the
+lock has been acquired and unlock if it is.
+    </p>
+   </div>
+   <div class="section" id="handling-eintr-inside-a-finally">
+    <h2>
+     <a class="toc-backref" href="#id22">
+      Handling EINTR Inside a Finally
+     </a>
+    </h2>
+    <p>
+     Even if a signal handler is prepared to check the
+     <tt class="docutils literal">
+      f_in_cleanup
+     </tt>
+     flag,
+     <tt class="docutils literal">
+      InterruptedError
+     </tt>
+     might be raised in the cleanup handler,
+because the respective system call returned an
+     <tt class="docutils literal">
+      EINTR
+     </tt>
+     error.  The
+primary use cases are prepared to handle this:
+    </p>
+    <ul class="simple">
+     <li>
+      Posix mutexes never return
+      <tt class="docutils literal">
+       EINTR
+      </tt>
+     </li>
+     <li>
+      Networking libraries are always prepared to handle
+      <tt class="docutils literal">
+       EINTR
+      </tt>
+     </li>
+     <li>
+      Coroutine libraries are usually interrupted with the
+      <tt class="docutils literal">
+       throw()
+      </tt>
+      method, not with a signal
+     </li>
+    </ul>
+    <p>
+     The platform-specific function
+     <tt class="docutils literal">
+      siginterrupt()
+     </tt>
+     might be used to
+remove the need to handle
+     <tt class="docutils literal">
+      EINTR
+     </tt>
+     .  However, it may have hardly
+predictable consequences, for example
+     <tt class="docutils literal">
+      SIGINT
+     </tt>
+     a handler is never
+called if the main thread is stuck inside an IO routine.
+    </p>
+    <p>
+     A better approach would be to have the code, which is usually used in
+cleanup handlers, be prepared to handle
+     <tt class="docutils literal">
+      InterruptedError
+     </tt>
+     explicitly.  An example of such code might be a file-based lock
+implementation.
+    </p>
+    <p>
+     <tt class="docutils literal">
+      signal.pthread_sigmask
+     </tt>
+     can be used to block signals inside
+cleanup handlers which can be interrupted with
+     <tt class="docutils literal">
+      EINTR
+     </tt>
+     .
+    </p>
+   </div>
+   <div class="section" id="setting-interruption-context-inside-finally-itself">
+    <h2>
+     <a class="toc-backref" href="#id23">
+      Setting Interruption Context Inside Finally Itself
+     </a>
+    </h2>
+    <p>
+     Some coroutine libraries may need to set a timeout for the finally
+clause itself.  For example:
+    </p>
+    <pre class="literal-block">
+try:
+    do_something()
+finally:
+    with timeout(0.5):
+        try:
+            yield do_slow_cleanup()
+        finally:
+            yield do_fast_cleanup()
+</pre>
+    <p>
+     With current semantics, timeout will either protect the whole
+     <tt class="docutils literal">
+      with
+     </tt>
+     block or nothing at all, depending on the implementation of each
+library.  What the author intended is to treat
+     <tt class="docutils literal">
+      do_slow_cleanup
+     </tt>
+     as
+ordinary code, and
+     <tt class="docutils literal">
+      do_fast_cleanup
+     </tt>
+     as a cleanup (a
+non-interruptible one).
+    </p>
+    <p>
+     A similar case might occur when using greenlets or tasklets.
+    </p>
+    <p>
+     This case can be fixed by exposing
+     <tt class="docutils literal">
+      f_in_cleanup
+     </tt>
+     as a counter, and
+by calling a cleanup hook on each decrement.  A coroutine library may
+then remember the value at timeout start, and compare it on each hook
+execution.
+    </p>
+    <p>
+     But in practice, the example is considered to be too obscure to take
+into account.
+    </p>
+   </div>
+   <div class="section" id="modifying-keyboardinterrupt">
+    <h2>
+     <a class="toc-backref" href="#id24">
+      Modifying KeyboardInterrupt
+     </a>
+    </h2>
+    <p>
+     It should be decided if the default
+     <tt class="docutils literal">
+      SIGINT
+     </tt>
+     handler should be
+modified to use the described mechanism.  The initial proposition is
+to keep old behavior, for two reasons:
+    </p>
+    <ul class="simple">
+     <li>
+      Most application do not care about cleanup on exit (either they do
+not have external state, or they modify it in crash-safe way).
+     </li>
+     <li>
+      Cleanup may take too much time, not giving user a chance to
+interrupt an application.
+     </li>
+    </ul>
+    <p>
+     The latter case can be fixed by allowing an unsafe break if a
+     <tt class="docutils literal">
+      SIGINT
+     </tt>
+     handler is called twice, but it seems not worth the
+complexity.
+    </p>
+   </div>
+  </div>
+  <div class="section" id="alternative-python-implementations-support">
+   <h1>
+    <a class="toc-backref" href="#id25">
+     Alternative Python Implementations Support
+    </a>
+   </h1>
+   <p>
+    We consider
+    <tt class="docutils literal">
+     f_in_cleanup
+    </tt>
+    an implementation detail.  The actual
+implementation may have some fake frame-like object passed to signal
+handler, cleanup hook and returned from
+    <tt class="docutils literal">
+     getcleanupframe()
+    </tt>
+    .  The
+only requirement is that the
+    <tt class="docutils literal">
+     inspect
+    </tt>
+    module functions work as
+expected on these objects.  For this reason, we also allow to pass a
+generator object to the
+    <tt class="docutils literal">
+     isframeincleanup()
+    </tt>
+    function, which removes
+the need to use the
+    <tt class="docutils literal">
+     gi_frame
+    </tt>
+    attribute.
+   </p>
+   <p>
+    It might be necessary to specify that
+    <tt class="docutils literal">
+     getcleanupframe()
+    </tt>
+    must
+return the same object that will be passed to cleanup hook at the next
+invocation.
+   </p>
+  </div>
+  <div class="section" id="alternative-names">
+   <h1>
+    <a class="toc-backref" href="#id26">
+     Alternative Names
+    </a>
+   </h1>
+   <p>
+    The original proposal had a
+    <tt class="docutils literal">
+     f_in_finally
+    </tt>
+    frame attribute, as the
+original intention was to protect
+    <tt class="docutils literal">
+     finally
+    </tt>
+    clauses.  But as it grew
+up to protecting
+    <tt class="docutils literal">
+     __enter__
+    </tt>
+    and
+    <tt class="docutils literal">
+     __exit__
+    </tt>
+    methods too, the
+    <tt class="docutils literal">
+     f_in_cleanup
+    </tt>
+    name seems better.  Although the
+    <tt class="docutils literal">
+     __enter__
+    </tt>
+    method
+is not a cleanup routine, it at least relates to cleanup done by
+context managers.
+   </p>
+   <p>
+    <tt class="docutils literal">
+     setcleanuphook
+    </tt>
+    ,
+    <tt class="docutils literal">
+     isframeincleanup
+    </tt>
+    and
+    <tt class="docutils literal">
+     getcleanupframe
+    </tt>
+    can
+be unobscured to
+    <tt class="docutils literal">
+     set_cleanup_hook
+    </tt>
+    ,
+    <tt class="docutils literal">
+     is_frame_in_cleanup
+    </tt>
+    and
+    <tt class="docutils literal">
+     get_cleanup_frame
+    </tt>
+    , although they follow the naming convention of
+their respective modules.
+   </p>
+  </div>
+  <div class="section" id="alternative-proposals">
+   <h1>
+    <a class="toc-backref" href="#id27">
+     Alternative Proposals
+    </a>
+   </h1>
+   <div class="section" id="propagating-f-in-cleanup-flag-automatically">
+    <h2>
+     <a class="toc-backref" href="#id28">
+      Propagating 'f_in_cleanup' Flag Automatically
+     </a>
+    </h2>
+    <p>
+     This can make
+     <tt class="docutils literal">
+      getcleanupframe()
+     </tt>
+     unnecessary.  But for yield-based
+coroutines you need to propagate it yourself.  Making it writable
+leads to somewhat unpredictable behavior of
+     <tt class="docutils literal">
+      setcleanuphook()
+     </tt>
+     .
+    </p>
+   </div>
+   <div class="section" id="add-bytecodes-incr-cleanup-decr-cleanup">
+    <h2>
+     <a class="toc-backref" href="#id29">
+      Add Bytecodes 'INCR_CLEANUP', 'DECR_CLEANUP'
+     </a>
+    </h2>
+    <p>
+     These bytecodes can be used to protect the expression inside the
+     <tt class="docutils literal">
+      with
+     </tt>
+     statement, as well as making counter increments more explicit
+and easy to debug (visible inside a disassembly).  Some middle ground
+might be chosen, like
+     <tt class="docutils literal">
+      END_FINALLY
+     </tt>
+     and
+     <tt class="docutils literal">
+      SETUP_WITH
+     </tt>
+     implicitly
+decrementing the counter (
+     <tt class="docutils literal">
+      END_FINALLY
+     </tt>
+     is present at end of every
+     <tt class="docutils literal">
+      with
+     </tt>
+     suite).
+    </p>
+    <p>
+     However, adding new bytecodes must be considered very carefully.
+    </p>
+   </div>
+   <div class="section" id="expose-f-in-cleanup-as-a-counter">
+    <h2>
+     <a class="toc-backref" href="#id30">
+      Expose 'f_in_cleanup' as a Counter
+     </a>
+    </h2>
+    <p>
+     The original intention was to expose a minimum of needed
+functionality.  However, as we consider the frame flag
+     <tt class="docutils literal">
+      f_in_cleanup
+     </tt>
+     an implementation detail, we may expose it as a
+counter.
+    </p>
+    <p>
+     Similarly, if we have a counter we may need to have the cleanup hook
+called on every counter decrement.  It's unlikely to have much
+performance impact as nested finally clauses are an uncommon case.
+    </p>
+   </div>
+   <div class="section" id="add-code-object-flag-co-cleanup">
+    <h2>
+     <a class="toc-backref" href="#id31">
+      Add code object flag 'CO_CLEANUP'
+     </a>
+    </h2>
+    <p>
+     As an alternative to set the flag inside the
+     <tt class="docutils literal">
+      SETUP_WITH
+     </tt>
+     and
+     <tt class="docutils literal">
+      WITH_CLEANUP
+     </tt>
+     bytecodes, we can introduce a flag
+     <tt class="docutils literal">
+      CO_CLEANUP
+     </tt>
+     .
+When the interpreter starts to execute code with
+     <tt class="docutils literal">
+      CO_CLEANUP
+     </tt>
+     set,
+it sets
+     <tt class="docutils literal">
+      f_in_cleanup
+     </tt>
+     for the whole function body.  This flag is
+set for code objects of
+     <tt class="docutils literal">
+      __enter__
+     </tt>
+     and
+     <tt class="docutils literal">
+      __exit__
+     </tt>
+     special
+methods.  Technically it might be set on functions called
+     <tt class="docutils literal">
+      __enter__
+     </tt>
+     and
+     <tt class="docutils literal">
+      __exit__
+     </tt>
+     .
+    </p>
+    <p>
+     This seems to be less clear solution.  It also covers the case where
+     <tt class="docutils literal">
+      __enter__
+     </tt>
+     and
+     <tt class="docutils literal">
+      __exit__
+     </tt>
+     are called manually.  This may be
+accepted either as a feature or as an unnecessary side-effect (or,
+though unlikely, as a bug).
+    </p>
+    <p>
+     It may also impose a problem when
+     <tt class="docutils literal">
+      __enter__
+     </tt>
+     or
+     <tt class="docutils literal">
+      __exit__
+     </tt>
+     functions are implemented in C, as there is no code object to check
+for the
+     <tt class="docutils literal">
+      f_in_cleanup
+     </tt>
+     flag.
+    </p>
+   </div>
+   <div class="section" id="have-cleanup-callback-on-frame-object-itself">
+    <h2>
+     <a class="toc-backref" href="#id32">
+      Have Cleanup Callback on Frame Object Itself
+     </a>
+    </h2>
+    <p>
+     The frame object may be extended to have a
+     <tt class="docutils literal">
+      f_cleanup_callback
+     </tt>
+     member which is called when
+     <tt class="docutils literal">
+      f_in_cleanup
+     </tt>
+     is reset to 0.  This
+would help to register different callbacks to different coroutines.
+    </p>
+    <p>
+     Despite its apparent beauty, this solution doesn't add anything, as
+the two primary use cases are:
+    </p>
+    <ul class="simple">
+     <li>
+      Setting the callback in a signal handler.  The callback is
+inherently a single one for this case.
+     </li>
+     <li>
+      Use a single callback per loop for the coroutine use case.  Here, in
+almost all cases, there is only one loop per thread.
+     </li>
+    </ul>
+   </div>
+   <div class="section" id="no-cleanup-hook">
+    <h2>
+     <a class="toc-backref" href="#id33">
+      No Cleanup Hook
+     </a>
+    </h2>
+    <p>
+     The original proposal included no cleanup hook specification, as there
+are a few ways to achieve the same using current tools:
+    </p>
+    <ul class="simple">
+     <li>
+      Using
+      <tt class="docutils literal">
+       sys.settrace()
+      </tt>
+      and the
+      <tt class="docutils literal">
+       f_trace
+      </tt>
+      callback.  This may
+impose some problem to debugging, and has a big performance impact
+(although interrupting doesn't happen very often).
+     </li>
+     <li>
+      Sleeping a bit more and trying again.  For a coroutine library this
+is easy.  For signals it may be achieved using
+      <tt class="docutils literal">
+       signal.alert
+      </tt>
+      .
+     </li>
+    </ul>
+    <p>
+     Both methods are considered too impractical and a way to catch exit
+from
+     <tt class="docutils literal">
+      finally
+     </tt>
+     clauses is proposed.
+    </p>
+   </div>
+  </div>
+  <div class="section" id="references">
+   <h1>
+    <a class="toc-backref" href="#id34">
+     References
+    </a>
+   </h1>
+   <table class="docutils footnote" frame="void" id="id4" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id1">
+        [1]
+       </a>
+      </td>
+      <td>
+       Monocle
+       <a class="reference external" href="https://github.com/saucelabs/monocle">
+        https://github.com/saucelabs/monocle
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id5" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id2">
+        [2]
+       </a>
+      </td>
+      <td>
+       Bluelet
+       <a class="reference external" href="https://github.com/sampsyo/bluelet">
+        https://github.com/sampsyo/bluelet
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id6" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id3">
+        [3]
+       </a>
+      </td>
+      <td>
+       Twisted: inlineCallbacks
+       <a class="reference external" href="http://twistedmatrix.com/documents/8.1.0/api/twisted.internet.defer.html">
+        http://twistedmatrix.com/documents/8.1.0/api/twisted.internet.defer.html
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id7" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       [4]
+      </td>
+      <td>
+       Original discussion
+       <a class="reference external" href="http://mail.python.org/pipermail/python-ideas/2012-April/014705.html">
+        http://mail.python.org/pipermail/python-ideas/2012-April/014705.html
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id8" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       [5]
+      </td>
+      <td>
+       Issue #14730: Implementation of the
+       <a class="reference external" href="index.html">
+        PEP 419
+       </a>
+       <a class="reference external" href="http://bugs.python.org/issue14730">
+        http://bugs.python.org/issue14730
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+  </div>
+  <div class="section" id="copyright">
+   <h1>
+    <a class="toc-backref" href="#id35">
+     Copyright
+    </a>
+   </h1>
+   <p>
+    This document has been placed in the public domain.
+   </p>
+   <!-- Local Variables:
+mode: indented-text
+indent-tabs-mode: nil
+sentence-end-double-space: t
+fill-column: 70
+coding: utf-8
+End: -->
+  </div>
+ </body>
+
+<!-- Mirrored from www.python.org/dev/peps/pep-0419/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 03 Sep 2015 04:36:56 GMT -->
+</html>Source: <a href="https://hg.python.org/peps/file/tip/pep-0419.txt">https://hg.python.org/peps/file/tip/pep-0419.txt</a>
+
+    </article>
+
+
+                </section>
+
+                
+
+
+<aside class="left-sidebar" role="secondary">
+
+    
+
+
+
+
+
+
+    
+
+
+
+
+
+        <div class="twitter-widget sidebar-widget">
+        <a class="twitter-timeline" data-dnt="true" href="https://twitter.com/ThePSF" data-widget-id="434113224703610882">Tweets by @ThePSF</a>
+        <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+    </div>
+
+    <div class="psf-sidebar-widget sidebar-widget">
+        <h3 class="widget-title">The PSF</h3>
+<p>The Python Software Foundation is the organization behind Python. Become a member of the PSF and help advance the software and our mission. </p>
+
+    </div>
+
+</aside>
+
+
+
+                
+                
+
+
+            </div><!-- end .container -->
+        </div><!-- end #content .content-wrapper -->
+
+        <!-- Footer and social media list -->
+        <footer id="site-map" class="main-footer" role="contentinfo">
+            <div class="main-footer-links">
+                <div class="container">
+
+                    
+                    <a id="back-to-top-1" class="jump-link" href="#python-network"><span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> Back to Top</a>
+
+                    
+
+<ul class="sitemap navigation menu do-not-print" role="tree" id="container">
+    
+    <li class="tier-1 element-1">
+        <a href="https://www.python.org/about/" >About</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/apps/" title="">Applications</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/quotes/" title="">Quotes</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/gettingstarted/" title="">Getting Started</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/help/" title="">Help</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-2">
+        <a href="https://www.python.org/downloads/" >Downloads</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/downloads/" title="">All releases</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/downloads/source/" title="">Source code</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/downloads/windows/" title="">Windows</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/downloads/mac-osx/" title="">Mac OS X</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/download/other/" title="">Other Platforms</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://docs.python.org/3/license.html" title="">License</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/download/alternatives" title="">Alternative Implementations</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-3">
+        <a href="https://www.python.org/doc/" >Documentation</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/doc/" title="">Docs</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/doc/av" title="">Audio/Visual Talks</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://wiki.python.org/moin/BeginnersGuide" title="">Beginner&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://docs.python.org/faq/" title="">FAQ</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="http://wiki.python.org/moin/Languages" title="">Non-English Docs</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="../index.html" title="">PEP Index</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://wiki.python.org/moin/PythonBooks" title="">Python Books</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-4">
+        <a href="https://www.python.org/community/" >Community</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/community/diversity/" title="">Diversity</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/community/irc/" title="">IRC</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/community/lists/" title="">Mailing Lists</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/workshops/" title="">Python Conferences</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/community/sigs/" title="">Special Interest Groups</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://wiki.python.org/moin/" title="">Python Wiki</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/community/logos/" title="">Python Logo</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://www.python.org/community/merchandise/" title="">Merchandise</a></li>
+    
+        <li class="tier-2 element-9" role="treeitem"><a href="https://www.python.org/community/awards" title="">Community Awards</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-5">
+        <a href="https://www.python.org/about/success/" title="success-stories">Success Stories</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/success/#arts" title="">Arts</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/success/#business" title="">Business</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/success/#education" title="">Education</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/success/#engineering" title="">Engineering</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/about/success/#government" title="">Government</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://www.python.org/about/success/#scientific" title="">Scientific</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/about/success/#software-development" title="">Software Development</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-6">
+        <a href="https://www.python.org/blogs/" title="News from around the Python world">News</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/blogs/" title="Python Insider Blog Posts">Python News</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://planetpython.org/" title="Planet Python">Community News</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="http://pyfound.blogspot.com/" title="PSF Blog">PSF News</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pycon.blogspot.com/" title="PyCon Blog">PyCon News</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-7">
+        <a href="https://www.python.org/events/" >Events</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/events/python-events/" title="">Python Events</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/events/python-user-group/" title="">User Group Events</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/events/python-events/past/" title="">Python Events Archive</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/events/python-user-group/past/" title="">User Group Events Archive</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://wiki.python.org/moin/PythonEventsCalendar#Submitting_an_Event" title="">Submit an Event</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-8">
+        <a href="https://www.python.org/dev/" >Contributing</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="http://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://bugs.python.org/" title="">Issue Tracker</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://mail.python.org/mailman/listinfo/python-dev" title="">python-dev list</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pythonmentors.com/" title="">Core Mentorship</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+</ul>
+
+
+                    <a id="back-to-top-2" class="jump-link" href="#python-network"><span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> Back to Top</a>
+                    
+
+                </div><!-- end .container -->
+            </div> <!-- end .main-footer-links -->
+
+            <div class="site-base">
+                <div class="container">
+                    
+                    <ul class="footer-links navigation menu do-not-print" role="tree">
+                        <li class="tier-1 element-1"><a href="https://www.python.org/about/help/">Help &amp; <span class="say-no-more">General</span> Contact</a></li>
+                        <li class="tier-1 element-2"><a href="https://www.python.org/community/diversity/">Diversity <span class="say-no-more">Initiatives</span></a></li>
+                        <li class="tier-1 element-3"><a href="https://github.com/python/pythondotorg/issues">Submit Website Bug</a></li>
+                        <!--<li class="tier-1 element-3"><a href="#"><span class="say-no-more">Website</span> Colophon</a></li>-->
+                    </ul>
+
+                    <div class="copyright">
+                        <p><small>
+                            <span class="pre">Copyright &copy;2001-2015.</span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/psf-landing/">Python Software Foundation</a></span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/about/legal/">Legal Statements</a></span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/privacy/">Privacy Policy</a></span>
+                        </small></p>
+                    </div>
+
+                </div><!-- end .container -->
+            </div><!-- end .site-base -->
+
+        </footer>
+
+    </div><!-- end #touchnav-wrapper -->
+
+    
+    <script src="../../../../ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="../../../static/js/libs/jquery-1.8.2.min.js"><\/script>')</script>
+
+    <script src="../../../static/js/libs/masonry.pkgd.min.js"></script>
+
+    <script type="text/javascript" src="../../../static/js/main-min.js" charset="utf-8"></script>
+    
+
+    <!--[if lte IE 7]>
+    <script type="text/javascript" src="/static/js/plugins/IE8-min.js" charset="utf-8"></script>
+    
+    
+    <![endif]-->
+
+    <!--[if lte IE 8]>
+    <script type="text/javascript" src="/static/js/plugins/getComputedStyle-min.js" charset="utf-8"></script>
+    
+    
+    <![endif]-->
+
+    
+
+    
+    
+
+</body>
+</html>

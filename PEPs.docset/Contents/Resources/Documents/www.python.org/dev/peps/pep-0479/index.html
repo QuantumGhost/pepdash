@@ -1,0 +1,2742 @@
+<!doctype html>
+<!--[if lt IE 7]>   <html class="no-js ie6 lt-ie7 lt-ie8 lt-ie9">   <![endif]-->
+<!--[if IE 7]>      <html class="no-js ie7 lt-ie8 lt-ie9">          <![endif]-->
+<!--[if IE 8]>      <html class="no-js ie8 lt-ie9">                 <![endif]-->
+<!--[if gt IE 8]><!--><html class="no-js" lang="en" dir="ltr">  <!--<![endif]-->
+
+
+<!-- Mirrored from www.python.org/dev/peps/pep-0479/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 03 Sep 2015 04:34:57 GMT -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <link rel="prefetch" href="../../../../ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js">
+
+    <meta name="application-name" content="Python.org">
+    <meta name="msapplication-tooltip" content="The official home of the Python Programming Language">
+    <meta name="apple-mobile-web-app-title" content="Python.org">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="format-detection" content="telephone=no">
+    <meta http-equiv="cleartype" content="on">
+    <meta http-equiv="imagetoolbar" content="false">
+
+    <script src="../../../static/js/libs/modernizr.js"></script>
+
+    <link href="../../../static/stylesheets/style.css" rel="stylesheet" type="text/css" title="default" />
+    <link href="../../../static/stylesheets/mq.css" rel="stylesheet" type="text/css" media="not print, braille, embossed, speech, tty" />
+    
+
+    <!--[if (lte IE 8)&(!IEMobile)]>
+    <link href="/static/stylesheets/no-mq.css" rel="stylesheet" type="text/css" media="screen" />
+    
+    
+    <![endif]-->
+
+    
+    <link rel="icon" type="image/x-icon" href="https://www.python.org/static/favicon.ico">
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="../../../static/apple-touch-icon-144x144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="../../../static/apple-touch-icon-114x114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="../../../static/apple-touch-icon-72x72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="../../../static/apple-touch-icon-precomposed.png">
+    <link rel="apple-touch-icon" href="../../../static/apple-touch-icon-precomposed.png">
+
+    
+    <meta name="msapplication-TileImage" content="/static/metro-icon-144x144-precomposed.png"><!-- white shape -->
+    <meta name="msapplication-TileColor" content="#3673a5"><!-- python blue -->
+    <meta name="msapplication-navbutton-color" content="#3673a5">
+
+    <meta property="og:site_name" content="Python.org">
+    <meta property="og:type" content="website">
+
+    <title>PEP 0479 -- Change StopIteration handling inside generators | Python.org</title>
+    <meta property="og:title" content="Welcome to Python.org">
+
+    
+    <meta name="description" content="The official home of the Python Programming Language">
+    <meta name="og:description" content="The official home of the Python Programming Language">
+    <meta name="keywords" content="Python programming language object oriented web free open source software license documentation download community">
+    <meta property="og:tag" content="Python programming language object oriented web free open source software license documentation download community">
+    <meta property="og:published_time" content="">
+    <meta property="og:modified_time" content="">
+    <meta property="og:author" content="">
+    <meta property="og:section" content=""> 
+    <meta property="og:url" content="">
+    <meta property="og:image" content="">
+    <meta property="og:video" content="">
+
+    <link rel="author" href="https://www.python.org/static/humans.txt">
+
+    
+
+    
+    <script type="application/ld+json">
+     {
+       "@context": "http://schema.org",
+       "@type": "WebSite",
+       "url": "https://www.python.org/",
+       "potentialAction": {
+         "@type": "SearchAction",
+         "target": "https://www.python.org/search/?q={search_term_string}",
+         "query-input": "required name=search_term_string"
+       }
+     }
+    </script>
+
+    
+    <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-39055973-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+    </script>
+    
+</head>
+
+<body class="python pages pep-page">
+
+    <div id="touchnav-wrapper">
+
+        <div id="nojs" class="do-not-print">
+            <p><strong>Notice:</strong> While Javascript is not essential for this website, your interaction with the content will be limited. Please turn Javascript on for the full experience. </p>
+        </div>
+
+        <!--[if lt IE 8]>
+        <div id="oldie-warning" class="do-not-print">
+            <p><strong>Notice:</strong> Your browser is <em>ancient</em> and <a href="http://www.ie6countdown.com/">Microsoft agrees</a>. <a href="http://browsehappy.com/">Upgrade to a different browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to experience a better web.</p>
+        </div>
+        <![endif]-->
+
+        <!-- Sister Site Links -->
+        <div id="top" class="top-bar do-not-print">
+
+            <nav class="meta-navigation container" role="navigation">
+
+                
+                <div class="skip-link screen-reader-text">
+                    <a href="#content" title="Skip to content">Skip to content</a>
+                </div>
+
+                
+                <a id="close-python-network" class="jump-link" href="#python-network" aria-hidden="true">
+                    <span aria-hidden="true" class="icon-arrow-down"><span>&#9660;</span></span> Close
+                </a>
+
+                
+
+<ul class="menu" role="tree">
+    
+    <li class="python-meta ">
+        <a href="https://www.python.org/" title="The Python Programming Language" >Python</a>
+    </li>
+    
+    <li class="psf-meta ">
+        <a href="https://www.python.org/psf-landing/" title="The Python Software Foundation" >PSF</a>
+    </li>
+    
+    <li class="docs-meta ">
+        <a href="https://docs.python.org/" title="Python Documentation" >Docs</a>
+    </li>
+    
+    <li class="pypi-meta ">
+        <a href="https://pypi.python.org/" title="Python Package Index" >PyPI</a>
+    </li>
+    
+    <li class="jobs-meta ">
+        <a href="https://www.python.org/jobs/" title="Python Job Board" >Jobs</a>
+    </li>
+    
+    <li class="shop-meta ">
+        <a href="https://www.python.org/community/" title="Python Community" >Community</a>
+    </li>
+    
+</ul>
+
+
+                <a id="python-network" class="jump-link" href="#top" aria-hidden="true">
+                    <span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> The Python Network
+                </a>
+
+            </nav>
+
+        </div>
+
+        <!-- Header elements -->
+        <header class="main-header" role="banner">
+            <div class="container">
+
+                <h1 class="site-headline">
+                    <a href="https://www.python.org/"><img class="python-logo" src="../../../static/img/python-logo.png" alt="python&trade;"></a>
+                </h1>
+
+                <div class="options-bar do-not-print">
+
+                    
+                    <a id="site-map-link" class="jump-to-menu" href="#site-map"><span class="menu-icon">&equiv;</span> Menu</a><form class="search-the-site" action="https://www.python.org/search/" method="get">
+                        <fieldset title="Search Python.org">
+
+                            <span aria-hidden="true" class="icon-search"></span>
+
+                            <label class="screen-reader-text" for="id-search-field">Search This Site</label>
+                            <input id="id-search-field" name="q" type="search" role="textbox" class="search-field" placeholder="Search" value="" tabindex="1">
+
+                            <button type="submit" name="submit" id="submit" class="search-button" title="Submit this Search" tabindex="3">
+                                GO
+                            </button>
+
+                            
+                            <!--[if IE]><input type="text" style="display: none;" disabled="disabled" size="1" tabindex="4"><![endif]-->
+
+                        </fieldset>
+                    </form><span class="breaker"></span><div class="adjust-font-size" aria-hidden="true">
+                        <ul class="navigation menu" aria-label="Adjust Text Size on Page">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                <a href="#" class="action-trigger"><strong><small>A</small> A</strong></a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a class="text-shrink" title="Make Text Smaller" href="javascript:;">Smaller</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a class="text-grow" title="Make Text Larger" href="javascript:;">Larger</a></li>
+                                    <li class="tier-2 element-3" role="treeitem"><a class="text-reset" title="Reset any font size changes I have made" href="javascript:;">Reset</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div><div class="winkwink-nudgenudge">
+                        <ul class="navigation menu" aria-label="Social Media Navigation">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                <a href="#" class="action-trigger">Socialize</a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a href="http://plus.google.com/+Python"><span aria-hidden="true" class="icon-google-plus"></span>Google+</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a href="http://www.facebook.com/pythonlang?fref=ts"><span aria-hidden="true" class="icon-facebook"></span>Facebook</a></li>
+                                    <li class="tier-2 element-3" role="treeitem"><a href="http://twitter.com/ThePSF"><span aria-hidden="true" class="icon-twitter"></span>Twitter</a></li>
+                                    <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/irc/"><span aria-hidden="true" class="icon-freenode"></span>Chat on IRC</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div><div class="account-signin">
+                        <ul class="navigation menu" aria-label="Social Media Navigation">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                
+                                <a href="https://www.python.org/accounts/login/" title="Sign Up or Sign In to Python.org">Sign In</a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/accounts/signup/">Sign Up / Register</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/accounts/login/">Sign In</a></li>
+                                </ul>
+                                
+                            </li>
+                        </ul>
+                    </div>
+
+                </div><!-- end options-bar -->
+
+                <nav id="mainnav" class="python-navigation main-navigation do-not-print" role="navigation">
+                    
+                        
+<ul class="navigation menu" role="menubar" aria-label="Main Navigation">
+  
+    
+    
+    <li id="about" class="tier-1 element-1  " aria-haspopup="true">
+        <a href="https://www.python.org/about/" title="" class="">About</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/apps/" title="">Applications</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/quotes/" title="">Quotes</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/gettingstarted/" title="">Getting Started</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/help/" title="">Help</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="downloads" class="tier-1 element-2  " aria-haspopup="true">
+        <a href="https://www.python.org/downloads/" title="" class="">Downloads</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/downloads/" title="">All releases</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/downloads/source/" title="">Source code</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/downloads/windows/" title="">Windows</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/downloads/mac-osx/" title="">Mac OS X</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/download/other/" title="">Other Platforms</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://docs.python.org/3/license.html" title="">License</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/download/alternatives" title="">Alternative Implementations</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="documentation" class="tier-1 element-3  " aria-haspopup="true">
+        <a href="https://www.python.org/doc/" title="" class="">Documentation</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/doc/" title="">Docs</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/doc/av" title="">Audio/Visual Talks</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://wiki.python.org/moin/BeginnersGuide" title="">Beginner&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://docs.python.org/faq/" title="">FAQ</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="http://wiki.python.org/moin/Languages" title="">Non-English Docs</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="../index.html" title="">PEP Index</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://wiki.python.org/moin/PythonBooks" title="">Python Books</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="community" class="tier-1 element-4  " aria-haspopup="true">
+        <a href="https://www.python.org/community/" title="" class="">Community</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/community/diversity/" title="">Diversity</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/community/irc/" title="">IRC</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/community/lists/" title="">Mailing Lists</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/workshops/" title="">Python Conferences</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/community/sigs/" title="">Special Interest Groups</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://wiki.python.org/moin/" title="">Python Wiki</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/community/logos/" title="">Python Logo</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://www.python.org/community/merchandise/" title="">Merchandise</a></li>
+    
+        <li class="tier-2 element-9" role="treeitem"><a href="https://www.python.org/community/awards" title="">Community Awards</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="success-stories" class="tier-1 element-5  " aria-haspopup="true">
+        <a href="https://www.python.org/about/success/" title="success-stories" class="">Success Stories</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/success/#arts" title="">Arts</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/success/#business" title="">Business</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/success/#education" title="">Education</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/success/#engineering" title="">Engineering</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/about/success/#government" title="">Government</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://www.python.org/about/success/#scientific" title="">Scientific</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/about/success/#software-development" title="">Software Development</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="news" class="tier-1 element-6  " aria-haspopup="true">
+        <a href="https://www.python.org/blogs/" title="News from around the Python world" class="">News</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/blogs/" title="Python Insider Blog Posts">Python News</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://planetpython.org/" title="Planet Python">Community News</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="http://pyfound.blogspot.com/" title="PSF Blog">PSF News</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pycon.blogspot.com/" title="PyCon Blog">PyCon News</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="events" class="tier-1 element-7  " aria-haspopup="true">
+        <a href="https://www.python.org/events/" title="" class="">Events</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/events/python-events/" title="">Python Events</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/events/python-user-group/" title="">User Group Events</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/events/python-events/past/" title="">Python Events Archive</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/events/python-user-group/past/" title="">User Group Events Archive</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://wiki.python.org/moin/PythonEventsCalendar#Submitting_an_Event" title="">Submit an Event</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    
+  
+</ul>
+
+                    
+                </nav>
+
+                <div class="header-banner "> <!-- for optional "do-not-print" class -->
+                    
+                    
+                </div>
+
+                
+                
+
+             </div><!-- end .container -->
+        </header>
+
+        <div id="content" class="content-wrapper">
+            <!-- Main Content Column -->
+            <div class="container">
+
+                <section class="main-content with-left-sidebar" role="main">
+
+                    
+<ul class="breadcrumbs menu">
+    <li>
+        <a href="https://www.python.org/" title="The Python Programming Language">Python</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>
+        <a href="https://www.python.org/dev/">Python Developer's Guide</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>
+        <a href="../index.html">PEP Index</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>PEP 0479 -- Change StopIteration handling inside generators</li>
+</ul>
+
+
+                    
+<style>
+   .pep-page pre {
+        padding: .5em;
+        background: inherit;
+        border-left: 0px;
+        -webkit-box-shadow: 0 0 0 0;
+        -moz-box-shadow: 0 0 0 0;
+        box-shadow: 0 0 0 0;
+   }
+</style>
+
+    
+    <article class="text">
+        
+
+        <header class="article-header">
+            <h1 class="page-title">PEP 0479 -- Change StopIteration handling inside generators</h1>
+        </header>
+
+        <!--
+This HTML is auto-generated.  DO NOT EDIT THIS FILE!  If you are writing a new
+PEP, see http://www.python.org/dev/peps/pep-0001 for instructions and links
+to templates.  DO NOT USE THIS HTML FILE AS YOUR TEMPLATE!
+-->
+<html>
+ <body>
+  <table class="rfc2822 docutils field-list" frame="void" rules="none">
+   <col class="field-name">
+   </col>
+   <col class="field-body">
+   </col>
+   <tbody valign="top">
+    <tr class="field">
+     <th class="field-name">
+      PEP:
+     </th>
+     <td class="field-body">
+      479
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Title:
+     </th>
+     <td class="field-body">
+      Change StopIteration handling inside generators
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Author:
+     </th>
+     <td class="field-body">
+      Chris Angelico &lt;rosuav at gmail.com&gt;, Guido van Rossum &lt;guido at python.org&gt;
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Status:
+     </th>
+     <td class="field-body">
+      Final
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Type:
+     </th>
+     <td class="field-body">
+      Standards Track
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Created:
+     </th>
+     <td class="field-body">
+      15-Nov-2014
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Python-Version:
+     </th>
+     <td class="field-body">
+      3.5
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Post-History:
+     </th>
+     <td class="field-body">
+      15-Nov-2014, 19-Nov-2014, 5-Dec-2014
+     </td>
+    </tr>
+   </tbody>
+  </table>
+  <hr/>
+  <div class="contents topic" id="contents">
+   <p class="topic-title first">
+    Contents
+   </p>
+   <ul class="simple">
+    <li>
+     <a class="reference internal" href="#abstract" id="id32">
+      Abstract
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#acceptance" id="id33">
+      Acceptance
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#rationale" id="id34">
+      Rationale
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#background-information" id="id35">
+      Background information
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#proposal" id="id36">
+      Proposal
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#consequences-for-existing-code" id="id37">
+      Consequences for existing code
+     </a>
+     <ul>
+      <li>
+       <a class="reference internal" href="#writing-backwards-and-forwards-compatible-code" id="id38">
+        Writing backwards and forwards compatible code
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#examples-of-breakage" id="id39">
+        Examples of breakage
+       </a>
+      </li>
+     </ul>
+    </li>
+    <li>
+     <a class="reference internal" href="#explanation-of-generators-iterators-and-stopiteration" id="id40">
+      Explanation of generators, iterators, and StopIteration
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#transition-plan" id="id41">
+      Transition plan
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#alternate-proposals" id="id42">
+      Alternate proposals
+     </a>
+     <ul>
+      <li>
+       <a class="reference internal" href="#raising-something-other-than-runtimeerror" id="id43">
+        Raising something other than RuntimeError
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#supplying-a-specific-exception-to-raise-on-return" id="id44">
+        Supplying a specific exception to raise on return
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#making-return-triggered-stopiterations-obvious" id="id45">
+        Making return-triggered StopIterations obvious
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#converting-the-exception-inside-next" id="id46">
+        Converting the exception inside next()
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#sub-proposal-decorator-to-explicitly-request-current-behaviour" id="id47">
+        Sub-proposal: decorator to explicitly request current behaviour
+       </a>
+      </li>
+     </ul>
+    </li>
+    <li>
+     <a class="reference internal" href="#criticism" id="id48">
+      Criticism
+     </a>
+     <ul>
+      <li>
+       <a class="reference internal" href="#why-not-fix-all-next-methods" id="id49">
+        Why not fix all __next__() methods?
+       </a>
+      </li>
+     </ul>
+    </li>
+    <li>
+     <a class="reference internal" href="#references" id="id50">
+      References
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#copyright" id="id51">
+      Copyright
+     </a>
+    </li>
+   </ul>
+  </div>
+  <div class="section" id="abstract">
+   <h1>
+    <a class="toc-backref" href="#id32">
+     Abstract
+    </a>
+   </h1>
+   <p>
+    This PEP proposes a change to generators: when
+    <tt class="docutils literal">
+     StopIteration
+    </tt>
+    is
+raised inside a generator, it is replaced it with
+    <tt class="docutils literal">
+     RuntimeError
+    </tt>
+    .
+(More precisely, this happens when the exception is about to bubble
+out of the generator's stack frame.)  Because the change is backwards
+incompatible, the feature is initially introduced using a
+    <tt class="docutils literal">
+     __future__
+    </tt>
+    statement.
+   </p>
+  </div>
+  <div class="section" id="acceptance">
+   <h1>
+    <a class="toc-backref" href="#id33">
+     Acceptance
+    </a>
+   </h1>
+   <p>
+    This PEP was accepted by the BDFL on November 22.  Because of the
+exceptionally short period from first draft to acceptance, the main
+objections brought up after acceptance were carefully considered and
+have been reflected in the "Alternate proposals" section below.
+However, none of the discussion changed the BDFL's mind and the PEP's
+acceptance is now final.  (Suggestions for clarifying edits are still
+welcome -- unlike IETF RFCs, the text of a PEP is not cast in stone
+after its acceptance, although the core design/plan/specification
+should not change after acceptance.)
+   </p>
+  </div>
+  <div class="section" id="rationale">
+   <h1>
+    <a class="toc-backref" href="#id34">
+     Rationale
+    </a>
+   </h1>
+   <p>
+    The interaction of generators and
+    <tt class="docutils literal">
+     StopIteration
+    </tt>
+    is currently
+somewhat surprising, and can conceal obscure bugs.  An unexpected
+exception should not result in subtly altered behaviour, but should
+cause a noisy and easily-debugged traceback.  Currently,
+    <tt class="docutils literal">
+     StopIteration
+    </tt>
+    raised accidentally inside a generator function will
+be interpreted as the end of the iteration by the loop construct
+driving the generator.
+   </p>
+   <p>
+    The main goal of the proposal is to ease debugging in the situation
+where an unguarded
+    <tt class="docutils literal">
+     next()
+    </tt>
+    call (perhaps several stack frames deep)
+raises
+    <tt class="docutils literal">
+     StopIteration
+    </tt>
+    and causes the iteration controlled by the
+generator to terminate silently.  (Whereas, when some other exception
+is raised, a traceback is printed pinpointing the cause of the
+problem.)
+   </p>
+   <p>
+    This is particularly pernicious in combination with the
+    <tt class="docutils literal">
+     yield from
+    </tt>
+    construct of
+    <a class="reference external" href="../pep-0380/index.html">
+     PEP 380
+    </a>
+    <a class="footnote-reference" href="#id18" id="id1">
+     [1]
+    </a>
+    , as it breaks the abstraction that a
+subgenerator may be factored out of a generator.  That PEP notes this
+limitation, but notes that "use cases for these [are] rare to non-
+existent".  Unfortunately while intentional use is rare, it is easy to
+stumble on these cases by accident:
+   </p>
+   <pre class="literal-block">
+import contextlib
+
+@contextlib.contextmanager
+def transaction():
+    print('begin')
+    try:
+        yield from do_it()
+    except:
+        print('rollback')
+        raise
+    else:
+        print('commit')
+
+def do_it():
+    print('Refactored initial setup')
+    yield # Body of with-statement is executed here
+    print('Refactored finalization of successful transaction')
+
+def gene():
+    for i in range(2):
+        with transaction():
+            yield i
+            # return
+            raise StopIteration  # This is wrong
+        print('Should not be reached')
+
+for i in gene():
+    print('main: i =', i)
+</pre>
+   <p>
+    Here factoring out
+    <tt class="docutils literal">
+     do_it
+    </tt>
+    into a subgenerator has introduced a
+subtle bug: if the wrapped block raises
+    <tt class="docutils literal">
+     StopIteration
+    </tt>
+    , under the
+current behavior this exception will be swallowed by the context
+manager; and, worse, the finalization is silently skipped!  Similarly
+problematic behavior occurs when an
+    <tt class="docutils literal">
+     asyncio
+    </tt>
+    coroutine raises
+    <tt class="docutils literal">
+     StopIteration
+    </tt>
+    , causing it to terminate silently, or when
+    <tt class="docutils literal">
+     next
+    </tt>
+    is used to take the first result from an iterator that unexpectedly
+turns out to be empty, for example:
+   </p>
+   <pre class="literal-block">
+# using the same context manager as above
+import pathlib
+
+with transaction():
+    print('commit file {}'.format(
+        # I can never remember what the README extension is
+        next(pathlib.Path('/some/dir').glob('README*'))))
+</pre>
+   <p>
+    In both cases, the refactoring abstraction of
+    <tt class="docutils literal">
+     yield from
+    </tt>
+    breaks
+in the presence of bugs in client code.
+   </p>
+   <p>
+    Additionally, the proposal reduces the difference between list
+comprehensions and generator expressions, preventing surprises such as
+the one that started this discussion
+    <a class="footnote-reference" href="#id19" id="id2">
+     [2]
+    </a>
+    .  Henceforth, the following
+statements will produce the same result if either produces a result at
+all:
+   </p>
+   <pre class="literal-block">
+a = list(F(x) for x in xs if P(x))
+a = [F(x) for x in xs if P(x)]
+</pre>
+   <p>
+    With the current state of affairs, it is possible to write a function
+    <tt class="docutils literal">
+     F(x)
+    </tt>
+    or a predicate
+    <tt class="docutils literal">
+     P(x)
+    </tt>
+    that causes the first form to produce
+a (truncated) result, while the second form raises an exception
+(namely,
+    <tt class="docutils literal">
+     StopIteration
+    </tt>
+    ).  With the proposed change, both forms
+will raise an exception at this point (albeit
+    <tt class="docutils literal">
+     RuntimeError
+    </tt>
+    in the
+first case and
+    <tt class="docutils literal">
+     StopIteration
+    </tt>
+    in the second).
+   </p>
+   <p>
+    Finally, the proposal also clears up the confusion about how to
+terminate a generator: the proper way is
+    <tt class="docutils literal">
+     return
+    </tt>
+    , not
+    <tt class="docutils literal">
+     raise StopIteration
+    </tt>
+    .
+   </p>
+   <p>
+    As an added bonus, the above changes bring generator functions much
+more in line with regular functions.  If you wish to take a piece of
+code presented as a generator and turn it into something else, you
+can usually do this fairly simply, by replacing every
+    <tt class="docutils literal">
+     yield
+    </tt>
+    with
+a call to
+    <tt class="docutils literal">
+     print()
+    </tt>
+    or
+    <tt class="docutils literal">
+     list.append()
+    </tt>
+    ; however, if there are any
+bare
+    <tt class="docutils literal">
+     next()
+    </tt>
+    calls in the code, you have to be aware of them.  If
+the code was originally written without relying on
+    <tt class="docutils literal">
+     StopIteration
+    </tt>
+    terminating the function, the transformation would be that much
+easier.
+   </p>
+  </div>
+  <div class="section" id="background-information">
+   <h1>
+    <a class="toc-backref" href="#id35">
+     Background information
+    </a>
+   </h1>
+   <p>
+    When a generator frame is (re)started as a result of a
+    <tt class="docutils literal">
+     __next__()
+    </tt>
+    (or
+    <tt class="docutils literal">
+     send()
+    </tt>
+    or
+    <tt class="docutils literal">
+     throw()
+    </tt>
+    ) call, one of three outcomes can occur:
+   </p>
+   <ul class="simple">
+    <li>
+     A yield point is reached, and the yielded value is returned.
+    </li>
+    <li>
+     The frame is returned from;
+     <tt class="docutils literal">
+      StopIteration
+     </tt>
+     is raised.
+    </li>
+    <li>
+     An exception is raised, which bubbles out.
+    </li>
+   </ul>
+   <p>
+    In the latter two cases the frame is abandoned (and the generator
+object's
+    <tt class="docutils literal">
+     gi_frame
+    </tt>
+    attribute is set to None).
+   </p>
+  </div>
+  <div class="section" id="proposal">
+   <h1>
+    <a class="toc-backref" href="#id36">
+     Proposal
+    </a>
+   </h1>
+   <p>
+    If a
+    <tt class="docutils literal">
+     StopIteration
+    </tt>
+    is about to bubble out of a generator frame, it
+is replaced with
+    <tt class="docutils literal">
+     RuntimeError
+    </tt>
+    , which causes the
+    <tt class="docutils literal">
+     next()
+    </tt>
+    call
+(which invoked the generator) to fail, passing that exception out.
+From then on it's just like any old exception.
+    <a class="footnote-reference" href="#id20" id="id3">
+     [3]
+    </a>
+   </p>
+   <p>
+    This affects the third outcome listed above, without altering any
+other effects.  Furthermore, it only affects this outcome when the
+exception raised is
+    <tt class="docutils literal">
+     StopIteration
+    </tt>
+    (or a subclass thereof).
+   </p>
+   <p>
+    Note that the proposed replacement happens at the point where the
+exception is about to bubble out of the frame, i.e. after any
+    <tt class="docutils literal">
+     except
+    </tt>
+    or
+    <tt class="docutils literal">
+     finally
+    </tt>
+    blocks that could affect it have been
+exited.  The
+    <tt class="docutils literal">
+     StopIteration
+    </tt>
+    raised by returning from the frame is
+not affected (the point being that
+    <tt class="docutils literal">
+     StopIteration
+    </tt>
+    means that the
+generator terminated "normally", i.e. it did not raise an exception).
+   </p>
+   <p>
+    A subtle issue is what will happen if the caller, having caught the
+    <tt class="docutils literal">
+     RuntimeError
+    </tt>
+    , calls the generator object's
+    <tt class="docutils literal">
+     __next__()
+    </tt>
+    method
+again.  The answer is that from this point on it will raise
+    <tt class="docutils literal">
+     StopIteration
+    </tt>
+    -- the behavior is the same as when any other
+exception was raised by the generator.
+   </p>
+   <p>
+    Another logical consequence of the proposal: if someone uses
+    <tt class="docutils literal">
+     g.throw(StopIteration)
+    </tt>
+    to throw a
+    <tt class="docutils literal">
+     StopIteration
+    </tt>
+    exception into
+a generator, if the generator doesn't catch it (which it could do
+using a
+    <tt class="docutils literal">
+     try/except
+    </tt>
+    around the
+    <tt class="docutils literal">
+     yield
+    </tt>
+    ), it will be transformed
+into
+    <tt class="docutils literal">
+     RuntimeError
+    </tt>
+    .
+   </p>
+   <p>
+    During the transition phase, the new feature must be enabled
+per-module using:
+   </p>
+   <pre class="literal-block">
+from __future__ import generator_stop
+</pre>
+   <p>
+    Any generator function constructed under the influence of this
+directive will have the
+    <tt class="docutils literal">
+     REPLACE_STOPITERATION
+    </tt>
+    flag set on its code
+object, and generators with the flag set will behave according to this
+proposal.  Once the feature becomes standard, the flag may be dropped;
+code should not inspect generators for it.
+   </p>
+   <p>
+    A proof-of-concept patch has been created to facilitate testing.
+    <a class="footnote-reference" href="#id21" id="id4">
+     [4]
+    </a>
+   </p>
+  </div>
+  <div class="section" id="consequences-for-existing-code">
+   <h1>
+    <a class="toc-backref" href="#id37">
+     Consequences for existing code
+    </a>
+   </h1>
+   <p>
+    This change will affect existing code that depends on
+    <tt class="docutils literal">
+     StopIteration
+    </tt>
+    bubbling up.  The pure Python reference
+implementation of
+    <tt class="docutils literal">
+     groupby
+    </tt>
+    <a class="footnote-reference" href="#id22" id="id5">
+     [5]
+    </a>
+    currently has comments "Exit on
+    <tt class="docutils literal">
+     StopIteration
+    </tt>
+    " where it is expected that the exception will
+propagate and then be handled.  This will be unusual, but not unknown,
+and such constructs will fail.  Other examples abound, e.g.
+    <a class="footnote-reference" href="#id23" id="id6">
+     [6]
+    </a>
+    ,
+    <a class="footnote-reference" href="#id24" id="id7">
+     [7]
+    </a>
+    .
+   </p>
+   <p>
+    (Nick Coghlan comments: """If you wanted to factor out a helper
+function that terminated the generator you'd have to do "return
+yield from helper()" rather than just "helper()".""")
+   </p>
+   <p>
+    There are also examples of generator expressions floating around that
+rely on a
+    <tt class="docutils literal">
+     StopIteration
+    </tt>
+    raised by the expression, the target or the
+predicate (rather than by the
+    <tt class="docutils literal">
+     __next__()
+    </tt>
+    call implied in the
+    <tt class="docutils literal">
+     for
+    </tt>
+    loop proper).
+   </p>
+   <div class="section" id="writing-backwards-and-forwards-compatible-code">
+    <h2>
+     <a class="toc-backref" href="#id38">
+      Writing backwards and forwards compatible code
+     </a>
+    </h2>
+    <p>
+     With the exception of hacks that raise
+     <tt class="docutils literal">
+      StopIteration
+     </tt>
+     to exit a
+generator expression, it is easy to write code that works equally well
+under older Python versions as under the new semantics.
+    </p>
+    <p>
+     This is done by enclosing those places in the generator body where a
+     <tt class="docutils literal">
+      StopIteration
+     </tt>
+     is expected (e.g. bare
+     <tt class="docutils literal">
+      next()
+     </tt>
+     calls or in some
+cases helper functions that are expected to raise
+     <tt class="docutils literal">
+      StopIteration
+     </tt>
+     )
+in a
+     <tt class="docutils literal">
+      try/except
+     </tt>
+     construct that returns when
+     <tt class="docutils literal">
+      StopIteration
+     </tt>
+     is
+raised.  The
+     <tt class="docutils literal">
+      try/except
+     </tt>
+     construct should appear directly in the
+generator function; doing this in a helper function that is not itself
+a generator does not work.  If
+     <tt class="docutils literal">
+      raise StopIteration
+     </tt>
+     occurs directly
+in a generator, simply replace it with
+     <tt class="docutils literal">
+      return
+     </tt>
+     .
+    </p>
+   </div>
+   <div class="section" id="examples-of-breakage">
+    <h2>
+     <a class="toc-backref" href="#id39">
+      Examples of breakage
+     </a>
+    </h2>
+    <p>
+     Generators which explicitly raise
+     <tt class="docutils literal">
+      StopIteration
+     </tt>
+     can generally be
+changed to simply return instead.  This will be compatible with all
+existing Python versions, and will not be affected by
+     <tt class="docutils literal">
+      __future__
+     </tt>
+     .
+Here are some illustrations from the standard library.
+    </p>
+    <p>
+     Lib/ipaddress.py:
+    </p>
+    <pre class="literal-block">
+if other == self:
+    raise StopIteration
+</pre>
+    <p>
+     Becomes:
+    </p>
+    <pre class="literal-block">
+if other == self:
+    return
+</pre>
+    <p>
+     In some cases, this can be combined with
+     <tt class="docutils literal">
+      yield from
+     </tt>
+     to simplify
+the code, such as Lib/difflib.py:
+    </p>
+    <pre class="literal-block">
+if context is None:
+    while True:
+        yield next(line_pair_iterator)
+</pre>
+    <p>
+     Becomes:
+    </p>
+    <pre class="literal-block">
+if context is None:
+    yield from line_pair_iterator
+    return
+</pre>
+    <p>
+     (The
+     <tt class="docutils literal">
+      return
+     </tt>
+     is necessary for a strictly-equivalent translation,
+though in this particular file, there is no further code, and the
+     <tt class="docutils literal">
+      return
+     </tt>
+     can be omitted.) For compatibility with pre-3.3 versions
+of Python, this could be written with an explicit
+     <tt class="docutils literal">
+      for
+     </tt>
+     loop:
+    </p>
+    <pre class="literal-block">
+if context is None:
+    for line in line_pair_iterator:
+        yield line
+    return
+</pre>
+    <p>
+     More complicated iteration patterns will need explicit
+     <tt class="docutils literal">
+      try/except
+     </tt>
+     constructs.  For example, a hypothetical parser like this:
+    </p>
+    <pre class="literal-block">
+def parser(f):
+    while True:
+        data = next(f)
+        while True:
+            line = next(f)
+            if line == "- end -": break
+            data += line
+        yield data
+</pre>
+    <p>
+     would need to be rewritten as:
+    </p>
+    <pre class="literal-block">
+def parser(f):
+    while True:
+        try:
+            data = next(f)
+            while True:
+                line = next(f)
+                if line == "- end -": break
+                data += line
+            yield data
+        except StopIteration:
+            return
+</pre>
+    <p>
+     or possibly:
+    </p>
+    <pre class="literal-block">
+def parser(f):
+    for data in f:
+        while True:
+            line = next(f)
+            if line == "- end -": break
+            data += line
+        yield data
+</pre>
+    <p>
+     The latter form obscures the iteration by purporting to iterate over
+the file with a
+     <tt class="docutils literal">
+      for
+     </tt>
+     loop, but then also fetches more data from
+the same iterator during the loop body.  It does, however, clearly
+differentiate between a "normal" termination (
+     <tt class="docutils literal">
+      StopIteration
+     </tt>
+     instead of the initial line) and an "abnormal" termination (failing
+to find the end marker in the inner loop, which will now raise
+     <tt class="docutils literal">
+      RuntimeError
+     </tt>
+     ).
+    </p>
+    <p>
+     This effect of
+     <tt class="docutils literal">
+      StopIteration
+     </tt>
+     has been used to cut a generator
+expression short, creating a form of
+     <tt class="docutils literal">
+      takewhile
+     </tt>
+     :
+    </p>
+    <pre class="literal-block">
+def stop():
+    raise StopIteration
+print(list(x for x in range(10) if x &lt; 5 or stop()))
+# prints [0, 1, 2, 3, 4]
+</pre>
+    <p>
+     Under the current proposal, this form of non-local flow control is
+not supported, and would have to be rewritten in statement form:
+    </p>
+    <pre class="literal-block">
+def gen():
+    for x in range(10):
+        if x &gt;= 5: return
+        yield x
+print(list(gen()))
+# prints [0, 1, 2, 3, 4]
+</pre>
+    <p>
+     While this is a small loss of functionality, it is functionality that
+often comes at the cost of readability, and just as
+     <tt class="docutils literal">
+      lambda
+     </tt>
+     has
+restrictions compared to
+     <tt class="docutils literal">
+      def
+     </tt>
+     , so does a generator expression have
+restrictions compared to a generator function. In many cases, the
+transformation to full generator function will be trivially easy, and
+may improve structural clarity.
+    </p>
+   </div>
+  </div>
+  <div class="section" id="explanation-of-generators-iterators-and-stopiteration">
+   <h1>
+    <a class="toc-backref" href="#id40">
+     Explanation of generators, iterators, and StopIteration
+    </a>
+   </h1>
+   <p>
+    The proposal does not change the relationship between generators and
+iterators: a generator object is still an iterator, and not all
+iterators are generators.  Generators have additional methods that
+iterators don't have, like
+    <tt class="docutils literal">
+     send
+    </tt>
+    and
+    <tt class="docutils literal">
+     throw
+    </tt>
+    .  All this is
+unchanged.  Nothing changes for generator users -- only authors of
+generator functions may have to learn something new.  (This includes
+authors of generator expressions that depend on early termination of
+the iteration by a
+    <tt class="docutils literal">
+     StopIteration
+    </tt>
+    raised in a condition.)
+   </p>
+   <p>
+    An iterator is an object with a
+    <tt class="docutils literal">
+     __next__
+    </tt>
+    method.  Like many other
+special methods, it may either return a value, or raise a specific
+exception - in this case,
+    <tt class="docutils literal">
+     StopIteration
+    </tt>
+    - to signal that it has
+no value to return.  In this, it is similar to
+    <tt class="docutils literal">
+     __getattr__
+    </tt>
+    (can
+raise
+    <tt class="docutils literal">
+     AttributeError
+    </tt>
+    ),
+    <tt class="docutils literal">
+     __getitem__
+    </tt>
+    (can raise
+    <tt class="docutils literal">
+     KeyError
+    </tt>
+    ),
+and so on.  A helper function for an iterator can be written to
+follow the same protocol; for example:
+   </p>
+   <pre class="literal-block">
+def helper(x, y):
+    if x &gt; y: return 1 / (x - y)
+    raise StopIteration
+
+def __next__(self):
+    if self.a: return helper(self.b, self.c)
+    return helper(self.d, self.e)
+</pre>
+   <p>
+    Both forms of signalling are carried through: a returned value is
+returned, an exception bubbles up.  The helper is written to match
+the protocol of the calling function.
+   </p>
+   <p>
+    A generator function is one which contains a
+    <tt class="docutils literal">
+     yield
+    </tt>
+    expression.
+Each time it is (re)started, it may either yield a value, or return
+(including "falling off the end").  A helper function for a generator
+can also be written, but it must also follow generator protocol:
+   </p>
+   <pre class="literal-block">
+def helper(x, y):
+    if x &gt; y: yield 1 / (x - y)
+
+def gen(self):
+    if self.a: return (yield from helper(self.b, self.c))
+    return (yield from helper(self.d, self.e))
+</pre>
+   <p>
+    In both cases, any unexpected exception will bubble up. Due to the
+nature of generators and iterators, an unexpected
+    <tt class="docutils literal">
+     StopIteration
+    </tt>
+    inside a generator will be converted into
+    <tt class="docutils literal">
+     RuntimeError
+    </tt>
+    , but
+beyond that, all exceptions will propagate normally.
+   </p>
+  </div>
+  <div class="section" id="transition-plan">
+   <h1>
+    <a class="toc-backref" href="#id41">
+     Transition plan
+    </a>
+   </h1>
+   <ul class="simple">
+    <li>
+     Python 3.5: Enable new semantics under
+     <tt class="docutils literal">
+      __future__
+     </tt>
+     import; silent
+deprecation warning if
+     <tt class="docutils literal">
+      StopIteration
+     </tt>
+     bubbles out of a generator
+not under
+     <tt class="docutils literal">
+      __future__
+     </tt>
+     import.
+    </li>
+    <li>
+     Python 3.6: Non-silent deprecation warning.
+    </li>
+    <li>
+     Python 3.7: Enable new semantics everywhere.
+    </li>
+   </ul>
+  </div>
+  <div class="section" id="alternate-proposals">
+   <h1>
+    <a class="toc-backref" href="#id42">
+     Alternate proposals
+    </a>
+   </h1>
+   <div class="section" id="raising-something-other-than-runtimeerror">
+    <h2>
+     <a class="toc-backref" href="#id43">
+      Raising something other than RuntimeError
+     </a>
+    </h2>
+    <p>
+     Rather than the generic
+     <tt class="docutils literal">
+      RuntimeError
+     </tt>
+     , it might make sense to raise
+a new exception type
+     <tt class="docutils literal">
+      UnexpectedStopIteration
+     </tt>
+     .  This has the
+downside of implicitly encouraging that it be caught; the correct
+action is to catch the original
+     <tt class="docutils literal">
+      StopIteration
+     </tt>
+     , not the chained
+exception.
+    </p>
+   </div>
+   <div class="section" id="supplying-a-specific-exception-to-raise-on-return">
+    <h2>
+     <a class="toc-backref" href="#id44">
+      Supplying a specific exception to raise on return
+     </a>
+    </h2>
+    <p>
+     Nick Coghlan suggested a means of providing a specific
+     <tt class="docutils literal">
+      StopIteration
+     </tt>
+     instance to the generator; if any other instance of
+     <tt class="docutils literal">
+      StopIteration
+     </tt>
+     is raised, it is an error, but if that particular
+one is raised, the generator has properly completed.  This subproposal
+has been withdrawn in favour of better options, but is retained for
+reference.
+    </p>
+   </div>
+   <div class="section" id="making-return-triggered-stopiterations-obvious">
+    <h2>
+     <a class="toc-backref" href="#id45">
+      Making return-triggered StopIterations obvious
+     </a>
+    </h2>
+    <p>
+     For certain situations, a simpler and fully backward-compatible
+solution may be sufficient: when a generator returns, instead of
+raising
+     <tt class="docutils literal">
+      StopIteration
+     </tt>
+     , it raises a specific subclass of
+     <tt class="docutils literal">
+      StopIteration
+     </tt>
+     (
+     <tt class="docutils literal">
+      GeneratorReturn
+     </tt>
+     ) which can then be detected.
+If it is not that subclass, it is an escaping exception rather than a
+return statement.
+    </p>
+    <p>
+     The inspiration for this alternative proposal was Nick's observation
+     <a class="footnote-reference" href="#id25" id="id8">
+      [8]
+     </a>
+     that if an
+     <tt class="docutils literal">
+      asyncio
+     </tt>
+     coroutine
+     <a class="footnote-reference" href="#id26" id="id9">
+      [9]
+     </a>
+     accidentally raises
+     <tt class="docutils literal">
+      StopIteration
+     </tt>
+     , it currently terminates silently, which may present
+a hard-to-debug mystery to the developer.  The main proposal turns
+such accidents into clearly distinguishable
+     <tt class="docutils literal">
+      RuntimeError
+     </tt>
+     exceptions,
+but if that is rejected, this alternate proposal would enable
+     <tt class="docutils literal">
+      asyncio
+     </tt>
+     to distinguish between a
+     <tt class="docutils literal">
+      return
+     </tt>
+     statement and an
+accidentally-raised
+     <tt class="docutils literal">
+      StopIteration
+     </tt>
+     exception.
+    </p>
+    <p>
+     Of the three outcomes listed above, two change:
+    </p>
+    <ul class="simple">
+     <li>
+      If a yield point is reached, the value, obviously, would still be
+returned.
+     </li>
+     <li>
+      If the frame is returned from,
+      <tt class="docutils literal">
+       GeneratorReturn
+      </tt>
+      (rather than
+      <tt class="docutils literal">
+       StopIteration
+      </tt>
+      ) is raised.
+     </li>
+     <li>
+      If an instance of
+      <tt class="docutils literal">
+       GeneratorReturn
+      </tt>
+      would be raised, instead an
+instance of
+      <tt class="docutils literal">
+       StopIteration
+      </tt>
+      would be raised. Any other exception
+bubbles up normally.
+     </li>
+    </ul>
+    <p>
+     In the third case, the
+     <tt class="docutils literal">
+      StopIteration
+     </tt>
+     would have the
+     <tt class="docutils literal">
+      value
+     </tt>
+     of
+the original
+     <tt class="docutils literal">
+      GeneratorReturn
+     </tt>
+     , and would reference the original
+exception in its
+     <tt class="docutils literal">
+      __cause__
+     </tt>
+     .  If uncaught, this would clearly show
+the chaining of exceptions.
+    </p>
+    <p>
+     This alternative does
+     <em>
+      not
+     </em>
+     affect the discrepancy between generator
+expressions and list comprehensions, but allows generator-aware code
+(such as the
+     <tt class="docutils literal">
+      contextlib
+     </tt>
+     and
+     <tt class="docutils literal">
+      asyncio
+     </tt>
+     modules) to reliably
+differentiate between the second and third outcomes listed above.
+    </p>
+    <p>
+     However, once code exists that depends on this distinction between
+     <tt class="docutils literal">
+      GeneratorReturn
+     </tt>
+     and
+     <tt class="docutils literal">
+      StopIteration
+     </tt>
+     , a generator that invokes
+another generator and relies on the latter's
+     <tt class="docutils literal">
+      StopIteration
+     </tt>
+     to
+bubble out would still be potentially wrong, depending on the use made
+of the distinction between the two exception types.
+    </p>
+   </div>
+   <div class="section" id="converting-the-exception-inside-next">
+    <h2>
+     <a class="toc-backref" href="#id46">
+      Converting the exception inside next()
+     </a>
+    </h2>
+    <p>
+     Mark Shannon suggested
+     <a class="footnote-reference" href="#id27" id="id10">
+      [10]
+     </a>
+     that the problem could be solved in
+     <tt class="docutils literal">
+      next()
+     </tt>
+     rather than at the boundary of generator functions.  By
+having
+     <tt class="docutils literal">
+      next()
+     </tt>
+     catch
+     <tt class="docutils literal">
+      StopIteration
+     </tt>
+     and raise instead
+     <tt class="docutils literal">
+      ValueError
+     </tt>
+     , all unexpected
+     <tt class="docutils literal">
+      StopIteration
+     </tt>
+     bubbling would be
+prevented; however, the backward-incompatibility concerns are far
+more serious than for the current proposal, as every
+     <tt class="docutils literal">
+      next()
+     </tt>
+     call
+now needs to be rewritten to guard against
+     <tt class="docutils literal">
+      ValueError
+     </tt>
+     instead of
+     <tt class="docutils literal">
+      StopIteration
+     </tt>
+     - not to mention that there is no way to write one
+block of code which reliably works on multiple versions of Python.
+(Using a dedicated exception type, perhaps subclassing
+     <tt class="docutils literal">
+      ValueError
+     </tt>
+     ,
+would help this; however, all code would still need to be rewritten.)
+    </p>
+    <p>
+     Note that calling
+     <tt class="docutils literal">
+      next(it, default)
+     </tt>
+     catches
+     <tt class="docutils literal">
+      StopIteration
+     </tt>
+     and
+substitutes the given default value; this feature is often useful to
+avoid a
+     <tt class="docutils literal">
+      try/except
+     </tt>
+     block.
+    </p>
+   </div>
+   <div class="section" id="sub-proposal-decorator-to-explicitly-request-current-behaviour">
+    <h2>
+     <a class="toc-backref" href="#id47">
+      Sub-proposal: decorator to explicitly request current behaviour
+     </a>
+    </h2>
+    <p>
+     Nick Coghlan suggested
+     <a class="footnote-reference" href="#id28" id="id11">
+      [11]
+     </a>
+     that the situations where the current
+behaviour is desired could be supported by means of a decorator:
+    </p>
+    <pre class="literal-block">
+from itertools import allow_implicit_stop
+
+@allow_implicit_stop
+def my_generator():
+    ...
+    yield next(it)
+    ...
+</pre>
+    <p>
+     Which would be semantically equivalent to:
+    </p>
+    <pre class="literal-block">
+def my_generator():
+    try:
+        ...
+        yield next(it)
+        ...
+    except StopIteration
+        return
+</pre>
+    <p>
+     but be faster, as it could be implemented by simply permitting the
+     <tt class="docutils literal">
+      StopIteration
+     </tt>
+     to bubble up directly.
+    </p>
+    <p>
+     Single-source Python 2/3 code would also benefit in a 3.7+ world,
+since libraries like six and python-future could just define their own
+version of "allow_implicit_stop" that referred to the new builtin in
+3.5+, and was implemented as an identity function in other versions.
+    </p>
+    <p>
+     However, due to the implementation complexities required, the ongoing
+compatibility issues created, the subtlety of the decorator's effect,
+and the fact that it would encourage the "quick-fix" solution of just
+slapping the decorator onto all generators instead of properly fixing
+the code in question, this sub-proposal has been rejected.
+     <a class="footnote-reference" href="#id29" id="id12">
+      [12]
+     </a>
+    </p>
+   </div>
+  </div>
+  <div class="section" id="criticism">
+   <h1>
+    <a class="toc-backref" href="#id48">
+     Criticism
+    </a>
+   </h1>
+   <p>
+    Unofficial and apocryphal statistics suggest that this is seldom, if
+ever, a problem.
+    <a class="footnote-reference" href="#id30" id="id13">
+     [13]
+    </a>
+    Code does exist which relies on the current
+behaviour (e.g.
+    <a class="footnote-reference" href="#id20" id="id14">
+     [3]
+    </a>
+    ,
+    <a class="footnote-reference" href="#id23" id="id15">
+     [6]
+    </a>
+    ,
+    <a class="footnote-reference" href="#id24" id="id16">
+     [7]
+    </a>
+    ), and there is the concern that this
+would be unnecessary code churn to achieve little or no gain.
+   </p>
+   <p>
+    Steven D'Aprano started an informal survey on comp.lang.python
+    <a class="footnote-reference" href="#id31" id="id17">
+     [14]
+    </a>
+    ;
+at the time of writing only two responses have been received: one was
+in favor of changing list comprehensions to match generator
+expressions (!), the other was in favor of this PEP's main proposal.
+   </p>
+   <p>
+    The existing model has been compared to the perfectly-acceptable
+issues inherent to every other case where an exception has special
+meaning.  For instance, an unexpected
+    <tt class="docutils literal">
+     KeyError
+    </tt>
+    inside a
+    <tt class="docutils literal">
+     __getitem__
+    </tt>
+    method will be interpreted as failure, rather than
+permitted to bubble up.  However, there is a difference.  Special
+methods use
+    <tt class="docutils literal">
+     return
+    </tt>
+    to indicate normality, and
+    <tt class="docutils literal">
+     raise
+    </tt>
+    to signal
+abnormality; generators
+    <tt class="docutils literal">
+     yield
+    </tt>
+    to indicate data, and
+    <tt class="docutils literal">
+     return
+    </tt>
+    to
+signal the abnormal state.  This makes explicitly raising
+    <tt class="docutils literal">
+     StopIteration
+    </tt>
+    entirely redundant, and potentially surprising.  If
+other special methods had dedicated keywords to distinguish between
+their return paths, they too could turn unexpected exceptions into
+    <tt class="docutils literal">
+     RuntimeError
+    </tt>
+    ; the fact that they cannot should not preclude
+generators from doing so.
+   </p>
+   <div class="section" id="why-not-fix-all-next-methods">
+    <h2>
+     <a class="toc-backref" href="#id49">
+      Why not fix all __next__() methods?
+     </a>
+    </h2>
+    <p>
+     When implementing a regular
+     <tt class="docutils literal">
+      __next__()
+     </tt>
+     method, the only way to
+indicate the end of the iteration is to raise
+     <tt class="docutils literal">
+      StopIteration
+     </tt>
+     .  So
+catching
+     <tt class="docutils literal">
+      StopIteration
+     </tt>
+     here and converting it to
+     <tt class="docutils literal">
+      RuntimeError
+     </tt>
+     would defeat the purpose.  This is a reminder of the special status of
+generator functions: in a generator function, raising
+     <tt class="docutils literal">
+      StopIteration
+     </tt>
+     is redundant since the iteration can be terminated
+by a simple
+     <tt class="docutils literal">
+      return
+     </tt>
+     .
+    </p>
+   </div>
+  </div>
+  <div class="section" id="references">
+   <h1>
+    <a class="toc-backref" href="#id50">
+     References
+    </a>
+   </h1>
+   <table class="docutils footnote" frame="void" id="id18" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id1">
+        [1]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="../pep-0380/index.html">
+        PEP 380
+       </a>
+       - Syntax for Delegating to a Subgenerator
+(
+       <a class="reference external" href="../pep-0380/index.html">
+        https://www.python.org/dev/peps/pep-0380
+       </a>
+       )
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id19" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id2">
+        [2]
+       </a>
+      </td>
+      <td>
+       Initial mailing list comment
+(
+       <a class="reference external" href="https://mail.python.org/pipermail/python-ideas/2014-November/029906.html">
+        https://mail.python.org/pipermail/python-ideas/2014-November/029906.html
+       </a>
+       )
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id20" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       [3]
+      </td>
+      <td>
+       <em>
+        (
+        <a class="fn-backref" href="#id3">
+         1
+        </a>
+        ,
+        <a class="fn-backref" href="#id14">
+         2
+        </a>
+        )
+       </em>
+       Proposal by GvR
+(
+       <a class="reference external" href="https://mail.python.org/pipermail/python-ideas/2014-November/029953.html">
+        https://mail.python.org/pipermail/python-ideas/2014-November/029953.html
+       </a>
+       )
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id21" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id4">
+        [4]
+       </a>
+      </td>
+      <td>
+       Tracker issue with Proof-of-Concept patch
+(
+       <a class="reference external" href="http://bugs.python.org/issue22906">
+        http://bugs.python.org/issue22906
+       </a>
+       )
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id22" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id5">
+        [5]
+       </a>
+      </td>
+      <td>
+       Pure Python implementation of groupby
+(
+       <a class="reference external" href="https://docs.python.org/3/library/itertools.html#itertools.groupby">
+        https://docs.python.org/3/library/itertools.html#itertools.groupby
+       </a>
+       )
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id23" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       [6]
+      </td>
+      <td>
+       <em>
+        (
+        <a class="fn-backref" href="#id6">
+         1
+        </a>
+        ,
+        <a class="fn-backref" href="#id15">
+         2
+        </a>
+        )
+       </em>
+       Split a sequence or generator using a predicate
+(
+       <a class="reference external" href="http://code.activestate.com/recipes/578416-split-a-sequence-or-generator-using-a-predicate/">
+        http://code.activestate.com/recipes/578416-split-a-sequence-or-generator-using-a-predicate/
+       </a>
+       )
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id24" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       [7]
+      </td>
+      <td>
+       <em>
+        (
+        <a class="fn-backref" href="#id7">
+         1
+        </a>
+        ,
+        <a class="fn-backref" href="#id16">
+         2
+        </a>
+        )
+       </em>
+       wrap unbounded generator to restrict its output
+(
+       <a class="reference external" href="http://code.activestate.com/recipes/66427-wrap-unbounded-generator-to-restrict-its-output/">
+        http://code.activestate.com/recipes/66427-wrap-unbounded-generator-to-restrict-its-output/
+       </a>
+       )
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id25" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id8">
+        [8]
+       </a>
+      </td>
+      <td>
+       Post from Nick Coghlan mentioning asyncio
+(
+       <a class="reference external" href="https://mail.python.org/pipermail/python-ideas/2014-November/029961.html">
+        https://mail.python.org/pipermail/python-ideas/2014-November/029961.html
+       </a>
+       )
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id26" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id9">
+        [9]
+       </a>
+      </td>
+      <td>
+       Coroutines in asyncio
+(
+       <a class="reference external" href="https://docs.python.org/3/library/asyncio-task.html#coroutines">
+        https://docs.python.org/3/library/asyncio-task.html#coroutines
+       </a>
+       )
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id27" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id10">
+        [10]
+       </a>
+      </td>
+      <td>
+       Post from Mark Shannon with alternate proposal
+(
+       <a class="reference external" href="https://mail.python.org/pipermail/python-dev/2014-November/137129.html">
+        https://mail.python.org/pipermail/python-dev/2014-November/137129.html
+       </a>
+       )
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id28" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id11">
+        [11]
+       </a>
+      </td>
+      <td>
+       Idea from Nick Coghlan
+(
+       <a class="reference external" href="https://mail.python.org/pipermail/python-dev/2014-November/137201.html">
+        https://mail.python.org/pipermail/python-dev/2014-November/137201.html
+       </a>
+       )
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id29" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id12">
+        [12]
+       </a>
+      </td>
+      <td>
+       Rejection of above idea by GvR
+(
+       <a class="reference external" href="https://mail.python.org/pipermail/python-dev/2014-November/137243.html">
+        https://mail.python.org/pipermail/python-dev/2014-November/137243.html
+       </a>
+       )
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id30" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id13">
+        [13]
+       </a>
+      </td>
+      <td>
+       Response by Steven D'Aprano
+(
+       <a class="reference external" href="https://mail.python.org/pipermail/python-ideas/2014-November/029994.html">
+        https://mail.python.org/pipermail/python-ideas/2014-November/029994.html
+       </a>
+       )
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id31" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id17">
+        [14]
+       </a>
+      </td>
+      <td>
+       Thread on comp.lang.python started by Steven D'Aprano
+(
+       <a class="reference external" href="https://mail.python.org/pipermail/python-list/2014-November/680757.html">
+        https://mail.python.org/pipermail/python-list/2014-November/680757.html
+       </a>
+       )
+      </td>
+     </tr>
+    </tbody>
+   </table>
+  </div>
+  <div class="section" id="copyright">
+   <h1>
+    <a class="toc-backref" href="#id51">
+     Copyright
+    </a>
+   </h1>
+   <p>
+    This document has been placed in the public domain.
+   </p>
+   <!-- Local Variables:
+mode: indented-text
+indent-tabs-mode: nil
+sentence-end-double-space: t
+fill-column: 70
+coding: utf-8
+End: -->
+  </div>
+ </body>
+
+<!-- Mirrored from www.python.org/dev/peps/pep-0479/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 03 Sep 2015 04:34:57 GMT -->
+</html>Source: <a href="https://hg.python.org/peps/file/tip/pep-0479.txt">https://hg.python.org/peps/file/tip/pep-0479.txt</a>
+
+    </article>
+
+
+                </section>
+
+                
+
+
+<aside class="left-sidebar" role="secondary">
+
+    
+
+
+
+
+
+
+    
+
+
+
+
+
+        <div class="twitter-widget sidebar-widget">
+        <a class="twitter-timeline" data-dnt="true" href="https://twitter.com/ThePSF" data-widget-id="434113224703610882">Tweets by @ThePSF</a>
+        <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+    </div>
+
+    <div class="psf-sidebar-widget sidebar-widget">
+        <h3 class="widget-title">The PSF</h3>
+<p>The Python Software Foundation is the organization behind Python. Become a member of the PSF and help advance the software and our mission. </p>
+
+    </div>
+
+</aside>
+
+
+
+                
+                
+
+
+            </div><!-- end .container -->
+        </div><!-- end #content .content-wrapper -->
+
+        <!-- Footer and social media list -->
+        <footer id="site-map" class="main-footer" role="contentinfo">
+            <div class="main-footer-links">
+                <div class="container">
+
+                    
+                    <a id="back-to-top-1" class="jump-link" href="#python-network"><span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> Back to Top</a>
+
+                    
+
+<ul class="sitemap navigation menu do-not-print" role="tree" id="container">
+    
+    <li class="tier-1 element-1">
+        <a href="https://www.python.org/about/" >About</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/apps/" title="">Applications</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/quotes/" title="">Quotes</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/gettingstarted/" title="">Getting Started</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/help/" title="">Help</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-2">
+        <a href="https://www.python.org/downloads/" >Downloads</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/downloads/" title="">All releases</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/downloads/source/" title="">Source code</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/downloads/windows/" title="">Windows</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/downloads/mac-osx/" title="">Mac OS X</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/download/other/" title="">Other Platforms</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://docs.python.org/3/license.html" title="">License</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/download/alternatives" title="">Alternative Implementations</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-3">
+        <a href="https://www.python.org/doc/" >Documentation</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/doc/" title="">Docs</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/doc/av" title="">Audio/Visual Talks</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://wiki.python.org/moin/BeginnersGuide" title="">Beginner&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://docs.python.org/faq/" title="">FAQ</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="http://wiki.python.org/moin/Languages" title="">Non-English Docs</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="../index.html" title="">PEP Index</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://wiki.python.org/moin/PythonBooks" title="">Python Books</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-4">
+        <a href="https://www.python.org/community/" >Community</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/community/diversity/" title="">Diversity</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/community/irc/" title="">IRC</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/community/lists/" title="">Mailing Lists</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/workshops/" title="">Python Conferences</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/community/sigs/" title="">Special Interest Groups</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://wiki.python.org/moin/" title="">Python Wiki</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/community/logos/" title="">Python Logo</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://www.python.org/community/merchandise/" title="">Merchandise</a></li>
+    
+        <li class="tier-2 element-9" role="treeitem"><a href="https://www.python.org/community/awards" title="">Community Awards</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-5">
+        <a href="https://www.python.org/about/success/" title="success-stories">Success Stories</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/success/#arts" title="">Arts</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/success/#business" title="">Business</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/success/#education" title="">Education</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/success/#engineering" title="">Engineering</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/about/success/#government" title="">Government</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://www.python.org/about/success/#scientific" title="">Scientific</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/about/success/#software-development" title="">Software Development</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-6">
+        <a href="https://www.python.org/blogs/" title="News from around the Python world">News</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/blogs/" title="Python Insider Blog Posts">Python News</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://planetpython.org/" title="Planet Python">Community News</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="http://pyfound.blogspot.com/" title="PSF Blog">PSF News</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pycon.blogspot.com/" title="PyCon Blog">PyCon News</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-7">
+        <a href="https://www.python.org/events/" >Events</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/events/python-events/" title="">Python Events</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/events/python-user-group/" title="">User Group Events</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/events/python-events/past/" title="">Python Events Archive</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/events/python-user-group/past/" title="">User Group Events Archive</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://wiki.python.org/moin/PythonEventsCalendar#Submitting_an_Event" title="">Submit an Event</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-8">
+        <a href="https://www.python.org/dev/" >Contributing</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="http://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://bugs.python.org/" title="">Issue Tracker</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://mail.python.org/mailman/listinfo/python-dev" title="">python-dev list</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pythonmentors.com/" title="">Core Mentorship</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+</ul>
+
+
+                    <a id="back-to-top-2" class="jump-link" href="#python-network"><span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> Back to Top</a>
+                    
+
+                </div><!-- end .container -->
+            </div> <!-- end .main-footer-links -->
+
+            <div class="site-base">
+                <div class="container">
+                    
+                    <ul class="footer-links navigation menu do-not-print" role="tree">
+                        <li class="tier-1 element-1"><a href="https://www.python.org/about/help/">Help &amp; <span class="say-no-more">General</span> Contact</a></li>
+                        <li class="tier-1 element-2"><a href="https://www.python.org/community/diversity/">Diversity <span class="say-no-more">Initiatives</span></a></li>
+                        <li class="tier-1 element-3"><a href="https://github.com/python/pythondotorg/issues">Submit Website Bug</a></li>
+                        <!--<li class="tier-1 element-3"><a href="#"><span class="say-no-more">Website</span> Colophon</a></li>-->
+                    </ul>
+
+                    <div class="copyright">
+                        <p><small>
+                            <span class="pre">Copyright &copy;2001-2015.</span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/psf-landing/">Python Software Foundation</a></span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/about/legal/">Legal Statements</a></span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/privacy/">Privacy Policy</a></span>
+                        </small></p>
+                    </div>
+
+                </div><!-- end .container -->
+            </div><!-- end .site-base -->
+
+        </footer>
+
+    </div><!-- end #touchnav-wrapper -->
+
+    
+    <script src="../../../../ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="../../../static/js/libs/jquery-1.8.2.min.js"><\/script>')</script>
+
+    <script src="../../../static/js/libs/masonry.pkgd.min.js"></script>
+
+    <script type="text/javascript" src="../../../static/js/main-min.js" charset="utf-8"></script>
+    
+
+    <!--[if lte IE 7]>
+    <script type="text/javascript" src="/static/js/plugins/IE8-min.js" charset="utf-8"></script>
+    
+    
+    <![endif]-->
+
+    <!--[if lte IE 8]>
+    <script type="text/javascript" src="/static/js/plugins/getComputedStyle-min.js" charset="utf-8"></script>
+    
+    
+    <![endif]-->
+
+    
+
+    
+    
+
+</body>
+</html>

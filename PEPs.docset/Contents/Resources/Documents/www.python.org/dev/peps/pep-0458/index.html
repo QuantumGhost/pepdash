@@ -1,0 +1,4408 @@
+<!doctype html>
+<!--[if lt IE 7]>   <html class="no-js ie6 lt-ie7 lt-ie8 lt-ie9">   <![endif]-->
+<!--[if IE 7]>      <html class="no-js ie7 lt-ie8 lt-ie9">          <![endif]-->
+<!--[if IE 8]>      <html class="no-js ie8 lt-ie9">                 <![endif]-->
+<!--[if gt IE 8]><!--><html class="no-js" lang="en" dir="ltr">  <!--<![endif]-->
+
+
+<!-- Mirrored from www.python.org/dev/peps/pep-0458/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 03 Sep 2015 04:33:21 GMT -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <link rel="prefetch" href="../../../../ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js">
+
+    <meta name="application-name" content="Python.org">
+    <meta name="msapplication-tooltip" content="The official home of the Python Programming Language">
+    <meta name="apple-mobile-web-app-title" content="Python.org">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="format-detection" content="telephone=no">
+    <meta http-equiv="cleartype" content="on">
+    <meta http-equiv="imagetoolbar" content="false">
+
+    <script src="../../../static/js/libs/modernizr.js"></script>
+
+    <link href="../../../static/stylesheets/style.css" rel="stylesheet" type="text/css" title="default" />
+    <link href="../../../static/stylesheets/mq.css" rel="stylesheet" type="text/css" media="not print, braille, embossed, speech, tty" />
+    
+
+    <!--[if (lte IE 8)&(!IEMobile)]>
+    <link href="/static/stylesheets/no-mq.css" rel="stylesheet" type="text/css" media="screen" />
+    
+    
+    <![endif]-->
+
+    
+    <link rel="icon" type="image/x-icon" href="https://www.python.org/static/favicon.ico">
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="../../../static/apple-touch-icon-144x144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="../../../static/apple-touch-icon-114x114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="../../../static/apple-touch-icon-72x72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="../../../static/apple-touch-icon-precomposed.png">
+    <link rel="apple-touch-icon" href="../../../static/apple-touch-icon-precomposed.png">
+
+    
+    <meta name="msapplication-TileImage" content="/static/metro-icon-144x144-precomposed.png"><!-- white shape -->
+    <meta name="msapplication-TileColor" content="#3673a5"><!-- python blue -->
+    <meta name="msapplication-navbutton-color" content="#3673a5">
+
+    <meta property="og:site_name" content="Python.org">
+    <meta property="og:type" content="website">
+
+    <title>PEP 0458 -- Surviving a Compromise of PyPI | Python.org</title>
+    <meta property="og:title" content="Welcome to Python.org">
+
+    
+    <meta name="description" content="The official home of the Python Programming Language">
+    <meta name="og:description" content="The official home of the Python Programming Language">
+    <meta name="keywords" content="Python programming language object oriented web free open source software license documentation download community">
+    <meta property="og:tag" content="Python programming language object oriented web free open source software license documentation download community">
+    <meta property="og:published_time" content="">
+    <meta property="og:modified_time" content="">
+    <meta property="og:author" content="">
+    <meta property="og:section" content=""> 
+    <meta property="og:url" content="">
+    <meta property="og:image" content="">
+    <meta property="og:video" content="">
+
+    <link rel="author" href="https://www.python.org/static/humans.txt">
+
+    
+
+    
+    <script type="application/ld+json">
+     {
+       "@context": "http://schema.org",
+       "@type": "WebSite",
+       "url": "https://www.python.org/",
+       "potentialAction": {
+         "@type": "SearchAction",
+         "target": "https://www.python.org/search/?q={search_term_string}",
+         "query-input": "required name=search_term_string"
+       }
+     }
+    </script>
+
+    
+    <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-39055973-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+    </script>
+    
+</head>
+
+<body class="python pages pep-page">
+
+    <div id="touchnav-wrapper">
+
+        <div id="nojs" class="do-not-print">
+            <p><strong>Notice:</strong> While Javascript is not essential for this website, your interaction with the content will be limited. Please turn Javascript on for the full experience. </p>
+        </div>
+
+        <!--[if lt IE 8]>
+        <div id="oldie-warning" class="do-not-print">
+            <p><strong>Notice:</strong> Your browser is <em>ancient</em> and <a href="http://www.ie6countdown.com/">Microsoft agrees</a>. <a href="http://browsehappy.com/">Upgrade to a different browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to experience a better web.</p>
+        </div>
+        <![endif]-->
+
+        <!-- Sister Site Links -->
+        <div id="top" class="top-bar do-not-print">
+
+            <nav class="meta-navigation container" role="navigation">
+
+                
+                <div class="skip-link screen-reader-text">
+                    <a href="#content" title="Skip to content">Skip to content</a>
+                </div>
+
+                
+                <a id="close-python-network" class="jump-link" href="#python-network" aria-hidden="true">
+                    <span aria-hidden="true" class="icon-arrow-down"><span>&#9660;</span></span> Close
+                </a>
+
+                
+
+<ul class="menu" role="tree">
+    
+    <li class="python-meta ">
+        <a href="https://www.python.org/" title="The Python Programming Language" >Python</a>
+    </li>
+    
+    <li class="psf-meta ">
+        <a href="https://www.python.org/psf-landing/" title="The Python Software Foundation" >PSF</a>
+    </li>
+    
+    <li class="docs-meta ">
+        <a href="https://docs.python.org/" title="Python Documentation" >Docs</a>
+    </li>
+    
+    <li class="pypi-meta ">
+        <a href="https://pypi.python.org/" title="Python Package Index" >PyPI</a>
+    </li>
+    
+    <li class="jobs-meta ">
+        <a href="https://www.python.org/jobs/" title="Python Job Board" >Jobs</a>
+    </li>
+    
+    <li class="shop-meta ">
+        <a href="https://www.python.org/community/" title="Python Community" >Community</a>
+    </li>
+    
+</ul>
+
+
+                <a id="python-network" class="jump-link" href="#top" aria-hidden="true">
+                    <span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> The Python Network
+                </a>
+
+            </nav>
+
+        </div>
+
+        <!-- Header elements -->
+        <header class="main-header" role="banner">
+            <div class="container">
+
+                <h1 class="site-headline">
+                    <a href="https://www.python.org/"><img class="python-logo" src="../../../static/img/python-logo.png" alt="python&trade;"></a>
+                </h1>
+
+                <div class="options-bar do-not-print">
+
+                    
+                    <a id="site-map-link" class="jump-to-menu" href="#site-map"><span class="menu-icon">&equiv;</span> Menu</a><form class="search-the-site" action="https://www.python.org/search/" method="get">
+                        <fieldset title="Search Python.org">
+
+                            <span aria-hidden="true" class="icon-search"></span>
+
+                            <label class="screen-reader-text" for="id-search-field">Search This Site</label>
+                            <input id="id-search-field" name="q" type="search" role="textbox" class="search-field" placeholder="Search" value="" tabindex="1">
+
+                            <button type="submit" name="submit" id="submit" class="search-button" title="Submit this Search" tabindex="3">
+                                GO
+                            </button>
+
+                            
+                            <!--[if IE]><input type="text" style="display: none;" disabled="disabled" size="1" tabindex="4"><![endif]-->
+
+                        </fieldset>
+                    </form><span class="breaker"></span><div class="adjust-font-size" aria-hidden="true">
+                        <ul class="navigation menu" aria-label="Adjust Text Size on Page">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                <a href="#" class="action-trigger"><strong><small>A</small> A</strong></a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a class="text-shrink" title="Make Text Smaller" href="javascript:;">Smaller</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a class="text-grow" title="Make Text Larger" href="javascript:;">Larger</a></li>
+                                    <li class="tier-2 element-3" role="treeitem"><a class="text-reset" title="Reset any font size changes I have made" href="javascript:;">Reset</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div><div class="winkwink-nudgenudge">
+                        <ul class="navigation menu" aria-label="Social Media Navigation">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                <a href="#" class="action-trigger">Socialize</a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a href="http://plus.google.com/+Python"><span aria-hidden="true" class="icon-google-plus"></span>Google+</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a href="http://www.facebook.com/pythonlang?fref=ts"><span aria-hidden="true" class="icon-facebook"></span>Facebook</a></li>
+                                    <li class="tier-2 element-3" role="treeitem"><a href="http://twitter.com/ThePSF"><span aria-hidden="true" class="icon-twitter"></span>Twitter</a></li>
+                                    <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/irc/"><span aria-hidden="true" class="icon-freenode"></span>Chat on IRC</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div><div class="account-signin">
+                        <ul class="navigation menu" aria-label="Social Media Navigation">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                
+                                <a href="https://www.python.org/accounts/login/" title="Sign Up or Sign In to Python.org">Sign In</a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/accounts/signup/">Sign Up / Register</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/accounts/login/">Sign In</a></li>
+                                </ul>
+                                
+                            </li>
+                        </ul>
+                    </div>
+
+                </div><!-- end options-bar -->
+
+                <nav id="mainnav" class="python-navigation main-navigation do-not-print" role="navigation">
+                    
+                        
+<ul class="navigation menu" role="menubar" aria-label="Main Navigation">
+  
+    
+    
+    <li id="about" class="tier-1 element-1  " aria-haspopup="true">
+        <a href="https://www.python.org/about/" title="" class="">About</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/apps/" title="">Applications</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/quotes/" title="">Quotes</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/gettingstarted/" title="">Getting Started</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/help/" title="">Help</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="downloads" class="tier-1 element-2  " aria-haspopup="true">
+        <a href="https://www.python.org/downloads/" title="" class="">Downloads</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/downloads/" title="">All releases</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/downloads/source/" title="">Source code</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/downloads/windows/" title="">Windows</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/downloads/mac-osx/" title="">Mac OS X</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/download/other/" title="">Other Platforms</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://docs.python.org/3/license.html" title="">License</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/download/alternatives" title="">Alternative Implementations</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="documentation" class="tier-1 element-3  " aria-haspopup="true">
+        <a href="https://www.python.org/doc/" title="" class="">Documentation</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/doc/" title="">Docs</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/doc/av" title="">Audio/Visual Talks</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://wiki.python.org/moin/BeginnersGuide" title="">Beginner&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://docs.python.org/faq/" title="">FAQ</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="http://wiki.python.org/moin/Languages" title="">Non-English Docs</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="../index.html" title="">PEP Index</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://wiki.python.org/moin/PythonBooks" title="">Python Books</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="community" class="tier-1 element-4  " aria-haspopup="true">
+        <a href="https://www.python.org/community/" title="" class="">Community</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/community/diversity/" title="">Diversity</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/community/irc/" title="">IRC</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/community/lists/" title="">Mailing Lists</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/workshops/" title="">Python Conferences</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/community/sigs/" title="">Special Interest Groups</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://wiki.python.org/moin/" title="">Python Wiki</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/community/logos/" title="">Python Logo</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://www.python.org/community/merchandise/" title="">Merchandise</a></li>
+    
+        <li class="tier-2 element-9" role="treeitem"><a href="https://www.python.org/community/awards" title="">Community Awards</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="success-stories" class="tier-1 element-5  " aria-haspopup="true">
+        <a href="https://www.python.org/about/success/" title="success-stories" class="">Success Stories</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/success/#arts" title="">Arts</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/success/#business" title="">Business</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/success/#education" title="">Education</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/success/#engineering" title="">Engineering</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/about/success/#government" title="">Government</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://www.python.org/about/success/#scientific" title="">Scientific</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/about/success/#software-development" title="">Software Development</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="news" class="tier-1 element-6  " aria-haspopup="true">
+        <a href="https://www.python.org/blogs/" title="News from around the Python world" class="">News</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/blogs/" title="Python Insider Blog Posts">Python News</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://planetpython.org/" title="Planet Python">Community News</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="http://pyfound.blogspot.com/" title="PSF Blog">PSF News</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pycon.blogspot.com/" title="PyCon Blog">PyCon News</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="events" class="tier-1 element-7  " aria-haspopup="true">
+        <a href="https://www.python.org/events/" title="" class="">Events</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/events/python-events/" title="">Python Events</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/events/python-user-group/" title="">User Group Events</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/events/python-events/past/" title="">Python Events Archive</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/events/python-user-group/past/" title="">User Group Events Archive</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://wiki.python.org/moin/PythonEventsCalendar#Submitting_an_Event" title="">Submit an Event</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    
+  
+</ul>
+
+                    
+                </nav>
+
+                <div class="header-banner "> <!-- for optional "do-not-print" class -->
+                    
+                    
+                </div>
+
+                
+                
+
+             </div><!-- end .container -->
+        </header>
+
+        <div id="content" class="content-wrapper">
+            <!-- Main Content Column -->
+            <div class="container">
+
+                <section class="main-content with-left-sidebar" role="main">
+
+                    
+<ul class="breadcrumbs menu">
+    <li>
+        <a href="https://www.python.org/" title="The Python Programming Language">Python</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>
+        <a href="https://www.python.org/dev/">Python Developer's Guide</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>
+        <a href="../index.html">PEP Index</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>PEP 0458 -- Surviving a Compromise of PyPI</li>
+</ul>
+
+
+                    
+<style>
+   .pep-page pre {
+        padding: .5em;
+        background: inherit;
+        border-left: 0px;
+        -webkit-box-shadow: 0 0 0 0;
+        -moz-box-shadow: 0 0 0 0;
+        box-shadow: 0 0 0 0;
+   }
+</style>
+
+    
+    <article class="text">
+        
+
+        <header class="article-header">
+            <h1 class="page-title">PEP 0458 -- Surviving a Compromise of PyPI</h1>
+        </header>
+
+        <!--
+This HTML is auto-generated.  DO NOT EDIT THIS FILE!  If you are writing a new
+PEP, see http://www.python.org/dev/peps/pep-0001 for instructions and links
+to templates.  DO NOT USE THIS HTML FILE AS YOUR TEMPLATE!
+-->
+<html>
+ <body>
+  <table class="rfc2822 docutils field-list" frame="void" rules="none">
+   <col class="field-name">
+   </col>
+   <col class="field-body">
+   </col>
+   <tbody valign="top">
+    <tr class="field">
+     <th class="field-name">
+      PEP:
+     </th>
+     <td class="field-body">
+      458
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Title:
+     </th>
+     <td class="field-body">
+      Surviving a Compromise of PyPI
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Author:
+     </th>
+     <td class="field-body">
+      Trishank Karthik Kuppusamy &lt;trishank at nyu.edu&gt;,
+Vladimir Diaz &lt;vladimir.diaz at nyu.edu&gt;,
+Donald Stufft &lt;donald at stufft.io&gt;, Justin Cappos &lt;jcappos at nyu.edu&gt;
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      BDFL-Delegate:
+     </th>
+     <td class="field-body">
+      Richard Jones &lt;
+      <a class="reference external" href="mailto:r1chardj0n3s@gmail.com">
+       r1chardj0n3s@gmail.com
+      </a>
+      &gt;
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Discussions-To:
+     </th>
+     <td class="field-body">
+      DistUtils mailing list &lt;
+      <a class="reference external" href="mailto:distutils-sig@python.org?subject=PEP%20458">
+       distutils-sig at python.org
+      </a>
+      &gt;
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Status:
+     </th>
+     <td class="field-body">
+      Draft
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Type:
+     </th>
+     <td class="field-body">
+      Standards Track
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Created:
+     </th>
+     <td class="field-body">
+      27-Sep-2013
+     </td>
+    </tr>
+   </tbody>
+  </table>
+  <hr/>
+  <div class="contents topic" id="contents">
+   <p class="topic-title first">
+    Contents
+   </p>
+   <ul class="simple">
+    <li>
+     <a class="reference internal" href="#abstract" id="id105">
+      Abstract
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#motivation" id="id106">
+      Motivation
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#threat-model" id="id107">
+      Threat Model
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#definitions" id="id108">
+      Definitions
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#overview-of-tuf" id="id109">
+      Overview of TUF
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#integrating-tuf-with-pypi" id="id110">
+      Integrating TUF with PyPI
+     </a>
+     <ul>
+      <li>
+       <a class="reference internal" href="#what-additional-repository-files-are-required-on-pypi" id="id111">
+        What Additional Repository Files are Required on PyPI?
+       </a>
+      </li>
+     </ul>
+    </li>
+    <li>
+     <a class="reference internal" href="#pypi-and-tuf-metadata" id="id112">
+      PyPI and TUF Metadata
+     </a>
+     <ul>
+      <li>
+       <a class="reference internal" href="#signing-metadata-and-repository-management" id="id113">
+        Signing Metadata and Repository Management
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#how-to-establish-initial-trust-in-the-pypi-root-keys" id="id114">
+        How to Establish Initial Trust in the PyPI Root Keys
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#minimum-security-model" id="id115">
+        Minimum Security Model
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#metadata-expiry-times" id="id116">
+        Metadata Expiry Times
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#metadata-scalability" id="id117">
+        Metadata Scalability
+       </a>
+      </li>
+     </ul>
+    </li>
+    <li>
+     <a class="reference internal" href="#pypi-and-key-requirements" id="id118">
+      PyPI and Key Requirements
+     </a>
+     <ul>
+      <li>
+       <a class="reference internal" href="#number-of-keys-recommended" id="id119">
+        Number Of Keys Recommended
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#online-and-offline-keys-recommended-for-each-role" id="id120">
+        Online and Offline Keys Recommended for Each Role
+       </a>
+      </li>
+     </ul>
+    </li>
+    <li>
+     <a class="reference internal" href="#how-should-metadata-be-generated" id="id121">
+      How Should Metadata be Generated?
+     </a>
+     <ul>
+      <li>
+       <a class="reference internal" href="#consistent-snapshots" id="id122">
+        Consistent Snapshots
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#producing-consistent-snapshots" id="id123">
+        Producing Consistent Snapshots
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#snapshot-process" id="id124">
+        Snapshot Process
+       </a>
+      </li>
+     </ul>
+    </li>
+    <li>
+     <a class="reference internal" href="#key-compromise-analysis" id="id125">
+      Key Compromise Analysis
+     </a>
+     <ul>
+      <li>
+       <a class="reference internal" href="#in-the-event-of-a-key-compromise" id="id126">
+        In the Event of a Key Compromise
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#auditing-snapshots" id="id127">
+        Auditing Snapshots
+       </a>
+      </li>
+     </ul>
+    </li>
+    <li>
+     <a class="reference internal" href="#appendix-a-repository-attacks-prevented-by-tuf" id="id128">
+      Appendix A: Repository Attacks Prevented by TUF
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#appendix-b-extension-to-the-minimum-security-model" id="id129">
+      Appendix B: Extension to the Minimum Security Model
+     </a>
+     <ul>
+      <li>
+       <a class="reference internal" href="#maximum-security-model" id="id130">
+        Maximum Security Model
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#end-to-end-signing" id="id131">
+        End-to-End Signing
+       </a>
+      </li>
+     </ul>
+    </li>
+    <li>
+     <a class="reference internal" href="#appendix-c-pep-470-and-projects-hosted-externally" id="id132">
+      Appendix C: PEP 470 and Projects Hosted Externally
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#references" id="id133">
+      References
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#acknowledgements" id="id134">
+      Acknowledgements
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#copyright" id="id135">
+      Copyright
+     </a>
+    </li>
+   </ul>
+  </div>
+  <div class="section" id="abstract">
+   <h1>
+    <a class="toc-backref" href="#id105">
+     Abstract
+    </a>
+   </h1>
+   <p>
+    This PEP proposes how the Python Package Index (PyPI
+    <a class="footnote-reference" href="#id48" id="id1">
+     [1]
+    </a>
+    ) should be integrated
+with The Update Framework
+    <a class="footnote-reference" href="#id49" id="id2">
+     [2]
+    </a>
+    (TUF).  TUF was designed to be a flexible
+security add-on to a software updater or package manager.  The framework
+integrates best security practices such as separating role responsibilities,
+adopting the many-man rule for signing packages, keeping signing keys offline,
+and revocation of expired or compromised signing keys.  For example, attackers
+would have to steal multiple signing keys stored independently to compromise
+a role responsible for specifying a repository's available files.  Another role
+responsible for indicating the latest snapshot of the repository may have to be
+similarly compromised, and independent of the first compromised role.
+   </p>
+   <p>
+    The proposed integration will allow modern package managers such as pip
+    <a class="footnote-reference" href="#id50" id="id3">
+     [3]
+    </a>
+    to
+be more secure against various types of security attacks on PyPI and protect
+users from such attacks.  Specifically, this PEP describes how PyPI processes
+should be adapted to generate and incorporate TUF metadata (i.e., the minimum
+security model).  The minimum security model supports verification of PyPI
+distributions that are signed with keys stored on PyPI: distributions uploaded
+by developers are signed by PyPI, require no action from developers (other than
+uploading the distribution), and are immediately available for download.  The
+minimum security model also minimizes PyPI administrative responsibilities by
+automating much of the signing process.
+   </p>
+   <p>
+    This PEP does not prescribe how package managers such as pip should be adapted
+to install or update projects from PyPI with TUF metadata.   Package managers
+interested in adopting TUF on the client side may consult TUF's
+    <a class="reference external" href="https://github.com/theupdateframework/tuf/tree/develop/tuf/client#updaterpy">
+     library
+documentation
+    </a>
+    <a class="footnote-reference" href="#id74" id="id75">
+     [27]
+    </a>
+    , which exists for this purpose.  Support for project
+distributions that are signed by developers (maximum security model) is also
+not discussed in this PEP, but is outlined in the appendix as a possible future
+extension and covered in detail in
+    <a class="reference external" href="../pep-0480/index.html">
+     PEP 480
+    </a>
+    <a class="footnote-reference" href="#id73" id="id4">
+     [26]
+    </a>
+    .  The
+    <a class="reference external" href="../pep-0480/index.html">
+     PEP 480
+    </a>
+    extension
+focuses on the maximum security model, which requires more PyPI administrative
+work (none by clients), but it also proposes an easy-to-use key management
+solution for developers, how to interface with a potential future build farm on
+PyPI infrastructure, and discusses the feasibility of end-to-end signing.
+   </p>
+  </div>
+  <div class="section" id="motivation">
+   <h1>
+    <a class="toc-backref" href="#id106">
+     Motivation
+    </a>
+   </h1>
+   <p>
+    In January 2013, the Python Software Foundation (PSF) announced
+    <a class="footnote-reference" href="#id51" id="id6">
+     [4]
+    </a>
+    that the
+python.org wikis for Python, Jython, and the PSF were subjected to a security
+breach that caused all of the wiki data to be destroyed on January 5, 2013.
+Fortunately, the PyPI infrastructure was not affected by this security breach.
+However, the incident is a reminder that PyPI should take defensive steps to
+protect users as much as possible in the event of a compromise.  Attacks on
+software repositories happen all the time
+    <a class="footnote-reference" href="#id52" id="id7">
+     [5]
+    </a>
+    .  The PSF must accept the
+possibility of security breaches and prepare PyPI accordingly because it is a
+valuable resource used by thousands, if not millions, of people.
+   </p>
+   <p>
+    Before the wiki attack, PyPI used MD5 hashes to tell package managers, such as
+pip, whether or not a package was corrupted in transit.  However, the absence
+of SSL made it hard for package managers to verify transport integrity to PyPI.
+It was therefore easy to launch a man-in-the-middle attack between pip and
+PyPI, and change package content arbitrarily.  Users could be tricked into
+installing malicious packages with man-in-the-middle attacks.  After the wiki
+attack, several steps were proposed (some of which were implemented) to deliver
+a much higher level of security than was previously the case: requiring SSL to
+communicate with PyPI
+    <a class="footnote-reference" href="#id53" id="id8">
+     [6]
+    </a>
+    , restricting project names
+    <a class="footnote-reference" href="#id54" id="id9">
+     [7]
+    </a>
+    , and migrating from
+MD5 to SHA-2 hashes
+    <a class="footnote-reference" href="#id55" id="id10">
+     [8]
+    </a>
+    .
+   </p>
+   <p>
+    These steps, though necessary, are insufficient because attacks are still
+possible through other avenues.  For example, a public mirror is trusted to
+honestly mirror PyPI, but some mirrors may misbehave due to malice or accident.
+Package managers such as pip are supposed to use signatures from PyPI to verify
+packages downloaded from a public mirror
+    <a class="footnote-reference" href="#id56" id="id11">
+     [9]
+    </a>
+    , but none are known to actually
+do so
+    <a class="footnote-reference" href="#id57" id="id12">
+     [10]
+    </a>
+    .  Therefore, it would be wise to add more security measures to
+detect attacks from public mirrors or content delivery networks
+    <a class="footnote-reference" href="#id58" id="id13">
+     [11]
+    </a>
+    (CDNs).
+   </p>
+   <p>
+    Even though official mirrors are being deprecated on PyPI
+    <a class="footnote-reference" href="#id59" id="id14">
+     [12]
+    </a>
+    , there remain a
+wide variety of other attack vectors on package managers
+    <a class="footnote-reference" href="#id60" id="id15">
+     [13]
+    </a>
+    .  These attacks
+can crash client systems, cause obsolete packages to be installed, or even
+allow an attacker to execute arbitrary code.  In
+    <a class="reference external" href="https://mail.python.org/pipermail/distutils-sig/2013-September/022755.html">
+     September 2013
+    </a>
+    <a class="footnote-reference" href="#id76" id="id77">
+     [28]
+    </a>
+    , a post was
+made to the Distutils mailing list showing that the latest version of pip (at
+the time) was susceptible to such attacks, and how TUF could protect users
+against them
+    <a class="footnote-reference" href="#id61" id="id16">
+     [14]
+    </a>
+    .  Specifically, testing was done to see how pip would
+respond to these attacks with and without TUF.  Attacks tested included replay
+and freeze, arbitrary packages, slow retrieval, and endless data.  The post
+also included a demonstration of how pip would respond if PyPI were
+compromised.
+   </p>
+   <p>
+    With the intent to protect PyPI against infrastructure compromises, this PEP
+proposes integrating PyPI with The Update Framework
+    <a class="footnote-reference" href="#id49" id="id18">
+     [2]
+    </a>
+    (TUF).  TUF helps
+secure new or existing software update systems. Software update systems are
+vulnerable to many known attacks, including those that can result in clients
+being compromised or crashed. TUF solves these problems by providing a flexible
+security framework that can be added to software updaters.
+   </p>
+  </div>
+  <div class="section" id="threat-model">
+   <h1>
+    <a class="toc-backref" href="#id107">
+     Threat Model
+    </a>
+   </h1>
+   <p>
+    The threat model assumes the following:
+   </p>
+   <ul class="simple">
+    <li>
+     Offline keys are safe and securely stored.
+    </li>
+    <li>
+     Attackers can compromise at least one of PyPI's trusted keys stored online,
+and may do so at once or over a period of time.
+    </li>
+    <li>
+     Attackers can respond to client requests.
+    </li>
+   </ul>
+   <p>
+    An attacker is considered successful if they can cause a client to install (or
+leave installed) something other than the most up-to-date version of the
+software the client is updating. If the attacker is preventing the installation
+of updates, they want clients to not realize there is anything wrong.
+   </p>
+  </div>
+  <div class="section" id="definitions">
+   <h1>
+    <a class="toc-backref" href="#id108">
+     Definitions
+    </a>
+   </h1>
+   <p>
+    The keywords "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD",
+"SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be
+interpreted as described in RFC
+    <a class="reference external" href="http://www.ietf.org/rfc/rfc2119.txt">
+     2119
+    </a>
+    <a class="footnote-reference" href="#id78" id="id79">
+     [29]
+    </a>
+    .
+   </p>
+   <p>
+    This PEP focuses on integrating TUF with PyPI; however, the reader is
+encouraged to read about TUF's design principles
+    <a class="footnote-reference" href="#id49" id="id20">
+     [2]
+    </a>
+    .  It is also RECOMMENDED
+that the reader be familiar with the TUF specification
+    <a class="footnote-reference" href="#id63" id="id21">
+     [16]
+    </a>
+    .
+   </p>
+   <p>
+    Terms used in this PEP are defined as follows:
+   </p>
+   <ul class="simple">
+    <li>
+     Projects: Projects are software components that are made available for
+integration.  Projects include Python libraries, frameworks, scripts,
+plugins, applications, collections of data or other resources, and various
+combinations thereof.  Public Python projects are typically registered on the
+Python Package Index
+     <a class="footnote-reference" href="#id64" id="id22">
+      [17]
+     </a>
+     .
+    </li>
+    <li>
+     Releases: Releases are uniquely identified snapshots of a project
+     <a class="footnote-reference" href="#id64" id="id23">
+      [17]
+     </a>
+     .
+    </li>
+    <li>
+     Distributions: Distributions are the packaged files that are used to publish
+and distribute a release
+     <a class="footnote-reference" href="#id64" id="id24">
+      [17]
+     </a>
+     .
+    </li>
+    <li>
+     Simple index: The HTML page that contains internal links to the
+distributions of a project
+     <a class="footnote-reference" href="#id64" id="id25">
+      [17]
+     </a>
+     .
+    </li>
+    <li>
+     Roles: There is one
+     <em>
+      root
+     </em>
+     role in PyPI.  There are multiple roles whose
+responsibilities are delegated to them directly or indirectly by the
+     <em>
+      root
+     </em>
+     role. The term top-level role refers to the
+     <em>
+      root
+     </em>
+     role and any role
+delegated by the
+     <em>
+      root
+     </em>
+     role. Each role has a single metadata file that it is
+trusted to provide.
+    </li>
+    <li>
+     Metadata: Metadata are signed files that describe roles, other metadata, and
+target files.
+    </li>
+    <li>
+     Repository: A repository is a resource comprised of named metadata and target
+files.  Clients request metadata and target files stored on a repository.
+    </li>
+    <li>
+     Consistent snapshot: A set of TUF metadata and PyPI targets that capture the
+complete state of all projects on PyPI as they existed at some fixed point in
+time.
+    </li>
+    <li>
+     The
+     <em>
+      snapshot
+     </em>
+     (
+     <em>
+      release
+     </em>
+     ) role: In order to prevent confusion due to the
+different meanings of the term "release" used in
+     <a class="reference external" href="../pep-0426/index.html">
+      PEP 426
+     </a>
+     <a class="footnote-reference" href="#id64" id="id26">
+      [17]
+     </a>
+     and the TUF
+specification
+     <a class="footnote-reference" href="#id63" id="id27">
+      [16]
+     </a>
+     , the
+     <em>
+      release
+     </em>
+     role is renamed as the
+     <em>
+      snapshot
+     </em>
+     role.
+    </li>
+    <li>
+     Developer: Either the owner or maintainer of a project who is allowed to
+update the TUF metadata as well as distribution metadata and files for the
+project.
+    </li>
+    <li>
+     Online key: A private cryptographic key that MUST be stored on the PyPI
+server infrastructure.  This is usually to allow automated signing with the
+key.  However, an attacker who compromises the PyPI infrastructure will be
+able to read these keys.
+    </li>
+    <li>
+     Offline key: A private cryptographic key that MUST be stored independent of
+the PyPI server infrastructure.  This prevents automated signing with the
+key.  An attacker who compromises the PyPI infrastructure will not be able to
+immediately read these keys.
+    </li>
+    <li>
+     Threshold signature scheme: A role can increase its resilience to key
+compromises by specifying that at least t out of n keys are REQUIRED to sign
+its metadata.  A compromise of t-1 keys is insufficient to compromise the
+role itself.  Saying that a role requires (t, n) keys denotes the threshold
+signature property.
+    </li>
+   </ul>
+  </div>
+  <div class="section" id="overview-of-tuf">
+   <h1>
+    <a class="toc-backref" href="#id109">
+     Overview of TUF
+    </a>
+   </h1>
+   <p>
+    At its highest level, TUF provides applications with a secure method of
+obtaining files and knowing when new versions of files are available. On the
+surface, this all sounds simple. The basic steps for updating applications are:
+   </p>
+   <ul class="simple">
+    <li>
+     Knowing when an update exists.
+    </li>
+    <li>
+     Downloading a correct copy of the latest version of an updated file.
+    </li>
+   </ul>
+   <p>
+    The problem is that updating applications is only simple when there are no
+malicious activities in the picture. If an attacker is trying to interfere with
+these seemingly simple steps, there is plenty they can do.
+   </p>
+   <p>
+    Assume a software updater takes the approach of most systems (at least the ones
+that try to be secure). It downloads both the file it wants and a cryptographic
+signature of the file. The software updater already knows which key it trusts
+to make the signature. It checks that the signature is correct and was made by
+this trusted key. Unfortunately, the software updater is still at risk in many
+ways, including:
+   </p>
+   <ul class="simple">
+    <li>
+     An attacker keeps giving the software updater the same update file, so it
+never realizes there is an update.
+    </li>
+    <li>
+     An attacker gives the software updater an older, insecure version of a file
+that it already has, so it downloads that one and blindly uses it thinking it
+is newer.
+    </li>
+    <li>
+     An attacker gives the software updater a newer version of a file it has but
+it is not the newest one.  The file is newer to the software updater, but it
+may be insecure and exploitable by the attacker.
+    </li>
+    <li>
+     An attacker compromises the key used to sign these files and now the software
+updater downloads a malicious file that is properly signed.
+    </li>
+   </ul>
+   <p>
+    TUF is designed to address these attacks, and others, by adding signed metadata
+(text files that describe the repository's files) to the repository and
+referencing the metadata files during the update procedure.  Repository files
+are verified against the information included in the metadata before they are
+handed off to the software update system.  The framework also provides
+multi-signature trust, explicit and implicit revocation of cryptograhic keys,
+responsibility separation of the metadata, and minimizes key risk.  For a full
+list and outline of the repository attacks and software updater weaknesses
+addressed by TUF, see Appendix A.
+   </p>
+  </div>
+  <div class="section" id="integrating-tuf-with-pypi">
+   <h1>
+    <a class="toc-backref" href="#id110">
+     Integrating TUF with PyPI
+    </a>
+   </h1>
+   <p>
+    A software update system must complete two main tasks to integrate with TUF.
+First, it must add the framework to the client side of the update system.  For
+example, TUF MAY be integrated with the pip package manager.  Second, the
+repository on the server side MUST be modified to provide signed TUF metadata.
+This PEP is concerned with the second part of the integration, and the changes
+required on PyPI to support software updates with TUF.
+   </p>
+   <div class="section" id="what-additional-repository-files-are-required-on-pypi">
+    <h2>
+     <a class="toc-backref" href="#id111">
+      What Additional Repository Files are Required on PyPI?
+     </a>
+    </h2>
+    <p>
+     In order for package managers like pip to download and verify packages with
+TUF, a few extra files MUST exist on PyPI. These extra repository files are
+called TUF metadata. TUF metadata contains information such as which keys are
+trustable, the cryptographic hashes of files, signatures to the metadata,
+metadata version numbers, and the date after which the metadata should be
+considered expired.
+    </p>
+    <p>
+     When a package manager wants to check for updates, it asks TUF to do the work.
+That is, a package manager never has to deal with this additional metadata or
+understand what's going on underneath. If TUF reports back that there are
+updates available, a package manager can then ask TUF to download these files
+from PyPI. TUF downloads them and checks them against the TUF metadata that it
+also downloads from the repository. If the downloaded target files are
+trustworthy, TUF then hands them over to the package manager.
+    </p>
+    <p>
+     The
+     <a class="reference external" href="https://github.com/theupdateframework/tuf/blob/develop/METADATA.md">
+      Metadata
+     </a>
+     <a class="footnote-reference" href="#id80" id="id81">
+      [30]
+     </a>
+     document provides information about each of the required
+metadata and their expected content.  The next section covers the different
+kinds of metadata RECOMMENDED for PyPI.
+    </p>
+   </div>
+  </div>
+  <div class="section" id="pypi-and-tuf-metadata">
+   <h1>
+    <a class="toc-backref" href="#id112">
+     PyPI and TUF Metadata
+    </a>
+   </h1>
+   <p>
+    TUF metadata provides information that clients can use to make update
+decisions.  For example, a
+    <em>
+     targets
+    </em>
+    metadata lists the available distributions
+on PyPI and includes the distribution's signatures, cryptographic hashes, and
+file sizes.  Different metadata files provide different information.  The
+various metadata files are signed by different roles, which are indicated by
+the
+    <em>
+     root
+    </em>
+    role.  The concept of roles allows TUF to delegate responsibilities
+to multiple roles and minimizes the impact of a compromised role.
+   </p>
+   <p>
+    TUF requires four top-level roles.  These are
+    <em>
+     root
+    </em>
+    ,
+    <em>
+     timestamp
+    </em>
+    ,
+    <em>
+     snapshot
+    </em>
+    ,
+and
+    <em>
+     targets
+    </em>
+    .  The
+    <em>
+     root
+    </em>
+    role specifies the public cryptographic keys of the
+top-level roles (including its own).  The
+    <em>
+     timestamp
+    </em>
+    role references the
+latest
+    <em>
+     snapshot
+    </em>
+    and can signify when a new snapshot of the repository is
+available.  The
+    <em>
+     snapshot
+    </em>
+    role indicates the latest version of all the TUF
+metadata files (other than
+    <em>
+     timestamp
+    </em>
+    ).  The
+    <em>
+     targets
+    </em>
+    role lists the
+available target files (in our case, it will be all files on PyPI under the
+/simple and /packages directories).  Each top-level role will serve its
+responsibilities without exception.  Figure 1 provides a table of the roles
+used in TUF.
+   </p>
+   <img alt="pep-0458-1.png" src="../../../m/dev/peps/pep-0458/pep-0458-1.png"/>
+   <p>
+    Figure 1: An overview of the TUF roles.
+   </p>
+   <div class="section" id="signing-metadata-and-repository-management">
+    <h2>
+     <a class="toc-backref" href="#id113">
+      Signing Metadata and Repository Management
+     </a>
+    </h2>
+    <p>
+     The top-level
+     <em>
+      root
+     </em>
+     role signs for the keys of the top-level
+     <em>
+      timestamp
+     </em>
+     ,
+     <em>
+      snapshot
+     </em>
+     ,
+     <em>
+      targets
+     </em>
+     , and
+     <em>
+      root
+     </em>
+     roles.  The
+     <em>
+      timestamp
+     </em>
+     role signs for every
+new snapshot of the repository metadata.  The
+     <em>
+      snapshot
+     </em>
+     role signs for
+     <em>
+      root
+     </em>
+     ,
+     <em>
+      targets
+     </em>
+     , and all delegated roles.  The
+     <em>
+      bins
+     </em>
+     roles (delegated roles) sign
+for all distributions belonging to registered PyPI projects.
+    </p>
+    <p>
+     Figure 2 provides an overview of the roles available within PyPI, which
+includes the top-level roles and the roles delegated by
+     <em>
+      targets
+     </em>
+     .  The figure
+also indicates the types of keys used to sign each role and which roles are
+trusted to sign for files available on PyPI.  The next two sections cover the
+details of signing repository files and the types of keys used for each role.
+    </p>
+    <img alt="pep-0458-2.png" src="../../../m/dev/peps/pep-0458/pep-0458-2.png"/>
+    <p>
+     Figure 2: An overview of the role metadata available on PyPI.
+    </p>
+    <p>
+     The roles that change most frequently are
+     <em>
+      timestamp
+     </em>
+     ,
+     <em>
+      snapshot
+     </em>
+     and delegated
+roles (
+     <em>
+      bins
+     </em>
+     and its delegated roles).  The
+     <em>
+      timestamp
+     </em>
+     and
+     <em>
+      snapshot
+     </em>
+     metadata MUST be updated whenever
+     <em>
+      root
+     </em>
+     ,
+     <em>
+      targets
+     </em>
+     or delegated metadata are
+updated.  Observe, though, that
+     <em>
+      root
+     </em>
+     and
+     <em>
+      targets
+     </em>
+     metadata are much less
+likely to be updated as often as delegated metadata.  Therefore,
+     <em>
+      timestamp
+     </em>
+     and
+     <em>
+      snapshot
+     </em>
+     metadata will most likely be updated frequently (possibly every
+minute) due to delegated metadata being updated frequently in order to support
+continuous delivery of projects.  Continuous delivery is a set of processes
+that PyPI uses produce snapshots that can safely coexist and be deleted
+independent of other snapshots
+     <a class="footnote-reference" href="#id65" id="id29">
+      [18]
+     </a>
+     .
+    </p>
+    <p>
+     Every year, PyPI administrators SHOULD sign for
+     <em>
+      root
+     </em>
+     and
+     <em>
+      targets
+     </em>
+     role keys.
+Automation will continuously sign for a timestamped, snapshot of all projects.
+A
+     <a class="reference external" href="https://github.com/theupdateframework/tuf/tree/develop/tuf#repository-management">
+      repository management
+     </a>
+     <a class="footnote-reference" href="#id82" id="id83">
+      [31]
+     </a>
+     tool is available that can sign metadata files,
+generate cryptographic keys, and manage a TUF repository.
+    </p>
+   </div>
+   <div class="section" id="how-to-establish-initial-trust-in-the-pypi-root-keys">
+    <h2>
+     <a class="toc-backref" href="#id114">
+      How to Establish Initial Trust in the PyPI Root Keys
+     </a>
+    </h2>
+    <p>
+     Package managers like pip need to ship a file called "root.json" with the
+installation files that users initially download. This includes information
+about the keys trusted for certain roles, as well as the root keys themselves.
+Any new version of "root.json" that clients may download are verified against
+the root keys that client's initially trust. If a root key is compromised, but
+a threshold of keys are still secured, the PyPI administrator MUST push a new
+release that revokes trust in the compromised keys. If a threshold of root keys
+are compromised, then "root.json" should be updated out-of-band, however the
+threshold should be chosen so that this is extremely unlikely. The TUF client
+library does not require manual intervention if root keys are revoked or added:
+the update process handles the cases where "root.json" has changed.
+    </p>
+    <p>
+     To bundle the software, "root.json" MUST be included in the version of pip
+shipped with CPython (via ensurepip). The TUF client library then loads the
+root metadata and downloads the rest of the roles, including updating
+"root.json" if it has changed.  An
+     <a class="reference external" href="https://github.com/theupdateframework/tuf/tree/develop/tuf/client#overview-of-the-update-process.">
+      outline of the update process
+     </a>
+     <a class="footnote-reference" href="#id84" id="id85">
+      [32]
+     </a>
+     is
+available.
+    </p>
+   </div>
+   <div class="section" id="minimum-security-model">
+    <h2>
+     <a class="toc-backref" href="#id115">
+      Minimum Security Model
+     </a>
+    </h2>
+    <p>
+     There are two security models to consider when integrating TUF with PyPI.  The
+one proposed in this PEP is the minimum security model, which supports
+verification of PyPI distributions that are signed with private cryptographic
+keys stored on PyPI.  Distributions uploaded by developers are signed by PyPI
+and immediately available for download.  A possible future extension to this
+PEP, discussed in Appendix B, proposes the maximum security model and allows a
+developer to sign for his/her project.  Developer keys are not stored online:
+therefore, projects are safe from PyPI compromises.
+    </p>
+    <p>
+     The minimum security model requires no action from a developer and protects
+against malicious CDNs
+     <a class="footnote-reference" href="#id66" id="id32">
+      [19]
+     </a>
+     and public mirrors.  To support continuous
+delivery of uploaded packages, PyPI signs for projects with an online key.
+This level of security prevents projects from being accidentally or
+deliberately tampered with by a mirror or a CDN because the mirror or CDN will
+not have any of the keys required to sign for projects.  However, it does not
+protect projects from attackers who have compromised PyPI, since attackers can
+manipulate TUF metadata using the keys stored online.
+    </p>
+    <p>
+     This PEP proposes that the
+     <em>
+      bins
+     </em>
+     role (and its delegated roles) sign for all
+PyPI projects with an online key.  The
+     <em>
+      targets
+     </em>
+     role, which only signs with an
+offline key, MUST delegate all PyPI projects to the
+     <em>
+      bins
+     </em>
+     role.  This means
+that when a package manager such as pip (i.e., using TUF) downloads a
+distribution from a project on PyPI, it will consult the
+     <em>
+      bins
+     </em>
+     role about the
+TUF metadata for the project.  If no bin roles delegated by
+     <em>
+      bins
+     </em>
+     specify the
+project's distribution, then the project is considered to be non-existent on
+PyPI.
+    </p>
+   </div>
+   <div class="section" id="metadata-expiry-times">
+    <h2>
+     <a class="toc-backref" href="#id116">
+      Metadata Expiry Times
+     </a>
+    </h2>
+    <p>
+     The
+     <em>
+      root
+     </em>
+     and
+     <em>
+      targets
+     </em>
+     role metadata SHOULD expire in one year, because these
+two metadata files are expected to change very rarely.
+    </p>
+    <p>
+     The
+     <em>
+      timestamp
+     </em>
+     ,
+     <em>
+      snapshot
+     </em>
+     , and
+     <em>
+      bins
+     </em>
+     metadata SHOULD expire in one day
+because a CDN or mirror SHOULD synchronize itself with PyPI every day.
+Furthermore, this generous time frame also takes into account client clocks
+that are highly skewed or adrift.
+    </p>
+   </div>
+   <div class="section" id="metadata-scalability">
+    <h2>
+     <a class="toc-backref" href="#id117">
+      Metadata Scalability
+     </a>
+    </h2>
+    <p>
+     Due to the growing number of projects and distributions, TUF metadata will also
+grow correspondingly.  For example, consider the
+     <em>
+      bins
+     </em>
+     role.  In August 2013,
+it was found that the size of the
+     <em>
+      bins
+     </em>
+     metadata was about 42MB if the
+     <em>
+      bins
+     </em>
+     role itself signed for about 220K PyPI targets (which are simple indices and
+distributions).  This PEP does not delve into the details, but TUF features a
+so-called "
+     <a class="reference external" href="https://github.com/theupdateframework/tuf/issues/39">
+      lazy bin walk
+     </a>
+     <a class="footnote-reference" href="#id86" id="id87">
+      [33]
+     </a>
+     " scheme that splits a large targets' metadata file
+into many small ones.  This allows a TUF client updater to intelligently
+download only a small number of TUF metadata files in order to update any
+project signed for by the
+     <em>
+      bins
+     </em>
+     role.  For example, applying this scheme to
+the previous repository resulted in pip downloading between 1.3KB and 111KB to
+install or upgrade a PyPI project via TUF.
+    </p>
+    <p>
+     Based on our findings as of the time of writing, PyPI SHOULD split all targets
+in the
+     <em>
+      bins
+     </em>
+     role by delegating them to 1024 delegated roles, each of which
+would sign for PyPI targets whose hashes fall into that "bin" or delegated role
+(see Figure 2).  It was found that 1024 bins would result in the
+     <em>
+      bins
+     </em>
+     metadata, and each of its delegated roles, being about the same size (40-50KB)
+for about 220K PyPI targets (simple indices and distributions).
+    </p>
+    <p>
+     It is possible to make TUF metadata more compact by representing it in a binary
+format as opposed to the JSON text format.  Nevertheless, a sufficiently large
+number of projects and distributions will introduce scalability challenges at
+some point, and therefore the
+     <em>
+      bins
+     </em>
+     role will still need delegations (as
+outlined in figure 2) in order to address the problem.  Furthermore, the JSON
+format is an open and well-known standard for data interchange.  Due to the
+large number of delegated metadata, compressed versions of
+     <em>
+      snapshot
+     </em>
+     metadata
+SHOULD also be made available to clients.
+    </p>
+   </div>
+  </div>
+  <div class="section" id="pypi-and-key-requirements">
+   <h1>
+    <a class="toc-backref" href="#id118">
+     PyPI and Key Requirements
+    </a>
+   </h1>
+   <p>
+    In this section, the kinds of keys required to sign for TUF roles on PyPI are
+examined.  TUF is agnostic with respect to choices of digital signature
+algorithms.  For the purpose of discussion, it is assumed that most digital
+signatures will be produced with the well-tested and tried RSA algorithm
+    <a class="footnote-reference" href="#id67" id="id34">
+     [20]
+    </a>
+    .
+Nevertheless, we do NOT recommend any particular digital signature algorithm in
+this PEP because there are a few important constraints: first, cryptography
+changes over time; second, package managers such as pip may wish to perform
+signature verification in Python, without resorting to a compiled C library, in
+order to be able to run on as many systems as Python supports; and third, TUF
+recommends diversity of keys for certain applications.
+   </p>
+   <div class="section" id="number-of-keys-recommended">
+    <h2>
+     <a class="toc-backref" href="#id119">
+      Number Of Keys Recommended
+     </a>
+    </h2>
+    <p>
+     The
+     <em>
+      timestamp
+     </em>
+     ,
+     <em>
+      snapshot
+     </em>
+     , and
+     <em>
+      bins
+     </em>
+     roles require continuous delivery.
+Even though their respective keys MUST be online, this PEP requires that the
+keys be independent of each other.  Different keys for online roles allow for
+each of the keys to be placed on separate servers if need be, and prevents side
+channel attacks that compromise one key from automatically compromising the
+rest of the keys.  Therefore, each of the
+     <em>
+      timestamp
+     </em>
+     ,
+     <em>
+      snapshot
+     </em>
+     , and
+     <em>
+      bins
+     </em>
+     roles MUST require (1, 1) keys.
+    </p>
+    <p>
+     The
+     <em>
+      bins
+     </em>
+     role MAY delegate targets in an automated manner to a number of
+roles called "bins", as discussed in the previous section.  Each of the "bin"
+roles SHOULD share the same key as the
+     <em>
+      bins
+     </em>
+     role, due to space efficiency,
+and because there is no security advantage to requiring separate keys.
+    </p>
+    <p>
+     The
+     <em>
+      root
+     </em>
+     role key is critical for security and should very rarely be used.
+It is primarily used for key revocation, and it is the locus of trust for all
+of PyPI.  The
+     <em>
+      root
+     </em>
+     role signs for the keys that are authorized for each of
+the top-level roles (including its own).  Keys belonging to the
+     <em>
+      root
+     </em>
+     role are
+intended to be very well-protected and used with the least frequency of all
+keys.  It is RECOMMENDED that every PSF board member own a (strong) root key.
+A majority of them can then constitute a quorum to revoke or endow trust in all
+top-level keys.  Alternatively, the system administrators of PyPI could be
+given responsibility for signing for the
+     <em>
+      root
+     </em>
+     role.  Therefore, the
+     <em>
+      root
+     </em>
+     role SHOULD require (t, n) keys, where n is the number of either all PyPI
+administrators or all PSF board members, and t &gt; 1 (so that at least two
+members must sign the
+     <em>
+      root
+     </em>
+     role).
+    </p>
+    <p>
+     The
+     <em>
+      targets
+     </em>
+     role will be used only to sign for the static delegation of all
+targets to the
+     <em>
+      bins
+     </em>
+     role.  Since these target delegations must be secured
+against attacks in the event of a compromise, the keys for the
+     <em>
+      targets
+     </em>
+     role
+MUST be offline and independent of other keys.  For simplicity of key
+management, without sacrificing security, it is RECOMMENDED that the keys of
+the
+     <em>
+      targets
+     </em>
+     role be permanently discarded as soon as they have been created
+and used to sign for the role.  Therefore, the
+     <em>
+      targets
+     </em>
+     role SHOULD require
+(1, 1) keys.  Again, this is because the keys are going to be permanently
+discarded and more offline keys will not help resist key recovery attacks
+     <a class="footnote-reference" href="#id68" id="id35">
+      [21]
+     </a>
+     unless diversity of keys is maintained.
+    </p>
+   </div>
+   <div class="section" id="online-and-offline-keys-recommended-for-each-role">
+    <h2>
+     <a class="toc-backref" href="#id120">
+      Online and Offline Keys Recommended for Each Role
+     </a>
+    </h2>
+    <p>
+     In order to support continuous delivery, the
+     <em>
+      timestamp
+     </em>
+     ,
+     <em>
+      snapshot
+     </em>
+     ,
+     <em>
+      bins
+     </em>
+     role keys MUST be online.
+    </p>
+    <p>
+     As explained in the previous section, the
+     <em>
+      root
+     </em>
+     and
+     <em>
+      targets
+     </em>
+     role keys MUST
+be offline for maximum security: these keys will be offline in the sense that
+their private keys MUST NOT be stored on PyPI, though some of them MAY be
+online in the private infrastructure of the project.
+    </p>
+   </div>
+  </div>
+  <div class="section" id="how-should-metadata-be-generated">
+   <h1>
+    <a class="toc-backref" href="#id121">
+     How Should Metadata be Generated?
+    </a>
+   </h1>
+   <p>
+    Project developers expect the distributions they upload to PyPI to be
+immediately available for download.  Unfortunately, there will be problems when
+many readers and writers simultaneously access the same metadata and
+distributions.  That is, there needs to be a way to ensure consistency of
+metadata and repository files when multiple developers simulaneously change the
+same metadata or distributions.  There are also issues with consistency on PyPI
+without TUF, but the problem is more severe with signed metadata that MUST keep
+track of the files available on PyPI in real-time.
+   </p>
+   <p>
+    Suppose that PyPI generates a
+    <em>
+     snapshot
+    </em>
+    , which indicates the latest version of
+every metadata except
+    <em>
+     timestamp
+    </em>
+    , at version 1 and a client requests this
+    <em>
+     snapshot
+    </em>
+    from PyPI.  While the client is busy downloading this
+    <em>
+     snapshot
+    </em>
+    ,
+PyPI then timestamps a new snapshot at, say, version 2.  Without ensuring
+consistency of metadata, the client would find itself with a copy of
+    <em>
+     snapshot
+    </em>
+    that disagrees with what is available on PyPI, which is indistinguishable from
+arbitrary metadata injected by an attacker.  The problem would also occur for
+mirrors attempting to sync with PyPI.
+   </p>
+   <div class="section" id="consistent-snapshots">
+    <h2>
+     <a class="toc-backref" href="#id122">
+      Consistent Snapshots
+     </a>
+    </h2>
+    <p>
+     There are problems with consistency on PyPI with or without TUF.  TUF requires
+that its metadata be consistent with the repository files, but how would the
+metadata be kept consistent with projects that change all the time?  As a
+result, this proposal MUST address the problem of producing a consistent
+snapshot that captures the state of all known projects at a given time.  Each
+snapshot should safely coexist with any other snapshot, and be able to be
+deleted independently, without affecting any other snapshot.
+    </p>
+    <p>
+     The solution presented in this PEP is that every metadata or data file managed
+by PyPI and written to disk MUST include in its filename the
+     <a class="reference external" href="https://en.wikipedia.org/wiki/Cryptographic_hash_function">
+      cryptographic
+hash
+     </a>
+     <a class="footnote-reference" href="#id88" id="id89">
+      [34]
+     </a>
+     of the file.  How would this help clients that use the TUF protocol to
+securely and consistently install or update a project from PyPI?
+    </p>
+    <p>
+     The first step in the TUF protocol requires the client to download the latest
+     <em>
+      timestamp
+     </em>
+     metadata.  However, the client would not know in advance the hash
+of the
+     <em>
+      timestamp
+     </em>
+     associated with the latest snapshot.  Therefore, PyPI MUST
+redirect all HTTP GET requests for
+     <em>
+      timestamp
+     </em>
+     to the
+     <em>
+      timestamp
+     </em>
+     referenced in
+the latest snapshot.  The
+     <em>
+      timestamp
+     </em>
+     role is the root of a tree of
+cryptographic hashes that points to every other metadata that is meant to exist
+together (i.e., clients request metadata in timestamp -&gt; snapshot -&gt; root -&gt;
+targets order).  Clients are able to retrieve any file from this snapshot
+by deterministically including, in the request for the file, the hash of the
+file in the filename.  Assuming infinite disk space and no
+     <a class="reference external" href="https://en.wikipedia.org/wiki/Collision_(computer_science)">
+      hash collisions
+     </a>
+     <a class="footnote-reference" href="#id90" id="id91">
+      [35]
+     </a>
+     ,
+a client may safely read from one snapshot while PyPI produces another
+snapshot.
+    </p>
+    <p>
+     In this simple but effective manner, PyPI is able to capture a consistent
+snapshot of all projects and the associated metadata at a given time.  The next
+subsection provides implementation details of this idea.
+    </p>
+    <p>
+     Note: This PEP does not prohibit using advanced file systems or tools to
+produce consistent snapshots. There are two important reasons for why this PEP
+proposes the simple solution.  First, the solution does not mandate that PyPI
+use any particular file system or tool.  Second, the generic file-system based
+approach allows mirrors to use extant file transfer tools such as rsync to
+efficiently transfer consistent snapshots from PyPI.
+    </p>
+   </div>
+   <div class="section" id="producing-consistent-snapshots">
+    <h2>
+     <a class="toc-backref" href="#id123">
+      Producing Consistent Snapshots
+     </a>
+    </h2>
+    <p>
+     Given a project, PyPI is responsible for updating the
+     <em>
+      bins
+     </em>
+     metadata (roles
+delegated by the
+     <em>
+      bins
+     </em>
+     role and signed with an online key).  Every project
+MUST upload its release in a single transaction.  The uploaded set of files is
+called the "project transaction".  How PyPI MAY validate the files in a project
+transaction is discussed in a later section.  For now, the focus is on how PyPI
+will respond to a project transaction.
+    </p>
+    <p>
+     Every metadata and target file MUST include in its filename the
+     <a class="reference external" href="http://docs.python.org/2/library/hashlib.html#hashlib.hash.hexdigest">
+      hex digest
+     </a>
+     <a class="footnote-reference" href="#id92" id="id93">
+      [36]
+     </a>
+     of its
+     <a class="reference external" href="https://en.wikipedia.org/wiki/SHA-2">
+      SHA-256
+     </a>
+     <a class="footnote-reference" href="#id94" id="id95">
+      [37]
+     </a>
+     hash.  For this PEP, it is RECOMMENDED that PyPI adopt a
+simple convention of the form: digest.filename, where filename is the original
+filename without a copy of the hash, and digest is the hex digest of the hash.
+    </p>
+    <p>
+     When a project uploads a new transaction, the project transaction process MUST
+add all new targets and relevant delegated
+     <em>
+      bins
+     </em>
+     metadata.  (It is shown later
+in this section why the
+     <em>
+      bins
+     </em>
+     role will delegate targets to a number of
+delegated
+     <em>
+      bins
+     </em>
+     roles.)  Finally, the project transaction process MUST inform
+the snapshot process about new delegated
+     <em>
+      bins
+     </em>
+     metadata.
+    </p>
+    <p>
+     Project transaction processes SHOULD be automated and MUST also be applied
+atomically: either all metadata and targets -- or none of them -- are added.
+The project transaction and snapshot processes SHOULD work concurrently.
+Finally, project transaction processes SHOULD keep in memory the latest
+     <em>
+      bins
+     </em>
+     metadata so that they will be correctly updated in new consistent snapshots.
+    </p>
+    <p>
+     All project transactions MAY be placed in a single queue and processed
+serially.  Alternatively, the queue MAY be processed concurrently in order of
+appearance, provided that the following rules are observed:
+    </p>
+    <ol class="arabic simple">
+     <li>
+      No pair of project transaction processes must concurrently work on the same
+project.
+     </li>
+     <li>
+      No pair of project transaction processes must concurrently work on
+      <em>
+       bins
+      </em>
+      projects that belong to the same delegated
+      <em>
+       bins
+      </em>
+      targets
+role.
+     </li>
+    </ol>
+    <p>
+     These rules MUST be observed so that metadata is not read from or written to
+inconsistently.
+    </p>
+   </div>
+   <div class="section" id="snapshot-process">
+    <h2>
+     <a class="toc-backref" href="#id124">
+      Snapshot Process
+     </a>
+    </h2>
+    <p>
+     The snapshot process is fairly simple and SHOULD be automated.  The snapshot
+process MUST keep in memory the latest working set of
+     <em>
+      root
+     </em>
+     ,
+     <em>
+      targets
+     </em>
+     , and
+delegated roles.  Every minute or so, the snapshot process will sign for this
+latest working set.  (Recall that project transaction processes continuously
+inform the snapshot process about the latest delegated metadata in a
+concurrency-safe manner.  The snapshot process will actually sign for a copy of
+the latest working set while the latest working set in memory will be updated
+with information that is continuously communicated by the project transaction
+processes.)  The snapshot process MUST generate and sign new
+     <em>
+      timestamp
+     </em>
+     metadata that will vouch for the metadata (
+     <em>
+      root
+     </em>
+     ,
+     <em>
+      targets
+     </em>
+     , and delegated
+roles) generated in the previous step.  Finally, the snapshot process MUST make
+available to clients the new
+     <em>
+      timestamp
+     </em>
+     and
+     <em>
+      snapshot
+     </em>
+     metadata representing
+the latest snapshot.
+    </p>
+    <p>
+     A few implementation notes are now in order.  So far, we have seen only that
+new metadata and targets are added, but not that old metadata and targets are
+removed.  Practical constraints are such that eventually PyPI will run out of
+disk space to produce a new consistent snapshot.  In that case, PyPI MAY then
+use something like a "mark-and-sweep" algorithm to delete sufficiently old
+consistent snapshots: in order to preserve the latest consistent snapshot, PyPI
+would walk objects beginning from the root (
+     <em>
+      timestamp
+     </em>
+     ) of the latest
+consistent snapshot, mark all visited objects, and delete all unmarked objects.
+The last few consistent snapshots may be preserved in a similar fashion.
+Deleting a consistent snapshot will cause clients to see nothing except HTTP
+404 responses to any request for a file within that consistent snapshot.
+Clients SHOULD then retry (as before) their requests with the latest consistent
+snapshot.
+    </p>
+    <p>
+     All clients, such as pip using the TUF protocol, MUST be modified to download
+every metadata and target file (except for
+     <em>
+      timestamp
+     </em>
+     metadata) by including,
+in the request for the file, the cryptographic hash of the file in the
+filename.  Following the filename convention recommended earlier, a request for
+the file at filename.ext will be transformed to the equivalent request for the
+file at digest.filename.
+    </p>
+    <p>
+     Finally, PyPI SHOULD use a
+     <a class="reference external" href="https://en.wikipedia.org/wiki/Transaction_log">
+      transaction log
+     </a>
+     <a class="footnote-reference" href="#id96" id="id97">
+      [38]
+     </a>
+     to record project transaction
+processes and queues so that it will be easier to recover from errors after a
+server failure.
+    </p>
+   </div>
+  </div>
+  <div class="section" id="key-compromise-analysis">
+   <h1>
+    <a class="toc-backref" href="#id125">
+     Key Compromise Analysis
+    </a>
+   </h1>
+   <p>
+    This PEP has covered the minimum security model, the TUF roles that should be
+added to support continuous delivery of distributions, and how to generate and
+sign the metadata of each role.  The remaining sections discuss how PyPI
+SHOULD audit repository metadata, and the methods PyPI can use to detect and
+recover from a PyPI compromise.
+   </p>
+   <p>
+    Table 1 summarizes a few of the attacks possible when a threshold number of
+private cryptographic keys (belonging to any of the PyPI roles) are
+compromised.  The leftmost column lists the roles (or a combination of roles)
+that have been compromised, and the columns to its right show whether the
+compromised roles leaves clients susceptible to malicious updates, a freeze
+attack, or metadata inconsistency attacks.
+   </p>
+   <table border="1" class="docutils">
+    <colgroup>
+     <col width="20%">
+     </col>
+     <col width="23%">
+     </col>
+     <col width="19%">
+     </col>
+     <col width="38%">
+     </col>
+    </colgroup>
+    <thead valign="bottom">
+     <tr>
+      <th class="head">
+       Role Compromise
+      </th>
+      <th class="head">
+       Malicious Updates
+      </th>
+      <th class="head">
+       Freeze Attack
+      </th>
+      <th class="head">
+       Metadata Inconsistency Attacks
+      </th>
+     </tr>
+    </thead>
+    <tbody valign="top">
+     <tr>
+      <td>
+       timestamp
+      </td>
+      <td>
+       NO
+snapshot and
+targets or any
+of the bins need
+to cooperate
+      </td>
+      <td>
+       YES
+limited by
+earliest root,
+targets, or
+bin expiry
+time
+      </td>
+      <td>
+       NO
+snapshot needs to cooperate
+      </td>
+     </tr>
+     <tr>
+      <td>
+       snapshot
+      </td>
+      <td>
+       NO
+timestamp and
+targets or any of
+the bins need to
+cooperate
+      </td>
+      <td>
+       NO
+timestamp
+needs to
+cooperate
+      </td>
+      <td>
+       NO
+timestamp needs to cooperate
+      </td>
+     </tr>
+     <tr>
+      <td>
+       timestamp
+       <strong>
+        AND
+       </strong>
+       snapshot
+      </td>
+      <td>
+       NO
+targets or any
+of the bins need
+to cooperate
+      </td>
+      <td>
+       YES
+limited by
+earliest root,
+targets, or
+bin metadata
+expiry time
+      </td>
+      <td>
+       YES
+limited by earliest root,
+targets, or bin metadata
+expiry time
+      </td>
+     </tr>
+     <tr>
+      <td>
+       targets
+       <strong>
+        OR
+       </strong>
+       bin
+      </td>
+      <td>
+       NO
+timestamp and
+snapshot need to
+cooperate
+      </td>
+      <td>
+       NOT APPLICABLE
+need timestamp
+and snapshot
+      </td>
+      <td>
+       NOT APPLICABLE
+need timestamp and snapshot
+      </td>
+     </tr>
+     <tr>
+      <td>
+       timestamp
+       <strong>
+        AND
+       </strong>
+       snapshot
+       <strong>
+        AND
+       </strong>
+       bin
+      </td>
+      <td>
+       YES
+      </td>
+      <td>
+       YES
+limited by
+earliest root,
+targets, or
+bin metadata
+expiry time
+      </td>
+      <td>
+       YES
+limited by earliest root,
+targets, or bin metadata
+expiry time
+      </td>
+     </tr>
+     <tr>
+      <td>
+       root
+      </td>
+      <td>
+       YES
+      </td>
+      <td>
+       YES
+      </td>
+      <td>
+       YES
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <p>
+    Table 1: Attacks possible by compromising certain combinations of role keys.
+In
+    <a class="reference external" href="https://mail.python.org/pipermail/distutils-sig/2013-September/022755.html">
+     September 2013
+    </a>
+    <a class="footnote-reference" href="#id76" id="id98">
+     [28]
+    </a>
+    , it was shown how the latest version (at the time) of pip
+was susceptible to these attacks  and how TUF could protect users against them
+    <a class="footnote-reference" href="#id61" id="id41">
+     [14]
+    </a>
+    .
+   </p>
+   <p>
+    Note that compromising
+    <em>
+     targets
+    </em>
+    or any delegated role (except for project
+targets metadata) does not immediately allow an attacker to serve malicious
+updates.  The attacker must also compromise the
+    <em>
+     timestamp
+    </em>
+    and
+    <em>
+     snapshot
+    </em>
+    roles (which are both online and therefore more likely to be compromised).
+This means that in order to launch any attack, one must not only be able to
+act as a man-in-the-middle but also compromise the
+    <em>
+     timestamp
+    </em>
+    key (or
+compromise the
+    <em>
+     root
+    </em>
+    keys and sign a new
+    <em>
+     timestamp
+    </em>
+    key).  To launch any
+attack other than a freeze attack, one must also compromise the
+    <em>
+     snapshot
+    </em>
+    key.
+   </p>
+   <p>
+    Finally, a compromise of the PyPI infrastructure MAY introduce malicious
+updates to
+    <em>
+     bins
+    </em>
+    projects because the keys for these roles are online.  The
+maximum security model discussed in the appendix addresses this issue.
+    <a class="reference external" href="../pep-0480/index.html">
+     PEP 480
+    </a>
+    also covers the maximum security model and goes into more detail on generating
+developer keys and signing uploaded distributions.
+   </p>
+   <div class="section" id="in-the-event-of-a-key-compromise">
+    <h2>
+     <a class="toc-backref" href="#id126">
+      In the Event of a Key Compromise
+     </a>
+    </h2>
+    <p>
+     A key compromise means that a threshold of keys (belonging to the metadata
+roles on PyPI), as well as the PyPI infrastructure, have been compromised and
+used to sign new metadata on PyPI.
+    </p>
+    <p>
+     If a threshold number of
+     <em>
+      timestamp
+     </em>
+     ,
+     <em>
+      snapshot
+     </em>
+     , or
+     <em>
+      bins
+     </em>
+     keys have
+been compromised, then PyPI MUST take the following steps:
+    </p>
+    <ol class="arabic simple">
+     <li>
+      Revoke the
+      <em>
+       timestamp
+      </em>
+      ,
+      <em>
+       snapshot
+      </em>
+      and
+      <em>
+       targets
+      </em>
+      role keys from
+the
+      <em>
+       root
+      </em>
+      role.  This is done by replacing the compromised
+      <em>
+       timestamp
+      </em>
+      ,
+      <em>
+       snapshot
+      </em>
+      and
+      <em>
+       targets
+      </em>
+      keys with newly issued keys.
+     </li>
+     <li>
+      Revoke the
+      <em>
+       bins
+      </em>
+      keys from the
+      <em>
+       targets
+      </em>
+      role by replacing their keys with
+newly issued keys.  Sign the new
+      <em>
+       targets
+      </em>
+      role metadata and discard the new
+keys (because, as explained earlier, this increases the security of
+      <em>
+       targets
+      </em>
+      metadata).
+     </li>
+     <li>
+      All targets of the
+      <em>
+       bins
+      </em>
+      roles SHOULD be compared with the last known
+good consistent snapshot where none of the
+      <em>
+       timestamp
+      </em>
+      ,
+      <em>
+       snapshot
+      </em>
+      , or
+      <em>
+       bins
+      </em>
+      keys
+were known to have been compromised.  Added, updated or deleted targets in
+the compromised consistent snapshot that do not match the last known good
+consistent snapshot MAY be restored to their previous versions.  After
+ensuring the integrity of all
+      <em>
+       bins
+      </em>
+      targets, the
+      <em>
+       bins
+      </em>
+      metadata
+MUST be regenerated.
+     </li>
+     <li>
+      The
+      <em>
+       bins
+      </em>
+      metadata MUST have their version numbers incremented, expiry
+times suitably extended, and signatures renewed.
+     </li>
+     <li>
+      A new timestamped consistent snapshot MUST be issued.
+     </li>
+    </ol>
+    <p>
+     Following these steps would preemptively protect all of these roles even though
+only one of them may have been compromised.
+    </p>
+    <p>
+     If a threshold number of
+     <em>
+      root
+     </em>
+     keys have been compromised, then PyPI MUST take
+the steps taken when the
+     <em>
+      targets
+     </em>
+     role has been compromised.  All of the
+     <em>
+      root
+     </em>
+     keys must also be replaced.
+    </p>
+    <p>
+     It is also RECOMMENDED that PyPI sufficiently document compromises with
+security bulletins.  These security bulletins will be most informative when
+users of pip-with-TUF are unable to install or update a project because the
+keys for the
+     <em>
+      timestamp
+     </em>
+     ,
+     <em>
+      snapshot
+     </em>
+     or
+     <em>
+      root
+     </em>
+     roles are no longer valid.  They
+could then visit the PyPI web site to consult security bulletins that would
+help to explain why they are no longer able to install or update, and then take
+action accordingly.  When a threshold number of
+     <em>
+      root
+     </em>
+     keys have not been
+revoked due to a compromise, then new
+     <em>
+      root
+     </em>
+     metadata may be safely updated
+because a threshold number of existing
+     <em>
+      root
+     </em>
+     keys will be used to sign for the
+integrity of the new
+     <em>
+      root
+     </em>
+     metadata.  TUF clients will be able to verify the
+integrity of the new
+     <em>
+      root
+     </em>
+     metadata with a threshold number of previously
+known
+     <em>
+      root
+     </em>
+     keys.  This will be the common case.  Otherwise, in the worst
+case, where a threshold number of
+     <em>
+      root
+     </em>
+     keys have been revoked due to a
+compromise, an end-user may choose to update new
+     <em>
+      root
+     </em>
+     metadata with
+     <a class="reference external" href="https://en.wikipedia.org/wiki/Out-of-band#Authentication">
+      out-of-band
+     </a>
+     <a class="footnote-reference" href="#id99" id="id100">
+      [39]
+     </a>
+     mechanisms.
+    </p>
+   </div>
+   <div class="section" id="auditing-snapshots">
+    <h2>
+     <a class="toc-backref" href="#id127">
+      Auditing Snapshots
+     </a>
+    </h2>
+    <p>
+     If a malicious party compromises PyPI, they can sign arbitrary files with any
+of the online keys.  The roles with offline keys (i.e.,
+     <em>
+      root
+     </em>
+     and
+     <em>
+      targets
+     </em>
+     )
+are still protected.  To safely recover from a repository compromise, snapshots
+should be audited to ensure files are only restored to trusted versions.
+    </p>
+    <p>
+     When a repository compromise has been detected, the integrity of three types of
+information must be validated:
+    </p>
+    <ol class="arabic simple">
+     <li>
+      If the online keys of the repository have been compromised, they can be
+revoked by having the
+      <em>
+       targets
+      </em>
+      role sign new metadata delegating to a new
+key.
+     </li>
+     <li>
+      If the role metadata on the repository has been changed, this would impact
+the metadata that is signed by online keys.  Any role information created
+since the last period should be discarded. As a result, developers of new
+projects will need to re-register their projects.
+     </li>
+     <li>
+      If the packages themselves may have been tampered with, they can be
+validated using the stored hash information for packages that existed at the
+time of the last period.
+     </li>
+    </ol>
+    <p>
+     In order to safely restore snapshots in the event of a compromise, PyPI SHOULD
+maintain a small number of its own mirrors to copy PyPI snapshots according to
+some schedule.  The mirroring protocol can be used immediately for this
+purpose.  The mirrors must be secured and isolated such that they are
+responsible only for mirroring PyPI.  The mirrors can be checked against one
+another to detect accidental or malicious failures.
+    </p>
+    <p>
+     Another approach is to generate the cryptographic hash of
+     <em>
+      snapshot
+     </em>
+     periodically and tweet it.  Perhaps a user comes forward with the actual
+metadata and the repository maintainers can verify the metadata's cryptographic
+hash.  Alternatively, PyPI may periodically archive its own versions of
+     <em>
+      snapshot
+     </em>
+     rather than rely on externally provided metadata.  In this case,
+PyPI SHOULD take the cryptographic hash of every package on the repository and
+store this data on an offline device. If any package hash has changed, this
+indicates an attack.
+    </p>
+    <p>
+     As for attacks that serve different versions of metadata, or freeze a version
+of a package at a specific version, they can be handled by TUF with techniques
+like implicit key revocation and metadata mismatch detection [81].
+    </p>
+   </div>
+  </div>
+  <div class="section" id="appendix-a-repository-attacks-prevented-by-tuf">
+   <h1>
+    <a class="toc-backref" href="#id128">
+     Appendix A: Repository Attacks Prevented by TUF
+    </a>
+   </h1>
+   <ul class="simple">
+    <li>
+     <strong>
+      Arbitrary software installation
+     </strong>
+     : An attacker installs anything they want
+on the client system. That is, an attacker can provide arbitrary files in
+respond to download requests and the files will not be detected as
+illegitimate.
+    </li>
+    <li>
+     <strong>
+      Rollback attacks
+     </strong>
+     : An attacker presents a software update system with
+older files than those the client has already seen, causing the client to use
+files older than those the client knows about.
+    </li>
+    <li>
+     <strong>
+      Indefinite freeze attacks
+     </strong>
+     : An attacker continues to present a software
+update system with the same files the client has already seen. The result is
+that the client does not know that new files are available.
+    </li>
+    <li>
+     <strong>
+      Endless data attacks
+     </strong>
+     : An attacker responds to a file download request
+with an endless stream of data, causing harm to clients (e.g., a disk
+partition filling up or memory exhaustion).
+    </li>
+    <li>
+     <strong>
+      Slow retrieval attacks
+     </strong>
+     : An attacker responds to clients with a very slow
+stream of data that essentially results in the client never continuing the
+update process.
+    </li>
+    <li>
+     <strong>
+      Extraneous dependencies attacks
+     </strong>
+     : An attacker indicates to clients that in
+order to install the software they wanted, they also need to install
+unrelated software.  This unrelated software can be from a trusted source
+but may have known vulnerabilities that are exploitable by the attacker.
+    </li>
+    <li>
+     <strong>
+      Mix-and-match attacks
+     </strong>
+     : An attacker presents clients with a view of a
+repository that includes files that never existed together on the repository
+at the same time. This can result in, for example, outdated versions of
+dependencies being installed.
+    </li>
+    <li>
+     <strong>
+      Wrong software installation
+     </strong>
+     : An attacker provides a client with a trusted
+file that is not the one the client wanted.
+    </li>
+    <li>
+     <strong>
+      Malicious mirrors preventing updates
+     </strong>
+     : An attacker in control of one
+repository mirror is able to prevent users from obtaining updates from
+other, good mirrors.
+    </li>
+    <li>
+     <strong>
+      Vulnerability to key compromises
+     </strong>
+     : An attacker who is able to compromise a
+single key or less than a given threshold of keys can compromise clients.
+This includes relying on a single online key (such as only being protected
+by SSL) or a single offline key (such as most software update systems use
+to sign files).
+    </li>
+   </ul>
+  </div>
+  <div class="section" id="appendix-b-extension-to-the-minimum-security-model">
+   <h1>
+    <a class="toc-backref" href="#id129">
+     Appendix B: Extension to the Minimum Security Model
+    </a>
+   </h1>
+   <p>
+    The maximum security model and end-to-end signing have been intentionally
+excluded from this PEP.  Although both improve PyPI's ability to survive a
+repository compromise and allow developers to sign their distributions, they
+have been postponed for review as a potential future extension to
+    <a class="reference external" href="index.html">
+     PEP 458
+    </a>
+    .
+    <a class="reference external" href="../pep-0480/index.html">
+     PEP
+480
+    </a>
+    <a class="footnote-reference" href="#id73" id="id44">
+     [26]
+    </a>
+    , which discusses the extension in detail, is available for review to
+those developers interested in the end-to-end signing option.  The maximum
+security model and end-to-end signing are briefly covered in subsections that
+follow.
+   </p>
+   <p>
+    There are several reasons for not initially supporting the features discussed
+in this section:
+   </p>
+   <ol class="arabic">
+    <li>
+     <p class="first">
+      A build farm (distribution wheels on supported platforms are generated for
+each project on PyPI infrastructure) may possibly complicate matters.  PyPI
+wants to support a build farm in the future.  Unfortunately, if wheels are
+auto-generated externally, developer signatures for these wheels are
+unlikely.  However, there might still be a benefit to generating wheels from
+source distributions that are signed by developers (provided that
+reproducible wheels are possible).  Another possibility is to optionally
+delegate trust of these wheels to an online role.
+     </p>
+    </li>
+    <li>
+     <p class="first">
+      An easy-to-use key management solution is needed for developers.
+      <a class="reference external" href="https://minilock.io/">
+       miniLock
+      </a>
+      <a class="footnote-reference" href="#id101" id="id102">
+       [40]
+      </a>
+      is one likely candidate for management and generation of keys.
+Although developer signatures can remain optional, this approach may be
+inadequate due to the great number of potentially unsigned dependencies each
+distribution may have.  If any one of these dependencies is unsigned, it
+negates any benefit the project gains from signing its own distribution
+(i.e., attackers would only need to compromise one of the unsigned
+dependencies to attack end-users).  Requiring developers to manually sign
+distributions and manage keys is expected to render key signing an unused
+feature.
+     </p>
+     <blockquote>
+     </blockquote>
+    </li>
+    <li>
+     <p class="first">
+      A two-phase approach, where the minimum security model is implemented first
+followed by the maximum security model, can simplify matters and give PyPI
+administrators time to review the feasibility of end-to-end signing.
+     </p>
+    </li>
+   </ol>
+   <div class="section" id="maximum-security-model">
+    <h2>
+     <a class="toc-backref" href="#id130">
+      Maximum Security Model
+     </a>
+    </h2>
+    <p>
+     The maximum security model relies on developers signing their projects and
+uploading signed metadata to PyPI.  If the PyPI infrastructure were to be
+compromised, attackers would be unable to serve malicious versions of claimed
+projects without access to the project's developer key.  Figure 3 depicts the
+changes made to figure 2, namely that developer roles are now supported and
+that three new delegated roles exist:
+     <em>
+      claimed
+     </em>
+     ,
+     <em>
+      recently-claimed
+     </em>
+     , and
+     <em>
+      unclaimed
+     </em>
+     .  The
+     <em>
+      bins
+     </em>
+     role has been renamed
+     <em>
+      unclaimed
+     </em>
+     and can contain any
+projects that have not been added to
+     <em>
+      claimed
+     </em>
+     .  The strength of this model
+(over the minimum security model) is in the offline keys provided by
+developers.  Although the minimum security model supports continuous delivery,
+all of the projects are signed by an online key.  An attacker can corrupt
+packages in the minimum security model, but not in the maximum model without
+also compromising a developer's key.
+    </p>
+    <img alt="pep-0458-3.png" src="../../../m/dev/peps/pep-0458/pep-0458-3.png"/>
+    <p>
+     Figure 3: An overview of the metadata layout in the maximum security model.
+The maximum security model supports continuous delivery and survivable key
+compromise.
+    </p>
+   </div>
+   <div class="section" id="end-to-end-signing">
+    <h2>
+     <a class="toc-backref" href="#id131">
+      End-to-End Signing
+     </a>
+    </h2>
+    <p>
+     End-to-End signing allows both PyPI and developers to sign for the metadata
+downloaded by clients.  PyPI is trusted to make uploaded projects available to
+clients (they sign the metadata for this part of the process), and developers
+can sign the distributions that they upload.
+    </p>
+    <p>
+     <a class="reference external" href="../pep-0480/index.html">
+      PEP 480
+     </a>
+     <a class="footnote-reference" href="#id73" id="id46">
+      [26]
+     </a>
+     discusses the tools available to developers who sign the
+distributions that they upload to PyPI.  To summarize
+     <a class="reference external" href="../pep-0480/index.html">
+      PEP 480
+     </a>
+     , developers
+generate cryptographic keys and sign metadata in some automated fashion, where
+the metadata includes the information required to verify the authenticity of
+the distribution.  The metadata is then uploaded to PyPI by the client, where
+it will be available for download by package managers such as pip (i.e.,
+package managers that support TUF metadata).  The entire process is transparent
+to clients (using a package manager that supports TUF) who download
+distributions from PyPI.
+    </p>
+   </div>
+  </div>
+  <div class="section" id="appendix-c-pep-470-and-projects-hosted-externally">
+   <h1>
+    Appendix C:
+    <a class="reference external" href="../pep-0470/index.html">
+     PEP 470
+    </a>
+    and Projects Hosted Externally
+   </h1>
+   <p>
+    How should TUF handle distributions that are not hosted on PyPI?  According to
+    <a class="reference external" href="../pep-0470/index.html">
+     PEP 470
+    </a>
+    <a class="footnote-reference" href="#id103" id="id104">
+     [41]
+    </a>
+    , projects may opt to host their distributions externally and are
+only required to provide PyPI a link to its external index, which package
+managers like pip can use to find the project's distributions.
+    <a class="reference external" href="../pep-0470/index.html">
+     PEP 470
+    </a>
+    does
+not mention whether externally hosted projects are considered unverified by
+default, as projects that use this option are not required to submit any
+information about their distributions (e.g., file size and cryptographic hash)
+when the project is registered, nor include a cryptographic hash of the file
+in download links.
+   </p>
+   <p>
+    Potentional approaches that PyPI administrators MAY consider to handle
+projects hosted externally:
+   </p>
+   <ol class="arabic simple">
+    <li>
+     Download external distributions but do not verify them.  The targets
+metadata will not include information for externally hosted projects.
+    </li>
+    <li>
+     PyPI will periodically download information from the external index.  PyPI
+will gather the external distribution's file size and hashes and generate
+appropriate TUF metadata.
+    </li>
+    <li>
+     External projects MUST submit to PyPI the file size and cryptographic hash
+for a distribution.
+    </li>
+    <li>
+     External projects MUST upload to PyPI a developer public key for the
+index.  The distribution MUST create TUF metadata that is stored at the
+index, and signed with the developer's corresponding private key.  The
+client will fetch the external TUF metadata as part of the package
+update process.
+    </li>
+    <li>
+     External projects MUST upload to PyPI signed TUF metadata (as allowed by
+the maximum security model) about the distributions that they host
+externally, and a developer public key.  Package managers verify
+distributions by consulting the signed metadata uploaded to PyPI.
+    </li>
+   </ol>
+   <p>
+    Only one of the options listed above should be implemented on PyPI.  Option
+(4) or (5) is RECOMMENDED because external distributions are signed by
+developers. External distributions that are forged (due to a compromised
+PyPI account or external host) may be detected if external developers are
+required to sign metadata, although this requirement is likely only practical
+if an easy-to-use key management solution and developer scripts are provided
+by PyPI.
+   </p>
+  </div>
+  <div class="section" id="references">
+   <h1>
+    <a class="toc-backref" href="#id133">
+     References
+    </a>
+   </h1>
+   <table class="docutils footnote" frame="void" id="id48" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id1">
+        [1]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="https://pypi.python.org/">
+        https://pypi.python.org
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id49" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       [2]
+      </td>
+      <td>
+       <em>
+        (
+        <a class="fn-backref" href="#id2">
+         1
+        </a>
+        ,
+        <a class="fn-backref" href="#id18">
+         2
+        </a>
+        ,
+        <a class="fn-backref" href="#id20">
+         3
+        </a>
+        )
+       </em>
+       <a class="reference external" href="https://isis.poly.edu/~jcappos/papers/samuel_tuf_ccs_2010.pdf">
+        https://isis.poly.edu/~jcappos/papers/samuel_tuf_ccs_2010.pdf
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id50" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id3">
+        [3]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="http://www.pip-installer.org/">
+        http://www.pip-installer.org
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id51" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id6">
+        [4]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="https://wiki.python.org/moin/WikiAttack2013">
+        https://wiki.python.org/moin/WikiAttack2013
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id52" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id7">
+        [5]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="https://github.com/theupdateframework/pip/wiki/Attacks-on-software-repositories">
+        https://github.com/theupdateframework/pip/wiki/Attacks-on-software-repositories
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id53" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id8">
+        [6]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="https://mail.python.org/pipermail/distutils-sig/2013-April/020596.html">
+        https://mail.python.org/pipermail/distutils-sig/2013-April/020596.html
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id54" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id9">
+        [7]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="https://mail.python.org/pipermail/distutils-sig/2013-May/020701.html">
+        https://mail.python.org/pipermail/distutils-sig/2013-May/020701.html
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id55" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id10">
+        [8]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="https://mail.python.org/pipermail/distutils-sig/2013-July/022008.html">
+        https://mail.python.org/pipermail/distutils-sig/2013-July/022008.html
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id56" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id11">
+        [9]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="../pep-0381/index.html">
+        PEP 381
+       </a>
+       , Mirroring infrastructure for PyPI, Ziadé, Löwis
+       <a class="reference external" href="../pep-0381/index.html">
+        http://www.python.org/dev/peps/pep-0381/
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id57" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id12">
+        [10]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="https://mail.python.org/pipermail/distutils-sig/2013-September/022773.html">
+        https://mail.python.org/pipermail/distutils-sig/2013-September/022773.html
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id58" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id13">
+        [11]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="https://mail.python.org/pipermail/distutils-sig/2013-May/020848.html">
+        https://mail.python.org/pipermail/distutils-sig/2013-May/020848.html
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id59" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id14">
+        [12]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="../pep-0449/index.html">
+        PEP 449
+       </a>
+       , Removal of the PyPI Mirror Auto Discovery and Naming Scheme, Stufft
+       <a class="reference external" href="../pep-0449/index.html">
+        http://www.python.org/dev/peps/pep-0449/
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id60" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id15">
+        [13]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="https://isis.poly.edu/~jcappos/papers/cappos_mirror_ccs_08.pdf">
+        https://isis.poly.edu/~jcappos/papers/cappos_mirror_ccs_08.pdf
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id61" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       [14]
+      </td>
+      <td>
+       <em>
+        (
+        <a class="fn-backref" href="#id16">
+         1
+        </a>
+        ,
+        <a class="fn-backref" href="#id41">
+         2
+        </a>
+        )
+       </em>
+       <a class="reference external" href="https://mail.python.org/pipermail/distutils-sig/2013-September/022755.html">
+        https://mail.python.org/pipermail/distutils-sig/2013-September/022755.html
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id62" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       [15]
+      </td>
+      <td>
+       <a class="reference external" href="https://pypi.python.org/security">
+        https://pypi.python.org/security
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id63" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       [16]
+      </td>
+      <td>
+       <em>
+        (
+        <a class="fn-backref" href="#id21">
+         1
+        </a>
+        ,
+        <a class="fn-backref" href="#id27">
+         2
+        </a>
+        )
+       </em>
+       <a class="reference external" href="https://github.com/theupdateframework/tuf/blob/develop/docs/tuf-spec.txt">
+        https://github.com/theupdateframework/tuf/blob/develop/docs/tuf-spec.txt
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id64" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       [17]
+      </td>
+      <td>
+       <em>
+        (
+        <a class="fn-backref" href="#id22">
+         1
+        </a>
+        ,
+        <a class="fn-backref" href="#id23">
+         2
+        </a>
+        ,
+        <a class="fn-backref" href="#id24">
+         3
+        </a>
+        ,
+        <a class="fn-backref" href="#id25">
+         4
+        </a>
+        ,
+        <a class="fn-backref" href="#id26">
+         5
+        </a>
+        )
+       </em>
+       <a class="reference external" href="../pep-0426/index.html">
+        PEP 426
+       </a>
+       , Metadata for Python Software Packages 2.0, Coghlan, Holth, Stufft
+       <a class="reference external" href="../pep-0426/index.html">
+        http://www.python.org/dev/peps/pep-0426/
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id65" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id29">
+        [18]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="https://en.wikipedia.org/wiki/Continuous_delivery">
+        https://en.wikipedia.org/wiki/Continuous_delivery
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id66" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id32">
+        [19]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="https://mail.python.org/pipermail/distutils-sig/2013-August/022154.html">
+        https://mail.python.org/pipermail/distutils-sig/2013-August/022154.html
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id67" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id34">
+        [20]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="https://en.wikipedia.org/wiki/RSA_(algorithm)">
+        https://en.wikipedia.org/wiki/RSA_%28algorithm%29
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id68" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id35">
+        [21]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="https://en.wikipedia.org/wiki/Key-recovery_attack">
+        https://en.wikipedia.org/wiki/Key-recovery_attack
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id69" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       [22]
+      </td>
+      <td>
+       <a class="reference external" href="http://csrc.nist.gov/publications/nistpubs/800-57/SP800-57-Part1.pdf">
+        http://csrc.nist.gov/publications/nistpubs/800-57/SP800-57-Part1.pdf
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id70" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       [23]
+      </td>
+      <td>
+       <a class="reference external" href="https://www.openssl.org/">
+        https://www.openssl.org/
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id71" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       [24]
+      </td>
+      <td>
+       <a class="reference external" href="https://pypi.python.org/pypi/pycrypto">
+        https://pypi.python.org/pypi/pycrypto
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id72" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       [25]
+      </td>
+      <td>
+       <a class="reference external" href="http://ed25519.cr.yp.to/">
+        http://ed25519.cr.yp.to/
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id73" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       [26]
+      </td>
+      <td>
+       <em>
+        (
+        <a class="fn-backref" href="#id4">
+         1
+        </a>
+        ,
+        <a class="fn-backref" href="#id44">
+         2
+        </a>
+        ,
+        <a class="fn-backref" href="#id46">
+         3
+        </a>
+        )
+       </em>
+       <a class="reference external" href="../pep-0480/index.html">
+        https://www.python.org/dev/peps/pep-0480/
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id74" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id75">
+        [27]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="https://github.com/theupdateframework/tuf/tree/develop/tuf/client#updaterpy">
+        https://github.com/theupdateframework/tuf/tree/develop/tuf/client#updaterpy
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id76" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       [28]
+      </td>
+      <td>
+       <em>
+        (
+        <a class="fn-backref" href="#id77">
+         1
+        </a>
+        ,
+        <a class="fn-backref" href="#id98">
+         2
+        </a>
+        )
+       </em>
+       <a class="reference external" href="https://mail.python.org/pipermail/distutils-sig/2013-September/022755.html">
+        https://mail.python.org/pipermail/distutils-sig/2013-September/022755.html
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id78" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id79">
+        [29]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="http://www.ietf.org/rfc/rfc2119.txt">
+        http://www.ietf.org/rfc/rfc2119.txt
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id80" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id81">
+        [30]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="https://github.com/theupdateframework/tuf/blob/develop/METADATA.md">
+        https://github.com/theupdateframework/tuf/blob/develop/METADATA.md
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id82" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id83">
+        [31]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="https://github.com/theupdateframework/tuf/tree/develop/tuf#repository-management">
+        https://github.com/theupdateframework/tuf/tree/develop/tuf#repository-management
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id84" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id85">
+        [32]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="https://github.com/theupdateframework/tuf/tree/develop/tuf/client#overview-of-the-update-process.">
+        https://github.com/theupdateframework/tuf/tree/develop/tuf/client#overview-of-the-update-process.
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id86" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id87">
+        [33]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="https://github.com/theupdateframework/tuf/issues/39">
+        https://github.com/theupdateframework/tuf/issues/39
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id88" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id89">
+        [34]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="https://en.wikipedia.org/wiki/Cryptographic_hash_function">
+        https://en.wikipedia.org/wiki/Cryptographic_hash_function
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id90" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id91">
+        [35]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="https://en.wikipedia.org/wiki/Collision_(computer_science)">
+        https://en.wikipedia.org/wiki/Collision_(computer_science)
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id92" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id93">
+        [36]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="http://docs.python.org/2/library/hashlib.html#hashlib.hash.hexdigest">
+        http://docs.python.org/2/library/hashlib.html#hashlib.hash.hexdigest
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id94" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id95">
+        [37]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="https://en.wikipedia.org/wiki/SHA-2">
+        https://en.wikipedia.org/wiki/SHA-2
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id96" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id97">
+        [38]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="https://en.wikipedia.org/wiki/Transaction_log">
+        https://en.wikipedia.org/wiki/Transaction_log
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id99" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id100">
+        [39]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="https://en.wikipedia.org/wiki/Out-of-band#Authentication">
+        https://en.wikipedia.org/wiki/Out-of-band#Authentication
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id101" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id102">
+        [40]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="https://minilock.io/">
+        https://minilock.io/
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id103" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id104">
+        [41]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="../pep-0470/index.html">
+        http://www.python.org/dev/peps/pep-0470/
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+  </div>
+  <div class="section" id="acknowledgements">
+   <h1>
+    <a class="toc-backref" href="#id134">
+     Acknowledgements
+    </a>
+   </h1>
+   <p>
+    This material is based upon work supported by the National Science Foundation
+under Grants No. CNS-1345049 and CNS-0959138. Any opinions, findings, and
+conclusions or recommendations expressed in this material are those of the
+author(s) and do not necessarily reflect the views of the National Science
+Foundation.
+   </p>
+   <p>
+    We thank Nick Coghlan, Daniel Holth and the distutils-sig community in general
+for helping us to think about how to usably and efficiently integrate TUF with
+PyPI.
+   </p>
+   <p>
+    Roger Dingledine, Sebastian Hahn, Nick Mathewson, Martin Peck and Justin Samuel
+helped us to design TUF from its predecessor Thandy of the Tor project.
+   </p>
+   <p>
+    We appreciate the efforts of Konstantin Andrianov, Geremy Condra, Zane Fisher,
+Justin Samuel, Tian Tian, Santiago Torres, John Ward, and Yuyu Zheng to to
+develop TUF.
+   </p>
+   <p>
+    Vladimir Diaz, Monzur Muhammad and Sai Teja Peddinti helped us to review this
+PEP.
+   </p>
+   <p>
+    Zane Fisher helped us to review and transcribe this PEP.
+   </p>
+  </div>
+  <div class="section" id="copyright">
+   <h1>
+    <a class="toc-backref" href="#id135">
+     Copyright
+    </a>
+   </h1>
+   <p>
+    This document has been placed in the public domain.
+   </p>
+  </div>
+ </body>
+
+<!-- Mirrored from www.python.org/dev/peps/pep-0458/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 03 Sep 2015 04:33:27 GMT -->
+</html>
+
+    </article>
+
+
+                </section>
+
+                
+
+
+<aside class="left-sidebar" role="secondary">
+
+    
+
+
+
+
+
+
+    
+
+
+
+
+
+        <div class="twitter-widget sidebar-widget">
+        <a class="twitter-timeline" data-dnt="true" href="https://twitter.com/ThePSF" data-widget-id="434113224703610882">Tweets by @ThePSF</a>
+        <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+    </div>
+
+    <div class="psf-sidebar-widget sidebar-widget">
+        <h3 class="widget-title">The PSF</h3>
+<p>The Python Software Foundation is the organization behind Python. Become a member of the PSF and help advance the software and our mission. </p>
+
+    </div>
+
+</aside>
+
+
+
+                
+                
+
+
+            </div><!-- end .container -->
+        </div><!-- end #content .content-wrapper -->
+
+        <!-- Footer and social media list -->
+        <footer id="site-map" class="main-footer" role="contentinfo">
+            <div class="main-footer-links">
+                <div class="container">
+
+                    
+                    <a id="back-to-top-1" class="jump-link" href="#python-network"><span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> Back to Top</a>
+
+                    
+
+<ul class="sitemap navigation menu do-not-print" role="tree" id="container">
+    
+    <li class="tier-1 element-1">
+        <a href="https://www.python.org/about/" >About</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/apps/" title="">Applications</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/quotes/" title="">Quotes</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/gettingstarted/" title="">Getting Started</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/help/" title="">Help</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-2">
+        <a href="https://www.python.org/downloads/" >Downloads</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/downloads/" title="">All releases</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/downloads/source/" title="">Source code</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/downloads/windows/" title="">Windows</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/downloads/mac-osx/" title="">Mac OS X</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/download/other/" title="">Other Platforms</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://docs.python.org/3/license.html" title="">License</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/download/alternatives" title="">Alternative Implementations</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-3">
+        <a href="https://www.python.org/doc/" >Documentation</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/doc/" title="">Docs</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/doc/av" title="">Audio/Visual Talks</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://wiki.python.org/moin/BeginnersGuide" title="">Beginner&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://docs.python.org/faq/" title="">FAQ</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="http://wiki.python.org/moin/Languages" title="">Non-English Docs</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="../index.html" title="">PEP Index</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://wiki.python.org/moin/PythonBooks" title="">Python Books</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-4">
+        <a href="https://www.python.org/community/" >Community</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/community/diversity/" title="">Diversity</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/community/irc/" title="">IRC</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/community/lists/" title="">Mailing Lists</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/workshops/" title="">Python Conferences</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/community/sigs/" title="">Special Interest Groups</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://wiki.python.org/moin/" title="">Python Wiki</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/community/logos/" title="">Python Logo</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://www.python.org/community/merchandise/" title="">Merchandise</a></li>
+    
+        <li class="tier-2 element-9" role="treeitem"><a href="https://www.python.org/community/awards" title="">Community Awards</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-5">
+        <a href="https://www.python.org/about/success/" title="success-stories">Success Stories</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/success/#arts" title="">Arts</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/success/#business" title="">Business</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/success/#education" title="">Education</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/success/#engineering" title="">Engineering</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/about/success/#government" title="">Government</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://www.python.org/about/success/#scientific" title="">Scientific</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/about/success/#software-development" title="">Software Development</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-6">
+        <a href="https://www.python.org/blogs/" title="News from around the Python world">News</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/blogs/" title="Python Insider Blog Posts">Python News</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://planetpython.org/" title="Planet Python">Community News</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="http://pyfound.blogspot.com/" title="PSF Blog">PSF News</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pycon.blogspot.com/" title="PyCon Blog">PyCon News</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-7">
+        <a href="https://www.python.org/events/" >Events</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/events/python-events/" title="">Python Events</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/events/python-user-group/" title="">User Group Events</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/events/python-events/past/" title="">Python Events Archive</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/events/python-user-group/past/" title="">User Group Events Archive</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://wiki.python.org/moin/PythonEventsCalendar#Submitting_an_Event" title="">Submit an Event</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-8">
+        <a href="https://www.python.org/dev/" >Contributing</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="http://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://bugs.python.org/" title="">Issue Tracker</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://mail.python.org/mailman/listinfo/python-dev" title="">python-dev list</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pythonmentors.com/" title="">Core Mentorship</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+</ul>
+
+
+                    <a id="back-to-top-2" class="jump-link" href="#python-network"><span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> Back to Top</a>
+                    
+
+                </div><!-- end .container -->
+            </div> <!-- end .main-footer-links -->
+
+            <div class="site-base">
+                <div class="container">
+                    
+                    <ul class="footer-links navigation menu do-not-print" role="tree">
+                        <li class="tier-1 element-1"><a href="https://www.python.org/about/help/">Help &amp; <span class="say-no-more">General</span> Contact</a></li>
+                        <li class="tier-1 element-2"><a href="https://www.python.org/community/diversity/">Diversity <span class="say-no-more">Initiatives</span></a></li>
+                        <li class="tier-1 element-3"><a href="https://github.com/python/pythondotorg/issues">Submit Website Bug</a></li>
+                        <!--<li class="tier-1 element-3"><a href="#"><span class="say-no-more">Website</span> Colophon</a></li>-->
+                    </ul>
+
+                    <div class="copyright">
+                        <p><small>
+                            <span class="pre">Copyright &copy;2001-2015.</span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/psf-landing/">Python Software Foundation</a></span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/about/legal/">Legal Statements</a></span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/privacy/">Privacy Policy</a></span>
+                        </small></p>
+                    </div>
+
+                </div><!-- end .container -->
+            </div><!-- end .site-base -->
+
+        </footer>
+
+    </div><!-- end #touchnav-wrapper -->
+
+    
+    <script src="../../../../ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="../../../static/js/libs/jquery-1.8.2.min.js"><\/script>')</script>
+
+    <script src="../../../static/js/libs/masonry.pkgd.min.js"></script>
+
+    <script type="text/javascript" src="../../../static/js/main-min.js" charset="utf-8"></script>
+    
+
+    <!--[if lte IE 7]>
+    <script type="text/javascript" src="/static/js/plugins/IE8-min.js" charset="utf-8"></script>
+    
+    
+    <![endif]-->
+
+    <!--[if lte IE 8]>
+    <script type="text/javascript" src="/static/js/plugins/getComputedStyle-min.js" charset="utf-8"></script>
+    
+    
+    <![endif]-->
+
+    
+
+    
+    
+
+</body>
+</html>

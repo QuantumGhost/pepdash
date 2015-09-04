@@ -1,0 +1,2878 @@
+<!doctype html>
+<!--[if lt IE 7]>   <html class="no-js ie6 lt-ie7 lt-ie8 lt-ie9">   <![endif]-->
+<!--[if IE 7]>      <html class="no-js ie7 lt-ie8 lt-ie9">          <![endif]-->
+<!--[if IE 8]>      <html class="no-js ie8 lt-ie9">                 <![endif]-->
+<!--[if gt IE 8]><!--><html class="no-js" lang="en" dir="ltr">  <!--<![endif]-->
+
+
+<!-- Mirrored from www.python.org/dev/peps/pep-0498/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 03 Sep 2015 04:33:52 GMT -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <link rel="prefetch" href="../../../../ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js">
+
+    <meta name="application-name" content="Python.org">
+    <meta name="msapplication-tooltip" content="The official home of the Python Programming Language">
+    <meta name="apple-mobile-web-app-title" content="Python.org">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="format-detection" content="telephone=no">
+    <meta http-equiv="cleartype" content="on">
+    <meta http-equiv="imagetoolbar" content="false">
+
+    <script src="../../../static/js/libs/modernizr.js"></script>
+
+    <link href="../../../static/stylesheets/style.css" rel="stylesheet" type="text/css" title="default" />
+    <link href="../../../static/stylesheets/mq.css" rel="stylesheet" type="text/css" media="not print, braille, embossed, speech, tty" />
+    
+
+    <!--[if (lte IE 8)&(!IEMobile)]>
+    <link href="/static/stylesheets/no-mq.css" rel="stylesheet" type="text/css" media="screen" />
+    
+    
+    <![endif]-->
+
+    
+    <link rel="icon" type="image/x-icon" href="https://www.python.org/static/favicon.ico">
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="../../../static/apple-touch-icon-144x144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="../../../static/apple-touch-icon-114x114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="../../../static/apple-touch-icon-72x72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="../../../static/apple-touch-icon-precomposed.png">
+    <link rel="apple-touch-icon" href="../../../static/apple-touch-icon-precomposed.png">
+
+    
+    <meta name="msapplication-TileImage" content="/static/metro-icon-144x144-precomposed.png"><!-- white shape -->
+    <meta name="msapplication-TileColor" content="#3673a5"><!-- python blue -->
+    <meta name="msapplication-navbutton-color" content="#3673a5">
+
+    <meta property="og:site_name" content="Python.org">
+    <meta property="og:type" content="website">
+
+    <title>PEP 0498 -- Literal String Interpolation | Python.org</title>
+    <meta property="og:title" content="Welcome to Python.org">
+
+    
+    <meta name="description" content="The official home of the Python Programming Language">
+    <meta name="og:description" content="The official home of the Python Programming Language">
+    <meta name="keywords" content="Python programming language object oriented web free open source software license documentation download community">
+    <meta property="og:tag" content="Python programming language object oriented web free open source software license documentation download community">
+    <meta property="og:published_time" content="">
+    <meta property="og:modified_time" content="">
+    <meta property="og:author" content="">
+    <meta property="og:section" content=""> 
+    <meta property="og:url" content="">
+    <meta property="og:image" content="">
+    <meta property="og:video" content="">
+
+    <link rel="author" href="https://www.python.org/static/humans.txt">
+
+    
+
+    
+    <script type="application/ld+json">
+     {
+       "@context": "http://schema.org",
+       "@type": "WebSite",
+       "url": "https://www.python.org/",
+       "potentialAction": {
+         "@type": "SearchAction",
+         "target": "https://www.python.org/search/?q={search_term_string}",
+         "query-input": "required name=search_term_string"
+       }
+     }
+    </script>
+
+    
+    <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-39055973-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+    </script>
+    
+</head>
+
+<body class="python pages pep-page">
+
+    <div id="touchnav-wrapper">
+
+        <div id="nojs" class="do-not-print">
+            <p><strong>Notice:</strong> While Javascript is not essential for this website, your interaction with the content will be limited. Please turn Javascript on for the full experience. </p>
+        </div>
+
+        <!--[if lt IE 8]>
+        <div id="oldie-warning" class="do-not-print">
+            <p><strong>Notice:</strong> Your browser is <em>ancient</em> and <a href="http://www.ie6countdown.com/">Microsoft agrees</a>. <a href="http://browsehappy.com/">Upgrade to a different browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to experience a better web.</p>
+        </div>
+        <![endif]-->
+
+        <!-- Sister Site Links -->
+        <div id="top" class="top-bar do-not-print">
+
+            <nav class="meta-navigation container" role="navigation">
+
+                
+                <div class="skip-link screen-reader-text">
+                    <a href="#content" title="Skip to content">Skip to content</a>
+                </div>
+
+                
+                <a id="close-python-network" class="jump-link" href="#python-network" aria-hidden="true">
+                    <span aria-hidden="true" class="icon-arrow-down"><span>&#9660;</span></span> Close
+                </a>
+
+                
+
+<ul class="menu" role="tree">
+    
+    <li class="python-meta ">
+        <a href="https://www.python.org/" title="The Python Programming Language" >Python</a>
+    </li>
+    
+    <li class="psf-meta ">
+        <a href="https://www.python.org/psf-landing/" title="The Python Software Foundation" >PSF</a>
+    </li>
+    
+    <li class="docs-meta ">
+        <a href="https://docs.python.org/" title="Python Documentation" >Docs</a>
+    </li>
+    
+    <li class="pypi-meta ">
+        <a href="https://pypi.python.org/" title="Python Package Index" >PyPI</a>
+    </li>
+    
+    <li class="jobs-meta ">
+        <a href="https://www.python.org/jobs/" title="Python Job Board" >Jobs</a>
+    </li>
+    
+    <li class="shop-meta ">
+        <a href="https://www.python.org/community/" title="Python Community" >Community</a>
+    </li>
+    
+</ul>
+
+
+                <a id="python-network" class="jump-link" href="#top" aria-hidden="true">
+                    <span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> The Python Network
+                </a>
+
+            </nav>
+
+        </div>
+
+        <!-- Header elements -->
+        <header class="main-header" role="banner">
+            <div class="container">
+
+                <h1 class="site-headline">
+                    <a href="https://www.python.org/"><img class="python-logo" src="../../../static/img/python-logo.png" alt="python&trade;"></a>
+                </h1>
+
+                <div class="options-bar do-not-print">
+
+                    
+                    <a id="site-map-link" class="jump-to-menu" href="#site-map"><span class="menu-icon">&equiv;</span> Menu</a><form class="search-the-site" action="https://www.python.org/search/" method="get">
+                        <fieldset title="Search Python.org">
+
+                            <span aria-hidden="true" class="icon-search"></span>
+
+                            <label class="screen-reader-text" for="id-search-field">Search This Site</label>
+                            <input id="id-search-field" name="q" type="search" role="textbox" class="search-field" placeholder="Search" value="" tabindex="1">
+
+                            <button type="submit" name="submit" id="submit" class="search-button" title="Submit this Search" tabindex="3">
+                                GO
+                            </button>
+
+                            
+                            <!--[if IE]><input type="text" style="display: none;" disabled="disabled" size="1" tabindex="4"><![endif]-->
+
+                        </fieldset>
+                    </form><span class="breaker"></span><div class="adjust-font-size" aria-hidden="true">
+                        <ul class="navigation menu" aria-label="Adjust Text Size on Page">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                <a href="#" class="action-trigger"><strong><small>A</small> A</strong></a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a class="text-shrink" title="Make Text Smaller" href="javascript:;">Smaller</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a class="text-grow" title="Make Text Larger" href="javascript:;">Larger</a></li>
+                                    <li class="tier-2 element-3" role="treeitem"><a class="text-reset" title="Reset any font size changes I have made" href="javascript:;">Reset</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div><div class="winkwink-nudgenudge">
+                        <ul class="navigation menu" aria-label="Social Media Navigation">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                <a href="#" class="action-trigger">Socialize</a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a href="http://plus.google.com/+Python"><span aria-hidden="true" class="icon-google-plus"></span>Google+</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a href="http://www.facebook.com/pythonlang?fref=ts"><span aria-hidden="true" class="icon-facebook"></span>Facebook</a></li>
+                                    <li class="tier-2 element-3" role="treeitem"><a href="http://twitter.com/ThePSF"><span aria-hidden="true" class="icon-twitter"></span>Twitter</a></li>
+                                    <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/irc/"><span aria-hidden="true" class="icon-freenode"></span>Chat on IRC</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div><div class="account-signin">
+                        <ul class="navigation menu" aria-label="Social Media Navigation">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                
+                                <a href="https://www.python.org/accounts/login/" title="Sign Up or Sign In to Python.org">Sign In</a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/accounts/signup/">Sign Up / Register</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/accounts/login/">Sign In</a></li>
+                                </ul>
+                                
+                            </li>
+                        </ul>
+                    </div>
+
+                </div><!-- end options-bar -->
+
+                <nav id="mainnav" class="python-navigation main-navigation do-not-print" role="navigation">
+                    
+                        
+<ul class="navigation menu" role="menubar" aria-label="Main Navigation">
+  
+    
+    
+    <li id="about" class="tier-1 element-1  " aria-haspopup="true">
+        <a href="https://www.python.org/about/" title="" class="">About</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/apps/" title="">Applications</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/quotes/" title="">Quotes</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/gettingstarted/" title="">Getting Started</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/help/" title="">Help</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="downloads" class="tier-1 element-2  " aria-haspopup="true">
+        <a href="https://www.python.org/downloads/" title="" class="">Downloads</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/downloads/" title="">All releases</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/downloads/source/" title="">Source code</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/downloads/windows/" title="">Windows</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/downloads/mac-osx/" title="">Mac OS X</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/download/other/" title="">Other Platforms</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://docs.python.org/3/license.html" title="">License</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/download/alternatives" title="">Alternative Implementations</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="documentation" class="tier-1 element-3  " aria-haspopup="true">
+        <a href="https://www.python.org/doc/" title="" class="">Documentation</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/doc/" title="">Docs</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/doc/av" title="">Audio/Visual Talks</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://wiki.python.org/moin/BeginnersGuide" title="">Beginner&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://docs.python.org/faq/" title="">FAQ</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="http://wiki.python.org/moin/Languages" title="">Non-English Docs</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="../index.html" title="">PEP Index</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://wiki.python.org/moin/PythonBooks" title="">Python Books</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="community" class="tier-1 element-4  " aria-haspopup="true">
+        <a href="https://www.python.org/community/" title="" class="">Community</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/community/diversity/" title="">Diversity</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/community/irc/" title="">IRC</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/community/lists/" title="">Mailing Lists</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/workshops/" title="">Python Conferences</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/community/sigs/" title="">Special Interest Groups</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://wiki.python.org/moin/" title="">Python Wiki</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/community/logos/" title="">Python Logo</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://www.python.org/community/merchandise/" title="">Merchandise</a></li>
+    
+        <li class="tier-2 element-9" role="treeitem"><a href="https://www.python.org/community/awards" title="">Community Awards</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="success-stories" class="tier-1 element-5  " aria-haspopup="true">
+        <a href="https://www.python.org/about/success/" title="success-stories" class="">Success Stories</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/success/#arts" title="">Arts</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/success/#business" title="">Business</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/success/#education" title="">Education</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/success/#engineering" title="">Engineering</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/about/success/#government" title="">Government</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://www.python.org/about/success/#scientific" title="">Scientific</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/about/success/#software-development" title="">Software Development</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="news" class="tier-1 element-6  " aria-haspopup="true">
+        <a href="https://www.python.org/blogs/" title="News from around the Python world" class="">News</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/blogs/" title="Python Insider Blog Posts">Python News</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://planetpython.org/" title="Planet Python">Community News</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="http://pyfound.blogspot.com/" title="PSF Blog">PSF News</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pycon.blogspot.com/" title="PyCon Blog">PyCon News</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="events" class="tier-1 element-7  " aria-haspopup="true">
+        <a href="https://www.python.org/events/" title="" class="">Events</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/events/python-events/" title="">Python Events</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/events/python-user-group/" title="">User Group Events</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/events/python-events/past/" title="">Python Events Archive</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/events/python-user-group/past/" title="">User Group Events Archive</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://wiki.python.org/moin/PythonEventsCalendar#Submitting_an_Event" title="">Submit an Event</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    
+  
+</ul>
+
+                    
+                </nav>
+
+                <div class="header-banner "> <!-- for optional "do-not-print" class -->
+                    
+                    
+                </div>
+
+                
+                
+
+             </div><!-- end .container -->
+        </header>
+
+        <div id="content" class="content-wrapper">
+            <!-- Main Content Column -->
+            <div class="container">
+
+                <section class="main-content with-left-sidebar" role="main">
+
+                    
+<ul class="breadcrumbs menu">
+    <li>
+        <a href="https://www.python.org/" title="The Python Programming Language">Python</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>
+        <a href="https://www.python.org/dev/">Python Developer's Guide</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>
+        <a href="../index.html">PEP Index</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>PEP 0498 -- Literal String Interpolation</li>
+</ul>
+
+
+                    
+<style>
+   .pep-page pre {
+        padding: .5em;
+        background: inherit;
+        border-left: 0px;
+        -webkit-box-shadow: 0 0 0 0;
+        -moz-box-shadow: 0 0 0 0;
+        box-shadow: 0 0 0 0;
+   }
+</style>
+
+    
+    <article class="text">
+        
+
+        <header class="article-header">
+            <h1 class="page-title">PEP 0498 -- Literal String Interpolation</h1>
+        </header>
+
+        <!--
+This HTML is auto-generated.  DO NOT EDIT THIS FILE!  If you are writing a new
+PEP, see http://www.python.org/dev/peps/pep-0001 for instructions and links
+to templates.  DO NOT USE THIS HTML FILE AS YOUR TEMPLATE!
+-->
+<html>
+ <body>
+  <table class="rfc2822 docutils field-list" frame="void" rules="none">
+   <col class="field-name">
+   </col>
+   <col class="field-body">
+   </col>
+   <tbody valign="top">
+    <tr class="field">
+     <th class="field-name">
+      PEP:
+     </th>
+     <td class="field-body">
+      498
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Title:
+     </th>
+     <td class="field-body">
+      Literal String Interpolation
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Author:
+     </th>
+     <td class="field-body">
+      Eric V. Smith &lt;eric at trueblade.com&gt;
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Status:
+     </th>
+     <td class="field-body">
+      Draft
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Type:
+     </th>
+     <td class="field-body">
+      Standards Track
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Created:
+     </th>
+     <td class="field-body">
+      01-Aug-2015
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Python-Version:
+     </th>
+     <td class="field-body">
+      3.6
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Post-History:
+     </th>
+     <td class="field-body">
+      07-Aug-2015, 30-Aug-2015
+     </td>
+    </tr>
+   </tbody>
+  </table>
+  <hr/>
+  <div class="contents topic" id="contents">
+   <p class="topic-title first">
+    Contents
+   </p>
+   <ul class="simple">
+    <li>
+     <a class="reference internal" href="#abstract" id="id27">
+      Abstract
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#rationale" id="id28">
+      Rationale
+     </a>
+     <ul>
+      <li>
+       <a class="reference internal" href="#no-use-of-globals-or-locals" id="id29">
+        No use of globals() or locals()
+       </a>
+      </li>
+     </ul>
+    </li>
+    <li>
+     <a class="reference internal" href="#specification" id="id30">
+      Specification
+     </a>
+     <ul>
+      <li>
+       <a class="reference internal" href="#escape-sequences" id="id31">
+        Escape sequences
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#code-equivalence" id="id32">
+        Code equivalence
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#expression-evaluation" id="id33">
+        Expression evaluation
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#format-specifiers" id="id34">
+        Format specifiers
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#concatenating-strings" id="id35">
+        Concatenating strings
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#error-handling" id="id36">
+        Error handling
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#leading-and-trailing-whitespace-in-expressions-is-skipped" id="id37">
+        Leading and trailing whitespace in expressions is skipped
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#evaluation-order-of-expressions" id="id38">
+        Evaluation order of expressions
+       </a>
+      </li>
+     </ul>
+    </li>
+    <li>
+     <a class="reference internal" href="#discussion" id="id39">
+      Discussion
+     </a>
+     <ul>
+      <li>
+       <a class="reference internal" href="#python-ideas-discussion" id="id40">
+        python-ideas discussion
+       </a>
+       <ul>
+        <li>
+         <a class="reference internal" href="#how-to-denote-f-strings" id="id41">
+          How to denote f-strings
+         </a>
+        </li>
+        <li>
+         <a class="reference internal" href="#how-to-specify-the-location-of-expressions-in-f-strings" id="id42">
+          How to specify the location of expressions in f-strings
+         </a>
+        </li>
+        <li>
+         <a class="reference internal" href="#supporting-full-python-expressions" id="id43">
+          Supporting full Python expressions
+         </a>
+        </li>
+       </ul>
+      </li>
+      <li>
+       <a class="reference internal" href="#similar-support-in-other-languages" id="id44">
+        Similar support in other languages
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#differences-between-f-string-and-str-format-expressions" id="id45">
+        Differences between f-string and str.format expressions
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#triple-quoted-f-strings" id="id46">
+        Triple-quoted f-strings
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#raw-f-strings" id="id47">
+        Raw f-strings
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#no-binary-f-strings" id="id48">
+        No binary f-strings
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#s-r-and-a-are-redundant" id="id49">
+        <tt class="docutils literal">
+         !s
+        </tt>
+        ,
+        <tt class="docutils literal">
+         !r
+        </tt>
+        , and
+        <tt class="docutils literal">
+         !a
+        </tt>
+        are redundant
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#lambdas-inside-expressions" id="id50">
+        Lambdas inside expressions
+       </a>
+      </li>
+     </ul>
+    </li>
+    <li>
+     <a class="reference internal" href="#examples-from-python-s-source-code" id="id51">
+      Examples from Python's source code
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#implementation-limitations" id="id52">
+      Implementation limitations
+     </a>
+     <ul>
+      <li>
+       <a class="reference internal" href="#maximum-of-255-expressions" id="id53">
+        Maximum of 255 expressions
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#the-same-expression-used-multiple-times" id="id54">
+        The same expression used multiple times
+       </a>
+      </li>
+     </ul>
+    </li>
+    <li>
+     <a class="reference internal" href="#references" id="id55">
+      References
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#copyright" id="id56">
+      Copyright
+     </a>
+    </li>
+   </ul>
+  </div>
+  <div class="section" id="abstract">
+   <h1>
+    <a class="toc-backref" href="#id27">
+     Abstract
+    </a>
+   </h1>
+   <p>
+    Python supports multiple ways to format text strings. These include
+%-formatting
+    <a class="footnote-reference" href="#id13" id="id1">
+     [1]
+    </a>
+    ,
+    <tt class="docutils literal">
+     str.format()
+    </tt>
+    <a class="footnote-reference" href="#id14" id="id2">
+     [2]
+    </a>
+    , and
+    <tt class="docutils literal">
+     string.Template
+    </tt>
+    <a class="footnote-reference" href="#id15" id="id3">
+     [3]
+    </a>
+    . Each of these methods have their advantages, but in addition
+have disadvantages that make them cumbersome to use in practice. This
+PEP proposed to add a new string formatting mechanism: Literal String
+Interpolation. In this PEP, such strings will be refered to as
+"f-strings", taken from the leading character used to denote such
+strings, and standing for "formatted strings".
+   </p>
+   <p>
+    This PEP does not propose to remove or deprecate any of the existing
+string formatting mechanisms.
+   </p>
+   <p>
+    f-strings provide a way to embed expressions inside string literals,
+using a minimal syntax. It should be noted that an f-string is really
+an expression evaluated at run time, not a constant value. In Python
+source code, an f-string is a literal string, prefixed with 'f', that
+contains expressions inside braces. The expressions are replaced with
+their values. Some examples are:
+   </p>
+   <pre class="literal-block">
+&gt;&gt;&gt; import datetime
+&gt;&gt;&gt; name = 'Fred'
+&gt;&gt;&gt; age = 50
+&gt;&gt;&gt; anniversary = datetime.date(1991, 10, 12)
+&gt;&gt;&gt; f'My name is {name}, my age next year is {age+1}, my anniversary is {anniversary:%A, %B %d, %Y}.'
+'My name is Fred, my age next year is 51, my anniversary is Saturday, October 12, 1991.'
+&gt;&gt;&gt; f'He said his name is {name!r}.'
+"He said his name is 'Fred'."
+</pre>
+   <p>
+    A similar feature was proposed in
+    <a class="reference external" href="../pep-0215/index.html">
+     PEP 215
+    </a>
+    <a class="footnote-reference" href="#id16" id="id4">
+     [4]
+    </a>
+    .
+    <a class="reference external" href="../pep-0215/index.html">
+     PEP 215
+    </a>
+    proposed to
+support a subset of Python expressions, and did not support the
+type-specific string formatting (the
+    <tt class="docutils literal">
+     __format__()
+    </tt>
+    method) which
+was introduced with
+    <a class="reference external" href="../pep-3101/index.html">
+     PEP 3101
+    </a>
+    <a class="footnote-reference" href="#id17" id="id5">
+     [5]
+    </a>
+    .
+   </p>
+  </div>
+  <div class="section" id="rationale">
+   <h1>
+    <a class="toc-backref" href="#id28">
+     Rationale
+    </a>
+   </h1>
+   <p>
+    This PEP is driven by the desire to have a simpler way to format
+strings in Python. The existing ways of formatting are either error
+prone, inflexible, or cumbersome.
+   </p>
+   <p>
+    %-formatting is limited as to the types it supports. Only ints, strs,
+and doubles can be formatted. All other types are either not
+supported, or converted to one of these types before formatting. In
+addition, there's a well-known trap where a single value is passed:
+   </p>
+   <pre class="literal-block">
+&gt;&gt;&gt; msg = 'disk failure'
+&gt;&gt;&gt; 'error: %s' % msg
+'error: disk failure'
+</pre>
+   <p>
+    But if msg were ever to be a tuple, the same code would fail:
+   </p>
+   <pre class="literal-block">
+&gt;&gt;&gt; msg = ('disk failure', 32)
+&gt;&gt;&gt; 'error: %s' % msg
+Traceback (most recent call last):
+  File "&lt;stdin&gt;", line 1, in &lt;module&gt;
+TypeError: not all arguments converted during string formatting
+</pre>
+   <p>
+    To be defensive, the following code should be used:
+   </p>
+   <pre class="literal-block">
+&gt;&gt;&gt; 'error: %s' % (msg,)
+"error: ('disk failure', 32)"
+</pre>
+   <p>
+    <tt class="docutils literal">
+     str.format()
+    </tt>
+    was added to address some of these problems with
+%-formatting. In particular, it uses normal function call syntax (and
+therefor supports multiple parameters) and it is extensible through
+the
+    <tt class="docutils literal">
+     __format__()
+    </tt>
+    method on the object being converted to a
+string. See PEP-3101 for a detailed rationale. This PEP reuses much of
+the
+    <tt class="docutils literal">
+     str.format()
+    </tt>
+    syntax and machinery, in order to provide
+continuity with an existing Python string formatting mechanism.
+   </p>
+   <p>
+    However,
+    <tt class="docutils literal">
+     str.format()
+    </tt>
+    is not without its issues. Chief among them
+is its verbosity. For example, the text
+    <tt class="docutils literal">
+     value
+    </tt>
+    is repeated here:
+   </p>
+   <pre class="literal-block">
+&gt;&gt;&gt; value = 4 * 20
+&gt;&gt;&gt; 'The value is {value}.'.format(value=value)
+'The value is 80.'
+</pre>
+   <p>
+    Even in its simplest form, there is a bit of boilerplate, and the
+value that's inserted into the placeholder is sometimes far removed
+from where the placeholder is situated:
+   </p>
+   <pre class="literal-block">
+&gt;&gt;&gt; 'The value is {}.'.format(value)
+'The value is 80.'
+</pre>
+   <p>
+    With an f-string, this becomes:
+   </p>
+   <pre class="literal-block">
+&gt;&gt;&gt; f'The value is {value}.'
+'The value is 80.'
+</pre>
+   <p>
+    f-strings provide a concise, readable way to include the value of
+Python expressions inside strings.
+   </p>
+   <p>
+    In this sense,
+    <tt class="docutils literal">
+     string.Template
+    </tt>
+    and %-formatting have similar
+shortcomings to
+    <tt class="docutils literal">
+     str.format()
+    </tt>
+    , but also support fewer formatting
+options. In particular, they do not support the
+    <tt class="docutils literal">
+     __format__
+    </tt>
+    protocol, so that there is no way to control how a specific object is
+converted to a string, nor can it be extended to additional types that
+want to control how they are converted to strings (such as
+    <tt class="docutils literal">
+     Decimal
+    </tt>
+    and
+    <tt class="docutils literal">
+     datetime
+    </tt>
+    ). This example is not possible with
+    <tt class="docutils literal">
+     string.Template
+    </tt>
+    :
+   </p>
+   <pre class="literal-block">
+&gt;&gt;&gt; value = 1234
+&gt;&gt;&gt; f'input={value:#0.6x}'
+'input=0x04d2'
+</pre>
+   <p>
+    And neither %-formatting nor
+    <tt class="docutils literal">
+     string.Template
+    </tt>
+    can control
+formatting such as:
+   </p>
+   <pre class="literal-block">
+&gt;&gt;&gt; date = datetime.date(1991, 10, 12)
+&gt;&gt;&gt; f'{date} was on a {date:%A}'
+'1991-10-12 was on a Saturday'
+</pre>
+   <div class="section" id="no-use-of-globals-or-locals">
+    <h2>
+     <a class="toc-backref" href="#id29">
+      No use of globals() or locals()
+     </a>
+    </h2>
+    <p>
+     In the discussions on python-dev
+     <a class="footnote-reference" href="#id18" id="id6">
+      [6]
+     </a>
+     , a number of solutions where
+presented that used locals() and globals() or their equivalents. All
+of these have various problems. Among these are referencing variables
+that are not otherwise used in a closure. Consider:
+    </p>
+    <pre class="literal-block">
+&gt;&gt;&gt; def outer(x):
+...     def inner():
+...         return 'x={x}'.format_map(locals())
+...     return inner
+...
+&gt;&gt;&gt; outer(42)()
+Traceback (most recent call last):
+  File "&lt;stdin&gt;", line 1, in &lt;module&gt;
+  File "&lt;stdin&gt;", line 3, in inner
+KeyError: 'x'
+</pre>
+    <p>
+     This returns an error because the compiler has not added a reference
+to x inside the closure. You need to manually add a reference to x in
+order for this to work:
+    </p>
+    <pre class="literal-block">
+&gt;&gt;&gt; def outer(x):
+...     def inner():
+...         x
+...         return 'x={x}'.format_map(locals())
+...     return inner
+...
+&gt;&gt;&gt; outer(42)()
+'x=42'
+</pre>
+    <p>
+     In addition, using locals() or globals() introduces an information
+leak. A called routine that has access to the callers locals() or
+globals() has access to far more information than needed to do the
+string interpolation.
+    </p>
+    <p>
+     Guido stated
+     <a class="footnote-reference" href="#id19" id="id7">
+      [7]
+     </a>
+     that any solution to better string interpolation
+would not use locals() or globals().
+    </p>
+   </div>
+  </div>
+  <div class="section" id="specification">
+   <h1>
+    <a class="toc-backref" href="#id30">
+     Specification
+    </a>
+   </h1>
+   <p>
+    In source code, f-strings are string literals that are prefixed by the
+letter 'f'. 'f' may be combined with 'r', in either order, to produce
+raw f-string literals. 'f' may not be combined with 'b': there are no
+binary f-strings. 'f' may also be combined with 'u', in either order,
+although adding 'u' has no effect.
+   </p>
+   <p>
+    f-strings are parsed in to literals and expressions. Expressions
+appear within curly braces '{' and '}. The parts of the string outside
+of braces are literals.  The expressions are evaluated, formatted with
+the existing __format__ protocol, then the results are concatenated
+together with the string literals. While scanning the string for
+expressions, any doubled braces '{{' or '}}' are replaced by the
+corresponding single brace. Doubled opening braces do not signify the
+start of an expression.
+   </p>
+   <p>
+    Following the expression, an optional type conversion may be
+specified.  The allowed conversions are
+    <tt class="docutils literal">
+     '!s'
+    </tt>
+    ,
+    <tt class="docutils literal">
+     '!r'
+    </tt>
+    , or
+    <tt class="docutils literal">
+     '!a'
+    </tt>
+    . These are treated the same as in
+    <tt class="docutils literal">
+     str.format()
+    </tt>
+    :
+    <tt class="docutils literal">
+     '!s'
+    </tt>
+    calls
+    <tt class="docutils literal">
+     str()
+    </tt>
+    on the expression,
+    <tt class="docutils literal">
+     '!r'
+    </tt>
+    calls
+    <tt class="docutils literal">
+     repr()
+    </tt>
+    on the
+expression, and
+    <tt class="docutils literal">
+     '!a'
+    </tt>
+    calls
+    <tt class="docutils literal">
+     ascii()
+    </tt>
+    on the expression. These
+conversions are applied before the call to
+    <tt class="docutils literal">
+     __format__
+    </tt>
+    . The only
+reason to use
+    <tt class="docutils literal">
+     '!s'
+    </tt>
+    is if you want to specify a format specifier
+that applies to
+    <tt class="docutils literal">
+     str
+    </tt>
+    , not to the type of the expression.
+   </p>
+   <p>
+    Similar to
+    <tt class="docutils literal">
+     str.format()
+    </tt>
+    , optional format specifiers maybe be
+included inside the f-string, separated from the expression (or the
+type conversion, if specified) by a colon. If a format specifier is
+not provied, an empty string is used.
+   </p>
+   <p>
+    So, an f-string looks like:
+   </p>
+   <pre class="literal-block">
+f ' &lt;text&gt; { &lt;expression&gt; &lt;optional !s, !r, or !a&gt; &lt;optional : format specifier&gt; } text ... '
+</pre>
+   <p>
+    The resulting expression's
+    <tt class="docutils literal">
+     __format__
+    </tt>
+    method is called with the
+format specifier. The resulting value is used when building the value
+of the f-string.
+   </p>
+   <p>
+    Expressions cannot contain
+    <tt class="docutils literal">
+     ':'
+    </tt>
+    or
+    <tt class="docutils literal">
+     '!'
+    </tt>
+    outside of strings or
+parens, brackets, or braces. The exception is that the
+    <tt class="docutils literal">
+     <span class="pre">
+      '!='
+     </span>
+    </tt>
+    operator is allowed as a special case.
+   </p>
+   <div class="section" id="escape-sequences">
+    <h2>
+     <a class="toc-backref" href="#id31">
+      Escape sequences
+     </a>
+    </h2>
+    <p>
+     Scanning an f-string for expressions happens after escape sequences
+are decoded. Because
+     <tt class="docutils literal">
+      <span class="pre">
+       hex(ord('{'))
+      </span>
+      == 0x7b
+     </tt>
+     , the f-string
+     <tt class="docutils literal">
+      <span class="pre">
+       f'\\u007b4*10}'
+      </span>
+     </tt>
+     is decoded to
+     <tt class="docutils literal">
+      <span class="pre">
+       f'{4*10}'
+      </span>
+     </tt>
+     , which evaluates as
+the integer 40:
+    </p>
+    <pre class="literal-block">
+&gt;&gt;&gt; f'\u007b4*10}'
+'40'
+&gt;&gt;&gt; f'\x7b4*10}'
+'40'
+&gt;&gt;&gt; f'\x7b4*10\N{RIGHT CURLY BRACKET}'
+'40'
+</pre>
+    <p>
+     These examples aren't generally useful, they're just to show that
+escape sequences are processed before f-strings are parsed for
+expressions.
+    </p>
+   </div>
+   <div class="section" id="code-equivalence">
+    <h2>
+     <a class="toc-backref" href="#id32">
+      Code equivalence
+     </a>
+    </h2>
+    <p>
+     The exact code used to implement f-strings is not specified. However,
+it is guaranteed that any embedded value that is converted to a string
+will use that value's
+     <tt class="docutils literal">
+      __format__
+     </tt>
+     method. This is the same
+mechanism that
+     <tt class="docutils literal">
+      str.format()
+     </tt>
+     uses to convert values to strings.
+    </p>
+    <p>
+     For example, this code:
+    </p>
+    <pre class="literal-block">
+f'abc{expr1:spec1}{expr2!r:spec2}def{expr3:!s}ghi'
+</pre>
+    <p>
+     Might be be evaluated as:
+    </p>
+    <pre class="literal-block">
+''.join(['abc', expr1.__format__(spec1), repr(expr2).__format__(spec2), 'def', str(spec3).__format__(''), 'ghi'])
+</pre>
+   </div>
+   <div class="section" id="expression-evaluation">
+    <h2>
+     <a class="toc-backref" href="#id33">
+      Expression evaluation
+     </a>
+    </h2>
+    <p>
+     The expressions that are extracted from the string are evaluated in
+the context where the f-string appeared. This means the expression has
+full access to local and global variables. Any valid Python expression
+can be used, including function and method calls.
+    </p>
+    <p>
+     Because the f-strings are evaluated where the string appears in the
+source code, there is no additional expressiveness available with
+f-strings. There are also no additional security concerns: you could
+have also just written the same expression, not inside of an
+f-string:
+    </p>
+    <pre class="literal-block">
+&gt;&gt;&gt; def foo():
+...   return 20
+...
+&gt;&gt;&gt; f'result={foo()}'
+'result=20'
+</pre>
+    <p>
+     Is equivalent to:
+    </p>
+    <pre class="literal-block">
+&gt;&gt;&gt; 'result=' + str(foo())
+'result=20'
+</pre>
+    <p>
+     After stripping leading and trailing whitespace (see below), the
+expression is parsed with the equivalent of
+     <tt class="docutils literal">
+      ast.parse(expression,
+      <span class="pre">
+       '&lt;fstring&gt;',
+      </span>
+      'eval')
+     </tt>
+     <a class="footnote-reference" href="#id20" id="id8">
+      [8]
+     </a>
+     . Note that this restricts the expression:
+it cannot contain any newlines, for example:
+    </p>
+    <pre class="literal-block">
+&gt;&gt;&gt; x = 0
+&gt;&gt;&gt; f'''{x
+... +1}'''
+  File "&lt;fstring&gt;", line 2
+    +1
+    ^
+SyntaxError: invalid syntax
+</pre>
+    <p>
+     But note that this works, since the newline is removed from the
+string, and the spaces in front of the
+     <tt class="docutils literal">
+      '1'
+     </tt>
+     are allowed in an
+expression:
+    </p>
+    <pre class="literal-block">
+&gt;&gt;&gt; f'{x+\
+...    1}'
+'2'
+</pre>
+   </div>
+   <div class="section" id="format-specifiers">
+    <h2>
+     <a class="toc-backref" href="#id34">
+      Format specifiers
+     </a>
+    </h2>
+    <p>
+     Format specifiers may also contain evaluated expressions. This allows
+code such as:
+    </p>
+    <pre class="literal-block">
+&gt;&gt;&gt; width = 10
+&gt;&gt;&gt; precision = 4
+&gt;&gt;&gt; value = decimal.Decimal('12.34567')
+&gt;&gt;&gt; f'result: {value:{width}.{precision}}'
+'result:      12.35'
+</pre>
+    <p>
+     Once expressions in a format specifier are evaluated (if necessary),
+format specifiers are not interpreted by the f-string evaluator. Just
+as in
+     <tt class="docutils literal">
+      str.format()
+     </tt>
+     , they are merely passed in to the
+     <tt class="docutils literal">
+      __format__()
+     </tt>
+     method of the object being formatted.
+    </p>
+   </div>
+   <div class="section" id="concatenating-strings">
+    <h2>
+     <a class="toc-backref" href="#id35">
+      Concatenating strings
+     </a>
+    </h2>
+    <p>
+     Adjacent f-strings and regular strings are concatenated. Regular
+strings are concatenated at compile time, and f-strings are
+concatenated at run time. For example, the expression:
+    </p>
+    <pre class="literal-block">
+&gt;&gt;&gt; x = 10
+&gt;&gt;&gt; y = 'hi'
+&gt;&gt;&gt; 'a' 'b' f'{x}' '{c}' f'str&lt;{y:^4}&gt;' 'd' 'e'
+</pre>
+    <p>
+     yields the value:
+    </p>
+    <pre class="literal-block">
+'ab10{c}str&lt; hi &gt;de'
+</pre>
+    <p>
+     While the exact method of this run time concatenation is unspecified,
+the above code might evaluate to:
+    </p>
+    <pre class="literal-block">
+''.join(['ab', x.__format__(''), '{c}', 'str&lt;', y.__format__('^4'), 'de'])
+</pre>
+   </div>
+   <div class="section" id="error-handling">
+    <h2>
+     <a class="toc-backref" href="#id36">
+      Error handling
+     </a>
+    </h2>
+    <p>
+     Either compile time or run time errors can occur when processing
+f-strings. Compile time errors are limited to those errors that can be
+detected when scanning an f-string. These errors all raise
+     <tt class="docutils literal">
+      SyntaxError
+     </tt>
+     .
+    </p>
+    <p>
+     Unmatched braces:
+    </p>
+    <pre class="literal-block">
+&gt;&gt;&gt; f'x={x'
+  File "&lt;stdin&gt;", line 1
+SyntaxError: missing '}' in format string expression
+</pre>
+    <p>
+     Invalid expressions:
+    </p>
+    <pre class="literal-block">
+&gt;&gt;&gt; f'x={!x}'
+  File "&lt;fstring&gt;", line 1
+    !x
+    ^
+SyntaxError: invalid syntax
+</pre>
+    <p>
+     Run time errors occur when evaluating the expressions inside an
+f-string. Note that an f-string can be evaluated multiple times, and
+work sometimes and raise an error at other times:
+    </p>
+    <pre class="literal-block">
+&gt;&gt;&gt; d = {0:10, 1:20}
+&gt;&gt;&gt; for i in range(3):
+...     print(f'{i}:{d[i]}')
+...
+0:10
+1:20
+Traceback (most recent call last):
+  File "&lt;stdin&gt;", line 2, in &lt;module&gt;
+KeyError: 2
+</pre>
+    <p>
+     or:
+    </p>
+    <pre class="literal-block">
+&gt;&gt;&gt; for x in (32, 100, 'fifty'):
+...   print(f'x = {x:+3}')
+...
+'x = +32'
+'x = +100'
+Traceback (most recent call last):
+  File "&lt;stdin&gt;", line 2, in &lt;module&gt;
+ValueError: Sign not allowed in string format specifier
+</pre>
+   </div>
+   <div class="section" id="leading-and-trailing-whitespace-in-expressions-is-skipped">
+    <h2>
+     <a class="toc-backref" href="#id37">
+      Leading and trailing whitespace in expressions is skipped
+     </a>
+    </h2>
+    <p>
+     For ease of readability, leading and trailing whitespace in
+expressions is ignored.
+    </p>
+   </div>
+   <div class="section" id="evaluation-order-of-expressions">
+    <h2>
+     <a class="toc-backref" href="#id38">
+      Evaluation order of expressions
+     </a>
+    </h2>
+    <p>
+     The expressions in an f-string are evaluated in left-to-right
+order. This is detectable only if the expressions have side effects:
+    </p>
+    <pre class="literal-block">
+&gt;&gt;&gt; def fn(l, incr):
+...    result = l[0]
+...    l[0] += incr
+...    return result
+...
+&gt;&gt;&gt; lst = [0]
+&gt;&gt;&gt; f'{fn(lst,2)} {fn(lst,3)}'
+'0 2'
+&gt;&gt;&gt; f'{fn(lst,2)} {fn(lst,3)}'
+'5 7'
+&gt;&gt;&gt; lst
+[10]
+</pre>
+   </div>
+  </div>
+  <div class="section" id="discussion">
+   <h1>
+    <a class="toc-backref" href="#id39">
+     Discussion
+    </a>
+   </h1>
+   <div class="section" id="python-ideas-discussion">
+    <h2>
+     <a class="toc-backref" href="#id40">
+      python-ideas discussion
+     </a>
+    </h2>
+    <p>
+     Most of the discussions on python-ideas
+     <a class="footnote-reference" href="#id21" id="id9">
+      [9]
+     </a>
+     focused on three issues:
+    </p>
+    <blockquote>
+     <ul class="simple">
+      <li>
+       How to denote f-strings,
+      </li>
+      <li>
+       How to specify the location of expressions in f-strings, and
+      </li>
+      <li>
+       Whether to allow full Python expressions.
+      </li>
+     </ul>
+    </blockquote>
+    <div class="section" id="how-to-denote-f-strings">
+     <h3>
+      <a class="toc-backref" href="#id41">
+       How to denote f-strings
+      </a>
+     </h3>
+     <p>
+      Because the compiler must be involved in evaluating the expressions
+contained in the interpolated strings, there must be some way to
+denote to the compiler which strings should be evaluated. This PEP
+chose a leading
+      <tt class="docutils literal">
+       'f'
+      </tt>
+      character preceeding the string literal. This
+is similar to how
+      <tt class="docutils literal">
+       'b'
+      </tt>
+      and
+      <tt class="docutils literal">
+       'r'
+      </tt>
+      prefixes change the meaning of
+the string itself, at compile time. Other prefixes were suggested,
+such as
+      <tt class="docutils literal">
+       'i'
+      </tt>
+      . No option seemed better than the other, so
+      <tt class="docutils literal">
+       'f'
+      </tt>
+      was chosen.
+     </p>
+     <p>
+      Another option was to support special functions, known to the
+compiler, such as
+      <tt class="docutils literal">
+       Format()
+      </tt>
+      . This seems like too much magic for
+Python: not only is there a chance for collision with existing
+identifiers, the PEP author feels that it's better to signify the
+magic with a string prefix character.
+     </p>
+    </div>
+    <div class="section" id="how-to-specify-the-location-of-expressions-in-f-strings">
+     <h3>
+      <a class="toc-backref" href="#id42">
+       How to specify the location of expressions in f-strings
+      </a>
+     </h3>
+     <p>
+      This PEP supports the same syntax as
+      <tt class="docutils literal">
+       str.format()
+      </tt>
+      for
+distinguishing replacement text inside strings: expressions are
+contained inside braces. There were other options suggested, such as
+      <tt class="docutils literal">
+       string.Template
+      </tt>
+      's
+      <tt class="docutils literal">
+       $identifier
+      </tt>
+      or
+      <tt class="docutils literal">
+       ${expression}
+      </tt>
+      .
+     </p>
+     <p>
+      While
+      <tt class="docutils literal">
+       $identifier
+      </tt>
+      is no doubt more familiar to shell scripters and
+users of some other languages, in Python
+      <tt class="docutils literal">
+       str.format()
+      </tt>
+      is heavily
+used. A quick search of Python's standard library shows only a handful
+of uses of
+      <tt class="docutils literal">
+       string.Template
+      </tt>
+      , but hundreds of uses of
+      <tt class="docutils literal">
+       str.format()
+      </tt>
+      .
+     </p>
+     <p>
+      Another proposed alternative was to have the substituted text between
+      <tt class="docutils literal">
+       \\{
+      </tt>
+      and
+      <tt class="docutils literal">
+       }
+      </tt>
+      or between
+      <tt class="docutils literal">
+       \\{
+      </tt>
+      and
+      <tt class="docutils literal">
+       \\}
+      </tt>
+      . While this syntax
+would probably be desirable if all string literals were to support
+interpolation, this PEP only supports strings that are already marked
+with the leading
+      <tt class="docutils literal">
+       'f'
+      </tt>
+      . As such, the PEP is using unadorned braces
+to denoted substituted text, in order to leverage end user familiarity
+with
+      <tt class="docutils literal">
+       str.format()
+      </tt>
+      .
+     </p>
+    </div>
+    <div class="section" id="supporting-full-python-expressions">
+     <h3>
+      <a class="toc-backref" href="#id43">
+       Supporting full Python expressions
+      </a>
+     </h3>
+     <p>
+      Many people on the python-ideas discussion wanted support for either
+only single identifiers, or a limited subset of Python expressions
+(such as the subset supported by
+      <tt class="docutils literal">
+       str.format()
+      </tt>
+      ). This PEP supports
+full Python expressions inside the braces. Without full expressions,
+some desirable usage would be cumbersome. For example:
+     </p>
+     <pre class="literal-block">
+&gt;&gt;&gt; f'Column={col_idx+1}'
+&gt;&gt;&gt; f'number of items: {len(items)}'
+</pre>
+     <p>
+      would become:
+     </p>
+     <pre class="literal-block">
+&gt;&gt;&gt; col_number = col_idx+1
+&gt;&gt;&gt; f'Column={col_number}'
+&gt;&gt;&gt; n_items = len(items)
+&gt;&gt;&gt; f'number of items: {n_items}'
+</pre>
+     <p>
+      While it's true that very ugly expressions could be included in the
+f-strings, this PEP takes the position that such uses should be
+addressed in a linter or code review:
+     </p>
+     <pre class="literal-block">
+&gt;&gt;&gt; f'mapping is { {a:b for (a, b) in ((1, 2), (3, 4))}}'
+'mapping is {1: 2, 3: 4}'
+</pre>
+    </div>
+   </div>
+   <div class="section" id="similar-support-in-other-languages">
+    <h2>
+     <a class="toc-backref" href="#id44">
+      Similar support in other languages
+     </a>
+    </h2>
+    <p>
+     Wikipedia has a good discussion of string interpolation in other
+programming languages
+     <a class="footnote-reference" href="#id22" id="id10">
+      [10]
+     </a>
+     . This feature is implemented in many
+languages, with a variety of syntaxes and restrictions.
+    </p>
+   </div>
+   <div class="section" id="differences-between-f-string-and-str-format-expressions">
+    <h2>
+     <a class="toc-backref" href="#id45">
+      Differences between f-string and str.format expressions
+     </a>
+    </h2>
+    <p>
+     There is one small difference between the limited expressions allowed
+in
+     <tt class="docutils literal">
+      str.format()
+     </tt>
+     and the full expressions allowed inside
+f-strings. The difference is in how index lookups are performed. In
+     <tt class="docutils literal">
+      str.format()
+     </tt>
+     , index values that do not look like numbers are
+converted to strings:
+    </p>
+    <pre class="literal-block">
+&gt;&gt;&gt; d = {'a': 10, 'b': 20}
+&gt;&gt;&gt; 'a={d[a]}'.format(d=d)
+'a=10'
+</pre>
+    <p>
+     Notice that the index value is converted to the string
+     <tt class="docutils literal">
+      'a'
+     </tt>
+     when it
+is looked up in the dict.
+    </p>
+    <p>
+     However, in f-strings, you would need to use a literal for the value
+of
+     <tt class="docutils literal">
+      'a'
+     </tt>
+     :
+    </p>
+    <pre class="literal-block">
+&gt;&gt;&gt; f'a={d["a"]}'
+'a=10'
+</pre>
+    <p>
+     This difference is required because otherwise you would not be able to
+use variables as index values:
+    </p>
+    <pre class="literal-block">
+&gt;&gt;&gt; a = 'b'
+&gt;&gt;&gt; f'a={d[a]}'
+'a=20'
+</pre>
+    <p>
+     See
+     <a class="footnote-reference" href="#id23" id="id11">
+      [11]
+     </a>
+     for a further discussion. It was this observation that led to
+full Python expressions being supported in f-strings.
+    </p>
+    <p>
+     Furthermore, the limited expressions that
+     <tt class="docutils literal">
+      str.format()
+     </tt>
+     understands
+need not be valid Python expressions. For example:
+    </p>
+    <pre class="literal-block">
+&gt;&gt;&gt; '{i[";]}'.format(i={'";':4})
+'4'
+</pre>
+    <p>
+     For this reason, the str.format() "expression parser" is not suitable
+for use when implementing f-strings.
+    </p>
+   </div>
+   <div class="section" id="triple-quoted-f-strings">
+    <h2>
+     <a class="toc-backref" href="#id46">
+      Triple-quoted f-strings
+     </a>
+    </h2>
+    <p>
+     Triple quoted f-strings are allowed. These strings are parsed just as
+normal triple-quoted strings are. After parsing, the normal f-string
+logic is applied, and
+     <tt class="docutils literal">
+      __format__()
+     </tt>
+     on each value is called.
+    </p>
+   </div>
+   <div class="section" id="raw-f-strings">
+    <h2>
+     <a class="toc-backref" href="#id47">
+      Raw f-strings
+     </a>
+    </h2>
+    <p>
+     Raw and f-strings may be combined. For example they could be used to
+build up regular expressions:
+    </p>
+    <pre class="literal-block">
+&gt;&gt;&gt; header = 'Subject'
+&gt;&gt;&gt; fr'{header}:\s+'
+'Subject:\\s+'
+</pre>
+    <p>
+     In addition, raw f-strings may be combined with triple-quoted strings.
+    </p>
+   </div>
+   <div class="section" id="no-binary-f-strings">
+    <h2>
+     <a class="toc-backref" href="#id48">
+      No binary f-strings
+     </a>
+    </h2>
+    <p>
+     For the same reason that we don't support
+     <tt class="docutils literal">
+      bytes.format()
+     </tt>
+     , you may
+not combine
+     <tt class="docutils literal">
+      'f'
+     </tt>
+     with
+     <tt class="docutils literal">
+      'b'
+     </tt>
+     string literals. The primary problem
+is that an object's
+     <tt class="docutils literal">
+      __format__()
+     </tt>
+     method may return Unicode data that
+is not compatible with a bytes string.
+    </p>
+    <p>
+     Binary f-strings would first require a solution for
+     <tt class="docutils literal">
+      bytes.format()
+     </tt>
+     . This idea has been proposed in the past, most
+recently in
+     <a class="reference external" href="../pep-0461/index.html">
+      PEP 461
+     </a>
+     <a class="footnote-reference" href="#id24" id="id12">
+      [12]
+     </a>
+     . The discussions of such a feature usually
+suggest either
+    </p>
+    <blockquote>
+     <ul class="simple">
+      <li>
+       adding a method such as
+       <tt class="docutils literal">
+        __bformat__()
+       </tt>
+       so an object can control
+how it is converted to bytes, or
+      </li>
+      <li>
+       having
+       <tt class="docutils literal">
+        bytes.format()
+       </tt>
+       not be as general purpose or extensible
+as
+       <tt class="docutils literal">
+        str.format()
+       </tt>
+       .
+      </li>
+     </ul>
+    </blockquote>
+    <p>
+     Both of these remain as options in the future, if such functionality
+is desired.
+    </p>
+   </div>
+   <div class="section" id="s-r-and-a-are-redundant">
+    <h2>
+     <a class="toc-backref" href="#id49">
+      <tt class="docutils literal">
+       !s
+      </tt>
+      ,
+      <tt class="docutils literal">
+       !r
+      </tt>
+      , and
+      <tt class="docutils literal">
+       !a
+      </tt>
+      are redundant
+     </a>
+    </h2>
+    <p>
+     The
+     <tt class="docutils literal">
+      !s
+     </tt>
+     ,
+     <tt class="docutils literal">
+      !r
+     </tt>
+     , and
+     <tt class="docutils literal">
+      !a
+     </tt>
+     conversions are not strictly
+required. Because arbitrary expressions are allowed inside the
+f-strings, this code:
+    </p>
+    <pre class="literal-block">
+&gt;&gt;&gt; a = 'some string'
+&gt;&gt;&gt; f'{a!r}'
+"'some string'"
+</pre>
+    <p>
+     Is identical to:
+    </p>
+    <pre class="literal-block">
+&gt;&gt;&gt; f'{repr(a)}'
+"'some string'"
+</pre>
+    <p>
+     Similarly,
+     <tt class="docutils literal">
+      !s
+     </tt>
+     can be replaced by calls to
+     <tt class="docutils literal">
+      str()
+     </tt>
+     and
+     <tt class="docutils literal">
+      !a
+     </tt>
+     by
+calls to
+     <tt class="docutils literal">
+      ascii()
+     </tt>
+     .
+    </p>
+    <p>
+     However,
+     <tt class="docutils literal">
+      !s
+     </tt>
+     ,
+     <tt class="docutils literal">
+      !r
+     </tt>
+     , and
+     <tt class="docutils literal">
+      !a
+     </tt>
+     are supported by this PEP in order
+to minimize the differences with
+     <tt class="docutils literal">
+      str.format()
+     </tt>
+     .
+     <tt class="docutils literal">
+      !s
+     </tt>
+     ,
+     <tt class="docutils literal">
+      !r
+     </tt>
+     , and
+     <tt class="docutils literal">
+      !a
+     </tt>
+     are required in
+     <tt class="docutils literal">
+      str.format()
+     </tt>
+     because it does not allow the
+execution of arbitrary expressions.
+    </p>
+   </div>
+   <div class="section" id="lambdas-inside-expressions">
+    <h2>
+     <a class="toc-backref" href="#id50">
+      Lambdas inside expressions
+     </a>
+    </h2>
+    <p>
+     Because lambdas use the
+     <tt class="docutils literal">
+      ':'
+     </tt>
+     character, they cannot appear outside
+of parenthesis in an expression. The colon is interpreted as the start
+of the format specifier, which means the start of the lambda
+expression is seen and is syntactically invalid. As there's no
+practical use for a plain lambda in an f-string expression, this is
+not seen as much of a limitation.
+    </p>
+    <p>
+     If you feel you must use lambdas, they may be used inside of parens:
+    </p>
+    <pre class="literal-block">
+&gt;&gt;&gt; f'{(lambda x: x*2)(3)}'
+'6'
+</pre>
+   </div>
+  </div>
+  <div class="section" id="examples-from-python-s-source-code">
+   <h1>
+    <a class="toc-backref" href="#id51">
+     Examples from Python's source code
+    </a>
+   </h1>
+   <p>
+    Here are some examples from Python source code that currently use
+    <tt class="docutils literal">
+     str.format()
+    </tt>
+    , and how they would look with f-strings. This PEP
+does not recommend wholesale converting to f-strings, these are just
+examples of real-world usages of
+    <tt class="docutils literal">
+     str.format()
+    </tt>
+    and how they'd look
+if written from scratch using f-strings.
+   </p>
+   <p>
+    <tt class="docutils literal">
+     Lib/asyncio/locks.py
+    </tt>
+    :
+   </p>
+   <pre class="literal-block">
+extra = '{},waiters:{}'.format(extra, len(self._waiters))
+extra = f'{extra},waiters:{len(self._waiters)}'
+</pre>
+   <p>
+    <tt class="docutils literal">
+     Lib/configparser.py
+    </tt>
+    :
+   </p>
+   <pre class="literal-block">
+message.append(" [line {0:2d}]".format(lineno))
+message.append(f" [line {lineno:2d}]")
+</pre>
+   <p>
+    <tt class="docutils literal">
+     Tools/clinic/clinic.py
+    </tt>
+    :
+   </p>
+   <pre class="literal-block">
+methoddef_name = "{}_METHODDEF".format(c_basename.upper())
+methoddef_name = f"{c_basename.upper()}_METHODDEF"
+</pre>
+   <p>
+    <tt class="docutils literal">
+     <span class="pre">
+      python-config.py
+     </span>
+    </tt>
+    :
+   </p>
+   <pre class="literal-block">
+print("Usage: {0} [{1}]".format(sys.argv[0], '|'.join('--'+opt for opt in valid_opts)), file=sys.stderr)
+print(f"Usage: {sys.argv[0]} [{'|'.join('--'+opt for opt in valid_opts)}]", file=sys.stderr)
+</pre>
+  </div>
+  <div class="section" id="implementation-limitations">
+   <h1>
+    <a class="toc-backref" href="#id52">
+     Implementation limitations
+    </a>
+   </h1>
+   <div class="section" id="maximum-of-255-expressions">
+    <h2>
+     <a class="toc-backref" href="#id53">
+      Maximum of 255 expressions
+     </a>
+    </h2>
+    <p>
+     Due to a CPython limit with the number of parameters to a function, an
+f-string may not contain more that 255 expressions. This includes
+expressions inside format specifiers. So this code would count as
+having 2 expressions:
+    </p>
+    <pre class="literal-block">
+f'{x:.{width}}'
+</pre>
+   </div>
+   <div class="section" id="the-same-expression-used-multiple-times">
+    <h2>
+     <a class="toc-backref" href="#id54">
+      The same expression used multiple times
+     </a>
+    </h2>
+    <p>
+     Every expression in an f-string is evaluated exactly once for each
+time it appears in the f-string. However, when the same expression
+appears more than once in an f-string, it's undefined which result
+will be used in the resulting string value. This only matters for
+expressions with side effects.
+    </p>
+    <p>
+     For purposes of this section, two expressions are the same if they
+have the exact same literal text defining them. For example,
+     <tt class="docutils literal">
+      '{i}'
+     </tt>
+     and
+     <tt class="docutils literal">
+      '{i}'
+     </tt>
+     are the same expression, but
+     <tt class="docutils literal">
+      '{i}'
+     </tt>
+     and
+     <tt class="docutils literal">
+      '{i }'
+     </tt>
+     are not, due to the extra space in the second expression.
+    </p>
+    <p>
+     For example, given:
+    </p>
+    <pre class="literal-block">
+&gt;&gt;&gt; def fn(lst):
+...    lst[0] += 1
+...    return lst[0]
+...
+&gt;&gt;&gt; lst=[0]
+&gt;&gt;&gt; f'{fn(lst)} {fn(lst)}'
+'1 2'
+</pre>
+    <p>
+     The resulting f-string might have the value
+     <tt class="docutils literal">
+      '1 2'
+     </tt>
+     ,
+     <tt class="docutils literal">
+      '2 2'
+     </tt>
+     ,
+     <tt class="docutils literal">
+      '1 1'
+     </tt>
+     , or even
+     <tt class="docutils literal">
+      '2 1'
+     </tt>
+     .
+    </p>
+    <p>
+     However:
+    </p>
+    <pre class="literal-block">
+&gt;&gt;&gt; lst=[0]
+&gt;&gt;&gt; f'{fn(lst)} { fn(lst)}'
+'1 2'
+</pre>
+    <p>
+     This f-string will always have the value
+     <tt class="docutils literal">
+      '1 2'
+     </tt>
+     . This is due to the
+two expressions not being the same: the space in the second example
+makes the two expressions distinct.
+    </p>
+    <p>
+     This restriction is in place in order to allow for a possible future
+extension allowing translated strings, wherein the expression
+substitutions would be identified by their text representations in the
+f-strings.
+    </p>
+   </div>
+  </div>
+  <div class="section" id="references">
+   <h1>
+    <a class="toc-backref" href="#id55">
+     References
+    </a>
+   </h1>
+   <table class="docutils footnote" frame="void" id="id13" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id1">
+        [1]
+       </a>
+      </td>
+      <td>
+       %-formatting
+(
+       <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#printf-style-string-formatting">
+        https://docs.python.org/3/library/stdtypes.html#printf-style-string-formatting
+       </a>
+       )
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id14" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id2">
+        [2]
+       </a>
+      </td>
+      <td>
+       str.format
+(
+       <a class="reference external" href="https://docs.python.org/3/library/string.html#formatstrings">
+        https://docs.python.org/3/library/string.html#formatstrings
+       </a>
+       )
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id15" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id3">
+        [3]
+       </a>
+      </td>
+      <td>
+       string.Template documentation
+(
+       <a class="reference external" href="https://docs.python.org/3/library/string.html#template-strings">
+        https://docs.python.org/3/library/string.html#template-strings
+       </a>
+       )
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id16" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id4">
+        [4]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="../pep-0215/index.html">
+        PEP 215
+       </a>
+       : String Interpolation
+(
+       <a class="reference external" href="../pep-0215/index.html">
+        https://www.python.org/dev/peps/pep-0215/
+       </a>
+       )
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id17" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id5">
+        [5]
+       </a>
+      </td>
+      <td>
+       <a class="reference external" href="../pep-3101/index.html">
+        PEP 3101
+       </a>
+       : Advanced String Formatting
+(
+       <a class="reference external" href="../pep-3101/index.html">
+        https://www.python.org/dev/peps/pep-3101/
+       </a>
+       )
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id18" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id6">
+        [6]
+       </a>
+      </td>
+      <td>
+       Formatting using locals() and globals()
+(
+       <a class="reference external" href="https://mail.python.org/pipermail/python-ideas/2015-July/034671.html">
+        https://mail.python.org/pipermail/python-ideas/2015-July/034671.html
+       </a>
+       )
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id19" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id7">
+        [7]
+       </a>
+      </td>
+      <td>
+       Avoid locals() and globals()
+(
+       <a class="reference external" href="https://mail.python.org/pipermail/python-ideas/2015-July/034701.html">
+        https://mail.python.org/pipermail/python-ideas/2015-July/034701.html
+       </a>
+       )
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id20" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id8">
+        [8]
+       </a>
+      </td>
+      <td>
+       str.format_map() documentation
+(
+       <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str.format_map">
+        https://docs.python.org/3/library/stdtypes.html#str.format_map
+       </a>
+       )
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id21" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id9">
+        [9]
+       </a>
+      </td>
+      <td>
+       Format string syntax
+(
+       <a class="reference external" href="https://docs.python.org/3/library/string.html#format-string-syntax">
+        https://docs.python.org/3/library/string.html#format-string-syntax
+       </a>
+       )
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id22" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id10">
+        [10]
+       </a>
+      </td>
+      <td>
+       ast.parse() documentation
+(
+       <a class="reference external" href="https://docs.python.org/3/library/ast.html#ast.parse">
+        https://docs.python.org/3/library/ast.html#ast.parse
+       </a>
+       )
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id23" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id11">
+        [11]
+       </a>
+      </td>
+      <td>
+       Start of python-ideas discussion
+(
+       <a class="reference external" href="https://mail.python.org/pipermail/python-ideas/2015-July/034657.html">
+        https://mail.python.org/pipermail/python-ideas/2015-July/034657.html
+       </a>
+       )
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id24" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id12">
+        [12]
+       </a>
+      </td>
+      <td>
+       Wikipedia article on string interpolation
+(
+       <a class="reference external" href="https://en.wikipedia.org/wiki/String_interpolation">
+        https://en.wikipedia.org/wiki/String_interpolation
+       </a>
+       )
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id25" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       [13]
+      </td>
+      <td>
+       Differences in str.format() and f-string expressions
+(
+       <a class="reference external" href="https://mail.python.org/pipermail/python-ideas/2015-July/034726.html">
+        https://mail.python.org/pipermail/python-ideas/2015-July/034726.html
+       </a>
+       )
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id26" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       [14]
+      </td>
+      <td>
+       <a class="reference external" href="../pep-0461/index.html">
+        PEP 461
+       </a>
+       rejects bytes.format()
+(
+       <a class="reference external" href="../pep-0461/index.html#proposed-variations">
+        https://www.python.org/dev/peps/pep-0461/#proposed-variations
+       </a>
+       )
+      </td>
+     </tr>
+    </tbody>
+   </table>
+  </div>
+  <div class="section" id="copyright">
+   <h1>
+    <a class="toc-backref" href="#id56">
+     Copyright
+    </a>
+   </h1>
+   <p>
+    This document has been placed in the public domain.
+   </p>
+   <!-- Local Variables:
+mode: indented-text
+indent-tabs-mode: nil
+sentence-end-double-space: t
+fill-column: 70
+coding: utf-8
+End: -->
+  </div>
+ </body>
+
+<!-- Mirrored from www.python.org/dev/peps/pep-0498/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 03 Sep 2015 04:33:54 GMT -->
+</html>Source: <a href="https://hg.python.org/peps/file/tip/pep-0498.txt">https://hg.python.org/peps/file/tip/pep-0498.txt</a>
+
+    </article>
+
+
+                </section>
+
+                
+
+
+<aside class="left-sidebar" role="secondary">
+
+    
+
+
+
+
+
+
+    
+
+
+
+
+
+        <div class="twitter-widget sidebar-widget">
+        <a class="twitter-timeline" data-dnt="true" href="https://twitter.com/ThePSF" data-widget-id="434113224703610882">Tweets by @ThePSF</a>
+        <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+    </div>
+
+    <div class="psf-sidebar-widget sidebar-widget">
+        <h3 class="widget-title">The PSF</h3>
+<p>The Python Software Foundation is the organization behind Python. Become a member of the PSF and help advance the software and our mission. </p>
+
+    </div>
+
+</aside>
+
+
+
+                
+                
+
+
+            </div><!-- end .container -->
+        </div><!-- end #content .content-wrapper -->
+
+        <!-- Footer and social media list -->
+        <footer id="site-map" class="main-footer" role="contentinfo">
+            <div class="main-footer-links">
+                <div class="container">
+
+                    
+                    <a id="back-to-top-1" class="jump-link" href="#python-network"><span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> Back to Top</a>
+
+                    
+
+<ul class="sitemap navigation menu do-not-print" role="tree" id="container">
+    
+    <li class="tier-1 element-1">
+        <a href="https://www.python.org/about/" >About</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/apps/" title="">Applications</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/quotes/" title="">Quotes</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/gettingstarted/" title="">Getting Started</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/help/" title="">Help</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-2">
+        <a href="https://www.python.org/downloads/" >Downloads</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/downloads/" title="">All releases</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/downloads/source/" title="">Source code</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/downloads/windows/" title="">Windows</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/downloads/mac-osx/" title="">Mac OS X</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/download/other/" title="">Other Platforms</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://docs.python.org/3/license.html" title="">License</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/download/alternatives" title="">Alternative Implementations</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-3">
+        <a href="https://www.python.org/doc/" >Documentation</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/doc/" title="">Docs</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/doc/av" title="">Audio/Visual Talks</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://wiki.python.org/moin/BeginnersGuide" title="">Beginner&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://docs.python.org/faq/" title="">FAQ</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="http://wiki.python.org/moin/Languages" title="">Non-English Docs</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="../index.html" title="">PEP Index</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://wiki.python.org/moin/PythonBooks" title="">Python Books</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-4">
+        <a href="https://www.python.org/community/" >Community</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/community/diversity/" title="">Diversity</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/community/irc/" title="">IRC</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/community/lists/" title="">Mailing Lists</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/workshops/" title="">Python Conferences</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/community/sigs/" title="">Special Interest Groups</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://wiki.python.org/moin/" title="">Python Wiki</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/community/logos/" title="">Python Logo</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://www.python.org/community/merchandise/" title="">Merchandise</a></li>
+    
+        <li class="tier-2 element-9" role="treeitem"><a href="https://www.python.org/community/awards" title="">Community Awards</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-5">
+        <a href="https://www.python.org/about/success/" title="success-stories">Success Stories</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/success/#arts" title="">Arts</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/success/#business" title="">Business</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/success/#education" title="">Education</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/success/#engineering" title="">Engineering</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/about/success/#government" title="">Government</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://www.python.org/about/success/#scientific" title="">Scientific</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/about/success/#software-development" title="">Software Development</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-6">
+        <a href="https://www.python.org/blogs/" title="News from around the Python world">News</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/blogs/" title="Python Insider Blog Posts">Python News</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://planetpython.org/" title="Planet Python">Community News</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="http://pyfound.blogspot.com/" title="PSF Blog">PSF News</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pycon.blogspot.com/" title="PyCon Blog">PyCon News</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-7">
+        <a href="https://www.python.org/events/" >Events</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/events/python-events/" title="">Python Events</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/events/python-user-group/" title="">User Group Events</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/events/python-events/past/" title="">Python Events Archive</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/events/python-user-group/past/" title="">User Group Events Archive</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://wiki.python.org/moin/PythonEventsCalendar#Submitting_an_Event" title="">Submit an Event</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-8">
+        <a href="https://www.python.org/dev/" >Contributing</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="http://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://bugs.python.org/" title="">Issue Tracker</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://mail.python.org/mailman/listinfo/python-dev" title="">python-dev list</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pythonmentors.com/" title="">Core Mentorship</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+</ul>
+
+
+                    <a id="back-to-top-2" class="jump-link" href="#python-network"><span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> Back to Top</a>
+                    
+
+                </div><!-- end .container -->
+            </div> <!-- end .main-footer-links -->
+
+            <div class="site-base">
+                <div class="container">
+                    
+                    <ul class="footer-links navigation menu do-not-print" role="tree">
+                        <li class="tier-1 element-1"><a href="https://www.python.org/about/help/">Help &amp; <span class="say-no-more">General</span> Contact</a></li>
+                        <li class="tier-1 element-2"><a href="https://www.python.org/community/diversity/">Diversity <span class="say-no-more">Initiatives</span></a></li>
+                        <li class="tier-1 element-3"><a href="https://github.com/python/pythondotorg/issues">Submit Website Bug</a></li>
+                        <!--<li class="tier-1 element-3"><a href="#"><span class="say-no-more">Website</span> Colophon</a></li>-->
+                    </ul>
+
+                    <div class="copyright">
+                        <p><small>
+                            <span class="pre">Copyright &copy;2001-2015.</span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/psf-landing/">Python Software Foundation</a></span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/about/legal/">Legal Statements</a></span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/privacy/">Privacy Policy</a></span>
+                        </small></p>
+                    </div>
+
+                </div><!-- end .container -->
+            </div><!-- end .site-base -->
+
+        </footer>
+
+    </div><!-- end #touchnav-wrapper -->
+
+    
+    <script src="../../../../ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="../../../static/js/libs/jquery-1.8.2.min.js"><\/script>')</script>
+
+    <script src="../../../static/js/libs/masonry.pkgd.min.js"></script>
+
+    <script type="text/javascript" src="../../../static/js/main-min.js" charset="utf-8"></script>
+    
+
+    <!--[if lte IE 7]>
+    <script type="text/javascript" src="/static/js/plugins/IE8-min.js" charset="utf-8"></script>
+    
+    
+    <![endif]-->
+
+    <!--[if lte IE 8]>
+    <script type="text/javascript" src="/static/js/plugins/getComputedStyle-min.js" charset="utf-8"></script>
+    
+    
+    <![endif]-->
+
+    
+
+    
+    
+
+</body>
+</html>

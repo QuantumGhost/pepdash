@@ -1,0 +1,2292 @@
+<!doctype html>
+<!--[if lt IE 7]>   <html class="no-js ie6 lt-ie7 lt-ie8 lt-ie9">   <![endif]-->
+<!--[if IE 7]>      <html class="no-js ie7 lt-ie8 lt-ie9">          <![endif]-->
+<!--[if IE 8]>      <html class="no-js ie8 lt-ie9">                 <![endif]-->
+<!--[if gt IE 8]><!--><html class="no-js" lang="en" dir="ltr">  <!--<![endif]-->
+
+
+<!-- Mirrored from www.python.org/dev/peps/pep-3148/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 03 Sep 2015 04:35:36 GMT -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <link rel="prefetch" href="../../../../ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js">
+
+    <meta name="application-name" content="Python.org">
+    <meta name="msapplication-tooltip" content="The official home of the Python Programming Language">
+    <meta name="apple-mobile-web-app-title" content="Python.org">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="format-detection" content="telephone=no">
+    <meta http-equiv="cleartype" content="on">
+    <meta http-equiv="imagetoolbar" content="false">
+
+    <script src="../../../static/js/libs/modernizr.js"></script>
+
+    <link href="../../../static/stylesheets/style.css" rel="stylesheet" type="text/css" title="default" />
+    <link href="../../../static/stylesheets/mq.css" rel="stylesheet" type="text/css" media="not print, braille, embossed, speech, tty" />
+    
+
+    <!--[if (lte IE 8)&(!IEMobile)]>
+    <link href="/static/stylesheets/no-mq.css" rel="stylesheet" type="text/css" media="screen" />
+    
+    
+    <![endif]-->
+
+    
+    <link rel="icon" type="image/x-icon" href="https://www.python.org/static/favicon.ico">
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="../../../static/apple-touch-icon-144x144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="../../../static/apple-touch-icon-114x114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="../../../static/apple-touch-icon-72x72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="../../../static/apple-touch-icon-precomposed.png">
+    <link rel="apple-touch-icon" href="../../../static/apple-touch-icon-precomposed.png">
+
+    
+    <meta name="msapplication-TileImage" content="/static/metro-icon-144x144-precomposed.png"><!-- white shape -->
+    <meta name="msapplication-TileColor" content="#3673a5"><!-- python blue -->
+    <meta name="msapplication-navbutton-color" content="#3673a5">
+
+    <meta property="og:site_name" content="Python.org">
+    <meta property="og:type" content="website">
+
+    <title>PEP 3148 -- futures - execute computations asynchronously | Python.org</title>
+    <meta property="og:title" content="Welcome to Python.org">
+
+    
+    <meta name="description" content="The official home of the Python Programming Language">
+    <meta name="og:description" content="The official home of the Python Programming Language">
+    <meta name="keywords" content="Python programming language object oriented web free open source software license documentation download community">
+    <meta property="og:tag" content="Python programming language object oriented web free open source software license documentation download community">
+    <meta property="og:published_time" content="">
+    <meta property="og:modified_time" content="">
+    <meta property="og:author" content="">
+    <meta property="og:section" content=""> 
+    <meta property="og:url" content="">
+    <meta property="og:image" content="">
+    <meta property="og:video" content="">
+
+    <link rel="author" href="https://www.python.org/static/humans.txt">
+
+    
+
+    
+    <script type="application/ld+json">
+     {
+       "@context": "http://schema.org",
+       "@type": "WebSite",
+       "url": "https://www.python.org/",
+       "potentialAction": {
+         "@type": "SearchAction",
+         "target": "https://www.python.org/search/?q={search_term_string}",
+         "query-input": "required name=search_term_string"
+       }
+     }
+    </script>
+
+    
+    <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-39055973-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+    </script>
+    
+</head>
+
+<body class="python pages pep-page">
+
+    <div id="touchnav-wrapper">
+
+        <div id="nojs" class="do-not-print">
+            <p><strong>Notice:</strong> While Javascript is not essential for this website, your interaction with the content will be limited. Please turn Javascript on for the full experience. </p>
+        </div>
+
+        <!--[if lt IE 8]>
+        <div id="oldie-warning" class="do-not-print">
+            <p><strong>Notice:</strong> Your browser is <em>ancient</em> and <a href="http://www.ie6countdown.com/">Microsoft agrees</a>. <a href="http://browsehappy.com/">Upgrade to a different browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to experience a better web.</p>
+        </div>
+        <![endif]-->
+
+        <!-- Sister Site Links -->
+        <div id="top" class="top-bar do-not-print">
+
+            <nav class="meta-navigation container" role="navigation">
+
+                
+                <div class="skip-link screen-reader-text">
+                    <a href="#content" title="Skip to content">Skip to content</a>
+                </div>
+
+                
+                <a id="close-python-network" class="jump-link" href="#python-network" aria-hidden="true">
+                    <span aria-hidden="true" class="icon-arrow-down"><span>&#9660;</span></span> Close
+                </a>
+
+                
+
+<ul class="menu" role="tree">
+    
+    <li class="python-meta ">
+        <a href="https://www.python.org/" title="The Python Programming Language" >Python</a>
+    </li>
+    
+    <li class="psf-meta ">
+        <a href="https://www.python.org/psf-landing/" title="The Python Software Foundation" >PSF</a>
+    </li>
+    
+    <li class="docs-meta ">
+        <a href="https://docs.python.org/" title="Python Documentation" >Docs</a>
+    </li>
+    
+    <li class="pypi-meta ">
+        <a href="https://pypi.python.org/" title="Python Package Index" >PyPI</a>
+    </li>
+    
+    <li class="jobs-meta ">
+        <a href="https://www.python.org/jobs/" title="Python Job Board" >Jobs</a>
+    </li>
+    
+    <li class="shop-meta ">
+        <a href="https://www.python.org/community/" title="Python Community" >Community</a>
+    </li>
+    
+</ul>
+
+
+                <a id="python-network" class="jump-link" href="#top" aria-hidden="true">
+                    <span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> The Python Network
+                </a>
+
+            </nav>
+
+        </div>
+
+        <!-- Header elements -->
+        <header class="main-header" role="banner">
+            <div class="container">
+
+                <h1 class="site-headline">
+                    <a href="https://www.python.org/"><img class="python-logo" src="../../../static/img/python-logo.png" alt="python&trade;"></a>
+                </h1>
+
+                <div class="options-bar do-not-print">
+
+                    
+                    <a id="site-map-link" class="jump-to-menu" href="#site-map"><span class="menu-icon">&equiv;</span> Menu</a><form class="search-the-site" action="https://www.python.org/search/" method="get">
+                        <fieldset title="Search Python.org">
+
+                            <span aria-hidden="true" class="icon-search"></span>
+
+                            <label class="screen-reader-text" for="id-search-field">Search This Site</label>
+                            <input id="id-search-field" name="q" type="search" role="textbox" class="search-field" placeholder="Search" value="" tabindex="1">
+
+                            <button type="submit" name="submit" id="submit" class="search-button" title="Submit this Search" tabindex="3">
+                                GO
+                            </button>
+
+                            
+                            <!--[if IE]><input type="text" style="display: none;" disabled="disabled" size="1" tabindex="4"><![endif]-->
+
+                        </fieldset>
+                    </form><span class="breaker"></span><div class="adjust-font-size" aria-hidden="true">
+                        <ul class="navigation menu" aria-label="Adjust Text Size on Page">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                <a href="#" class="action-trigger"><strong><small>A</small> A</strong></a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a class="text-shrink" title="Make Text Smaller" href="javascript:;">Smaller</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a class="text-grow" title="Make Text Larger" href="javascript:;">Larger</a></li>
+                                    <li class="tier-2 element-3" role="treeitem"><a class="text-reset" title="Reset any font size changes I have made" href="javascript:;">Reset</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div><div class="winkwink-nudgenudge">
+                        <ul class="navigation menu" aria-label="Social Media Navigation">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                <a href="#" class="action-trigger">Socialize</a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a href="http://plus.google.com/+Python"><span aria-hidden="true" class="icon-google-plus"></span>Google+</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a href="http://www.facebook.com/pythonlang?fref=ts"><span aria-hidden="true" class="icon-facebook"></span>Facebook</a></li>
+                                    <li class="tier-2 element-3" role="treeitem"><a href="http://twitter.com/ThePSF"><span aria-hidden="true" class="icon-twitter"></span>Twitter</a></li>
+                                    <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/irc/"><span aria-hidden="true" class="icon-freenode"></span>Chat on IRC</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div><div class="account-signin">
+                        <ul class="navigation menu" aria-label="Social Media Navigation">
+                            <li class="tier-1 last" aria-haspopup="true">
+                                
+                                <a href="https://www.python.org/accounts/login/" title="Sign Up or Sign In to Python.org">Sign In</a>
+                                <ul class="subnav menu">
+                                    <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/accounts/signup/">Sign Up / Register</a></li>
+                                    <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/accounts/login/">Sign In</a></li>
+                                </ul>
+                                
+                            </li>
+                        </ul>
+                    </div>
+
+                </div><!-- end options-bar -->
+
+                <nav id="mainnav" class="python-navigation main-navigation do-not-print" role="navigation">
+                    
+                        
+<ul class="navigation menu" role="menubar" aria-label="Main Navigation">
+  
+    
+    
+    <li id="about" class="tier-1 element-1  " aria-haspopup="true">
+        <a href="https://www.python.org/about/" title="" class="">About</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/apps/" title="">Applications</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/quotes/" title="">Quotes</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/gettingstarted/" title="">Getting Started</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/help/" title="">Help</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="downloads" class="tier-1 element-2  " aria-haspopup="true">
+        <a href="https://www.python.org/downloads/" title="" class="">Downloads</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/downloads/" title="">All releases</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/downloads/source/" title="">Source code</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/downloads/windows/" title="">Windows</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/downloads/mac-osx/" title="">Mac OS X</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/download/other/" title="">Other Platforms</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://docs.python.org/3/license.html" title="">License</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/download/alternatives" title="">Alternative Implementations</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="documentation" class="tier-1 element-3  " aria-haspopup="true">
+        <a href="https://www.python.org/doc/" title="" class="">Documentation</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/doc/" title="">Docs</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/doc/av" title="">Audio/Visual Talks</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://wiki.python.org/moin/BeginnersGuide" title="">Beginner&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://docs.python.org/faq/" title="">FAQ</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="http://wiki.python.org/moin/Languages" title="">Non-English Docs</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="../index.html" title="">PEP Index</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://wiki.python.org/moin/PythonBooks" title="">Python Books</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="community" class="tier-1 element-4  " aria-haspopup="true">
+        <a href="https://www.python.org/community/" title="" class="">Community</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/community/diversity/" title="">Diversity</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/community/irc/" title="">IRC</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/community/lists/" title="">Mailing Lists</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/workshops/" title="">Python Conferences</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/community/sigs/" title="">Special Interest Groups</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://wiki.python.org/moin/" title="">Python Wiki</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/community/logos/" title="">Python Logo</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://www.python.org/community/merchandise/" title="">Merchandise</a></li>
+    
+        <li class="tier-2 element-9" role="treeitem"><a href="https://www.python.org/community/awards" title="">Community Awards</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="success-stories" class="tier-1 element-5  " aria-haspopup="true">
+        <a href="https://www.python.org/about/success/" title="success-stories" class="">Success Stories</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/success/#arts" title="">Arts</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/success/#business" title="">Business</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/success/#education" title="">Education</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/success/#engineering" title="">Engineering</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/about/success/#government" title="">Government</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://www.python.org/about/success/#scientific" title="">Scientific</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/about/success/#software-development" title="">Software Development</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="news" class="tier-1 element-6  " aria-haspopup="true">
+        <a href="https://www.python.org/blogs/" title="News from around the Python world" class="">News</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/blogs/" title="Python Insider Blog Posts">Python News</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://planetpython.org/" title="Planet Python">Community News</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="http://pyfound.blogspot.com/" title="PSF Blog">PSF News</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pycon.blogspot.com/" title="PyCon Blog">PyCon News</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    <li id="events" class="tier-1 element-7  " aria-haspopup="true">
+        <a href="https://www.python.org/events/" title="" class="">Events</a>
+        
+            
+
+<ul class="subnav menu" role="menu" aria-hidden="true">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/events/python-events/" title="">Python Events</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/events/python-user-group/" title="">User Group Events</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/events/python-events/past/" title="">Python Events Archive</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/events/python-user-group/past/" title="">User Group Events Archive</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://wiki.python.org/moin/PythonEventsCalendar#Submitting_an_Event" title="">Submit an Event</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    
+    
+    
+  
+</ul>
+
+                    
+                </nav>
+
+                <div class="header-banner "> <!-- for optional "do-not-print" class -->
+                    
+                    
+                </div>
+
+                
+                
+
+             </div><!-- end .container -->
+        </header>
+
+        <div id="content" class="content-wrapper">
+            <!-- Main Content Column -->
+            <div class="container">
+
+                <section class="main-content with-left-sidebar" role="main">
+
+                    
+<ul class="breadcrumbs menu">
+    <li>
+        <a href="https://www.python.org/" title="The Python Programming Language">Python</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>
+        <a href="https://www.python.org/dev/">Python Developer's Guide</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>
+        <a href="../index.html">PEP Index</a><span class="prompt">&gt;&gt;&gt;</span>
+    </li>
+    <li>PEP 3148 -- futures - execute computations asynchronously</li>
+</ul>
+
+
+                    
+<style>
+   .pep-page pre {
+        padding: .5em;
+        background: inherit;
+        border-left: 0px;
+        -webkit-box-shadow: 0 0 0 0;
+        -moz-box-shadow: 0 0 0 0;
+        box-shadow: 0 0 0 0;
+   }
+</style>
+
+    
+    <article class="text">
+        
+
+        <header class="article-header">
+            <h1 class="page-title">PEP 3148 -- futures - execute computations asynchronously</h1>
+        </header>
+
+        <!--
+This HTML is auto-generated.  DO NOT EDIT THIS FILE!  If you are writing a new
+PEP, see http://www.python.org/dev/peps/pep-0001 for instructions and links
+to templates.  DO NOT USE THIS HTML FILE AS YOUR TEMPLATE!
+-->
+<html>
+ <body>
+  <table class="rfc2822 docutils field-list" frame="void" rules="none">
+   <col class="field-name">
+   </col>
+   <col class="field-body">
+   </col>
+   <tbody valign="top">
+    <tr class="field">
+     <th class="field-name">
+      PEP:
+     </th>
+     <td class="field-body">
+      3148
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Title:
+     </th>
+     <td class="field-body">
+      futures - execute computations asynchronously
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Author:
+     </th>
+     <td class="field-body">
+      Brian Quinlan &lt;brian at sweetapp.com&gt;
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Status:
+     </th>
+     <td class="field-body">
+      Final
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Type:
+     </th>
+     <td class="field-body">
+      Standards Track
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Created:
+     </th>
+     <td class="field-body">
+      16-Oct-2009
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Python-Version:
+     </th>
+     <td class="field-body">
+      3.2
+     </td>
+    </tr>
+    <tr class="field">
+     <th class="field-name">
+      Post-History:
+     </th>
+     <td class="field-body">
+     </td>
+    </tr>
+   </tbody>
+  </table>
+  <hr/>
+  <div class="contents topic" id="contents">
+   <p class="topic-title first">
+    Contents
+   </p>
+   <ul class="simple">
+    <li>
+     <a class="reference internal" href="#abstract" id="id17">
+      Abstract
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#motivation" id="id18">
+      Motivation
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#specification" id="id19">
+      Specification
+     </a>
+     <ul>
+      <li>
+       <a class="reference internal" href="#naming" id="id20">
+        Naming
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#interface" id="id21">
+        Interface
+       </a>
+       <ul>
+        <li>
+         <a class="reference internal" href="#executor" id="id22">
+          Executor
+         </a>
+        </li>
+        <li>
+         <a class="reference internal" href="#processpoolexecutor" id="id23">
+          ProcessPoolExecutor
+         </a>
+        </li>
+        <li>
+         <a class="reference internal" href="#threadpoolexecutor" id="id24">
+          ThreadPoolExecutor
+         </a>
+        </li>
+        <li>
+         <a class="reference internal" href="#future-objects" id="id25">
+          Future Objects
+         </a>
+         <ul>
+          <li>
+           <a class="reference internal" href="#internal-future-methods" id="id26">
+            Internal Future Methods
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li>
+         <a class="reference internal" href="#module-functions" id="id27">
+          Module Functions
+         </a>
+        </li>
+       </ul>
+      </li>
+      <li>
+       <a class="reference internal" href="#check-prime-example" id="id28">
+        Check Prime Example
+       </a>
+      </li>
+      <li>
+       <a class="reference internal" href="#web-crawl-example" id="id29">
+        Web Crawl Example
+       </a>
+      </li>
+     </ul>
+    </li>
+    <li>
+     <a class="reference internal" href="#rationale" id="id30">
+      Rationale
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#reference-implementation" id="id31">
+      Reference Implementation
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#references" id="id32">
+      References
+     </a>
+    </li>
+    <li>
+     <a class="reference internal" href="#copyright" id="id33">
+      Copyright
+     </a>
+    </li>
+   </ul>
+  </div>
+  <div class="section" id="abstract">
+   <h1>
+    <a class="toc-backref" href="#id17">
+     Abstract
+    </a>
+   </h1>
+   <p>
+    This PEP proposes a design for a package that facilitates the
+evaluation of callables using threads and processes.
+   </p>
+  </div>
+  <div class="section" id="motivation">
+   <h1>
+    <a class="toc-backref" href="#id18">
+     Motivation
+    </a>
+   </h1>
+   <p>
+    Python currently has powerful primitives to construct multi-threaded
+and multi-process applications but parallelizing simple operations
+requires a lot of work i.e. explicitly launching processes/threads,
+constructing a work/results queue, and waiting for completion or some
+other termination condition (e.g.  failure, timeout).  It is also
+difficult to design an application with a global process/thread limit
+when each component invents its own parallel execution strategy.
+   </p>
+  </div>
+  <div class="section" id="specification">
+   <h1>
+    <a class="toc-backref" href="#id19">
+     Specification
+    </a>
+   </h1>
+   <div class="section" id="naming">
+    <h2>
+     <a class="toc-backref" href="#id20">
+      Naming
+     </a>
+    </h2>
+    <p>
+     The proposed package would be called "futures" and would live in a new
+"concurrent" top-level package. The rationale behind pushing the
+futures library into a "concurrent" namespace has multiple components.
+The first, most simple one is to prevent any and all confusion with
+the existing "from __future__ import x" idiom which has been in use
+for a long time within Python. Additionally, it is felt that adding
+the "concurrent" precursor to the name fully denotes what the library
+is related to - namely concurrency - this should clear up any addition
+ambiguity as it has been noted that not everyone in the community is
+familiar with Java Futures, or the Futures term except as it relates
+to the US stock market.
+    </p>
+    <p>
+     Finally; we are carving out a new namespace for the standard library -
+obviously named "concurrent". We hope to either add, or move existing,
+concurrency-related libraries to this in the future.  A prime example
+is the multiprocessing.Pool work, as well as other "addons" included
+in that module, which work across thread and process boundaries.
+    </p>
+   </div>
+   <div class="section" id="interface">
+    <h2>
+     <a class="toc-backref" href="#id21">
+      Interface
+     </a>
+    </h2>
+    <p>
+     The proposed package provides two core classes:
+     <cite>
+      Executor
+     </cite>
+     and
+     <cite>
+      Future
+     </cite>
+     . An
+     <cite>
+      Executor
+     </cite>
+     receives asynchronous work requests (in terms
+of a callable and its arguments) and returns a
+     <cite>
+      Future
+     </cite>
+     to represent
+the execution of that work request.
+    </p>
+    <div class="section" id="executor">
+     <h3>
+      <a class="toc-backref" href="#id22">
+       Executor
+      </a>
+     </h3>
+     <p>
+      <cite>
+       Executor
+      </cite>
+      is an abstract class that provides methods to execute calls
+asynchronously.
+     </p>
+     <p>
+      <tt class="docutils literal">
+       submit(fn, *args, **kwargs)
+      </tt>
+     </p>
+     <blockquote>
+      <p>
+       Schedules the callable to be executed as
+       <tt class="docutils literal">
+        <span class="pre">
+         fn(*args,
+        </span>
+        **kwargs)
+       </tt>
+       and returns a
+       <cite>
+        Future
+       </cite>
+       instance representing the execution of the
+callable.
+      </p>
+      <p>
+       This is an abstract method and must be implemented by Executor
+subclasses.
+      </p>
+     </blockquote>
+     <p>
+      <tt class="docutils literal">
+       map(func, *iterables, timeout=None)
+      </tt>
+     </p>
+     <blockquote>
+      Equivalent to
+      <tt class="docutils literal">
+       map(func, *iterables)
+      </tt>
+      but func is executed
+asynchronously and several calls to func may be made concurrently.
+The returned iterator raises a
+      <cite>
+       TimeoutError
+      </cite>
+      if
+      <cite>
+       __next__()
+      </cite>
+      is
+called and the result isn't available after
+      <em>
+       timeout
+      </em>
+      seconds from
+the original call to
+      <cite>
+       map()
+      </cite>
+      .  If
+      <em>
+       timeout
+      </em>
+      is not specified or
+      <cite>
+       None
+      </cite>
+      then there is no limit to the wait time.  If a call raises
+an exception then that exception will be raised when its value is
+retrieved from the iterator.
+     </blockquote>
+     <p>
+      <tt class="docutils literal">
+       shutdown(wait=True)
+      </tt>
+     </p>
+     <blockquote>
+      <p>
+       Signal the executor that it should free any resources that it is
+using when the currently pending futures are done executing.
+Calls to
+       <cite>
+        Executor.submit
+       </cite>
+       and
+       <cite>
+        Executor.map
+       </cite>
+       and made after
+shutdown will raise
+       <cite>
+        RuntimeError
+       </cite>
+       .
+      </p>
+      <p>
+       If wait is
+       <cite>
+        True
+       </cite>
+       then this method will not return until all the
+pending futures are done executing and the resources associated
+with the executor have been freed. If wait is
+       <cite>
+        False
+       </cite>
+       then this
+method will return immediately and the resources associated with
+the executor will be freed when all pending futures are done
+executing. Regardless of the value of wait, the entire Python
+program will not exit until all pending futures are done
+executing.
+      </p>
+     </blockquote>
+     <div class="line-block">
+      <div class="line">
+       <tt class="docutils literal">
+        __enter__()
+       </tt>
+      </div>
+      <div class="line">
+       <tt class="docutils literal">
+        __exit__(exc_type, exc_val, exc_tb)
+       </tt>
+      </div>
+     </div>
+     <blockquote>
+      When using an executor as a context manager,
+      <cite>
+       __exit__
+      </cite>
+      will call
+      <tt class="docutils literal">
+       Executor.shutdown(wait=True)
+      </tt>
+      .
+     </blockquote>
+    </div>
+    <div class="section" id="processpoolexecutor">
+     <h3>
+      <a class="toc-backref" href="#id23">
+       ProcessPoolExecutor
+      </a>
+     </h3>
+     <p>
+      The
+      <cite>
+       ProcessPoolExecutor
+      </cite>
+      class is an
+      <cite>
+       Executor
+      </cite>
+      subclass that uses a
+pool of processes to execute calls asynchronously.  The callable
+objects and arguments passed to
+      <cite>
+       ProcessPoolExecutor.submit
+      </cite>
+      must be
+pickleable according to the same limitations as the multiprocessing
+module.
+     </p>
+     <p>
+      Calling
+      <cite>
+       Executor
+      </cite>
+      or
+      <cite>
+       Future
+      </cite>
+      methods from within a callable
+submitted to a
+      <cite>
+       ProcessPoolExecutor
+      </cite>
+      will result in deadlock.
+     </p>
+     <p>
+      <tt class="docutils literal">
+       __init__(max_workers)
+      </tt>
+     </p>
+     <blockquote>
+      Executes calls asynchronously using a pool of a most
+      <em>
+       max_workers
+      </em>
+      processes.  If
+      <em>
+       max_workers
+      </em>
+      is
+      <tt class="docutils literal">
+       None
+      </tt>
+      or not given then as many
+worker processes will be created as the machine has processors.
+     </blockquote>
+    </div>
+    <div class="section" id="threadpoolexecutor">
+     <h3>
+      <a class="toc-backref" href="#id24">
+       ThreadPoolExecutor
+      </a>
+     </h3>
+     <p>
+      The
+      <cite>
+       ThreadPoolExecutor
+      </cite>
+      class is an
+      <cite>
+       Executor
+      </cite>
+      subclass that uses a
+pool of threads to execute calls asynchronously.
+     </p>
+     <p>
+      Deadlock can occur when the callable associated with a
+      <cite>
+       Future
+      </cite>
+      waits
+on the results of another
+      <cite>
+       Future
+      </cite>
+      .  For example:
+     </p>
+     <pre class="literal-block">
+import time
+def wait_on_b():
+    time.sleep(5)
+    print(b.result())  # b will never complete because it is waiting on a.
+    return 5
+
+def wait_on_a():
+    time.sleep(5)
+    print(a.result())  # a will never complete because it is waiting on b.
+    return 6
+
+
+executor = ThreadPoolExecutor(max_workers=2)
+a = executor.submit(wait_on_b)
+b = executor.submit(wait_on_a)
+</pre>
+     <p>
+      And:
+     </p>
+     <pre class="literal-block">
+def wait_on_future():
+    f = executor.submit(pow, 5, 2)
+    # This will never complete because there is only one worker thread and
+    # it is executing this function.
+    print(f.result())
+
+executor = ThreadPoolExecutor(max_workers=1)
+executor.submit(wait_on_future)
+</pre>
+     <p>
+      <tt class="docutils literal">
+       __init__(max_workers)
+      </tt>
+     </p>
+     <blockquote>
+      Executes calls asynchronously using a pool of at most
+      <em>
+       max_workers
+      </em>
+      threads.
+     </blockquote>
+    </div>
+    <div class="section" id="future-objects">
+     <h3>
+      <a class="toc-backref" href="#id25">
+       Future Objects
+      </a>
+     </h3>
+     <p>
+      The
+      <cite>
+       Future
+      </cite>
+      class encapsulates the asynchronous execution of a
+callable.
+      <cite>
+       Future
+      </cite>
+      instances are returned by
+      <cite>
+       Executor.submit
+      </cite>
+      .
+     </p>
+     <p>
+      <tt class="docutils literal">
+       cancel()
+      </tt>
+     </p>
+     <blockquote>
+      Attempt to cancel the call.  If the call is currently being
+executed then it cannot be cancelled and the method will return
+      <cite>
+       False
+      </cite>
+      , otherwise the call will be cancelled and the method will
+return
+      <cite>
+       True
+      </cite>
+      .
+     </blockquote>
+     <p>
+      <tt class="docutils literal">
+       cancelled()
+      </tt>
+     </p>
+     <blockquote>
+      Return
+      <cite>
+       True
+      </cite>
+      if the call was successfully cancelled.
+     </blockquote>
+     <p>
+      <tt class="docutils literal">
+       running()
+      </tt>
+     </p>
+     <blockquote>
+      Return
+      <cite>
+       True
+      </cite>
+      if the call is currently being executed and cannot
+be cancelled.
+     </blockquote>
+     <p>
+      <tt class="docutils literal">
+       done()
+      </tt>
+     </p>
+     <blockquote>
+      Return
+      <cite>
+       True
+      </cite>
+      if the call was successfully cancelled or finished
+running.
+     </blockquote>
+     <p>
+      <tt class="docutils literal">
+       result(timeout=None)
+      </tt>
+     </p>
+     <blockquote>
+      <p>
+       Return the value returned by the call.  If the call hasn't yet
+completed then this method will wait up to
+       <em>
+        timeout
+       </em>
+       seconds.  If
+the call hasn't completed in
+       <em>
+        timeout
+       </em>
+       seconds then a
+       <cite>
+        TimeoutError
+       </cite>
+       will be raised.  If
+       <em>
+        timeout
+       </em>
+       is not specified or
+       <cite>
+        None
+       </cite>
+       then there is no limit to the wait time.
+      </p>
+      <p>
+       If the future is cancelled before completing then
+       <cite>
+        CancelledError
+       </cite>
+       will be raised.
+      </p>
+      <p>
+       If the call raised then this method will raise the same exception.
+      </p>
+     </blockquote>
+     <p>
+      <tt class="docutils literal">
+       exception(timeout=None)
+      </tt>
+     </p>
+     <blockquote>
+      <p>
+       Return the exception raised by the call.  If the call hasn't yet
+completed then this method will wait up to
+       <em>
+        timeout
+       </em>
+       seconds.  If
+the call hasn't completed in
+       <em>
+        timeout
+       </em>
+       seconds then a
+       <cite>
+        TimeoutError
+       </cite>
+       will be raised.  If
+       <em>
+        timeout
+       </em>
+       is not specified or
+       <tt class="docutils literal">
+        None
+       </tt>
+       then there is no limit to the wait time.
+      </p>
+      <p>
+       If the future is cancelled before completing then
+       <cite>
+        CancelledError
+       </cite>
+       will be raised.
+      </p>
+      <p>
+       If the call completed without raising then
+       <cite>
+        None
+       </cite>
+       is returned.
+      </p>
+     </blockquote>
+     <p>
+      <tt class="docutils literal">
+       add_done_callback(fn)
+      </tt>
+     </p>
+     <blockquote>
+      <p>
+       Attaches a callable
+       <em>
+        fn
+       </em>
+       to the future that will be called when
+the future is cancelled or finishes running.
+       <em>
+        fn
+       </em>
+       will be called
+with the future as its only argument.
+      </p>
+      <p>
+       Added callables are called in the order that they were added and
+are always called in a thread belonging to the process that added
+them.  If the callable raises an
+       <cite>
+        Exception
+       </cite>
+       then it will be
+logged and ignored.  If the callable raises another
+       <cite>
+        BaseException
+       </cite>
+       then behavior is not defined.
+      </p>
+      <p>
+       If the future has already completed or been cancelled then
+       <em>
+        fn
+       </em>
+       will be called immediately.
+      </p>
+     </blockquote>
+     <div class="section" id="internal-future-methods">
+      <h4>
+       <a class="toc-backref" href="#id26">
+        Internal Future Methods
+       </a>
+      </h4>
+      <p>
+       The following
+       <cite>
+        Future
+       </cite>
+       methods are meant for use in unit tests and
+       <cite>
+        Executor
+       </cite>
+       implementations.
+      </p>
+      <p>
+       <tt class="docutils literal">
+        set_running_or_notify_cancel()
+       </tt>
+      </p>
+      <blockquote>
+       <p>
+        Should be called by
+        <cite>
+         Executor
+        </cite>
+        implementations before executing
+the work associated with the
+        <cite>
+         Future
+        </cite>
+        .
+       </p>
+       <p>
+        If the method returns
+        <cite>
+         False
+        </cite>
+        then the
+        <cite>
+         Future
+        </cite>
+        was cancelled,
+i.e.
+        <cite>
+         Future.cancel
+        </cite>
+        was called and returned
+        <cite>
+         True
+        </cite>
+        .  Any threads
+waiting on the
+        <cite>
+         Future
+        </cite>
+        completing (i.e. through
+        <cite>
+         as_completed()
+        </cite>
+        or
+        <cite>
+         wait()
+        </cite>
+        ) will be woken up.
+       </p>
+       <p>
+        If the method returns
+        <cite>
+         True
+        </cite>
+        then the
+        <cite>
+         Future
+        </cite>
+        was not cancelled
+and has been put in the running state, i.e. calls to
+        <cite>
+         Future.running()
+        </cite>
+        will return
+        <cite>
+         True
+        </cite>
+        .
+       </p>
+       <p>
+        This method can only be called once and cannot be called after
+        <cite>
+         Future.set_result()
+        </cite>
+        or
+        <cite>
+         Future.set_exception()
+        </cite>
+        have been
+called.
+       </p>
+      </blockquote>
+      <p>
+       <tt class="docutils literal">
+        set_result(result)
+       </tt>
+      </p>
+      <blockquote>
+       Sets the result of the work associated with the
+       <cite>
+        Future
+       </cite>
+       .
+      </blockquote>
+      <p>
+       <tt class="docutils literal">
+        set_exception(exception)
+       </tt>
+      </p>
+      <blockquote>
+       Sets the result of the work associated with the
+       <cite>
+        Future
+       </cite>
+       to the
+given
+       <cite>
+        Exception
+       </cite>
+       .
+      </blockquote>
+     </div>
+    </div>
+    <div class="section" id="module-functions">
+     <h3>
+      <a class="toc-backref" href="#id27">
+       Module Functions
+      </a>
+     </h3>
+     <p>
+      <tt class="docutils literal">
+       wait(fs, timeout=None, return_when=ALL_COMPLETED)
+      </tt>
+     </p>
+     <blockquote>
+      <p>
+       Wait for the
+       <cite>
+        Future
+       </cite>
+       instances (possibly created by different
+       <cite>
+        Executor
+       </cite>
+       instances) given by
+       <em>
+        fs
+       </em>
+       to complete.  Returns a named
+2-tuple of sets.  The first set, named "done", contains the
+futures that completed (finished or were cancelled) before the
+wait completed.  The second set, named "not_done", contains
+uncompleted futures.
+      </p>
+      <p>
+       <em>
+        timeout
+       </em>
+       can be used to control the maximum number of seconds to
+wait before returning.  If timeout is not specified or None then
+there is no limit to the wait time.
+      </p>
+      <p>
+       <em>
+        return_when
+       </em>
+       indicates when the method should return.  It must be
+one of the following constants:
+      </p>
+      <table border="1" class="docutils">
+       <colgroup>
+        <col width="37%">
+        </col>
+        <col width="63%">
+        </col>
+       </colgroup>
+       <thead valign="bottom">
+        <tr>
+         <th class="head">
+          Constant
+         </th>
+         <th class="head">
+          Description
+         </th>
+        </tr>
+       </thead>
+       <tbody valign="top">
+        <tr>
+         <td>
+          <cite>
+           FIRST_COMPLETED
+          </cite>
+         </td>
+         <td>
+          The method will return when any future finishes or
+is cancelled.
+         </td>
+        </tr>
+        <tr>
+         <td>
+          <cite>
+           FIRST_EXCEPTION
+          </cite>
+         </td>
+         <td>
+          The method will return when any future finishes by
+raising an exception. If not future raises an
+exception then it is equivalent to ALL_COMPLETED.
+         </td>
+        </tr>
+        <tr>
+         <td>
+          <cite>
+           ALL_COMPLETED
+          </cite>
+         </td>
+         <td>
+          The method will return when all calls finish.
+         </td>
+        </tr>
+       </tbody>
+      </table>
+     </blockquote>
+     <p>
+      <tt class="docutils literal">
+       as_completed(fs, timeout=None)
+      </tt>
+     </p>
+     <blockquote>
+      <p>
+       Returns an iterator over the
+       <cite>
+        Future
+       </cite>
+       instances given by
+       <em>
+        fs
+       </em>
+       that
+yields futures as they complete (finished or were cancelled).  Any
+futures that completed before
+       <cite>
+        as_completed()
+       </cite>
+       was called will be
+yielded first.  The returned iterator raises a
+       <cite>
+        TimeoutError
+       </cite>
+       if
+       <cite>
+        __next__()
+       </cite>
+       is called and the result isn't available after
+       <em>
+        timeout
+       </em>
+       seconds from the original call to
+       <cite>
+        as_completed()
+       </cite>
+       .  If
+       <em>
+        timeout
+       </em>
+       is not specified or
+       <cite>
+        None
+       </cite>
+       then there is no limit to the
+wait time.
+      </p>
+      <p>
+       The
+       <cite>
+        Future
+       </cite>
+       instances can have been created by different
+       <cite>
+        Executor
+       </cite>
+       instances.
+      </p>
+     </blockquote>
+    </div>
+   </div>
+   <div class="section" id="check-prime-example">
+    <h2>
+     <a class="toc-backref" href="#id28">
+      Check Prime Example
+     </a>
+    </h2>
+    <pre class="literal-block">
+from concurrent import futures
+import math
+
+PRIMES = [
+    112272535095293,
+    112582705942171,
+    112272535095293,
+    115280095190773,
+    115797848077099,
+    1099726899285419]
+
+def is_prime(n):
+    if n % 2 == 0:
+        return False
+
+    sqrt_n = int(math.floor(math.sqrt(n)))
+    for i in range(3, sqrt_n + 1, 2):
+        if n % i == 0:
+            return False
+    return True
+
+def main():
+    with futures.ProcessPoolExecutor() as executor:
+        for number, prime in zip(PRIMES, executor.map(is_prime,
+                                                      PRIMES)):
+            print('%d is prime: %s' % (number, prime))
+
+if __name__ == '__main__':
+    main()
+</pre>
+   </div>
+   <div class="section" id="web-crawl-example">
+    <h2>
+     <a class="toc-backref" href="#id29">
+      Web Crawl Example
+     </a>
+    </h2>
+    <pre class="literal-block">
+from concurrent import futures
+import urllib.request
+
+URLS = ['http://www.foxnews.com/',
+        'http://www.cnn.com/',
+        'http://europe.wsj.com/',
+        'http://www.bbc.co.uk/',
+        'http://some-made-up-domain.com/']
+
+def load_url(url, timeout):
+    return urllib.request.urlopen(url, timeout=timeout).read()
+
+def main():
+    with futures.ThreadPoolExecutor(max_workers=5) as executor:
+        future_to_url = dict(
+            (executor.submit(load_url, url, 60), url)
+             for url in URLS)
+
+        for future in futures.as_completed(future_to_url):
+            url = future_to_url[future]
+            try:
+                print('%r page is %d bytes' % (
+                          url, len(future.result())))
+            except Exception as e:
+                print('%r generated an exception: %s' % (
+                          url, e))
+
+if __name__ == '__main__':
+    main()
+</pre>
+   </div>
+  </div>
+  <div class="section" id="rationale">
+   <h1>
+    <a class="toc-backref" href="#id30">
+     Rationale
+    </a>
+   </h1>
+   <p>
+    The proposed design of this module was heavily influenced by the the
+Java java.util.concurrent package
+    <a class="footnote-reference" href="#id9" id="id1">
+     [1]
+    </a>
+    .  The conceptual basis of the
+module, as in Java, is the Future class, which represents the progress
+and result of an asynchronous computation.  The Future class makes
+little commitment to the evaluation mode being used e.g. it can be be
+used to represent lazy or eager evaluation, for evaluation using
+threads, processes or remote procedure call.
+   </p>
+   <p>
+    Futures are created by concrete implementations of the Executor class
+(called ExecutorService in Java).  The reference implementation
+provides classes that use either a process or a thread pool to eagerly
+evaluate computations.
+   </p>
+   <p>
+    Futures have already been seen in Python as part of a popular Python
+cookbook recipe
+    <a class="footnote-reference" href="#id10" id="id2">
+     [2]
+    </a>
+    and have discussed on the Python-3000 mailing
+list
+    <a class="footnote-reference" href="#id11" id="id3">
+     [3]
+    </a>
+    .
+   </p>
+   <p>
+    The proposed design is explicit, i.e. it requires that clients be
+aware that they are consuming Futures.  It would be possible to design
+a module that would return proxy objects (in the style of
+    <cite>
+     weakref
+    </cite>
+    )
+that could be used transparently.  It is possible to build a proxy
+implementation on top of the proposed explicit mechanism.
+   </p>
+   <p>
+    The proposed design does not introduce any changes to Python language
+syntax or semantics.  Special syntax could be introduced
+    <a class="footnote-reference" href="#id12" id="id4">
+     [4]
+    </a>
+    to mark
+function and method calls as asynchronous.  A proxy result would be
+returned while the operation is eagerly evaluated asynchronously, and
+execution would only block if the proxy object were used before the
+operation completed.
+   </p>
+   <p>
+    Anh Hai Trinh proposed a simpler but more limited API concept
+    <a class="footnote-reference" href="#id13" id="id5">
+     [5]
+    </a>
+    and
+the API has been discussed in some detail on stdlib-sig
+    <a class="footnote-reference" href="#id14" id="id6">
+     [6]
+    </a>
+    .
+   </p>
+   <p>
+    The proposed design was discussed on the Python-Dev mailing list
+    <a class="footnote-reference" href="#id15" id="id7">
+     [7]
+    </a>
+    .
+Following those discussions, the following changes were made:
+   </p>
+   <ul class="simple">
+    <li>
+     The
+     <cite>
+      Executor
+     </cite>
+     class was made into an abstract base class
+    </li>
+    <li>
+     The
+     <cite>
+      Future.remove_done_callback
+     </cite>
+     method was removed due to a lack
+of convincing use cases
+    </li>
+    <li>
+     The
+     <cite>
+      Future.add_done_callback
+     </cite>
+     method was modified to allow the
+same callable to be added many times
+    </li>
+    <li>
+     The
+     <cite>
+      Future
+     </cite>
+     class's mutation methods were better documented to
+indicate that they are private to the
+     <cite>
+      Executor
+     </cite>
+     that created them
+    </li>
+   </ul>
+  </div>
+  <div class="section" id="reference-implementation">
+   <h1>
+    <a class="toc-backref" href="#id31">
+     Reference Implementation
+    </a>
+   </h1>
+   <p>
+    The reference implementation
+    <a class="footnote-reference" href="#id16" id="id8">
+     [8]
+    </a>
+    contains a complete implementation
+of the proposed design.  It has been tested on Linux and Mac OS X.
+   </p>
+  </div>
+  <div class="section" id="references">
+   <h1>
+    <a class="toc-backref" href="#id32">
+     References
+    </a>
+   </h1>
+   <table class="docutils footnote" frame="void" id="id9" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id1">
+        [1]
+       </a>
+      </td>
+      <td>
+       <cite>
+        java.util.concurrent
+       </cite>
+       package documentation
+       <a class="reference external" href="http://java.sun.com/j2se/1.5.0/docs/api/java/util/concurrent/package-summary.html">
+        http://java.sun.com/j2se/1.5.0/docs/api/java/util/concurrent/package-summary.html
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id10" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id2">
+        [2]
+       </a>
+      </td>
+      <td>
+       Python Cookbook recipe 84317, "Easy threading with Futures"
+       <a class="reference external" href="http://code.activestate.com/recipes/84317/">
+        http://code.activestate.com/recipes/84317/
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id11" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id3">
+        [3]
+       </a>
+      </td>
+      <td>
+       <cite>
+        Python-3000
+       </cite>
+       thread, "mechanism for handling asynchronous concurrency"
+       <a class="reference external" href="http://mail.python.org/pipermail/python-3000/2006-April/000960.html">
+        http://mail.python.org/pipermail/python-3000/2006-April/000960.html
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id12" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id4">
+        [4]
+       </a>
+      </td>
+      <td>
+       <cite>
+        Python 3000
+       </cite>
+       thread, "Futures in Python 3000 (was Re: mechanism for handling asynchronous concurrency)"
+       <a class="reference external" href="http://mail.python.org/pipermail/python-3000/2006-April/000970.html">
+        http://mail.python.org/pipermail/python-3000/2006-April/000970.html
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id13" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id5">
+        [5]
+       </a>
+      </td>
+      <td>
+       A discussion of
+       <cite>
+        stream
+       </cite>
+       , a similar concept proposed by Anh Hai Trinh
+       <a class="reference external" href="http://www.mail-archive.com/stdlib-sig@python.org/msg00480.html">
+        http://www.mail-archive.com/stdlib-sig@python.org/msg00480.html
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id14" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id6">
+        [6]
+       </a>
+      </td>
+      <td>
+       A discussion of the proposed API on stdlib-sig
+       <a class="reference external" href="http://mail.python.org/pipermail/stdlib-sig/2009-November/000731.html">
+        http://mail.python.org/pipermail/stdlib-sig/2009-November/000731.html
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id15" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id7">
+        [7]
+       </a>
+      </td>
+      <td>
+       A discussion of the PEP on python-dev
+       <a class="reference external" href="http://mail.python.org/pipermail/python-dev/2010-March/098169.html">
+        http://mail.python.org/pipermail/python-dev/2010-March/098169.html
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+   <table class="docutils footnote" frame="void" id="id16" rules="none">
+    <colgroup>
+     <col class="label">
+     </col>
+     <col>
+     </col>
+    </colgroup>
+    <tbody valign="top">
+     <tr>
+      <td class="label">
+       <a class="fn-backref" href="#id8">
+        [8]
+       </a>
+      </td>
+      <td>
+       Reference
+       <cite>
+        futures
+       </cite>
+       implementation
+       <a class="reference external" href="http://code.google.com/p/pythonfutures/source/browse/#svn/branches/feedback">
+        http://code.google.com/p/pythonfutures/source/browse/#svn/branches/feedback
+       </a>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+  </div>
+  <div class="section" id="copyright">
+   <h1>
+    <a class="toc-backref" href="#id33">
+     Copyright
+    </a>
+   </h1>
+   <p>
+    This document has been placed in the public domain.
+   </p>
+   <!-- Local Variables:
+mode: indented-text
+indent-tabs-mode: nil
+sentence-end-double-space: t
+fill-column: 70
+coding: utf-8
+End: -->
+  </div>
+ </body>
+
+<!-- Mirrored from www.python.org/dev/peps/pep-3148/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 03 Sep 2015 04:35:36 GMT -->
+</html>Source: <a href="https://hg.python.org/peps/file/tip/pep-3148.txt">https://hg.python.org/peps/file/tip/pep-3148.txt</a>
+
+    </article>
+
+
+                </section>
+
+                
+
+
+<aside class="left-sidebar" role="secondary">
+
+    
+
+
+
+
+
+
+    
+
+
+
+
+
+        <div class="twitter-widget sidebar-widget">
+        <a class="twitter-timeline" data-dnt="true" href="https://twitter.com/ThePSF" data-widget-id="434113224703610882">Tweets by @ThePSF</a>
+        <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+    </div>
+
+    <div class="psf-sidebar-widget sidebar-widget">
+        <h3 class="widget-title">The PSF</h3>
+<p>The Python Software Foundation is the organization behind Python. Become a member of the PSF and help advance the software and our mission. </p>
+
+    </div>
+
+</aside>
+
+
+
+                
+                
+
+
+            </div><!-- end .container -->
+        </div><!-- end #content .content-wrapper -->
+
+        <!-- Footer and social media list -->
+        <footer id="site-map" class="main-footer" role="contentinfo">
+            <div class="main-footer-links">
+                <div class="container">
+
+                    
+                    <a id="back-to-top-1" class="jump-link" href="#python-network"><span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> Back to Top</a>
+
+                    
+
+<ul class="sitemap navigation menu do-not-print" role="tree" id="container">
+    
+    <li class="tier-1 element-1">
+        <a href="https://www.python.org/about/" >About</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/apps/" title="">Applications</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/quotes/" title="">Quotes</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/gettingstarted/" title="">Getting Started</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/help/" title="">Help</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-2">
+        <a href="https://www.python.org/downloads/" >Downloads</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/downloads/" title="">All releases</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/downloads/source/" title="">Source code</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/downloads/windows/" title="">Windows</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/downloads/mac-osx/" title="">Mac OS X</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/download/other/" title="">Other Platforms</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://docs.python.org/3/license.html" title="">License</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/download/alternatives" title="">Alternative Implementations</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-3">
+        <a href="https://www.python.org/doc/" >Documentation</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/doc/" title="">Docs</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/doc/av" title="">Audio/Visual Talks</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://wiki.python.org/moin/BeginnersGuide" title="">Beginner&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://docs.python.org/faq/" title="">FAQ</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="http://wiki.python.org/moin/Languages" title="">Non-English Docs</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="../index.html" title="">PEP Index</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://wiki.python.org/moin/PythonBooks" title="">Python Books</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-4">
+        <a href="https://www.python.org/community/" >Community</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/community/diversity/" title="">Diversity</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/community/irc/" title="">IRC</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/community/lists/" title="">Mailing Lists</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/community/workshops/" title="">Python Conferences</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/community/sigs/" title="">Special Interest Groups</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://wiki.python.org/moin/" title="">Python Wiki</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/community/logos/" title="">Python Logo</a></li>
+    
+        <li class="tier-2 element-8" role="treeitem"><a href="https://www.python.org/community/merchandise/" title="">Merchandise</a></li>
+    
+        <li class="tier-2 element-9" role="treeitem"><a href="https://www.python.org/community/awards" title="">Community Awards</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-5">
+        <a href="https://www.python.org/about/success/" title="success-stories">Success Stories</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/about/success/#arts" title="">Arts</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/about/success/#business" title="">Business</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/about/success/#education" title="">Education</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/about/success/#engineering" title="">Engineering</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://www.python.org/about/success/#government" title="">Government</a></li>
+    
+        <li class="tier-2 element-6" role="treeitem"><a href="https://www.python.org/about/success/#scientific" title="">Scientific</a></li>
+    
+        <li class="tier-2 element-7" role="treeitem"><a href="https://www.python.org/about/success/#software-development" title="">Software Development</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-6">
+        <a href="https://www.python.org/blogs/" title="News from around the Python world">News</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/blogs/" title="Python Insider Blog Posts">Python News</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://planetpython.org/" title="Planet Python">Community News</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="http://pyfound.blogspot.com/" title="PSF Blog">PSF News</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pycon.blogspot.com/" title="PyCon Blog">PyCon News</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-7">
+        <a href="https://www.python.org/events/" >Events</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="https://www.python.org/events/python-events/" title="">Python Events</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="https://www.python.org/events/python-user-group/" title="">User Group Events</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://www.python.org/events/python-events/past/" title="">Python Events Archive</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="https://www.python.org/events/python-user-group/past/" title="">User Group Events Archive</a></li>
+    
+        <li class="tier-2 element-5" role="treeitem"><a href="https://wiki.python.org/moin/PythonEventsCalendar#Submitting_an_Event" title="">Submit an Event</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+    <li class="tier-1 element-8">
+        <a href="https://www.python.org/dev/" >Contributing</a>
+        
+            
+
+<ul class="subnav menu">
+    
+        <li class="tier-2 element-1" role="treeitem"><a href="http://docs.python.org/devguide/" title="">Developer&#39;s Guide</a></li>
+    
+        <li class="tier-2 element-2" role="treeitem"><a href="http://bugs.python.org/" title="">Issue Tracker</a></li>
+    
+        <li class="tier-2 element-3" role="treeitem"><a href="https://mail.python.org/mailman/listinfo/python-dev" title="">python-dev list</a></li>
+    
+        <li class="tier-2 element-4" role="treeitem"><a href="http://pythonmentors.com/" title="">Core Mentorship</a></li>
+    
+</ul>
+
+        
+    </li>
+    
+</ul>
+
+
+                    <a id="back-to-top-2" class="jump-link" href="#python-network"><span aria-hidden="true" class="icon-arrow-up"><span>&#9650;</span></span> Back to Top</a>
+                    
+
+                </div><!-- end .container -->
+            </div> <!-- end .main-footer-links -->
+
+            <div class="site-base">
+                <div class="container">
+                    
+                    <ul class="footer-links navigation menu do-not-print" role="tree">
+                        <li class="tier-1 element-1"><a href="https://www.python.org/about/help/">Help &amp; <span class="say-no-more">General</span> Contact</a></li>
+                        <li class="tier-1 element-2"><a href="https://www.python.org/community/diversity/">Diversity <span class="say-no-more">Initiatives</span></a></li>
+                        <li class="tier-1 element-3"><a href="https://github.com/python/pythondotorg/issues">Submit Website Bug</a></li>
+                        <!--<li class="tier-1 element-3"><a href="#"><span class="say-no-more">Website</span> Colophon</a></li>-->
+                    </ul>
+
+                    <div class="copyright">
+                        <p><small>
+                            <span class="pre">Copyright &copy;2001-2015.</span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/psf-landing/">Python Software Foundation</a></span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/about/legal/">Legal Statements</a></span>
+                            &nbsp;<span class="pre"><a href="https://www.python.org/privacy/">Privacy Policy</a></span>
+                        </small></p>
+                    </div>
+
+                </div><!-- end .container -->
+            </div><!-- end .site-base -->
+
+        </footer>
+
+    </div><!-- end #touchnav-wrapper -->
+
+    
+    <script src="../../../../ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="../../../static/js/libs/jquery-1.8.2.min.js"><\/script>')</script>
+
+    <script src="../../../static/js/libs/masonry.pkgd.min.js"></script>
+
+    <script type="text/javascript" src="../../../static/js/main-min.js" charset="utf-8"></script>
+    
+
+    <!--[if lte IE 7]>
+    <script type="text/javascript" src="/static/js/plugins/IE8-min.js" charset="utf-8"></script>
+    
+    
+    <![endif]-->
+
+    <!--[if lte IE 8]>
+    <script type="text/javascript" src="/static/js/plugins/getComputedStyle-min.js" charset="utf-8"></script>
+    
+    
+    <![endif]-->
+
+    
+
+    
+    
+
+</body>
+</html>
