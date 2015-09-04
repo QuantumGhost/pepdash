@@ -1,16 +1,20 @@
 # pepdash
-============
+---------------
 
 ## How to Update:
 --------------
 
 Requirements:
+
  - httrack
  - python3 with beautifulsoup installed
 
-First run sync.sh to grab all PEPs. Then run `python PEPs.docset` to
+First run sync.sh to grab all PEPs. Then run `python3 pepdash.py PEPs.docset` to
 update indexes.
 
+## TODO
+
+ - add table of content
 
 ## License
 ---------
