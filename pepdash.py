@@ -4,6 +4,7 @@ import argparse
 import glob
 import os
 from os import path
+import re
 import shutil
 import sqlite3
 
@@ -70,6 +71,7 @@ def create_index(config):
 			continue    # skip pep-xxxx
 		index_file = path.join(folder_name, 'index.html')
 		title = extract_title_from_page(index_file)
+		title = re.sub('\r\n|\r|\n', ' ', title)
 		rel_path = path.relpath(index_file, document_dir)
 		cur.execute(
 			'INSERT OR IGNORE INTO searchIndex(name, type, path) VALUES (?,?,?)',
